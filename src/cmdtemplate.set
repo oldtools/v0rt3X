@@ -1,0 +1,108 @@
+@echo off
+cd "%~dp0"
+for /f "tokens=" %%a in ("Game.ini") do if not exist ("Game.ini") goto ZETA
+:READINI
+for /f "usebackq tokens=1,*eol=^delims==" %%a in ("Game.ini") do IF "%%b" NEQ "" SET %%a=%%b
+
+:ZETA
+for /f "delims=" %%a in ("[Mapper]") do if "%Mapper%" == "" set Mapper=%%~a
+for /f "delims=" %%a in ("[MonitorMode]") do if "%MonitorMode%" == "" set MonitorMode=%%~a
+for /f "delims=" %%a in ("[1_Post]") do if "%A_Post%" == "" set A_Post=%%~a
+for /f "delims=" %%a in ("[2_Post]") do if "%B_Post%" == ""  set B_Post=%%~a
+for /f "delims=" %%a in ("[3_Post]") do if "%C_Post%" == "" set C_Post=%%~a
+for /f "delims=" %%a in ("[1_Pre]") do if "%A_Pre%" == "" set A_Pre=%%~a
+for /f "delims=" %%a in ("[2_Pre]") do if "%B_Pre%" == "" set B_Pre=%%~a
+for /f "delims=" %%a in ("[3_Pre]") do if "%C_Pre%" == "" set C_Pre=%%~a
+for /f "delims=" %%a in ("[JustAfterLaunch]") do if "%JustAfterLaunch%" == "" set JustAfterLaunch=%%~a
+for /f "delims=" %%a in ("[JustBeforeExit]") do if "%JustBeforeExit%" == "" set JustBeforeExit=%%~a
+for /f "delims=" %%a in ("[exelist]") do if "%exelist%" == "" set exelist=%%~a
+for /f "delims=" %%a in ("[Keyboard_Mapper]") do if "%Keyboard_Mapper%" == "" set Keyboard_Mapper=%%~a
+for /f "delims=" %%a in ("[MediaCenter_Profile]") do if "%MediaCenter_Profile%" == "" set MediaCenter_Profile=%%~a
+for /f "delims=" %%a in ("[Player1]") do if "%Player1%" == "" set Player1=%%~a
+for /f "delims=" %%a in ("[Player2]") do if "%Player2%" == "" set Player2=%%a
+for /f "delims=" %%a in ("[MultiMonitor_Tool]") do if "%MultiMonitor_Tool%" == "" set MultiMonitor_Tool=%%~a
+for /f "delims=" %%a in ("[MM_Game_Config]") do if "%MM_Game_Config%" == "" set MM_Game_Config=%%~a
+for /f "delims=" %%a in ("[MM_MEDIACENTER_Config]") do if "%MM_MEDIACENTER_Config%" == "" set MM_MEDIACENTER_Config=%%~a
+
+:RUNEXE
+for /f "delims=" %%a in ("[GAME_EXE]") do (
+	set EXENAME=%%~nxa
+	set DIRNAME=%%~dpa
+	set EXE_GAME=%%~a
+)
+
+:PRE1
+if not exist "%A_Pre%" goto PREMAP
+[1_PreW] "%A_Pre%"
+
+:PREMAP
+if "%Mapper%" == "" goto MONMODE
+if not exist "%keyboard_mapper%" goto MONMODE
+if not exist "%player1%" goto MONMODE
+call "%keyboard_mapper%" "%player1%" %player2%
+
+:MONMODE
+if "%MONITORMODE%" == "" goto PRE2
+if "%MONITORMODE%" == "0" goto PRE2
+if not exist "%multimonitor_tool%" goto PRE2
+if not exist "%MM_Game_Config%"  goto PRE2
+call "%multimonitor_tool%" /LoadConfig "%mm_Game_config%"
+
+:PRE2
+if not exist "%B_Pre%" goto PRE3
+[2_PreW] "%B_Pre%"
+
+:PRE3
+if not exist "%C_Pre%" goto STARTGAME
+[3_PreW] "%C_Pre%"
+
+:STARTGAME
+pushd "%DIRNAME%"
+cmd /c start "" "%EXE_GAME%"
+TIMEOUT /T 3
+if not exist "%JustAfterLaunch%" goto LOOP
+[JALW] "%JustAfterLaunch%"
+
+:LOOP
+for /f "tokens=2 delims= " %%a in ('tasklist ^|find /i "%EXENAME%"') do (
+	SET GAMEPID=%%~a
+	IF "%%~a" == "" (
+		  GOTO RUNDONE
+			) ELSE (
+			  TIMEOUT /T 5
+			  GOTO LOOP
+				)
+	)
+:RUNDONE
+popd
+
+:POST3
+if not exist "%C_Post%" goto POSTMAP
+[3_PostW] "%C_Post%"
+
+:POSTMAP
+if "%Mapper%" == "" goto POST2
+if not exist "%mediacenter_profile%" goto POST2
+if not exist "%keyboard_mapper%" goto POST2
+call "%keyboard_mapper%" "%mediacenter_profile%"
+
+:POST2
+if not exist "%B_Post%" goto POSTMON
+[2_PostW] "%B_Post%"
+
+:POSTMON
+if "%MONITORMODE%" == "" goto POST1
+if "%MONITORMODE%" == "0" goto POST1
+if not exist "%multimonitor_tool%" goto POST1
+REM if "%MM_Game_Config%" == "" set MM_Game_Config=GameMonitors.mon
+REM call "%multimonitor_tool%" /SaveConfig "%mm_Game_config%"
+if not exist "%MM_MediaCenter_Config%" goto POST1
+call "%multimonitor_tool%" /LoadConfig "%mm_mediacenter_config%"
+
+:POST1
+if not exist "%A_Post%" goto QUITOUT
+[1_PostW] "%A_Post%"
+
+:QUITOUT
+taskkill /f /im %GAMEPID%
+for /f "tokens=* delims=|" %%a in ("%exelist%") do taskkill /f /im "%%~a"

@@ -1,0 +1,13 @@
+
+et pro1=%1%
+set ProX=%2%
+for /f "delims=" %%a in ('echo."%pro1%"') do (
+set proxn=%%~dpa
+)
+if "%ProX%" neq "" set proXProfile= %proxn%JoyToKey.ini
+
+if "%ProX%" == "" set ProX=%proxn%&&set proXProfile=[JOYTKINI]
+if %ProX%" == "" set proXProfile= "[JOYTKINI]"&&set ProX=%proxn%
+copy /N "%proXProfile%" "%ProX%"
+start "" "[JOYTK]" -r %pro1%
+ 
