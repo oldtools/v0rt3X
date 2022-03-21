@@ -51,7 +51,7 @@ if (scextn = "lnk")
 binhome= %home%\bin
 if ((plink = "") or !fileExist(plink) or (scextn = ""))
 	{
-		filedelete,%home%\log.txt
+		;filedelete,%home%\log.txt
 	}
 gosub, DDPOPS
 repopbut= hidden
@@ -68,7 +68,8 @@ fileread,exclfls,%source%\exclfnms.set
 fileread,rlsgrps,%source%\rlsgrps.set
 ;filextns= exe|lnk
 filextns= exe
-RLSPFX=.|%A_Space%-%A_Space%|-%A_Space%|-
+RLSPFX= .|-|(|[|_|%A_Space%|
+RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
 remotebins= _BorderlessGaming_|_Antimicro_|_JoyToKey_|_Xpadder_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
@@ -102,9 +103,10 @@ ifnotexist,%home%\RJDB.ini
 		gosub,MM_AUTO
 	}
 gosub, popgui
-if (Logging = 1)
+if (Log = 1)
 	{
 		loget= checked
+		enablelogging= 1
 	}
 cfgenbl= disabled
 joyenbl= disabled
@@ -596,7 +598,6 @@ if ((Source_DirectoryT <> "")&& !instr(Source_DirectoryT,"<"))
 		iniwrite,%srcdira%,%RJDB_Config%,GENERAL,Source_Directory
 		stringreplace,CURDP,Source_DirectoryX,%A_Space%,`%,All
 		guicontrol,,Source_DirectoryT,|%srcdira%
-		guicontrol,,CURDP,%CURDP%
 	}
 return
 
@@ -1433,6 +1434,7 @@ gui,submit,nohide
 guicontrolget,SRCDIRDD,,SOURCE_DIRECTORYT
 iniread,cftst,%RJDB_Config%,GENERAL,Source_Directory
 knum=
+Srclist=
 Loop,parse,cftst,|
     {
 		IF (a_lOOPfIELD = "")
@@ -1451,12 +1453,11 @@ Loop,parse,cftst,|
 				continue
 			}
 										   
-		Srclist.= dkv . "|"
+		Srclist.= CURDP . "|"
     }
 SOURCE_DIRECTORY= %SrcList%
 iniwrite,%Srclist%,%RJDB_Config%,GENERAL,SOURCE_Directory
 guicontrol,,SOURCE_DirectoryT,|%Srclist%
-guicontrol,,CURDP,%CURDP%
 return
 
 KILLCHK:
@@ -1477,7 +1478,6 @@ return
 SOURCE_DirectoryDD:
 gui,submit,nohide
 guicontrolget,CURDP,,SOURCE_DIRECTORYT
-guicontrol,,CURDP,%CURDP%
 return
 
 DELpostAPP:
@@ -1810,12 +1810,12 @@ return
 EnableLogging:
 gui,submit,nohide
 guicontrolget,EnableLogging,,EnableLogging
-iniwrite,%EnableLogging%,%RJDB_Config%,GENERAL,Logging
+iniwrite,%EnableLogging%,%RJDB_Config%,GENERAL,Log
 return
 
 OPNLOG:
 gui,submit,NoHide
-if fileexist("%home%\log.txt")
+if fileexist(home . "\" . "log.txt")
 	{
 		Run,Notepad %home%\log.txt,
 	}
@@ -1902,7 +1902,9 @@ if (kbmpprt <> "")
 		stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
 		stringreplace,amcb,amcb,[AMICRO],%kbmpprt%,All
 		stringreplace,amcp,amcp,[NEWOSK],%osklok%,All
+		stringreplace,amcp,amcp,[AMICRO],%antimicro_executable%,All
 		stringreplace,amcd,amcd,[NEWOSK],%osklok%,All
+		stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
 		FileAppend,%amcb%,%home%\%JMAP%_!.cmd
 		FileAppend,%amcp%,%Player1_Template%
 		FileAppend,%amcp%,%Player2_Template%
@@ -2066,13 +2068,13 @@ Loop,parse,dralbet,|
 									}
 								if (fileexist(ALLCHK)&& !instr(CONCAT_ROOT,ALLCHK))
 									{
-										CONCAT_ROOT.= ALLCHK . "|"
+										ACONCAT_ROOT.= ALLCHK . "|"
 										GENERIC_ROOT.= ALLCHK . "|"
 									}
 							}
-						if !instr(CONCAT_ROOT,GNCHK)
+						if !instr(ACONCAT_ROOT,GNCHK)
 							{
-								CONCAT_ROOT.= GNCHK . "|"
+								ACONCAT_ROOT.= GNCHK . "|"
 								GENERIC_ROOT.= GNCHK . "|"
 							}
 					}
@@ -2222,11 +2224,11 @@ Loop,parse,dralbet,|
 
 			}
 	}
-if (CONCAT_ROOT <> "")
+if (ACONCAT_ROOT <> "")
 	{
 		pl=
-		SOURCE_Directory= %CONCAT_ROOT%
-		Loop,parse,CONCAT_ROOT,|
+		SOURCE_Directory= %ACONCAT_ROOT%
+		Loop,parse,ACONCAT_ROOT,|
 			{
 				if (A_LoopField = "")
 					{
@@ -2246,6 +2248,11 @@ if (CONCAT_ROOT <> "")
 		iniwrite,%Source_directory%,%RJDB_Config%,GENERAL,SOURCE_DIRECTORY
 		SOURCE_DIRECTORY= %sourc_t%
 	}
+else {
+	iniwrite,%CONCAT_ROOT%,%RJDB_CONFIG%,GENERAL,SOURCE_DIRECTORY
+	return
+}
+iniwrite,%CONCAT_ROOT%,%RJDB_CONFIG%,GENERAL,DIST_DIRECTORY
 return
 
 popgui:
@@ -2513,7 +2520,7 @@ filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
 Gui,Listview,MyListView
-
+guicontrolget,enablelogging,,enablelogging
 guicontrolget,NameChk,,NameChk
 LV_Delete()
 if (!Fileexist(GAME_Directory)or !FileExist(Game_Profiles))
@@ -2561,15 +2568,15 @@ if (namechk = 1)
 	{
 		fileread,stfn,%source%\steamlkp.set
 		loop,parse,stfn,`n`r
-		{
-			if (A_Loopfield = "")
-				{
-					continue
-				}
-			stringsplit,ge,A_Loopfield,|
-			stringreplace,op,ge1,%A_Space%,,All
-			sivk.= op . "|" . ge2 . "|" . "`n"
-		}		
+			{
+				if (A_Loopfield = "")
+					{
+						continue
+					}
+				stringsplit,ge,A_Loopfield,|
+				stringreplace,op,ge1,%A_Space%,,All
+				sivk.= op . "|" . ge2 . "|" . "`n"
+			}		
 	}
 Loop,parse,SOURCE_DIRECTORY,|
 	{
@@ -2578,7 +2585,6 @@ Loop,parse,SOURCE_DIRECTORY,|
 			{
 				continue
 			}
-
 		Loop,parse,filextns,|
 			{
 				if (A_LoopField = "")
@@ -2588,43 +2594,44 @@ Loop,parse,SOURCE_DIRECTORY,|
 				fsext= %A_LoopField%
 				sfi_size := A_PtrSize + 8 + (A_IsUnicode ? 680 : 340)
 				VarSetCapacity(sfi, sfi_size)
-				Loop,files,%SRCLOOP%,D
+				Loop,files,%SRCLOOP%\*,D
 					{
 						allfld.= A_LoopFileFullPath . "|"
 					}
-				loop, Files, %SRCLOOP%\*.%fsext%,R
+				loop, Files, %SRCLOOP%\*.%fsext%,FR
 					{
+						Loop,parse,DIST_DIRECTORY,|
+							{
+								if instr(A_LoopFileLongPath,A_LoopField)
+									{
+										continue
+									}
+							}
+						stringright,rlxtn,A_LoopFileName,4
+						if (rlxtn <> ".exe")
+							{
+								continue
+							}
 						excl=
 						lvachk= +Check
 						FileName := A_LoopFileFullPath
 						filez:= A_LoopFileSizeKB
 						splitpath,FileName,FileNM,FilePath,FileExt,filtn
 						splitpath,FilePath,filpn,filpdir,,filpjn
-						stringreplace,simpath,FilePath,%SCRLOOP%\,,
-						stringreplace,trukpath,filpdir,%SCRLOOP%\,,
+						stringreplace,simpath,FilePath,%SRCLOOP%\,,
+						stringreplace,trukpath,filpdir,%SRCLOOP%,,
 						splitpath,simpath,simpn,simpdir
 						splitpath,trukpath,truknm,farpth
 						splitpath,farpth,farnm,
-						simploc= %simpath%\%FileNM%
-						if (FilePath <> SCRLOOP)
-							{
-								simploc= %filpn%\%FileNM%
-								if ((truknm <> filpn)&&(truknm <> ""))
-									{
-										simploc= %truknm%\%filpn%\%FileNM%
-									}
-								if ((farpth <> "")&&(farnm <> truknm))
-									{
-										simploc= %farnm%\%truknm%\%filpn%\%FileNM%
-									}
-							}
+						simploc= %simpath%
+						SB_SetText("adding " filenm "")
 						Loop,parse,absol,`r`n
 							{
 								if (A_LoopField = "")
 									{
 										continue
 									}
-								if instr(simploc,A_LoopField)
+								if instr(FileNM,A_LoopField)
 									{
 										omitd.= filenm . "|" . "|" . simploc . "`n"
 										excl= 1
@@ -2647,36 +2654,27 @@ Loop,parse,SOURCE_DIRECTORY,|
 										excl= 1
 										break
 									}	
-								if instr(simploc,A_LoopField)
-									{
-										lvachk=
-										simpnk.= FileName . "`n"
-										fileappend,%simpath%,%home%\simpth.db
-										goto,Chkcon
-									}
 							}
 						if (excl = 1)
 							{
 								continue
 							}
+						simpnk.= FileName . "`n"
+						fileappend,%simpath%,%home%\simpth.db
 						PostDirChk:
-						if ((A_LoopFileExt = "lnk")or(A_LoopFileExt = "_lnk_"))
-							{
-								FileGetShortcut, %FileName%,FileSCName,OutDir,OutArgs,OutDescription,OutIcon,IconNumber,OutRunState
-								FileGetSize,filez,%FileName%
-								FileExt= lnk
-							}
 						Loop,parse,unselect,`r`n
 							{
 								if (A_LoopField = "")
 									{
 										continue
 									}
-								if (instr(simploc,A_LoopField)&& !instr(filpn,A_LoopField))
+								stringlen,hh,A_LoopField
+								stringright,an,filtn,%hh%
+								if (an = A_LoopField)
 									{
 										lvachk=
 										simpnk.= FileName . "`n"
-										fileappend,%simpath%,%home%\simpth.db
+										fileappend,%simpath%`n,%home%\simpth.db
 										goto,Chkcon
 									}
 							}
@@ -2686,12 +2684,9 @@ Loop,parse,SOURCE_DIRECTORY,|
 									{
 										continue
 									}
-								unlika= _%a_LoopField%
-								unlikb= %A_LoopField%_
-								stringreplace,filtfp,FileNM,.,_,All
-								stringreplace,filtfp,filtf,-,_,All
-								stringreplace,filtfp,filtp,%A_Space%,_,All
-								if (instr(filtfp,unlika)or instr(filtfp,unlikb)&& !instr(filpn,A_LoopField))
+								stringlen,hh,A_LoopField
+								stringright,an,filtn,%hh%
+								if (an = A_LoopField)
 									{
 										lvachk=
 										simpnk.= FileName . "`n"
@@ -2704,93 +2699,271 @@ Loop,parse,SOURCE_DIRECTORY,|
 								fullist.= A_LoopFileFullPath . "|"
 							}
 						Chkcon:
-						njName= %A_Space%
+						njName= 
 						if ((namechk = 1)&&(lvachk <> ""))
 							{
-								splitpath,filename,exnm,exep,exet,
-								splitpath,exep,exenj,exepN
-								redux:
-								Loop,parse,RLSPFX,|
+								splitpath,filename,exnm,exep,exet,exechk
+								stringreplace,exep,exep,%SRCLOOP%\,,
+								stringsplit,exep,exenj
+								exepN= %exep%
+								jpd:
+								stringreplace,exep,exep,\\,\,All
+								Loop,parse,exep,\
 									{
-										if (A_Loopfield = "")
+										if (A_LoopField = "")
 											{
 												continue
 											}
-										prfx:= A_LoopField
-										Loop,parse,rlsgrps,`n`r
+										din= %A_LoopField%							
+										Loop,parse,exclfls,`n`r
+											{
+												if (A_Loopfield = "")
+													{
+														continue
+													}
+												brk= |%din%|	
+												if (brk = A_LoopField)
+													{
+														njname=
+														stringreplace,vv,A_LoopField,|,,All
+														stringreplace,exep,exep,%vv%,,
+														goto,jpd
+													}
+											}	
+										Loop,parse,rabsol,`n`r
 											{
 												if (A_LoopField = "")
 													{
 														continue
 													}
-												rlpfx= %prfx%%A_LoopField%
-												stringlen,rlpfn,rlpfx
-												stringright,rlpfm,exenj,%rlpfn%
-												if (rlpfx = rlpfm)
+												if instr(din,A_LoopField)
 													{
-														stringreplace,exenj,exenj,%rlpfx%,,All
+														njname=
+														stringreplace,exep,exep,%A_LoopField%,,
+														goto, jpd
+													}
+											}
+										Loop,parse,absol,`r`n
+											{
+												if (A_LoopField = "")
+													{
+														continue
+													}
+												if instr(din,A_LoopField)
+													{
+														njname=
+														stringreplace,exep,exep,%A_LoopField%,,
+														goto, jpd
+													}
+											}
+										stringreplace,ack,din,%A_Space%,,
+										stringreplace,ack,ack,_,,
+										stringreplace,ack,ack,.,,
+										stringreplace,execk,exep,.,,
+										stringreplace,execk,execk,_,,
+										stringreplace,execk,execk,%A_SPace%,,
+										if instr(ack,execk)
+											{
+												njName= %din%
+												exenj= %din%
+												break
+											}
+										if (njname = "")
+											{
+												njName= %din%
+											}	
+									}
+								redux:
+								nexenj=
+								mf=	
+								vmo= 
+								Loop,parse,rlspfx,|
+									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
+										delim= %A_LoopField%
+										stringsplit,vm,njName,%delim%
+										Loop,%vm0%
+											{
+												nJnamex=
+												pkr:= % vm%A_Index%
+												ap:= regexmatch(pkr,"^v[0-9].*",tmp)
+												bp:= regexmatch(pkr,"^v-[0-9].*",tmp)
+												cp:= regexmatch(pkr,"^v [0-9].*",tmp)
+												hp:= regexmatch(pkr,"^v\.[0-9].*",tmp)
+												dp:= regexmatch(pkr,"^ver[0-9].*",tmp)
+												ep:= regexmatch(pkr,"^ver-[0-9].*",tmp)
+												fp:= regexmatch(pkr,"^ver [0-9].*",tmp)
+												gp:= regexmatch(pkr,"^ver\.[0-9].*",tmp)
+												ip:= regexmatch(pkr,"^version\.[0-9].*",tmp)
+												jp:= regexmatch(pkr,"^version[0-9].*",tmp)
+												kp:= regexmatch(pkr,"^version-[0-9].*",tmp)
+												lp:= regexmatch(pkr,"^version [0-9].*",tmp)
+												if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+													{
+														mf= 1
+														Loop,%vm0%
+															{
+																srs:= % vm%A_Index%
+																if (srs = pkr)
+																	{
+																		vmo= 1
+																		if (A_Index = 1)
+																			{
+																				nJnameX= %njName%
+																			}
+																		break
+																	}
+																nJnamex.= srs . delim
+															}
+														nJname= %njNamex%	
+													}													
+												if (vmo = 1)
+													{
+														break
+													}
+											}
+										if (vmo = 1)
+											{
+												break
+											}
+										Loop,%vm0%
+											{
+												nJnamex= 
+												pkr:= % vm%A_Index%
+												ap:= regexmatch(pkr,"^Dev.*Build.*",tmp)
+												bp:= regexmatch(pkr,"^Build.*",tmp)
+												lp:= regexmatch(pkr,"^Build [0-9].*",tmp)
+												cp:= regexmatch(pkr,"^Release.*[0-9].*",tmp)
+												dp:= regexmatch(pkr,"^Debug.*[0-9].*",tmp)
+												ep:= regexmatch(pkr,"^Developer.*",tmp)
+												fp:= regexmatch(pkr,"^Rls\.[0-9].*",tmp)
+												gp:= regexmatch(pkr,"^Early.*",tmp)
+												hp:= regexmatch(pkr,"^Demo.*",tmp)
+												ip:= regexmatch(pkr,"^Alpha.*",tmp)
+												jp:= regexmatch(pkr,"^Pre.*Rel.*",tmp)
+												kp:= regexmatch(pkr,"^UPDATE.*",tmp)
+												if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+													{
+														mf= 1
+														Loop,%vm0%
+															{
+																srs:= % vm%A_Index%
+																if (srs = pkr)
+																	{
+																		vmo= 1
+																		if (A_Index = 1)
+																			{
+																				nJnameX= %njName%
+																			}
+																		break
+																	}
+																nJnamex.= srs . delim
+															}
+														nJname= %njNamex%
+													}													
+												if (vmo = 1)
+													{
+														break
+													}
+											}
+										if (vmo = 1)
+											{
+												break
+											}
+									}
+							
+								jexenj=
+								loop,parse,RLSIFX,|
+									{
+										if (jexenj = "")
+											jexenj= %njname%
+										if instr(jexenj,A_LoopField)
+											{
+												stringreplace,nexenj,jexenj,%A_LoopField%,,
+												if ((nexenj <> jexenj)&&(nexenj <> ""))
+													{
+														njName= %nexenj%
+														break
 													}
 											}
 									}
-								mf=	
-								exenjx= %exenj%
-								stringsplit,vm,exenjx,.
-								Loop,%vm0%
+								if (nexenj = "")
 									{
-										pkr:= % vm%A_Index%
-										ap:= regexmatch(pkr,"^v[0-9].*",tmp)
-										bp:= regexmatch(pkr,"^v-[0-9].*",tmp)
-										cp:= regexmatch(pkr,"^v [0-9].*",tmp)
-										dp:= regexmatch(pkr,"^ver[0-9].*",tmp)
-										ep:= regexmatch(pkr,"^ver-[0-9].*",tmp)
-										fp:= regexmatch(pkr,"^ver [0-9].*",tmp)
-										gp:= regexmatch(pkr,"^vers[0-9].*",tmp)
-										hp:= regexmatch(pkr,"^vers-[0-9].*",tmp)
-										ip:= regexmatch(pkr,"^vers [0-9].*",tmp)
-										jp:= regexmatch(pkr,"^version[0-9].*",tmp)
-										kp:= regexmatch(pkr,"^version-[0-9].*",tmp)
-										lp:= regexmatch(pkr,"^version [0-9].*",tmp)
-										if ((ap = 1)or(p = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+										nexenj= %njname%
+									}
+								
+								Loop,parse,rlsgrps,`n`r
+									{
+										if (A_LoopField = "")
 											{
-												mf= 1
-												stringreplace,exenjx,exenjx,.%pkr%,,All
+												continue
+											}
+										hh=	
+										rgg:= A_LoopField
+										stringlen,rgv,rgg
+										stringright,nv,njname,%rgv%
+										if (instr(njname,rgg)&&(nv = rgg))
+											{
+												Loop,parse,RLSPFX,|
+													{
+														if (A_LoopField = "")
+															{
+																continue
+															}
+														ccba:= A_LoopField . rgg
+														stringreplace,sexenj,njname,%ccba%,,
+														if (sexenj <> njname)
+															{
+																nJname= %sexenj%
+																hh= 1
+																break
+															}
+													}
+												if (hh = 1)
+													{
+														break
+													}
 											}
 									}
-								if (exenjx <> "")
-									{
-										exenj= %exenjx%
-									}
-								stringreplace,exenj,exenj,_,%A_Space%,All	
-								str:= exenj
-								StrReplace(str, njName,, scnt)
-								str:= exenj
+								
+								stringreplace,njname,njname,_,%A_Space%,All	
+								str:= njname
+								StrReplace(str, A_Space,, scnt)
+								str:= njname
 								StrReplace(str, ".",, ncnt)
 								stringlen,kinm,str			
 								kivm:= (3 . ncnt ) + 1 
-								if ((ncnt > scnt) or (ncnt = scnt) && (exenj > kivm))
+								if ((ncnt > scnt) or (ncnt = scnt) && (njname > kivm))
 									{
-										stringreplace,exenj,exenj,.,%A_Space%,All
+										stringreplace,njname,njname,.,%A_Space%,All
 									}
-								excn=|%exenj%|
+								excn=|%njname%|
 								stringreplace,excn,excn,%A_Space%,,All
 								stringreplace,excn,excn,-,,All
 								stringreplace,excn,excn,.,,All
 								stringreplace,excn,excn,_,,All
-								Loop,parse,exclfls,`n`r
+
+								
+								stringleft,rlschkn,njname,7
+								stringleft,dplychkn,njname,6
+								stringleft,winochkn,njname,5
+								stringleft,winychkn,njname,4
+								stringleft,winvchkn,njname,3
+								if ((rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dplychkn = "winx86")or(dplychkn = "vista")or(dplychkn = "winx64")or (winochkn = "win32")or(winochkn = "win64")or(winochkn = "win10")or(winochkn = "win95")or(winochkn = "win2k")or(winochkn = "winxp")or(winychkn = "win7")or(winychkn = "win8")or(winvchkn = "x86")or(winvchkn = "x64"))
 									{
-										if (A_Loopfield = "")
+										splitpath,exepN,excn,jik,,njname										
+										if instr(exepN,".")
 											{
-												continue
+												excn= %njname%
+												njname= %excn%
 											}
-										if (excn = A_LoopField)
-											{
-												splitpath,exepN,excn,jik,,exenj
-												exepN= %jik%
-												goto, redux
-											}
+										exepN= %jik%
+										goto, redux
 									}
-								njName= %exenj%	
-								stringreplace,exedp,exenj,.,,All
+								stringreplace,exedp,njname,.,,All
 								stringreplace,exedp,exedp,%A_SPace%,,All
 								stringreplace,exedp,exedp,(,,All
 								stringreplace,exedp,exedp,),,All
@@ -2812,8 +2985,8 @@ Loop,parse,SOURCE_DIRECTORY,|
 								stringreplace,exedp,exedp,#,,All
 								stringreplace,exedp,exedp,_,,All
 								bexp=\%exedp%|
-								xenjx=|%exenj%|
-								if (instr(sivk,bexp)&& instr(A_LoopField,xenjx))
+								xenjx=|%njname%|
+								if (instr(sivk,bexp)&& instr(sivk,xenjx))
 									{
 										Loop,parse,sivk,`n
 											{
@@ -2840,6 +3013,14 @@ Loop,parse,SOURCE_DIRECTORY,|
 											}
 									}
 							}
+						Loop,parse,RLSPFX,|
+							{
+								stringright,tbb,njname,1
+								if (tbb = A_LoopField)
+									{
+										stringtrimright,njname,njname,1
+									}
+							}
 						SB_SetText("added " FileNM "")	
 						LV_Add(lvachk,FileNM, FileExt, FilePath, filez, njName,"y","<","<","<","y","<","<","<","<","y","y")
 						SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
@@ -2848,7 +3029,7 @@ Loop,parse,SOURCE_DIRECTORY,|
 	}
 if (enablelogging = 1)
 	{
-		fileappend,[OMITTED]`n%omitd%`n`n[RE-INCLUDED]`n,log.txt
+		fileappend,[OMITTED]`n%omitd%`n[REINCLUDED]`n%simpnk%`n,%home%\log.txt
 	}
 Loop,parse,simpnk,`r`n
 	{
@@ -2865,10 +3046,10 @@ Loop,parse,simpnk,`r`n
 						continue
 					}
 				srcdtmp= %A_LoopField%\
-				stringreplace,fen,fendir,%srcdtmp%\,,UseErrorLevel
+				stringreplace,fen,fendir,%srcdtmp%,,UseErrorLevel
 				if (errorlevel <> 0)
 					{
-						stringreplace,fltsmp,fullist,%scrdtmp%\,,UseErrorLevel
+						stringreplace,fltsmp,fullist,%scrdtmp%,,UseErrorLevel
 						fenum2=
 						stringsplit,fenum,fen,\
 						rplt= %fenum1%
@@ -2881,7 +3062,7 @@ Loop,parse,simpnk,`r`n
 							{
 								if (enablelogging = 1)
 									{
-								fileappend,%fenx%|`n,log.txt
+										fileappend,%fenx%|`n,%home%\log.txt
 									}
 								LV_Add(lvachk,fenf, fenxtn, fendir, 0, A_Space,"y","<","<","<","y","<","<","<","<","y","y")
 								SOURCEDLIST.= fenf . "|" . fenxtn . "|" fendir . "|" . 0 . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
@@ -2889,7 +3070,7 @@ Loop,parse,simpnk,`r`n
 								break
 							}
 					}
-			}
+			}		
 	}
 fileappend,%SOURCEDLIST%,%home%\continue.db
 REPOP:
@@ -3213,11 +3394,16 @@ Loop,%fullstn0%
 				mattop= %gmnamedv%
 				gmnamedvx= |%gmnamedv%|
 				stringlen,mattlen,gmnamedv
+				stringleft,rlschkn,gmnamedv,7
+				stringleft,dplychkn,gmnamedv,6
+				stringleft,winochkn,gmnamedv,5
+				stringleft,winychkn,gmnamedv,4
+				stringleft,winvchkn,gmnamedv,3
 				if (instr(gmnamedv,gmnamed)&&(gmnamed <> gmnamedv)&&(mattlen > 5))
 					{
 						gmnamed= %gmnameo%
 					}
-				if instr(exclfls,gmnamedvx)
+				if (instr(exclfls,gmnamedvx)or (rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dplychkn = "winx86")or(dplychkn = "vista")or(dplychkn = "winx64")or (winochkn = "win32")or(winochkn = "win64")or(winochkn = "win10")or(winochkn = "win95")or(winochkn = "win2k")or(winochkn = "winxp")or(winychkn = "win7")or(winychkn = "win8")or(winvchkn = "x86")or(winvchkn = "x64"))
 					{
 						tmppath= %redpth%
 						splitpath,tmppath,gmnamek,curpthk
@@ -3498,7 +3684,7 @@ Loop,%fullstn0%
 				stringtrimright,subfldrepn,subfldrep,1
 				if (enablelogging = 1)
 					{
-						fileappend,%rn%==%subfldrep%%gmnamed%|%gmnamex%(%renum%):%tot%<!%priority%!`n,log.txt
+						fileappend,%rn%==%subfldrep%%gmnamed%|%gmnamex%(%renum%):%tot%<!%priority%!`n,%home%\log.txt
 					}
 				sidn= %Game_Profiles%\%gmnameD%
 				if (Localize = 1)
@@ -3785,8 +3971,8 @@ Loop,%fullstn0%
 														iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
 													}
 											}
+									}
 							}
-					}
 						Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
 						if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
 							{

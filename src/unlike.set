@@ -3,11 +3,9 @@ conf
 crack
 data
 db
-dx9
 event
 files
 fix
-gl
 identif
 info
 init
@@ -16,7 +14,6 @@ input
 joy
 joystick
 joystk
-kb
 kb
 keybd
 keyboard

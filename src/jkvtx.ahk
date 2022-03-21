@@ -374,7 +374,7 @@ return
 PRE_MAP:
 premapper:	
 Mapper_Extension:= % Mapper_Extension
-if (Mapper > 0)
+if ((Mapper > 0)&&(Mapper <> ""))
 	{
 		ToolTip,Running %gmnamx% preferences`n:::Loading Joystick Configurations:::
 		joyncnt=
@@ -413,20 +413,23 @@ if (Mapper > 0)
 		if (JMap = "joytokey")
 			{
 				player2t:= A_Space . "" . Game_profiles . "\" . gmnamex . ""
-				process,close,.exe
+				splitpath,joytokey_executable,mapperxn,mapperp
+				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				process,close,%mapperxn%
 				sleep,600
 			}
 		if (JMap = "xpadder")
 			{
-				process,close,xpadder.exe
+				splitpath,xpadder_executable,mapperxn,mapperp
+				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				process,close,%mapperxn%
 				sleep,600
 			}
-		if ((JMap = "antimicro") && fileexist(antimicro_executable))
+		if (JMap = "antimicro")
 			{
-				unload:= "" . antimicro_executable . "" . A_Space . "--unload"
-				splitpath,antimicro_executable,,mapperp
-				Run, %unload%,%mapperp%,hide
-				process,close,antimicro.exe
+				splitpath,antimicro_executable,mapperxn,mapperp
+				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				process,close,%mapperxn%
 				sleep,600
 			}
 		ToolTip, %joycnt% Joysticks found
@@ -570,10 +573,18 @@ if (Hide_Taskbar <> 0)
 		WinHide, ahk_class Shell_TrayWnd
 		WinHide, ahk_class Shell_SecondaryTrayWnd
 	}
-Tooltip,
+Tooltip
 if (JustAfterLaunch <> "")
 	{
 		gosub, PRE_JAL
+	}
+if (instr(prestk1,"borderlessgaming")or instr(prestk2,"borderlessgaming")or instr(prrestk3,"borderlessgaming"))
+	{
+		sleep,1500
+		if process,exist,borderlessgaming.exe
+			{
+				send #f6
+			}
 	}
 BlockInput,Off
 iniwrite,%erahkpid%,%curpidf%,Current_Game,pid
@@ -639,6 +650,10 @@ if (Hide_Taskbar <> 0)
 		WinShow, ahk_class Shell_TrayWnd
 		WinShow, ahk_class Shell_SecondaryTrayWnd		
 	}
+if (instr(prestk1,"borderlessgaming")or instr(prestk2,"borderlessgaming")or instr(prrestk3,"borderlessgaming"))
+	{
+		process,close,borderlessgaming.exe
+	}	
 ExitApp
 
 POST_JBE:
@@ -728,7 +743,7 @@ if (prestk2 <> "")
 return
 
 POST_MAP:	
-if (Mapper > 0)
+if ((Mapper > 0)&&(Mapper <> ""))
 	{
 		ToolTip,Please Be Patient`n:::Reloading Mediacenter/Desktop Profiles:::
 		if (nosave = 1)
@@ -927,30 +942,30 @@ if (Mapper > 0)
 					}
 				Sleep,500
 			}
-	}
-if (nosave = 1)
-	{
-		goto, Logout
-	}
-Loop, 4
-	{
-		if (A_Index = 1)
+		if (nosave = 1)
 			{
-				iniwrite,%MediaCenter_Profile%,%inif%,JOYSTICKS,MediaCenter_Profile
-				continue
+				goto, Logout
 			}
-		mcpn:= % MediaCenter_Profile%A_Index%	
-		if (mcpn <> "")
+		Loop, 4
 			{
-				iniwrite,%mcpn%,%inif%,JOYSTICKS,MediaCenter_Profile%A_Index%
+				if (A_Index = 1)
+					{
+						iniwrite,%MediaCenter_Profile%,%inif%,JOYSTICKS,MediaCenter_Profile
+						continue
+					}
+				mcpn:= % MediaCenter_Profile%A_Index%	
+				if (mcpn <> "")
+					{
+						iniwrite,%mcpn%,%inif%,JOYSTICKS,MediaCenter_Profile%A_Index%
+					}
 			}
-	}
-Loop,4
-	{
-		plyrn:= % Player%A_index%
-		if (plyrn <> "")
+		Loop,4
 			{
-				iniwrite,%plyrn%,%inif%,JOYSTICKS,Player%A_Index%	
+				plyrn:= % Player%A_index%
+				if (plyrn <> "")
+					{
+						iniwrite,%plyrn%,%inif%,JOYSTICKS,Player%A_Index%	
+					}
 			}
 	}
 
@@ -961,7 +976,7 @@ if (Logging = 1)
 iniwrite,%KeyBoard_Mapper%,%inif%,JOYSTICKS,KeyBoard_Mapper
 iniwrite,%Jmap%,%inif%,JOYSTICKS,Jmap
 iniwrite,%Mapper_Extension%,%inif%,JOYSTICKS,Mapper_Extension
-iniwrite,%MAPPER%,%inif%,JOYSTICKS,Mapper
+iniwrite,%MAPPER%,%inif%,GENERAL,Mapper
 Tooltip,Reloading Profiles`n:::shutting down game:::
 return
 

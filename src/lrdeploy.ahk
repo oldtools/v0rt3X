@@ -2733,7 +2733,7 @@ if (ServerPush = 1)
 				if (ServerPush = 1)
 					{	
 						FileAppend,gh release delete portable -y`n,%DEPL%\gpush.cmd
-						FileAppend,gh release create portable -t "portable binaries" -n "" "%DEPL%\portable.zip"`n,%DEPL%\gpush.cmd
+						FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip"`n,%DEPL%\gpush.cmd
 					}
 			}
 		if (OvrStable = 1)
@@ -2741,7 +2741,7 @@ if (ServerPush = 1)
 				if (ServerPush = 1)
 					{
 						FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
-						FileAppend,gh release create Installer -t "Zipped Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
+						FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
 					}
 			}
 		guicontrol,,progb,80

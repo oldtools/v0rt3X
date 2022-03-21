@@ -1,10 +1,9 @@
--SDL
 activate
 activation
 addin
 addon
-App.exe
-application.exe
+App
+application
 assistant
 Authorize
 backup
@@ -19,7 +18,7 @@ deploy
 desktop
 display
 download
-dump.exe
+dump
 dumper
 duplicate
 edit
@@ -46,8 +45,8 @@ restor
 result
 scanner
 security
-select.exe
-serv.exe
+select
+serv
 Server
 sfx
 sniff
@@ -58,10 +57,10 @@ test
 toggle
 token
 tool
-tracer.exe
+tracer
 twitter
 Update
 upgrade
 upload
-host.exe
-worker.exe
+host
+worker

@@ -154,6 +154,15 @@
                             <code>0x1000015</code>
                             <mode>keyboard</mode>
                         </slot>
+						<slot>
+                            <code>5100</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <path>[AMICRO]</path>
+                            <arguments>--show --qwindowgeometry 250x350+72+72</arguments>
+                            <mode>execute</mode>
+                        </slot>
                     </slots>
                 </dpadbutton>
                 <dpadbutton index="2">
