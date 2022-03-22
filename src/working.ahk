@@ -2523,6 +2523,7 @@ filedelete,%home%\simpth.db
 filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
+SPLIT_SRC:= SOURCE_DIRECTORY . "|" . XSRCADD
 Gui,Listview,MyListView
 guicontrolget,enablelogging,,enablelogging
 guicontrolget,NameChk,,NameChk

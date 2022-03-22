@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-03-22 2:19 PM
+RELEASE= 2022-03-22 3:35 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -2523,6 +2523,7 @@ filedelete,%home%\simpth.db
 filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
+SPLIT_SRC:= SOURCE_DIRECTORY . "|" . XSRCADD
 Gui,Listview,MyListView
 guicontrolget,enablelogging,,enablelogging
 guicontrolget,NameChk,,NameChk
