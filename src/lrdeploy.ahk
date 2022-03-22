@@ -831,7 +831,7 @@ if (!fileExist(BUILDIR)or(BUILDIR = ""))
 		iniwrite,%BUILDIR%,%home%\skopt.cfg,GLOBAL,Build_Directory
 	}
 guicontrol,,TxtBLD,%BUILDIR%
-iniwrite,%RJPRJCT%,%home%\skopt.cfg,GLOBAL,ProjectName
+iniwrite,%RJPRJCT%,%home%\skopt.cfg,GLOBAL,Project_Name
 SB_SetText(" The project " RJPRJCT " name has been set.")
 return
 
@@ -2128,7 +2128,7 @@ Loop, Read, %home%\skopt.cfg
 							UPDTFILE= %curlz%
 						}
 				}
-		if (curvl1 = "ProjectName")
+		if (curvl1 = "Project_Name")
 				{
 					if ((curlz <> "")&&(curlz <> "ERROR"))
 						{
@@ -2498,30 +2498,21 @@ if (GitPush = 1)
 				donation= 00.00				
 			}
 			
-		FileDelete, %SKELD%\!gitupdate.cmd
-		FileAppend, mkdir "%GITD%\site"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, mkdir "%GITD%\src"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, del /s /q "%GITD%\src\*.ini"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, del /s /q "%GITD%\src\*.txt"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "site\index.html" "%GITD%\site"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "src\*.ahk" "%GITD%\src"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "src\*.set" "%GITD%\src"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "src\*.ico" "%GITD%\src"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "ReadMe.md" "%GITD%"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "site\ReadMe.md" "%GITD%\site"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, copy /y "site\version.txt" "%GITD%\site"`n,%SKELD%\!gitupdate.cmd
-		FileAppend, del /q "%GITD%\jkvtx.exe"`n,%SKELD%\!gitupdate.cmd
-		FileSetAttrib, +h, %SKELD%\!gitupdate.cmd
-		SB_SetText(" Adding changes to git ")
-
-		SB_SetText(" committing changes to git ")
-		FileAppend, "%PushNotes%`n",%DEPL%\changelog.txt
-
-		SB_SetText(" Source changes committed.  Files Copied to git.  Committing...")
-		StringReplace,PushNotes,PushNotes,",,All
-		;"
-
-		SB_SetText(" source changes pushed to master ")
+		FileDelete, %DEPL%\!gitupdate.cmd
+		FileAppend, mkdir "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, mkdir "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, del /s /q "%GITD%\src\*.ini"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, del /s /q "%GITD%\src\*.txt"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "site\index.html" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "src\*.ahk" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "src\*.set" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "src\*.ico" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "ReadMe.md" "%GITD%"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "site\ReadMe.md" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "site\version.txt" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, del /q "%GITD%\jkvtx.exe"`n,%DEPL%\!gitupdate.cmd
+		FileSetAttrib, +h, %DEPL%\!gitupdate.cmd
+	
 		guicontrol,,progb,65
 	}
 if (BCANC = 1)
@@ -2667,7 +2658,14 @@ if (ServerPush = 1)
 			}
 		if (uptoserv = 1)
 			{
-				SB_SetText(" Uploading to server ")
+				RunWait, %comspec% cmd /c echo.##################  GIT COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
+				SB_SetText(" committing changes to git ")
+				RunWait, %comspec% cmd /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+				FileAppend, "%PushNotes%`n",%DEPL%\changelog.txt
+
+				SB_SetText(" Source changes committed.  Files Copied to git.")
+				StringReplace,PushNotes,PushNotes,",,All
+				;"
 				FileDelete, %DEPL%\sitecommit.bat
 				FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.bat
 				FileAppend,copy /y "%BUILDIR%\site\*.ico" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
@@ -2681,6 +2679,7 @@ if (ServerPush = 1)
 				FileAppend,copy /y "%BUILDIR%\site\version.txt" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
 				RunWait, %comspec% cmd /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 				RunWait, %comspec% cmd /c " "%DEPL%\sitecommit.bat" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+				SB_SetText(" Uploading to server ")
 				RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 			}
 
@@ -2732,6 +2731,7 @@ if (ServerPush = 1)
 			{
 				if (ServerPush = 1)
 					{	
+						FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
 						FileAppend,gh release delete portable -y`n,%DEPL%\gpush.cmd
 						FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip"`n,%DEPL%\gpush.cmd
 					}
@@ -2740,6 +2740,7 @@ if (ServerPush = 1)
 			{
 				if (ServerPush = 1)
 					{
+						FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
 						FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
 						FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
 					}

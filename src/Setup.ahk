@@ -4,8 +4,8 @@ SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
 
-RJPRJCT= 
-RELEASE= 2022-03-21 3:55 AM
+RJPRJCT= v0rt3X
+RELEASE= 2022-03-22 2:19 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -54,7 +54,7 @@ if ((plink = "") or !fileExist(plink) or (scextn = ""))
 		;filedelete,%home%\log.txt
 	}
 gosub, DDPOPS
-repopbut= hidden
+repopbut= hidden 
 fileread,unlike,%source%\unlike.set
 fileread,unselect,%source%\unsel.set
 fileread,absol,%source%\absol.set
@@ -370,7 +370,7 @@ Gui, Add, Text,  x64 y110 w222 h14  hidden disabled,<Application Directory>
 
 OnMessage(0x200, "WM_MOUSEMOVE")
 Gui, Add, StatusBar, x0 y546 w314 h28 vRJStatus, Status Bar
-Gui Show, w314 h624, _GUI
+Gui Show, w314 h624, v0rt3X_GUI
 
   
 SB_SetText("")
@@ -2459,6 +2459,10 @@ FileSelectFile,Gametoadd,35,,Select a Game,*.exe;*.lnk
 fullist.= GametoAdd . "|"
 FileGetSize,filez,%GameToAdd%
 splitpath,GameToAdd,filenm,filepath,fileext
+if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
+	{
+		XSRCADD.= filepath . "|"
+	}
 SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
 Gui,ListView,MyListView
 LV_Add(lvachk,FileNM, FileExt, FilePath,filez,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
@@ -2578,7 +2582,7 @@ if (namechk = 1)
 				sivk.= op . "|" . ge2 . "|" . "`n"
 			}		
 	}
-Loop,parse,SOURCE_DIRECTORY,|
+Loop,parse,SPLIT_SRC,|
 	{
 		SRCLOOP= %A_LoopField%
 		if (!fileexist(SRCLOOP)or(A_LoopField= ""))
@@ -2618,8 +2622,30 @@ Loop,parse,SOURCE_DIRECTORY,|
 						filez:= A_LoopFileSizeKB
 						splitpath,FileName,FileNM,FilePath,FileExt,filtn
 						splitpath,FilePath,filpn,filpdir,,filpjn
-						stringreplace,simpath,FilePath,%SRCLOOP%\,,
+						stringreplace,simpath,FilePath,%SRCLOOP%,,
+						if (simpth = "")
+							{
+								Loop,parse,filepath,\
+									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
+										simpth= %A_loopField%
+									}
+							}
 						stringreplace,trukpath,filpdir,%SRCLOOP%,,
+						if ((trukpath = "")or(trukpath = filpdir))
+							{
+								Loop,parse,filpdir,\
+									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
+										trukpath= %A_loopField%
+									}
+							}
 						splitpath,simpath,simpn,simpdir
 						splitpath,trukpath,truknm,farpth
 						splitpath,farpth,farnm,
@@ -2703,327 +2729,11 @@ Loop,parse,SOURCE_DIRECTORY,|
 						if ((namechk = 1)&&(lvachk <> ""))
 							{
 								splitpath,filename,exnm,exep,exet,exechk
-								stringreplace,exep,exep,%SRCLOOP%\,,
-								stringsplit,exep,exenj
-								exepN= %exep%
-								jpd:
-								stringreplace,exep,exep,\\,\,All
-								Loop,parse,exep,\
-									{
-										if (A_LoopField = "")
-											{
-												continue
-											}
-										din= %A_LoopField%							
-										Loop,parse,exclfls,`n`r
-											{
-												if (A_Loopfield = "")
-													{
-														continue
-													}
-												brk= |%din%|	
-												if (brk = A_LoopField)
-													{
-														njname=
-														stringreplace,vv,A_LoopField,|,,All
-														stringreplace,exep,exep,%vv%,,
-														goto,jpd
-													}
-											}	
-										Loop,parse,rabsol,`n`r
-											{
-												if (A_LoopField = "")
-													{
-														continue
-													}
-												if instr(din,A_LoopField)
-													{
-														njname=
-														stringreplace,exep,exep,%A_LoopField%,,
-														goto, jpd
-													}
-											}
-										Loop,parse,absol,`r`n
-											{
-												if (A_LoopField = "")
-													{
-														continue
-													}
-												if instr(din,A_LoopField)
-													{
-														njname=
-														stringreplace,exep,exep,%A_LoopField%,,
-														goto, jpd
-													}
-											}
-										stringreplace,ack,din,%A_Space%,,
-										stringreplace,ack,ack,_,,
-										stringreplace,ack,ack,.,,
-										stringreplace,execk,exep,.,,
-										stringreplace,execk,execk,_,,
-										stringreplace,execk,execk,%A_SPace%,,
-										if instr(ack,execk)
-											{
-												njName= %din%
-												exenj= %din%
-												break
-											}
-										if (njname = "")
-											{
-												njName= %din%
-											}	
-									}
-								redux:
-								nexenj=
-								mf=	
-								vmo= 
-								Loop,parse,rlspfx,|
-									{
-										if (A_LoopField = "")
-											{
-												continue
-											}
-										delim= %A_LoopField%
-										stringsplit,vm,njName,%delim%
-										Loop,%vm0%
-											{
-												nJnamex=
-												pkr:= % vm%A_Index%
-												ap:= regexmatch(pkr,"^v[0-9].*",tmp)
-												bp:= regexmatch(pkr,"^v-[0-9].*",tmp)
-												cp:= regexmatch(pkr,"^v [0-9].*",tmp)
-												hp:= regexmatch(pkr,"^v\.[0-9].*",tmp)
-												dp:= regexmatch(pkr,"^ver[0-9].*",tmp)
-												ep:= regexmatch(pkr,"^ver-[0-9].*",tmp)
-												fp:= regexmatch(pkr,"^ver [0-9].*",tmp)
-												gp:= regexmatch(pkr,"^ver\.[0-9].*",tmp)
-												ip:= regexmatch(pkr,"^version\.[0-9].*",tmp)
-												jp:= regexmatch(pkr,"^version[0-9].*",tmp)
-												kp:= regexmatch(pkr,"^version-[0-9].*",tmp)
-												lp:= regexmatch(pkr,"^version [0-9].*",tmp)
-												if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
-													{
-														mf= 1
-														Loop,%vm0%
-															{
-																srs:= % vm%A_Index%
-																if (srs = pkr)
-																	{
-																		vmo= 1
-																		if (A_Index = 1)
-																			{
-																				nJnameX= %njName%
-																			}
-																		break
-																	}
-																nJnamex.= srs . delim
-															}
-														nJname= %njNamex%	
-													}													
-												if (vmo = 1)
-													{
-														break
-													}
-											}
-										if (vmo = 1)
-											{
-												break
-											}
-										Loop,%vm0%
-											{
-												nJnamex= 
-												pkr:= % vm%A_Index%
-												ap:= regexmatch(pkr,"^Dev.*Build.*",tmp)
-												bp:= regexmatch(pkr,"^Build.*",tmp)
-												lp:= regexmatch(pkr,"^Build [0-9].*",tmp)
-												cp:= regexmatch(pkr,"^Release.*[0-9].*",tmp)
-												dp:= regexmatch(pkr,"^Debug.*[0-9].*",tmp)
-												ep:= regexmatch(pkr,"^Developer.*",tmp)
-												fp:= regexmatch(pkr,"^Rls\.[0-9].*",tmp)
-												gp:= regexmatch(pkr,"^Early.*",tmp)
-												hp:= regexmatch(pkr,"^Demo.*",tmp)
-												ip:= regexmatch(pkr,"^Alpha.*",tmp)
-												jp:= regexmatch(pkr,"^Pre.*Rel.*",tmp)
-												kp:= regexmatch(pkr,"^UPDATE.*",tmp)
-												if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
-													{
-														mf= 1
-														Loop,%vm0%
-															{
-																srs:= % vm%A_Index%
-																if (srs = pkr)
-																	{
-																		vmo= 1
-																		if (A_Index = 1)
-																			{
-																				nJnameX= %njName%
-																			}
-																		break
-																	}
-																nJnamex.= srs . delim
-															}
-														nJname= %njNamex%
-													}													
-												if (vmo = 1)
-													{
-														break
-													}
-											}
-										if (vmo = 1)
-											{
-												break
-											}
-									}
-							
-								jexenj=
-								loop,parse,RLSIFX,|
-									{
-										if (jexenj = "")
-											jexenj= %njname%
-										if instr(jexenj,A_LoopField)
-											{
-												stringreplace,nexenj,jexenj,%A_LoopField%,,
-												if ((nexenj <> jexenj)&&(nexenj <> ""))
-													{
-														njName= %nexenj%
-														break
-													}
-											}
-									}
-								if (nexenj = "")
-									{
-										nexenj= %njname%
-									}
-								
-								Loop,parse,rlsgrps,`n`r
-									{
-										if (A_LoopField = "")
-											{
-												continue
-											}
-										hh=	
-										rgg:= A_LoopField
-										stringlen,rgv,rgg
-										stringright,nv,njname,%rgv%
-										if (instr(njname,rgg)&&(nv = rgg))
-											{
-												Loop,parse,RLSPFX,|
-													{
-														if (A_LoopField = "")
-															{
-																continue
-															}
-														ccba:= A_LoopField . rgg
-														stringreplace,sexenj,njname,%ccba%,,
-														if (sexenj <> njname)
-															{
-																nJname= %sexenj%
-																hh= 1
-																break
-															}
-													}
-												if (hh = 1)
-													{
-														break
-													}
-											}
-									}
-								
-								stringreplace,njname,njname,_,%A_Space%,All	
-								str:= njname
-								StrReplace(str, A_Space,, scnt)
-								str:= njname
-								StrReplace(str, ".",, ncnt)
-								stringlen,kinm,str			
-								kivm:= (3 . ncnt ) + 1 
-								if ((ncnt > scnt) or (ncnt = scnt) && (njname > kivm))
-									{
-										stringreplace,njname,njname,.,%A_Space%,All
-									}
-								excn=|%njname%|
-								stringreplace,excn,excn,%A_Space%,,All
-								stringreplace,excn,excn,-,,All
-								stringreplace,excn,excn,.,,All
-								stringreplace,excn,excn,_,,All
-
-								
-								stringleft,rlschkn,njname,7
-								stringleft,dplychkn,njname,6
-								stringleft,winochkn,njname,5
-								stringleft,winychkn,njname,4
-								stringleft,winvchkn,njname,3
-								if ((rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dplychkn = "winx86")or(dplychkn = "vista")or(dplychkn = "winx64")or (winochkn = "win32")or(winochkn = "win64")or(winochkn = "win10")or(winochkn = "win95")or(winochkn = "win2k")or(winochkn = "winxp")or(winychkn = "win7")or(winychkn = "win8")or(winvchkn = "x86")or(winvchkn = "x64"))
-									{
-										splitpath,exepN,excn,jik,,njname										
-										if instr(exepN,".")
-											{
-												excn= %njname%
-												njname= %excn%
-											}
-										exepN= %jik%
-										goto, redux
-									}
-								stringreplace,exedp,njname,.,,All
-								stringreplace,exedp,exedp,%A_SPace%,,All
-								stringreplace,exedp,exedp,(,,All
-								stringreplace,exedp,exedp,),,All
-								stringreplace,exedp,exedp,-,,All
-								stringreplace,exedp,exedp,[,,All
-								stringreplace,exedp,exedp,],,All
-								stringreplace,exedp,exedp,{,,All
-								stringreplace,exedp,exedp,},,All
-								stringreplace,exedp,exedp,`,,All
-								stringreplace,exedp,exedp,+,All
-								stringreplace,exedp,exedp,',All
-								stringreplace,exedp,exedp,!,All
-								stringreplace,exedp,exedp,&,All
-								stringreplace,exedp,exedp,$,All
-								stringreplace,exedp,exedp,`%,,All
-								stringreplace,exedp,exedp,@,,All
-								stringreplace,exedp,exedp,;,,All
-								stringreplace,exedp,exedp,~,,All
-								stringreplace,exedp,exedp,#,,All
-								stringreplace,exedp,exedp,_,,All
-								bexp=\%exedp%|
-								xenjx=|%njname%|
-								if (instr(sivk,bexp)&& instr(sivk,xenjx))
-									{
-										Loop,parse,sivk,`n
-											{
-												stringsplit,bei,A_LoopField,|
-												if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
-													{
-														njName=%bei2%
-														break
-													}
-											}
-									}
-									else {
-										if (instr(sivk,bexp)&&(exedp <> ""))
-											{
-												Loop,parse,sivk,`n
-													{
-														stringsplit,bei,A_LoopField,|,
-														if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
-															{
-																njName=%bei2%
-																break
-															}
-													}
-											}
-									}
-							}
-						Loop,parse,RLSPFX,|
-							{
-								stringright,tbb,njname,1
-								if (tbb = A_LoopField)
-									{
-										stringtrimright,njname,njname,1
-									}
+								gosub, GETGOODNAME
 							}
 						SB_SetText("added " FileNM "")	
 						LV_Add(lvachk,FileNM, FileExt, FilePath, filez, njName,"y","<","<","<","y","<","<","<","<","y","y")
-						SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+						SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
 					}
 			}
 	}
@@ -3149,6 +2859,7 @@ Loop,parse,GUIVARS,|
 		guicontrol,disable,%A_LoopField%
 	}
 
+SPLIT_SRC:= SOURCE_DIRECTORY . "|" . XSRCADD
 fileread,cmdtpp,%home%\src\cmdtemplate.set
 guicontrolget,CREFLD,,CREFLD
 guicontrolget,ASADMIN,,ASADMIN
@@ -3162,7 +2873,7 @@ guicontrolget,INCLALTS,,INCLALTS
 guicontrolget,KILLCHK,,KILLCHK
 guicontrolget,Hide_Taskbar,,Hide_Taskbar
 guicontrolget,EnableLogging,,EnableLogging
-complist:= LVGetCheckedItems("SysListView321","_GUI")
+complist:= LVGetCheckedItems("SysListView321","v0rt3X_GUI")
 fullist= %complist%
 
 stringsplit,fullstn,fullist,|
@@ -3200,6 +2911,11 @@ Loop,%fullstn0%
 			stringsplit,prvn,przn,>/
 			prn= %prvn1%
 		}
+		stringlen,prt,prn
+		if (!fileexist(prn)or (prt < 6))
+			{
+				continue
+			}
 		kbmovr= %prvn2%
 		mmovr= %prvn6%
 		jlovr= %prvn9%
@@ -3234,865 +2950,658 @@ Loop,%fullstn0%
 			{
 				jbovr= %prvn10%
 			}
-		splitpath,prn,tmpn,tmpth,tmpxtn,gmnamex
-		Loop,parse,RLSPFX,|
+		fnd64=
+		fnd32=
+		getaplist=
+		splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
+		sx= 0
+		Loop,parse,SPLIT_SRC,|
 			{
-				prfx:= A_LoopField
-				Loop,parse,rlsgrps,`n`r
+				if (A_LoopField = "")
 					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						rlpfx= %prfx%%A_LoopField%	
-						stringreplace,gmnamex,gmnamex,%rlpfx%,,All	
+						continue
 					}
-				
+				if instr(prn,A_LoopField)
+					{
+						stringlen,tn,A_LoopField
+						if (tn > sx)
+							{
+								SRCLOOP= %A_LoopField%
+								sx= %tn%
+							}
+					}
 			}
-		
-		refname= %gmnamex%
-		if ((tmpxtn = "exe")or(tmpxtn = "bat")or(tmpxtn = "cmd")or(tmpxtn = "apk"))
+		if (nameOverride <> "")
 			{
-				fnd64=
-				fnd32=
-				getaplist=
-				splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
-				Loop,parse,RLSPFX,|
-					{
-						prfx:= A_LoopField
-						Loop,parse,rlsgrps,`n`r
-							{
-								if (A_LoopField = "")
-									{
-										continue
-									}
-								rlpfx= %prfx%%A_LoopField%	
-								stringreplace,gmnamex,gmnamex,%rlpfx%,,All	
-							}
-						
-					}
-				
-				OutRunState= 1
-				OutTarget= %prn%
-				OutDescription= %gmnamex%
-				ExeSN= %gmnamex%
-				gmnamer.= gmnamex . "|"
-				splitpath,outdir,gmnamed,curpth,outmpxtn
-				Loop,parse,RLSPFX,|
-					{
-						prfx:= A_LoopField
-						Loop,parse,rlsgrps,`n`r
-							{
-								if (A_LoopField = "")
-									{
-										continue
-									}
-								rlpfx= %prfx%%A_LoopField%	
-								stringreplace,outmpxtn,outmpxtn,%rlpfx%,,All	
-							}
-						
-					}
-				
-				Loop,parse,undirs,|
-					{
-						if (a_Loopfield = "")
-							{
-								continue
-							}
-						if (outdir = A_Loopfield)
-							{
-														 
-								outdir= %A_temp%\thin
-								filecreatedir,%outdir%
-								break
-							}
-					}
-				invar= %gmnamex%
+				gmnamed= %nameOverride%
+				goto, nameOVR
+			}
+		exep= %OutDir%	
+		gosub, GETGOODNAME
+		gmnamed= %njname%
+		nameOVR:	
+		invar= %gmnamed%
+		gosub, CleanVar
+		gmnamecm= %invarx%
+		invar= %gmnamex%
+		gosub, CleanVar
+		ExeSN= %invarx%
+		gmnamfcm= %invarx%
+		priority:= 0
+		if instr(gmnamecm,ExeSN)
+			{
+				priority:= 2
+			}
+		if instr(gmnamecm,gmnamfcm)
+			{
+				priority:= 4
+			}
+		if (gmnamfcm = gmnamecm)
+			{
+				priority:= 5
+			}
+		if (instr(gmnamex,"launch")or instr(gmnamex,"start"))
+			{
+				priority:= 6
+			}
+		SUBDCHK:
+		if instr(priorb,gmnamedx)
+			{
+				priority:= 7
+			}
+		if instr(priora,gmnamedx)
+			{
+				priority:= 10
+			}
+		Loop,parse,gfnamex,\
+			{
+				kinn= %A_LoopField%
+				invar= %kinn%
 				gosub, CleanVar
-				gmnamet= |%invarx%|
-				gmnamedx= |%gmnamet%|
-				if (instr(exclfls,gmnamedx)or instr(exclfls,gmnamex))
+				gmtnm= %invarx%
+				kivx= |%gmtnm%|
+				if instr(priorbb,kivx)
 					{
-						gmnamex= %gmnamex%!
-						  
+						priority+=1
 					}
-				gmname= %gmnamex%
-				cursrc=
-				Loop,parse,Source_directory,|
+				if instr(prioraa,kivx)
 					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						if instr(prn,A_LoopField)
-							{
-								cursrc= %A_LoopField%
-								break
-							}
-					}
-				PARENTSOURCE=
-				IF (cursrc = "")
-					{
-						PARENTSOURCE= 1
-						cursrc= %outdir%
-					}
-				tlevel= %outdir%
-				cursrp=|
-				stringreplace,undirs,undira,|%cursrc%|,,
-				Stringreplace,gfnamex,outdir,%cursrc%\,,All
-
-				realpth= \%gfnamex%\
-				invar= %realpth%
-				gosub,CleanVar
-				realpth= %invarx%
-				stringsplit,tdirn,gfnamex,\
-
-				topdirec= %tdirn1%
-
-				invar= %topdirec%
-				gosub, CleanVar
-				topdir= %invarx%
-				gmnamedv= %topdir%
-				stringlen,topln,topdir
-				chkpl= %cursrc%\%topdirec%
-				pthchk=
-				Loop,%fullstx0%
-					{
-						glt:= % fullstn%A_Index%
-						if instr(glt,chkpl)
-							{
-								pthchk.= glt . "|"
-							}
-					}
-				stringreplace,pthchk,pthchk,%cursrc%,\,All
-				exlist.= "?" . cursrc . "?" . "|"
-				ExtID := FileExt
-				IconNumber:= 0
-				redpth= %outdir%
-				exlthis= |%gmnamex%|
-				if instr(exclfls,gmnamedx)
-					{
-						gmnamex= %gmnamex%!
-						  
-					}
-				if (topdirec = gmnamed)
-					{
-						mattop= %gmnamedv%
-						invar= %gmnamed%
-						gosub, CleanVar
-						gmnamecm= %invarx%
-						goto, TOPFIN
-					}
-				topreduc=
-				gmnameo= %gmnamed%
-				TOPREDUC:
-				stringlen,gmat,gmnamed
-				gmat+=1
-				invar= %gmnamed%
-				gosub,CleanVar
-				gmnamedv= %invarx%
-				mattop= %gmnamedv%
-				gmnamedvx= |%gmnamedv%|
-				stringlen,mattlen,gmnamedv
-				stringleft,rlschkn,gmnamedv,7
-				stringleft,dplychkn,gmnamedv,6
-				stringleft,winochkn,gmnamedv,5
-				stringleft,winychkn,gmnamedv,4
-				stringleft,winvchkn,gmnamedv,3
-				if (instr(gmnamedv,gmnamed)&&(gmnamed <> gmnamedv)&&(mattlen > 5))
-					{
-						gmnamed= %gmnameo%
-					}
-				if (instr(exclfls,gmnamedvx)or (rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dplychkn = "winx86")or(dplychkn = "vista")or(dplychkn = "winx64")or (winochkn = "win32")or(winochkn = "win64")or(winochkn = "win10")or(winochkn = "win95")or(winochkn = "win2k")or(winochkn = "winxp")or(winychkn = "win7")or(winychkn = "win8")or(winvchkn = "x86")or(winvchkn = "x64"))
-					{
-						tmppath= %redpth%
-						splitpath,tmppath,gmnamek,curpthk
-						curpthn= |%curpth%|
-						curpthd= %curpth%\
-						if (instr(undirs,curpthn)&& !instr(undirs,curpthd))
-							{
-								tlevel= %redpth%
-								goto, topout
-							}
-						stringtrimright,gfnamek,gfnamex,%gmat%
-						if (gfnamek = "")
-							{
-								tlevel= %redpth%
-								goto, topout
-							}
-						gfnamex= %gfnamek%
-						redpth= %curpthk%
-						stringlen,gmat,gmnamek
-						gmat+=1
-						topreduc= 1
-						tlevel= %redpth%
-						invar= %gmnamek%
-						gosub, CleanVar
-						topdir= %invarx%
-						if (!instr(topdir,gmnamed)or(mattlen < 5))
-							{
-								gmnamed= %gmnamek%
-							}
-						goto, topreduc
-					}
-				TOPOUT:
-				
-				Loop,parse,RLSPFX,|
-					{
-						prfx:= A_LoopField
-						Loop,parse,rlsgrps,`n`r
-							{
-								if (A_LoopField = "")
-									{
-										continue
-									}
-								rlpfx= %prfx%%A_LoopField%	
-								stringreplace,gmnamed,gmnamed,%rlpfx%,,All	
-							}
-						
-					}																																   
-				invar= %gmnamed%
-				gosub, CleanVar
-				gmnamecm= %invarx%
-				TOPFIN:
-				invar= %gmnamex%
-				gosub, CleanVar
-				gmnamfcm= %invarx%
-				if (PARENTSOURCE = 1)
-					{
-						cursrc= %redpth%
-					}
-				stringlen,orilen,gmnamfcm
-				if (instr(topdir,mattop) && (mattlen > 5))
-					{
-						gmnamed= %topdirec%
-						gmnamedx= |%topdirec%|
-					}
-				if (instr(topdir,gmnamfcm) && (orilen > 5) && !instr(topdir,gmnamecm))
-					{
-						gmnamed= %topdirec%
-						gmnamedx= |%topdirec%|
-					}
-				if (nameOverride <> "")
-					{
-						gmnamed= %nameOverride%
-					}
-				priority:= 0
-				if (topdirec = gmnamed)
-					{
-						;goto, SUBDCHK
-					}
-				if instr(gmnamecm,ExeSN)
-					{
-						priority:= 2
-					}
-				if instr(gmnamecm,gmnamfcm)
-					{
-						priority:= 4
-					}
-				if (gmnamfcm = gmnamecm)
-					{
-						priority:= 5
-					}
-				if (instr(gmnamex,"launch")or instr(gmnamex,"start"))
-					{
-						priority:= 6
-					}
-				SUBDCHK:
-				if instr(priorb,gmnamedx)
-					{
-						priority:= 7
-					}
-				if instr(priora,gmnamedx)
-					{
-						priority:= 10
-					}
-				Loop,parse,gfnamex,\
-					{
-						kinn= %A_LoopField%
-						invar= %kinn%
-						gosub, CleanVar
-						gmtnm= %invarx%
-						kivx= |%gmtnm%|
+						priority+=3
 						if instr(priorbb,kivx)
 							{
-								priority+=1
+								priority+=-1
 							}
-						if instr(prioraa,kivx)
-							{
-								priority+=3
-								if instr(priorbb,kivx)
+							else {
+								Loop,parse,priorbb,|
 									{
-										priority+=-1
-									}
-									else {
-										Loop,parse,priorbb,|
+										if instr(gmnamex,A_LoopField)
 											{
-												if instr(gmnamex,A_LoopField)
-													{
-														priority+=-1
-														break
-													}
+												priority+=-1
+												break
 											}
 									}
 							}
-						if (instr(unlike,kinn)or instr(reduced,kinn))
-							{
-								priority+=-1
-							}
 					}
-				Loop,parse,reduced,|
+				if (instr(unlike,kinn)or instr(reduced,kinn))
 					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						if (instr(gfnamex,A_LoopField)or instr(gmnamex,A_LoopField))
-							{
-								priority+=-1
-								break
-							}
+						priority+=-1
 					}
-				Loop,parse,unlike,`r`n
+			}
+		Loop,parse,reduced,|
+			{
+				if (A_LoopField = "")
 					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						if (instr(refname,A_LoopField)or instr(gmnamex,A_LoopField))
-							{
-								priority+=-1
-								break
-							}
+						continue
 					}
-				posa= %gmnamed%
-				posb= |%gmnamed%|
-				stringsplit,expa,exlist,|
-				renum=
-				rn=
+				if (instr(gfnamex,A_LoopField)or instr(gmnamex,A_LoopField))
+					{
+						priority+=-1
+						break
+					}
+			}
+		Loop,parse,unlike,`r`n
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if (instr(refname,A_LoopField)or instr(gmnamex,A_LoopField))
+					{
+						priority+=-1
+						break
+					}
+			}
+		posa= %gmnamed%
+		posb= |%gmnamed%|
+		stringsplit,expa,exlist,|
+		renum=
+		rn=
+		fp=
+		tot:=-20
+		poscnt:= 0
+		if instr(exlist,posb)
+			{
+				rn= 1
 				fp=
-				tot:=-20
-				poscnt:= 0
-				if instr(exlist,posb)
+				nm=
+				Loop,%expa0%
 					{
-						rn= 1
-						fp=
-						nm=
-						Loop,%expa0%
+						fp= 0
+						fn:= A_Index + 1
+						fu:= % expa%A_index%
+						if (fu = "")
 							{
-								fp= 0
-								fn:= A_Index + 1
-								fu:= % expa%A_index%
-								if (fu = "")
+								continue
+							}
+						if (fu = posa)
+							{
+								poscnt+=1
+								fp:= % expa%fn%
+								if (fp > tot)
 									{
-										continue
-									}
-								if (fu = posa)
-									{
-										poscnt+=1
-										fp:= % expa%fn%
-										if (fp > tot)
-											{
-												tot:= fp
-											}
+										tot:= fp
 									}
 							}
-						if (priority >= tot)
-							{
-								renum= 1
-							}
 					}
-					else {
-					gmnamex= %gmnamed%
-					}
-				exlist.= posa . "|" . priority . "|"
-				subfldrep=
-				if (rn = 1)
+				if (priority >= tot)
 					{
-						poscntx:= poscnt + 1
-						if (poscnt > 0)
+						renum= 1
+					}
+			}
+			else {
+			gmnamex= %gmnamed%
+			}
+		exlist.= posa . "|" . priority . "|"
+		subfldrep=
+		if (rn = 1)
+			{
+				poscntx:= poscnt + 1
+				if (poscnt > 0)
+					{
+						Loop,12
 							{
-								Loop,12
+								GMMO%A_Index%:=
+							}
+						stringsplit,GMMO,gmnamed,%A_Space%_-([{}
+						if (GMMO3 = "")
+							{
+								stringleft,gmo,GMMO1,4
+								stringleft,gmb,GMMO2,3
+								stringupper,gmo,gmo,T
+								stringupper,gmb,gmb,T
+								gmname:= gmo . gmb
+							}
+						if (GMMO2 = "")
+							{
+								Stringleft,gmname,GMMO1,7
+								stringupper,gmname,gmname,T
+							}
+						if ((GMMO1 = "the") or (GMMO1 = "A")&&(GMMO4 = ""))
+							{
+								stringleft,INNSG,GMMO1,1
+								stringupper,INNSG,INNSG,T
+								stringleft,INNSJ,GMMO2,1
+								stringupper,INNSJ,INNSJ,T
+								stringleft,gmop,GMMO3,3
+								stringupper,gmop,gmop,T
+								gmname= INNSG . INNSJ . GMOP
+								if (gmop = "")
 									{
-										GMMO%A_Index%:=
+										stringleft,INNSK,GMMO2,3
+										stringupper,INNSK,INNSK,T
+										gmname:= .INNSG . INNSK
 									}
-								stringsplit,GMMO,gmnamed,%A_Space%_-([{}
-								if (GMMO3 = "")
+								if (INNSJ = "")
 									{
-										stringleft,gmo,GMMO1,4
-										stringleft,gmb,GMMO2,3
-										stringupper,gmo,gmo,T
-										stringupper,gmb,gmb,T
-										gmname:= gmo . gmb
-									}
-								if (GMMO2 = "")
-									{
-										Stringleft,gmname,GMMO1,7
-										stringupper,gmname,gmname,T
-									}
-								if ((GMMO1 = "the") or (GMMO1 = "A")&&(GMMO4 = ""))
-									{
-										stringleft,INNSG,GMMO1,1
-										stringupper,INNSG,INNSG,T
-										stringleft,INNSJ,GMMO2,1
-										stringupper,INNSJ,INNSJ,T
-										stringleft,gmop,GMMO3,3
-										stringupper,gmop,gmop,T
-										gmname= INNSG . INNSJ . GMOP
-										if (gmop = "")
-											{
-												stringleft,INNSK,GMMO2,3
-												stringupper,INNSK,INNSK,T
-												gmname:= .INNSG . INNSK
-											}
-										if (INNSJ = "")
-											{
-												Stringleft,SICRME,INNSJ,5
-												stringupper,SIRCME,SIRCME,T
-												gmname= %SICRME%
-											}
-									}
-								else {
-										stringleft,abegin,GMMO1,3
-										SIRCME= %abegin%
-										stringleft,amidl,GMMO2,3
-										SIRCAD= %amidl%
-										stringleft,amend,GMMO3,2
-										SIRCEND= %amend%
+										Stringleft,SICRME,INNSJ,5
 										stringupper,SIRCME,SIRCME,T
-										stringupper,SIRCAD,SIRCAD,T
-										stringupper,SIRCEND,SIRCEND,T
-										gmname:= SIRCME . SIRCAD . SIRCEND
-									}
- 								subnumbr:= poscnt
-								;subfldrep= %poscnt%_More\
-								subfldrep= alternates\
-								substfldrc= %poscnt%_More\%gmname%_[0%poscntx%]
-								if (INCLALTS = "")
-									{
-										gmnamex= %gmname%_[0%poscnt%]
+										gmname= %SICRME%
 									}
 							}
 						else {
-							subfldrep=
-							if (INCLALTS = "")
-								{
-									gmnamex= %gmnamed%
-								}
-						}
-					}
-				stringtrimright,subfldrepn,subfldrep,1
-				if (enablelogging = 1)
-					{
-						fileappend,%rn%==%subfldrep%%gmnamed%|%gmnamex%(%renum%):%tot%<!%priority%!`n,%home%\log.txt
-					}
-				sidn= %Game_Profiles%\%gmnameD%
-				if (Localize = 1)
-					{
-						sidn= %OUTDIR%
-					}
-				splitpath,sidn,sidnf,sidnpth
-				GMon= %subfldrep%%gmnamex%_GameMonitors.mon
-				DMon= %subfldrep%%gmnamex%_DesktopMonitors.mon
-				gamecfgn= %subfldrep%%gmnamex%.ini
-				if ((renum = 1)or(rn = ""))
-					{
-						FileCreateDir,%sidn%\alternates
-						subfldrep=
-						GMon= GameMonitors.mon
-						DMon= DesktopMonitors.mon
-						gamecfgn= Game.ini
-						gmnamex= %gmnamed%
-						FileMove,%sidn%\%gmnamed%.lnk,%sidn%\alternates\%gmnamed%_[0%poscntx%].lnk,1
-						FileMove,%sidn%\Game.ini,%sidn%\alternates\%gmnamed%_[0%poscntx%].ini,1
-						FileMove,%sidn%\*.xpadderprofile,%sidn%\alternates,1
-						FileMove,%sidn%\*.amgp,%sidn%\alternates,1
-						FileMove,%sidn%\*.cfg,%sidn%\alternates,1
-					}
-				gamecfg= %sidn%\%subfldrep%%gamecfgn%
-				if (CREFLD = 1)
-					{
-						FileCreateDir, %sidn%
-						if (subfldrep <> "")
+								stringleft,abegin,GMMO1,3
+								SIRCME= %abegin%
+								stringleft,amidl,GMMO2,3
+								SIRCAD= %amidl%
+								stringleft,amend,GMMO3,2
+								SIRCEND= %amend%
+								stringupper,SIRCME,SIRCME,T
+								stringupper,SIRCAD,SIRCAD,T
+								stringupper,SIRCEND,SIRCEND,T
+								gmname:= SIRCME . SIRCAD . SIRCEND
+							}
+						subnumbr:= poscnt
+						;subfldrep= %poscnt%_More\
+						subfldrep= alternates\
+						substfldrc= %poscnt%_More\%gmname%_[0%poscntx%]
+						if (INCLALTS = "")
 							{
-								FileCreateDir, %sidn%\%subfldrepn%
-								FileSetAttrib, +H, %sidn%\%Subfldrepn%
+								gmnamex= %gmname%_[0%poscnt%]
 							}
 					}
 				else {
-					if ((CREFLD = 0)&& !fileExist(sidn))
+					subfldrep=
+					if (INCLALTS = "")
 						{
-							continue
+							gmnamex= %gmnamed%
 						}
-					}
-				skip=
-				if (GMLNK = 1)
+				}
+			}
+		stringtrimright,subfldrepn,subfldrep,1
+		if (enablelogging = 1)
+			{
+				fileappend,%rn%==%subfldrep%%gmnamed%|%gmnamex%(%renum%):%tot%<!%priority%!`n,%home%\log.txt
+			}
+		sidn= %Game_Profiles%\%gmnameD%
+		if (Localize = 1)
+			{
+				sidn= %OUTDIR%
+			}
+		splitpath,sidn,sidnf,sidnpth
+		GMon= %subfldrep%%gmnamex%_GameMonitors.mon
+		DMon= %subfldrep%%gmnamex%_DesktopMonitors.mon
+		gamecfgn= %subfldrep%%gmnamex%.ini
+		if ((renum = 1)or(rn = ""))
+			{
+				FileCreateDir,%sidn%\alternates
+				subfldrep=
+				GMon= GameMonitors.mon
+				DMon= DesktopMonitors.mon
+				gamecfgn= Game.ini
+				gmnamex= %gmnamed%
+				FileMove,%sidn%\%gmnamed%.lnk,%sidn%\alternates\%gmnamed%_[0%poscntx%].lnk,1
+				FileMove,%sidn%\Game.ini,%sidn%\alternates\%gmnamed%_[0%poscntx%].ini,1
+				FileMove,%sidn%\*.xpadderprofile,%sidn%\alternates,1
+				FileMove,%sidn%\*.amgp,%sidn%\alternates,1
+				FileMove,%sidn%\*.cfg,%sidn%\alternates,1
+			}
+		gamecfg= %sidn%\%subfldrep%%gamecfgn%
+		if (CREFLD = 1)
+			{
+				FileCreateDir, %sidn%
+				if (subfldrep <> "")
 					{
-						prvv= %sidn%\%subfldrep%%gmnamex%.lnk
-						linktar= %GAME_Directory%\%gmnamex%
-						linktarget:= linktar . ".lnk"
-						linktargez:= linktar . ".cmd"
-						linkprox= %sidn%\%subfldrep%%gmnamex%
-						linkproxy:= linkprox . ".lnk"
-						linkproxz:= linkprox . ".cmd"
-						if ((OVERWRT = 1)&&(prnxtn = "lnk"))
+						FileCreateDir, %sidn%\%subfldrepn%
+						FileSetAttrib, +H, %sidn%\%Subfldrepn%
+					}
+			}
+		else {
+			if ((CREFLD = 0)&& !fileExist(sidn))
+				{
+					continue
+				}
+			}
+		skip=
+		if (GMLNK = 1)
+			{
+				OutRunState= 1
+				OutTarget= %prn%
+				refname= %gmnamex%
+				OutDescription= %gmnamex%
+				IconNumber:= 0
+				prvv= %sidn%\%subfldrep%%gmnamex%.lnk
+				linktar= %GAME_Directory%\%gmnamex%
+				linktarget:= linktar . ".lnk"
+				linktargez:= linktar . ".cmd"
+				linkprox= %sidn%\%subfldrep%%gmnamex%
+				linkproxy:= linkprox . ".lnk"
+				linkproxz:= linkprox . ".cmd"
+				if ((OVERWRT = 1)&&(prnxtn = "lnk"))
+					{
+						if (!fileexist(linkproxy) or (renum = 1))
 							{
-								if (!fileexist(linkproxy) or (renum = 1))
-									{
-										FileCreateShortcut,%prn%,%linkproxy%,%outdir%,%OutArgs%,%refname%, %OutTarget%,, %IconNumber%, %OutRunState%
-										Filecopy,%prvv%,%sidn%\%subfldrep%%gmnamed%._lnk_,%OVERWRT%
-									}
-								if (!fileexist(linktarget)or(renum = 1))
-									{
-										FileDelete,%linktarget%
-										FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
-									}
-							}
-						if (prnxtn = "exe")
-							{
-								OutArgs=
-								if ((OVERWRT = 1)or(renum = 1))
-								 	{
-										FileDelete,%linkproxy%
-									}
 								FileCreateShortcut,%prn%,%linkproxy%,%outdir%,%OutArgs%,%refname%, %OutTarget%,, %IconNumber%, %OutRunState%
-								if (renum = 1)
-									{
-										if fileexist(linktarget)
-											{
-												FileDelete,%linktarget%
-											}
-									}
-								if ((rn = "")or(renum = 1))
-									{
-										FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
-									}
-								if (!fileexist(linktarget)&&(renum = "")&&(SETALTSALL = 1))
-									{
-										FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
-									}
+								Filecopy,%prvv%,%sidn%\%subfldrep%%gmnamed%._lnk_,%OVERWRT%
 							}
-						if (ASADMIN = 1)
+						if (!fileexist(linktarget)or(renum = 1))
 							{
-								RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %linkproxy%, ~ RUNASADMIN
+								FileDelete,%linktarget%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
-                        if (GMCONF = 1)
-                            {
-								Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
-								if (pl1ovr <> "<")
-									{
-										Player1_Template= %pl1ovr%
-										splitpath,pl1ovr,pl1flnm
-									}
-                                Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
-								if (pl2ovr <> "<")
-									{
-										Player2_Template= %pl1ovr%
-										splitpath,pl2ovr,pl2flnm
-									}
-								SplitPath,MediaCenter_Profile_Template,MediaCenter_ProfileName	
-								MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_ProfileName%	
-                                cfgcopied=
-								if ((OVERWRT = 1)or !fileexist(gamecfg))
-                                    {
-										cfgcopied= 1
-										Filecopy,%RJDB_Config%,%gamecfg%,%OVERWRT%
-                                        if ((errorlevel <> 0)or fileexist(gamecfg))
-                                            {
-                                                fileread,gmcf,%gamecfg%
-                                                Loop,parse,gmcf,`n`r
-                                                    {
-                                                        stringleft,bb,A_LoopField,1
-                                                        if (bb = "[")
-                                                            {
-                                                                stringreplace,sect,A_LoopField,[,,
-                                                                stringreplace,section,sect,],,
-                                                                continue
-                                                            }
-                                                        stringsplit,an,A_LoopField,=
-                                                        stringreplace,vb,A_LoopField,%an1%=,,
-                                                        if ((vb <> "")&&(vb <> "ERROR"))
-                                                            {
-                                                                %an1%= %vb%
-                                                            }
-                                                    }
-                                            }
-                                    }
-                                fileread,amcf,%RJDB_CONFIG%
-                                Loop,parse,amcf,`n`r
-                                    {
-                                        stringleft,bb,A_LoopField,1
-                                        if (bb = "[")
-                                            {
-                                                stringreplace,sect,A_LoopField,[,,
-                                                stringreplace,section,sect,],,
-                                                continue
-                                            }
-                                        stringsplit,an,A_LoopField,=
-                                        stringreplace,vb,A_LoopField,%an1%=,,
-                                        if ((vb <> "")&&(vb <> "ERROR"))
-                                            {
-                                                krs:= % an1
-                                                if ((an1 = "Source_Directory") or (an1 = "Game_Profiles")or(an1 = "Game_Directory"))
-                                                    {
-														Continue
-                                                    }
-												if (instr(vb,"GameAudio.cmd")or instr(vb,"MediaCenterAudio.cmd")or instr(vb,"_!.cmd"))
-												  {
-														eb2= 
-														stringsplit,eb,vb,<
-														if (eb2 <> "")
-															{
-																splitpath,eb2,vb
-																eb1.= "<"
-															}
-															else {
-																	splitpath,eb1,vb
-																	eb1= 
-															}
-														%an1%= %vb%
-														filecopy,%home%\%vb%,%sidn%,%OVERWRT%
-                                                        if (OVERWRT = 1)
-                                                            {
-															  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
-															} 
-														CONTINUE
-												  }
-                                                if ((krs = "")&&!instr(an1,"template"))
-                                                    {
-                                                        %an1%= %vb%
-                                                        if (OVERWRT = 1)
-                                                            {
-                                                                iniwrite,%vb%,%gamecfg%,%section%,%an1%
-                                                            }
-                                                        else {
-                                                            iniread,vtmb,%gamecfg%,%section%,%an1%
-                                                            if ((vtmb = "ERROR")or(vtmb = ""))
-                                                                {
-                                                                    iniwrite,%vb%,%gamecfg%,%section%,%an1%
-                                                                }
-                                                        	}
-                                                    }
-                                            }
-                                    }
-								if ((OVERWRT = 1)or(cfgcopied = 1))
-									{
-										iniwrite, %sidn%,%gamecfg%,GENERAL,GAME_PROFILES
-										iniwrite, %outdir%,%gamecfg%,GENERAL,Source_Directory
-										iniwrite, %gamecfg%,%gamecfg%,GENERAL,RJDB_Config
-									}
-								DeskMon= %sidn%\%subfldrep%%DMon%
-								if ((dgovr <> "<")&&(dgovr <> ""))
-									{
-										DeskMon= %dgovr%
-									}
-                                if ((OVERWRT = 1))or (!fileexist(DeskMon)&& fileexist(MM_MediaCenter_Config))
-                                    {
-										filecopy, %MM_MediaCenter_Config%,%DeskMon%,%OVERWRT%
-										iniwrite,%DeskMon%,%gamecfg%,GENERAL,MM_MediaCenter_Config
-									}
-                                GameMon= %sidn%\%subfldrep%%GMon%
-								if ((mgovr <> "<")&&(mgovr <> ""))
-									{
-										GameMon= %mgovr%
-									}
-                                if ((OVERWRT = 1))or (!fileexist(GameMon)&& fileexist(MM_Game_Config))
-                                    {
-										filecopy, %MM_GAME_Config%,%GameMon%,%OVERWRT%
-										iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
-									}
-								GameProfs= %sidn%
-								iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
-								killist:
-								klist=%tmpn%|
-								if (KILLCHK = 1)
-									{
-																					   
-										Loop,files,%tlevel%\*.exe,R
-											{
-												splitpath,A_LoopFileFullPath,tmpfn,tmpfd,,tmpfo
-												abson=
-												Loop,parse,absol,`r`n
-													{
-														if (A_LoopField = "")
-															{
-																continue
-															}
-														if instr(tmpfo,A_LoopField)
-															{
-																abson= 1
-																continue
-															}
-													}
-												if (!instr(klist,A_LoopFileName)&&(abson = ""))
-													{
-														klist.= A_LoopFileName . "|"
-													}
-											}
-										iniread,nklist,%gamecfg%,CONFIG,exe_list
-										if ((nklist = "")or(nklist = "ERROR")or(OVERWRT = 1))
-											{
-												iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
-											}
-									}
-									
-                            }
 					}
-				if (GMJOY = 1)
+				if (prnxtn = "exe")
 					{
-						Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
-						if ((errorlevel = 0)or fileexist(player1X))
-							{
-								if (OVERWRT = 1)
-									{
-										iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
-									}
-								else {
-										iniread,pkt,%GAMECFG%,JOYSTICKS,Player1
-										if ((pkt = "ERROR")or(pkt = ""))
-											{
-												iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
-											}
-									}
-							}
-						if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
-							{
-								Filecopy,%Player2_Template%,%player2X%,%OVERWRT%
-								if ((errorlevel = 0)or fileexist(player2x))
-									{
-										if (OVERWRT = 1)
-											{
-												iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
-											}
-										else {
-												iniread,pkt2,%GAMECFG%,JOYSTICKS,Player2
-												if ((pkt2 = "ERROR")or(pkt2 = ""))
-													{
-														iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
-													}
-											}
-									}
-							}
-						Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
-						if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
-							{
-								if (OVERWRT = 1)
-									{
-										iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
-									}
-								else {
-										iniread,mktA,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
-										if ((mktA = "ERROR")or(mktA = ""))
-											{
-												iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
-											}
-									}
-							}	
-					}
-				if (GMLNK = 1)
-					{
-						newcmd= %linkproxz%
+						OutArgs=
 						if ((OVERWRT = 1)or(renum = 1))
 							{
-								MonitorMode=2
-								if ((mmovr = "n") or (mmovr ="0"))
-									{
-										MonitorMode=0
-										}
-								stringreplace,cmdtmp,cmdtpp,[MonitorMode],%MonitorMode%
-								stringreplace,cmdtmp,cmdtmp,[multimonitor_tool],%multimonitor_tool%
-								stringreplace,cmdtmp,cmdtmp,[Mapper],%mapper%
-								stringreplace,cmdtmp,cmdtmp,[GAME_EXE],%prn%
-								Loop,3
-									{
-										prea2= 
-										npre:= % %A_Index%_Pre
-										npst:= % %A_Index%_Post
-										stringsplit,prea,npre,<
-										%A_Index%_PreW=call
-										if (prea2 <> "")
-											{
-												if instr(prea1,"W")
-													{
-														%A_Index%_PreW= start /Wait ""
-													}
-												%A_Index%_Pre= %prea2%
-											}
-										prea2= 
-										stringsplit,prea,npst,<
-										%A_Index%_PostW=call
-										if (prea2 <> "")
-											{
-												if instr(prea1,"W")
-													{
-														%A_Index%_PostW= start /Wait ""
-													}
-												%A_Index%_Post= %prea2%
-											}
-										}
-								prea2=
-								stringsplit,prea,JustBeforeExit,<
-								JBEW=call
-								if (prea2 <> "")
-									{
-										if instr(prea1,"W")
-											{
-												JBEW= start /Wait ""
-											}
-										JustBeforeExit= %prea2%
-									}
-								prea2=
-								JALW=call
-								stringsplit,prea,JustAfterLaunch,<
-								if (prea2 <> "")
-									{
-										if instr(prea1,"W")
-											{
-												JALW= start /Wait ""
-											}
-										JustAfterLaunch= %prea2%
-									}
-								stringreplace,cmdtmp,cmdtmp,[1_Pre],%1_Pre%
-								stringreplace,cmdtmp,cmdtmp,[1_PreW],%1_PreW%
-								stringreplace,cmdtmp,cmdtmp,[2_Pre],%2_Pre%
-								stringreplace,cmdtmp,cmdtmp,[2_PreW],%2_PreW%
-								stringreplace,cmdtmp,cmdtmp,[3_Pre],%3_Pre%
-								stringreplace,cmdtmp,cmdtmp,[3_PreW],%3_PreW%
-								stringreplace,cmdtmp,cmdtmp,[3_PostW],%3_PostW%
-								stringreplace,cmdtmp,cmdtmp,[3_Post],%3_Post%
-								stringreplace,cmdtmp,cmdtmp,[2_Post],%2_Post%
-								stringreplace,cmdtmp,cmdtmp,[2_PostW],%2_PostW%
-								stringreplace,cmdtmp,cmdtmp,[1_Post],%1_Post%
-								stringreplace,cmdtmp,cmdtmp,[1_PostW],%1_PostW%
-								stringreplace,cmdtmp,cmdtmp,[JustBeforeExit],%JustBeforeExit%
-								stringreplace,cmdtmp,cmdtmp,[JBEW],%JBEW%
-								stringreplace,cmdtmp,cmdtmp,[JustAfterLaunch],%JustAfterLaunch%
-								stringreplace,cmdtmp,cmdtmp,[JALW],%JALW%
-								stringreplace,cmdtmp,cmdtmp,[exelist],%klist%
-								stringreplace,cmdtmp,cmdtmp,[MultiMonitor_tool],%MultiMonitor_Tool%
-								stringreplace,cmdtmp,cmdtmp,[keyboard_mapper],%keyboard_mapper%
-								stringreplace,cmdtmp,cmdtmp,[MM_Game_config],%GameMon%
-								stringreplace,cmdtmp,cmdtmp,[MM_MediaCenter_config],%DeskMon%
-								stringreplace,cmdtmp,cmdtmp,[MediaCenter_profile],%MediaCenter_ProfileX%
-								stringreplace,cmdtmp,cmdtmp,[Player1],%Player1x%
-								stringreplace,cmdtmp,cmdtmp,[Player2],%Player2x%
-								FileDelete,%linkproxz%
+								FileDelete,%linkproxy%
 							}
+						FileCreateShortcut,%prn%,%linkproxy%,%outdir%,%OutArgs%,%refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 						if (renum = 1)
 							{
-								if fileexist(linkproxz)
+								if fileexist(linktarget)
 									{
-										FileDelete,%linkproxz%
+										FileDelete,%linktarget%
 									}
 							}
 						if ((rn = "")or(renum = 1))
 							{
-								fileappend,%cmdtmp%,%linkproxz%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
-						if (!fileexist(linkproxz)&&(renum = "")&&(SETALTSALL = 1))
+						if (!fileexist(linktarget)&&(renum = "")&&(SETALTSALL = 1))
 							{
-								fileappend,%cmdtmp%,%linkproxz%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
+					}
+				if (ASADMIN = 1)
+					{
+						RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %linkproxy%, ~ RUNASADMIN
+					}
+				if (GMCONF = 1)
+					{
+						Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
+						if (pl1ovr <> "<")
+							{
+								Player1_Template= %pl1ovr%
+								splitpath,pl1ovr,pl1flnm
+							}
+						Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
+						if (pl2ovr <> "<")
+							{
+								Player2_Template= %pl1ovr%
+								splitpath,pl2ovr,pl2flnm
+							}
+						SplitPath,MediaCenter_Profile_Template,MediaCenter_ProfileName	
+						MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_ProfileName%	
+						cfgcopied=
+						if ((OVERWRT = 1)or !fileexist(gamecfg))
+							{
+								cfgcopied= 1
+								Filecopy,%RJDB_Config%,%gamecfg%,%OVERWRT%
+								if ((errorlevel <> 0)or fileexist(gamecfg))
+									{
+										fileread,gmcf,%gamecfg%
+										Loop,parse,gmcf,`n`r
+											{
+												stringleft,bb,A_LoopField,1
+												if (bb = "[")
+													{
+														stringreplace,sect,A_LoopField,[,,
+														stringreplace,section,sect,],,
+														continue
+													}
+												stringsplit,an,A_LoopField,=
+												stringreplace,vb,A_LoopField,%an1%=,,
+												if ((vb <> "")&&(vb <> "ERROR"))
+													{
+														%an1%= %vb%
+													}
+											}
+									}
+							}
+						fileread,amcf,%RJDB_CONFIG%
+						Loop,parse,amcf,`n`r
+							{
+								stringleft,bb,A_LoopField,1
+								if (bb = "[")
+									{
+										stringreplace,sect,A_LoopField,[,,
+										stringreplace,section,sect,],,
+										continue
+									}
+								stringsplit,an,A_LoopField,=
+								stringreplace,vb,A_LoopField,%an1%=,,
+								if ((vb <> "")&&(vb <> "ERROR"))
+									{
+										krs:= % an1
+										if ((an1 = "Source_Directory") or (an1 = "Game_Profiles")or(an1 = "Game_Directory"))
+											{
+												Continue
+											}
+										if (instr(vb,"GameAudio.cmd")or instr(vb,"MediaCenterAudio.cmd")or instr(vb,"_!.cmd"))
+										  {
+												eb2= 
+												stringsplit,eb,vb,<
+												if (eb2 <> "")
+													{
+														splitpath,eb2,vb
+														eb1.= "<"
+													}
+													else {
+															splitpath,eb1,vb
+															eb1= 
+													}
+												%an1%= %vb%
+												filecopy,%home%\%vb%,%sidn%,%OVERWRT%
+												if (OVERWRT = 1)
+													{
+													  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
+													} 
+												CONTINUE
+										  }
+										if ((krs = "")&&!instr(an1,"template"))
+											{
+												%an1%= %vb%
+												if (OVERWRT = 1)
+													{
+														iniwrite,%vb%,%gamecfg%,%section%,%an1%
+													}
+												else {
+													iniread,vtmb,%gamecfg%,%section%,%an1%
+													if ((vtmb = "ERROR")or(vtmb = ""))
+														{
+															iniwrite,%vb%,%gamecfg%,%section%,%an1%
+														}
+													}
+											}
+									}
+							}
+						if ((OVERWRT = 1)or(cfgcopied = 1))
+							{
+								iniwrite, %sidn%,%gamecfg%,GENERAL,GAME_PROFILES
+								iniwrite, %outdir%,%gamecfg%,GENERAL,Source_Directory
+								iniwrite, %gamecfg%,%gamecfg%,GENERAL,RJDB_Config
+							}
+						DeskMon= %sidn%\%subfldrep%%DMon%
+						if ((dgovr <> "<")&&(dgovr <> ""))
+							{
+								DeskMon= %dgovr%
+							}
+						if ((OVERWRT = 1))or (!fileexist(DeskMon)&& fileexist(MM_MediaCenter_Config))
+							{
+								filecopy, %MM_MediaCenter_Config%,%DeskMon%,%OVERWRT%
+								iniwrite,%DeskMon%,%gamecfg%,GENERAL,MM_MediaCenter_Config
+							}
+						GameMon= %sidn%\%subfldrep%%GMon%
+						if ((mgovr <> "<")&&(mgovr <> ""))
+							{
+								GameMon= %mgovr%
+							}
+						if ((OVERWRT = 1))or (!fileexist(GameMon)&& fileexist(MM_Game_Config))
+							{
+								filecopy, %MM_GAME_Config%,%GameMon%,%OVERWRT%
+								iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
+							}
+						GameProfs= %sidn%
+						iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
+						killist:
+						klist=%tmpn%|
+						if (KILLCHK = 1)
+							{										   
+								Loop,files,%tlevel%\*.exe,R
+									{
+										splitpath,A_LoopFileFullPath,tmpfn,tmpfd,,tmpfo
+										abson=
+										Loop,parse,absol,`r`n
+											{
+												if (A_LoopField = "")
+													{
+														continue
+													}
+												if instr(tmpfo,A_LoopField)
+													{
+														abson= 1
+														continue
+													}
+											}
+										if (!instr(klist,A_LoopFileName)&&(abson = ""))
+											{
+												klist.= A_LoopFileName . "|"
+											}
+									}
+								iniread,nklist,%gamecfg%,CONFIG,exe_list
+								if ((nklist = "")or(nklist = "ERROR")or(OVERWRT = 1))
+									{
+										iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
+									}
+							}
+							
+					}
+			}
+		if (GMJOY = 1)
+			{
+				Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
+				if ((errorlevel = 0)or fileexist(player1X))
+					{
+						if (OVERWRT = 1)
+							{
+								iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+							}
+						else {
+								iniread,pkt,%GAMECFG%,JOYSTICKS,Player1
+								if ((pkt = "ERROR")or(pkt = ""))
+									{
+										iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+									}
+							}
+					}
+				if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
+					{
+						Filecopy,%Player2_Template%,%player2X%,%OVERWRT%
+						if ((errorlevel = 0)or fileexist(player2x))
+							{
+								if (OVERWRT = 1)
+									{
+										iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+									}
+								else {
+										iniread,pkt2,%GAMECFG%,JOYSTICKS,Player2
+										if ((pkt2 = "ERROR")or(pkt2 = ""))
+											{
+												iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+											}
+									}
+							}
+					}
+				Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
+				if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
+					{
+						if (OVERWRT = 1)
+							{
+								iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+							}
+						else {
+								iniread,mktA,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+								if ((mktA = "ERROR")or(mktA = ""))
+									{
+										iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+									}
+							}
+					}	
+			}
+		if (GMLNK = 1)
+			{
+				newcmd= %linkproxz%
+				if ((OVERWRT = 1)or(renum = 1))
+					{
+						MonitorMode=2
+						if ((mmovr = "n") or (mmovr ="0"))
+							{
+								MonitorMode=0
+								}
+						stringreplace,cmdtmp,cmdtpp,[MonitorMode],%MonitorMode%
+						stringreplace,cmdtmp,cmdtmp,[multimonitor_tool],%multimonitor_tool%
+						stringreplace,cmdtmp,cmdtmp,[Mapper],%mapper%
+						stringreplace,cmdtmp,cmdtmp,[GAME_EXE],%prn%
+						Loop,3
+							{
+								prea2= 
+								npre:= % %A_Index%_Pre
+								npst:= % %A_Index%_Post
+								stringsplit,prea,npre,<
+								%A_Index%_PreW=call
+								if (prea2 <> "")
+									{
+										if instr(prea1,"W")
+											{
+												%A_Index%_PreW= start /Wait ""
+											}
+										%A_Index%_Pre= %prea2%
+									}
+								prea2= 
+								stringsplit,prea,npst,<
+								%A_Index%_PostW=call
+								if (prea2 <> "")
+									{
+										if instr(prea1,"W")
+											{
+												%A_Index%_PostW= start /Wait ""
+											}
+										%A_Index%_Post= %prea2%
+									}
+								}
+						prea2=
+						stringsplit,prea,JustBeforeExit,<
+						JBEW=call
+						if (prea2 <> "")
+							{
+								if instr(prea1,"W")
+									{
+										JBEW= start /Wait ""
+									}
+								JustBeforeExit= %prea2%
+							}
+						prea2=
+						JALW=call
+						stringsplit,prea,JustAfterLaunch,<
+						if (prea2 <> "")
+							{
+								if instr(prea1,"W")
+									{
+										JALW= start /Wait ""
+									}
+								JustAfterLaunch= %prea2%
+							}
+						stringreplace,cmdtmp,cmdtmp,[1_Pre],%1_Pre%
+						stringreplace,cmdtmp,cmdtmp,[1_PreW],%1_PreW%
+						stringreplace,cmdtmp,cmdtmp,[2_Pre],%2_Pre%
+						stringreplace,cmdtmp,cmdtmp,[2_PreW],%2_PreW%
+						stringreplace,cmdtmp,cmdtmp,[3_Pre],%3_Pre%
+						stringreplace,cmdtmp,cmdtmp,[3_PreW],%3_PreW%
+						stringreplace,cmdtmp,cmdtmp,[3_PostW],%3_PostW%
+						stringreplace,cmdtmp,cmdtmp,[3_Post],%3_Post%
+						stringreplace,cmdtmp,cmdtmp,[2_Post],%2_Post%
+						stringreplace,cmdtmp,cmdtmp,[2_PostW],%2_PostW%
+						stringreplace,cmdtmp,cmdtmp,[1_Post],%1_Post%
+						stringreplace,cmdtmp,cmdtmp,[1_PostW],%1_PostW%
+						stringreplace,cmdtmp,cmdtmp,[JustBeforeExit],%JustBeforeExit%
+						stringreplace,cmdtmp,cmdtmp,[JBEW],%JBEW%
+						stringreplace,cmdtmp,cmdtmp,[JustAfterLaunch],%JustAfterLaunch%
+						stringreplace,cmdtmp,cmdtmp,[JALW],%JALW%
+						stringreplace,cmdtmp,cmdtmp,[exelist],%klist%
+						stringreplace,cmdtmp,cmdtmp,[MultiMonitor_tool],%MultiMonitor_Tool%
+						stringreplace,cmdtmp,cmdtmp,[keyboard_mapper],%keyboard_mapper%
+						stringreplace,cmdtmp,cmdtmp,[MM_Game_config],%GameMon%
+						stringreplace,cmdtmp,cmdtmp,[MM_MediaCenter_config],%DeskMon%
+						stringreplace,cmdtmp,cmdtmp,[MediaCenter_profile],%MediaCenter_ProfileX%
+						stringreplace,cmdtmp,cmdtmp,[Player1],%Player1x%
+						stringreplace,cmdtmp,cmdtmp,[Player2],%Player2x%
+						FileDelete,%linkproxz%
+					}
+				if (renum = 1)
+					{
+						if fileexist(linkproxz)
+							{
+								FileDelete,%linkproxz%
+							}
+					}
+				if ((rn = "")or(renum = 1))
+					{
+						fileappend,%cmdtmp%,%linkproxz%
+					}
+				if (!fileexist(linkproxz)&&(renum = "")&&(SETALTSALL = 1))
+					{
+						fileappend,%cmdtmp%,%linkproxz%
 					}
 			}
 		if ((kbmovr = "n") or (kbmovr = "0") or (MAPPER = "") or (Mapper = 0))
@@ -4151,6 +3660,344 @@ stringreplace,invarx,invarx,],,All
 stringreplace,invarx,invarx,-,,All
 stringreplace,invarx,invarx,%A_Space%,,All
 return
+
+GETGOODNAME:
+stringreplace,exep,exep,%SRCLOOP%,,
+if (exep = "")
+	{
+		Loop,parse,srcloop,\
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				exep= %A_LoopField%
+			}
+	}
+exepN= %exep%
+jpd:
+stringreplace,exep,exep,\\,\,All
+tlevel= %SRCLOOP%\%exep%
+stringreplace,tlevel,tlevel,\\,\,All
+stringright,te,tlevel,1
+if (te = "\")
+	{
+		stringtrimright,tlevel,tlevel,1
+	}
+Loop,parse,exep,\
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		din= %A_LoopField%							
+		Loop,parse,exclfls,`n`r
+			{
+				if (A_Loopfield = "")
+					{
+						continue
+					}
+				brk= |%din%|	
+				if (brk = A_LoopField)
+					{
+						njname=
+						stringreplace,vv,A_LoopField,|,,All
+						stringreplace,exep,exep,%vv%,,
+						goto,jpd
+					}
+			}	
+		Loop,parse,rabsol,`n`r
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if instr(din,A_LoopField)
+					{
+						njname=
+						stringreplace,exep,exep,%A_LoopField%,,
+						goto, jpd
+					}
+			}
+		Loop,parse,absol,`r`n
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if instr(din,A_LoopField)
+					{
+						njname=
+						stringreplace,exep,exep,%A_LoopField%,,
+						goto, jpd
+					}
+			}
+		stringreplace,ack,din,%A_Space%,,
+		stringreplace,ack,ack,_,,
+		stringreplace,ack,ack,.,,
+		stringreplace,execk,exep,.,,
+		stringreplace,execk,execk,_,,
+		stringreplace,execk,execk,%A_SPace%,,
+		if instr(ack,execk)
+			{
+				njName= %din%
+				exenj= %din%
+				break
+			}
+		if (njname = "")
+			{
+				njName= %din%
+			}	
+	}
+redux:
+nexenj=
+mf=	
+vmo= 
+Loop,parse,rlspfx,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		delim= %A_LoopField%
+		stringsplit,vm,njName,%delim%
+		Loop,%vm0%
+			{
+				nJnamex=
+				pkr:= % vm%A_Index%
+				ap:= regexmatch(pkr,"^v[0-9].*",tmp)
+				bp:= regexmatch(pkr,"^v-[0-9].*",tmp)
+				cp:= regexmatch(pkr,"^v [0-9].*",tmp)
+				hp:= regexmatch(pkr,"^v\.[0-9].*",tmp)
+				dp:= regexmatch(pkr,"^ver[0-9].*",tmp)
+				ep:= regexmatch(pkr,"^ver-[0-9].*",tmp)
+				fp:= regexmatch(pkr,"^ver [0-9].*",tmp)
+				gp:= regexmatch(pkr,"^ver\.[0-9].*",tmp)
+				ip:= regexmatch(pkr,"^version\.[0-9].*",tmp)
+				jp:= regexmatch(pkr,"^version[0-9].*",tmp)
+				kp:= regexmatch(pkr,"^version-[0-9].*",tmp)
+				lp:= regexmatch(pkr,"^version [0-9].*",tmp)
+				if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+					{
+						mf= 1
+						Loop,%vm0%
+							{
+								srs:= % vm%A_Index%
+								if (srs = pkr)
+									{
+										vmo= 1
+										if (A_Index = 1)
+											{
+												nJnameX= %njName%
+											}
+										break
+									}
+								nJnamex.= srs . delim
+							}
+						nJname= %njNamex%	
+					}													
+				if (vmo = 1)
+					{
+						break
+					}
+			}
+		if (vmo = 1)
+			{
+				break
+			}
+		Loop,%vm0%
+			{
+				nJnamex= 
+				pkr:= % vm%A_Index%
+				ap:= regexmatch(pkr,"^Dev.*Build.*",tmp)
+				bp:= regexmatch(pkr,"^Build.*",tmp)
+				lp:= regexmatch(pkr,"^Build [0-9].*",tmp)
+				cp:= regexmatch(pkr,"^Release.*[0-9].*",tmp)
+				dp:= regexmatch(pkr,"^Debug.*[0-9].*",tmp)
+				ep:= regexmatch(pkr,"^Developer.*",tmp)
+				fp:= regexmatch(pkr,"^Rls\.[0-9].*",tmp)
+				gp:= regexmatch(pkr,"^Early.*",tmp)
+				hp:= regexmatch(pkr,"^Demo.*",tmp)
+				ip:= regexmatch(pkr,"^Alpha.*",tmp)
+				jp:= regexmatch(pkr,"^Pre.*Rel.*",tmp)
+				kp:= regexmatch(pkr,"^UPDATE.*",tmp)
+				if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+					{
+						mf= 1
+						Loop,%vm0%
+							{
+								srs:= % vm%A_Index%
+								if (srs = pkr)
+									{
+										vmo= 1
+										if (A_Index = 1)
+											{
+												nJnameX= %njName%
+											}
+										break
+									}
+								nJnamex.= srs . delim
+							}
+						nJname= %njNamex%
+					}													
+				if (vmo = 1)
+					{
+						break
+					}
+			}
+		if (vmo = 1)
+			{
+				break
+			}
+	}
+
+jexenj=
+loop,parse,RLSIFX,|
+	{
+		if (jexenj = "")
+			jexenj= %njname%
+		if instr(jexenj,A_LoopField)
+			{
+				stringreplace,nexenj,jexenj,%A_LoopField%,,
+				if ((nexenj <> jexenj)&&(nexenj <> ""))
+					{
+						njName= %nexenj%
+						break
+					}
+			}
+	}
+if (nexenj = "")
+	{
+		nexenj= %njname%
+	}
+
+Loop,parse,rlsgrps,`n`r
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		hh=	
+		rgg:= A_LoopField
+		stringlen,rgv,rgg
+		stringright,nv,njname,%rgv%
+		if (instr(njname,rgg)&&(nv = rgg))
+			{
+				Loop,parse,RLSPFX,|
+					{
+						if (A_LoopField = "")
+							{
+								continue
+							}
+						ccba:= A_LoopField . rgg
+						stringreplace,sexenj,njname,%ccba%,,
+						if (sexenj <> njname)
+							{
+								nJname= %sexenj%
+								hh= 1
+								break
+							}
+					}
+				if (hh = 1)
+					{
+						break
+					}
+			}
+	}
+
+stringreplace,njname,njname,_,%A_Space%,All	
+str:= njname
+StrReplace(str, A_Space,, scnt)
+str:= njname
+StrReplace(str, ".",, ncnt)
+stringlen,kinm,str			
+kivm:= (3 . ncnt ) + 1 
+if ((ncnt > scnt) or (ncnt = scnt) && (njname > kivm))
+	{
+		stringreplace,njname,njname,.,%A_Space%,All
+	}
+excn=|%njname%|
+stringreplace,excn,excn,%A_Space%,,All
+stringreplace,excn,excn,-,,All
+stringreplace,excn,excn,.,,All
+stringreplace,excn,excn,_,,All
+
+
+stringleft,rlschkn,njname,7
+stringleft,dplychkn,njname,6
+stringleft,winochkn,njname,5
+stringleft,winychkn,njname,4
+stringleft,winvchkn,njname,3
+if ((rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dplychkn = "winx86")or(dplychkn = "vista")or(dplychkn = "winx64")or (winochkn = "win32")or(winochkn = "win64")or(winochkn = "win10")or(winochkn = "win95")or(winochkn = "win2k")or(winochkn = "winxp")or(winychkn = "win7")or(winychkn = "win8")or(winvchkn = "x86")or(winvchkn = "x64"))
+	{
+		splitpath,exepN,excn,jik,,njname										
+		if instr(exepN,".")
+			{
+				excn= %njname%
+				njname= %excn%
+			}
+		exepN= %jik%
+		goto, redux
+	}
+stringreplace,exedp,njname,.,,All
+stringreplace,exedp,exedp,%A_SPace%,,All
+stringreplace,exedp,exedp,(,,All
+stringreplace,exedp,exedp,),,All
+stringreplace,exedp,exedp,-,,All
+stringreplace,exedp,exedp,[,,All
+stringreplace,exedp,exedp,],,All
+stringreplace,exedp,exedp,{,,All
+stringreplace,exedp,exedp,},,All
+stringreplace,exedp,exedp,`,,All
+stringreplace,exedp,exedp,+,All
+stringreplace,exedp,exedp,',All
+stringreplace,exedp,exedp,!,All
+stringreplace,exedp,exedp,&,All
+stringreplace,exedp,exedp,$,All
+stringreplace,exedp,exedp,`%,,All
+stringreplace,exedp,exedp,@,,All
+stringreplace,exedp,exedp,;,,All
+stringreplace,exedp,exedp,~,,All
+stringreplace,exedp,exedp,#,,All
+stringreplace,exedp,exedp,_,,All
+bexp=\%exedp%|
+xenjx=|%njname%|
+if (instr(sivk,bexp)&& instr(sivk,xenjx))
+	{
+		Loop,parse,sivk,`n
+			{
+				stringsplit,bei,A_LoopField,|
+				if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
+					{
+						njName=%bei2%
+						break
+					}
+			}
+	}
+	else {
+		if (instr(sivk,bexp)&&(exedp <> ""))
+			{
+				Loop,parse,sivk,`n
+					{
+						stringsplit,bei,A_LoopField,|,
+						if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
+							{
+								njName=%bei2%
+								break
+							}
+					}
+			}
+	}
+Loop,parse,RLSPFX,|
+	{
+		stringright,tbb,njname,1
+		if (tbb = A_LoopField)
+			{
+				stringtrimright,njname,njname,1
+			}
+	}	
+return
+
 Localize:
 gui,submit,NoHide
 guicontrolget,localize,,localize
