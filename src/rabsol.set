@@ -5,6 +5,10 @@ cache
 certif
 Copy (
 Copy of
+crackintro
+.crack.exe
+_crack.exe
+-crack.exe
 debug
 decoder.exe
 dialog
@@ -20,7 +24,7 @@ find.exe
 gs.exe
 head.exe
 helper.exe
-host.exe
+vshost.exe
 http
 inkey
 inst.
@@ -39,6 +43,7 @@ linux
 net.downloadhelper
 option.exe
 options.exe
+patcher
 plug-in
 plugin
 plugin-container

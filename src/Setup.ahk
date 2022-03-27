@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-03-22 3:35 PM
+RELEASE= 2022-03-26 9:46 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -923,6 +923,7 @@ Loop,7
 				iniwrite,0,%home%\tst.tmp,MONITOR%abn%,PositionX
 				iniwrite,0,%home%\tst.tmp,MONITOR%abn%,PositionY
 				iniwrite,0,%home%\tst.tmp,MONITOR%abn%,DisplayFrequency
+				inidelete,%home%\tst.tmp,MONITOR%abn%,Name
 			}
 		abn+=1
 	}
@@ -2405,6 +2406,12 @@ ifmsgbox,OK
            }
 SB_SetText("Monitor config saved")
     }
+abn= 0
+Loop,7
+	{
+		inidelete,%MM_Mediacenter_Config%,MONITOR%abn%,Name
+		abn+= 1
+	}
 guicontrol,,MM_MediaCenter_ConfigT,%MM_Mediacenter_Config%
 return
 
@@ -2605,12 +2612,18 @@ Loop,parse,SPLIT_SRC,|
 					}
 				loop, Files, %SRCLOOP%\*.%fsext%,FR
 					{
+						stmexcl= 	
 						Loop,parse,DIST_DIRECTORY,|
 							{
 								if instr(A_LoopFileLongPath,A_LoopField)
 									{
-										continue
+										break
+										stmexcl= 1
 									}
+							}
+						if (stmexcl = 1)
+							{
+								continue
 							}
 						stringright,rlxtn,A_LoopFileName,4
 						if (rlxtn <> ".exe")
@@ -3754,6 +3767,7 @@ redux:
 nexenj=
 mf=	
 vmo= 
+ap= 
 Loop,parse,rlspfx,|
 	{
 		if (A_LoopField = "")
@@ -3762,96 +3776,47 @@ Loop,parse,rlspfx,|
 			}
 		delim= %A_LoopField%
 		stringsplit,vm,njName,%delim%
+		vmind= %delim%
+		vmc= 
 		Loop,%vm0%
 			{
-				nJnamex=
+				vmc+=1
+			}
+		njnx= %njname%
+		Loop,%vm0%
+			{
+				vmnn=
 				pkr:= % vm%A_Index%
-				ap:= regexmatch(pkr,"^v[0-9].*",tmp)
-				bp:= regexmatch(pkr,"^v-[0-9].*",tmp)
-				cp:= regexmatch(pkr,"^v [0-9].*",tmp)
-				hp:= regexmatch(pkr,"^v\.[0-9].*",tmp)
-				dp:= regexmatch(pkr,"^ver[0-9].*",tmp)
-				ep:= regexmatch(pkr,"^ver-[0-9].*",tmp)
-				fp:= regexmatch(pkr,"^ver [0-9].*",tmp)
-				gp:= regexmatch(pkr,"^ver\.[0-9].*",tmp)
-				ip:= regexmatch(pkr,"^version\.[0-9].*",tmp)
-				jp:= regexmatch(pkr,"^version[0-9].*",tmp)
-				kp:= regexmatch(pkr,"^version-[0-9].*",tmp)
-				lp:= regexmatch(pkr,"^version [0-9].*",tmp)
-				if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
+				Loop, 20
 					{
-						mf= 1
-						Loop,%vm0%
+						if (A_Index = vmc)
 							{
-								srs:= % vm%A_Index%
-								if (srs = pkr)
-									{
-										vmo= 1
-										if (A_Index = 1)
-											{
-												nJnameX= %njName%
-											}
-										break
-									}
-								nJnamex.= srs . delim
+								vmind= 	
+								stringreplace,njnx,njnx,%pkr%,,
+								break
 							}
-						nJname= %njNamex%	
+						stringreplace,njnx,njnx,%pkr%%delim%,,
+						if (errorlevel =1 )
+							{
+								break
+							}
+					}
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",tmp)
+				if (ap = 1)
+					{
+						stringreplace,njname,njname,%vmind%%tmp%,,
+						break
 					}													
-				if (vmo = 1)
+				if (ap = 1)
 					{
 						break
 					}
 			}
-		if (vmo = 1)
-			{
-				break
-			}
-		Loop,%vm0%
-			{
-				nJnamex= 
-				pkr:= % vm%A_Index%
-				ap:= regexmatch(pkr,"^Dev.*Build.*",tmp)
-				bp:= regexmatch(pkr,"^Build.*",tmp)
-				lp:= regexmatch(pkr,"^Build [0-9].*",tmp)
-				cp:= regexmatch(pkr,"^Release.*[0-9].*",tmp)
-				dp:= regexmatch(pkr,"^Debug.*[0-9].*",tmp)
-				ep:= regexmatch(pkr,"^Developer.*",tmp)
-				fp:= regexmatch(pkr,"^Rls\.[0-9].*",tmp)
-				gp:= regexmatch(pkr,"^Early.*",tmp)
-				hp:= regexmatch(pkr,"^Demo.*",tmp)
-				ip:= regexmatch(pkr,"^Alpha.*",tmp)
-				jp:= regexmatch(pkr,"^Pre.*Rel.*",tmp)
-				kp:= regexmatch(pkr,"^UPDATE.*",tmp)
-				if ((ap = 1)or(bp = 1)or(cp = 1)or(dp = 1)or(ep = 1)or(fp = 1)or(gp = 1)or(hp = 1)or(ip = 1)or(jp = 1)or(kp = 1)or(lp = 1)or(mf = 1)&&(A_Index <> 1))
-					{
-						mf= 1
-						Loop,%vm0%
-							{
-								srs:= % vm%A_Index%
-								if (srs = pkr)
-									{
-										vmo= 1
-										if (A_Index = 1)
-											{
-												nJnameX= %njName%
-											}
-										break
-									}
-								nJnamex.= srs . delim
-							}
-						nJname= %njNamex%
-					}													
-				if (vmo = 1)
-					{
-						break
-					}
-			}
-		if (vmo = 1)
+		if (ap = 1)
 			{
 				break
 			}
 	}
-
 jexenj=
 loop,parse,RLSIFX,|
 	{
