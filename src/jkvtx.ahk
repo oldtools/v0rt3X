@@ -351,7 +351,11 @@ if (MonitorMode > 0)
 							}
 						if (monix2 = gkh1)
 							{
-								iniwrite,%gkh2%,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
+								iniread,tba,%MM_MEDIACENTER_Config%,MONITOR%ABN%,MonitorID
+								if (tba <> "ERROR")
+									{
+										iniwrite,%gkh2%,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
+									}
 							}
 					}
 				abn+=1	
