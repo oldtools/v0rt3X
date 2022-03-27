@@ -296,10 +296,9 @@ if (MonitorMode > 0)
 				stringsplit,abk,ebw7,\
 				dispn%miny%= %abk2%|%ebw7%
 			}
-		abn= 0
-		abx= 0
 		mon_sel=
-		miny=
+		abn= 0
+		monset=
 		Loop,7
 			{
 				iniread,monid,%MM_Game_Config%,MONITOR%ABN%,Monitorid
@@ -308,35 +307,55 @@ if (MonitorMode > 0)
 				iniread,wdth,%MM_Game_Config%,MONITOR%ABN%,Width
 				iniread,hght,%MM_Game_Config%,MONITOR%ABN%,Height
 				if ((bpp = 0)or(wdth = 0)or(hght = 0))
-					{
-						iniread,nmonid,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
-						stringsplit,nmonix,monid,\
-						Loop,7
-							{
-								ndspx:= % dispn%A_Index%
-								stringsplit,ngkh,ndspx,|
-								if (nmonix2 = ngkh1)
-									{
-										iniwrite,%ngkh2%,%MM_Mediacenter_Config%,MonitorID
-										break
-									}
-							}
-						abn+=1	
-						continue
-					}
-				vn= 0	
+						{
+							abn+=1	
+							continue
+						}
 				Loop,7
 					{
 						dspx:= % dispn%A_Index%
 						stringsplit,gkh,dspx,|
 						if (monix2 = gkh1)
 							{
-								iniwrite,%gkh2%,%MM_Game_Config%,MONITOR%ABN%,MonitorID
+								COREID= %monix2%
+								CORMON= %gkh2%
+								iniwrite,%CORMON%,%MM_Game_Config%,MONITOR%ABN%,MonitorID
+								monset=1
 								break
 							}
 					}
-				abn+=1
+				abn+=1	
+				if (monset = 1)
+					{
+						break
+					}
 			}
+		abn= 0
+		monset=
+		Loop,7
+			{
+				iniread,monid,%MM_MediaCenter_Config%,MONITOR%ABN%,Monitorid
+				stringsplit,monix,monid,\
+				if (monid = CORMON)
+					{
+						continue
+					}
+				stringsplit,monix,monid,\
+				Loop,7
+					{
+						dspx:= % dispn%A_Index%
+						stringsplit,gkh,dspx,|
+						if (monix2 = COREID)
+							{
+								continue
+							}
+						if (monix2 = gkh1)
+							{
+								iniwrite,%gkh2%,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
+							}
+					}
+				abn+=1	
+			}	
 		Tooltip,
 		WinGet, WindowList, List
 		Loop, %WindowList%
