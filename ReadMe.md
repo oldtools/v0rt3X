@@ -6,7 +6,7 @@ Games not installed through steam/gog/epic/origin/etc....
 ## Installation
 This Version:0.99.60.016
 
-This Build: 2022-03-26 9:46 PM
+This Build: 2022-03-27 4:26 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh

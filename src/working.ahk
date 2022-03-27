@@ -3429,7 +3429,7 @@ Loop,%fullstn0%
 						GameProfs= %sidn%
 						iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
 						killist:
-						klist=%tmpn%|
+						klist=%prnmx%|
 						if (KILLCHK = 1)
 							{										   
 								Loop,files,%tlevel%\*.exe,R

@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-03-26 9:46 PM
+RELEASE= 2022-03-27 4:26 AM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -3429,7 +3429,7 @@ Loop,%fullstn0%
 						GameProfs= %sidn%
 						iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
 						killist:
-						klist=%tmpn%|
+						klist=%prnmx%|
 						if (KILLCHK = 1)
 							{										   
 								Loop,files,%tlevel%\*.exe,R
