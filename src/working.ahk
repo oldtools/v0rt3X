@@ -808,7 +808,7 @@ filedelete,%alir%
 fileappend,echo off`n,%home%\%alir%
 RunWait, "%multimonitor_tool%" /saveconfig tst.tmp,%home%,hide
 RunWait, "%multimonitor_tool%" /scomma cr.tmp,%home%,hide
-fileappend,for /f "tokens=1`,6`,8`,11`,12`,13`,17`,19`,20 delims=`," `%`%a in ('type "%home%\cr.tmp"') do echo."`%`%~a|`%`%~b|`%`%~c|`%`%~d|`%`%~e|`%`%~f|`%`%~g|`%`%~h|`%`%~i|`%`%~j|`%`%~k" >>"%home%\cv.tmp",%home%\devlist.cmd
+fileappend,for /f "tokens=1`,6`,8`,11`,12`,13`,17`,19`,20 delims=`," `%`%a in ('type "%home%\cr.tmp"') do if "`%`%~a" NEQ "Resolution" echo."`%`%~a|`%`%~b|`%`%~c|`%`%~d|`%`%~e|`%`%~f|`%`%~g|`%`%~h|`%`%~i|`%`%~j|`%`%~k" >>"%home%\cv.tmp",%home%\devlist.cmd
 runwait,%alir%,,hide
 fileread,inff,%home%\cv.tmp
 filedelete,%alir%
@@ -816,7 +816,6 @@ filedelete,%home%\cr.tmp
 filedelete,%home%\cv.tmp
 vein= 
 miny=
-
 Loop,parse,inff,`n`r
 	{
 		if (A_LoopField = "")
@@ -824,12 +823,10 @@ Loop,parse,inff,`n`r
 				continue
 			}
 		miny+=1
-		if (miny = 1)
-			{
-				continue
-			}
 		stringsplit,ebw,A_LoopField,|
-		dispn%miny%= %ebw6%|%ebw7%
+		stringsplit,abk,ebw7,\
+		monclv= %ebk2%
+		dispn%miny%= %ebk2%|%ebw7%
 		Menu,addonz,Add,%ebw9%|%ebw6%|%ebw7%,XeinHC
 	}
 Menu, addonz, Show, x64 y354
@@ -837,6 +834,8 @@ return
 XeinHC:
 mondev= %A_ThisMenuItem%
 stringsplit,msp,mondev,|
+stringsplit,abk,msp3,\
+monclv= %abk2%
 abn= 0
 mon_sel=
 miny=
@@ -844,19 +843,19 @@ Loop,7
 	{
 		resadx= 
 		resady= 
-		iniread,moname,%home%\tst.tmp,MONITOR%abn%,Name
 		iniread,monid,%home%\tst.tmp,MONITOR%abn%,MonitorID
-		if ((moname = msp2)&&(monid = msp3))
+		stringsplit,monix,monid,\
+		if ((monid = msp3)&&(monix2 = monclv))
 			{
 				mon_sel=%abn%
 				Loop,parse,inff,`n`r
 					{
 						if (A_LoopField = "")
 							{
-							continue
+								continue
 							}
 						miny+=1	
-						if (instr(A_LoopField,msp2)&& instr(A_LoopField,msp3))
+						if (instr(A_LoopField,monix2)&& instr(A_LoopField,msp3))
 							{
 								Loop,20
 									{
@@ -913,9 +912,9 @@ iniwrite,0,%home%\tst.tmp,MONITOR%mon_sel%,PositionY
 abn= 0
 Loop,7
 	{
-		iniread,moname,%home%\tst.tmp,MONITOR%abn%,Name
 		iniread,monid,%home%\tst.tmp,MONITOR%abn%,MonitorID
-		if ((abn <> mon_sel)&&(moname <> "ERROR"))
+		stringsplit,monix,monid,\
+		if ((abn <> mon_sel)&&(monid <> "ERROR"))
 			{
 				iniwrite,0,%home%\tst.tmp,MONITOR%abn%,Width
 				iniwrite,0,%home%\tst.tmp,MONITOR%abn%,Height

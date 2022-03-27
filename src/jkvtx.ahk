@@ -269,6 +269,74 @@ return
 PRE_MON:
 if (MonitorMode > 0)
 	{
+		alir= %home%\devlist.cmd
+		filedelete,%home%\cv.tmp
+		filedelete,%home%\cr.tmp
+		filedelete,%home%\tst.tmp
+		filedelete,%alir%
+		fileappend,echo off`n,%home%\%alir%
+		RunWait, "%multimonitor_tool%" /saveconfig %home%\tst.tmp,%home%,hide
+		RunWait, "%multimonitor_tool%" /scomma %home%\cr.tmp,%home%,hide
+		fileappend,for /f "tokens=1`,6`,8`,11`,12`,13`,17`,19`,20 delims=`," `%`%a in ('type "%home%\cr.tmp"') do if "`%`%~a" NEQ "Resolution" echo."`%`%~a|`%`%~b|`%`%~c|`%`%~d|`%`%~e|`%`%~f|`%`%~g|`%`%~h|`%`%~i|`%`%~j|`%`%~k" >>"%home%\cv.tmp",%home%\devlist.cmd
+		runwait,%alir%,,hide
+		fileread,inff,%home%\cv.tmp
+		filedelete,%alir%
+		filedelete,%home%\cr.tmp
+		filedelete,%home%\cv.tmp
+		vein= 
+		miny=
+		Loop,parse,inff,`n`r
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				miny+=1
+				stringsplit,ebw,A_LoopField,|
+				stringsplit,abk,ebw7,\
+				dispn%miny%= %abk2%|%ebw7%
+			}
+		abn= 0
+		abx= 0
+		mon_sel=
+		miny=
+		Loop,7
+			{
+				iniread,monid,%MM_Game_Config%,MONITOR%ABN%,Monitorid
+				stringsplit,monix,monid,\
+				iniread,bpp,%MM_Game_Config%,MONITOR%ABN%,BitsperPixel
+				iniread,wdth,%MM_Game_Config%,MONITOR%ABN%,Width
+				iniread,hght,%MM_Game_Config%,MONITOR%ABN%,Height
+				if ((bpp = 0)or(wdth = 0)or(hght = 0))
+					{
+						iniread,nmonid,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
+						stringsplit,nmonix,monid,\
+						Loop,7
+							{
+								ndspx:= % dispn%A_Index%
+								stringsplit,ngkh,ndspx,|
+								if (nmonix2 = ngkh1)
+									{
+										iniwrite,%ngkh2%,%MM_Mediacenter_Config%,MonitorID
+										break
+									}
+							}
+						abn+=1	
+						continue
+					}
+				vn= 0	
+				Loop,7
+					{
+						dspx:= % dispn%A_Index%
+						stringsplit,gkh,dspx,|
+						if (monix2 = gkh1)
+							{
+								iniwrite,%gkh2%,%MM_Game_Config%,MONITOR%ABN%,MonitorID
+								break
+							}
+					}
+				abn+=1
+			}
 		Tooltip,
 		WinGet, WindowList, List
 		Loop, %WindowList%
