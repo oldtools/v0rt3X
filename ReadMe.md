@@ -4,7 +4,7 @@ Games not installed through steam/gog/epic/origin/etc....
 
 
 ## Installation
-This Version:0.99.60.021
+This Version:0.99.60.022
 
 This Build: 2022-03-27 12:42 PM
 

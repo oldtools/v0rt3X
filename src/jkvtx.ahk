@@ -298,46 +298,12 @@ if (MonitorMode > 0)
 			}
 		mon_sel=
 		abn= 0
-		monset=
 		Loop,7
 			{
 				iniread,monid,%MM_Game_Config%,MONITOR%ABN%,Monitorid
-				stringsplit,monix,monid,\
-				iniread,bpp,%MM_Game_Config%,MONITOR%ABN%,BitsperPixel
-				iniread,wdth,%MM_Game_Config%,MONITOR%ABN%,Width
-				iniread,hght,%MM_Game_Config%,MONITOR%ABN%,Height
-				if ((bpp = 0)or(wdth = 0)or(hght = 0))
-						{
-							abn+=1	
-							continue
-						}
-				Loop,7
+				if (monid = "ERROR")
 					{
-						dspx:= % dispn%A_Index%
-						stringsplit,gkh,dspx,|
-						if (monix2 = gkh1)
-							{
-								COREID= %monix2%
-								CORMON= %gkh2%
-								iniwrite,%CORMON%,%MM_Game_Config%,MONITOR%ABN%,MonitorID
-								monset=1
-								break
-							}
-					}
-				abn+=1	
-				if (monset = 1)
-					{
-						break
-					}
-			}
-		abn= 0
-		monset=
-		Loop,7
-			{
-				iniread,monid,%MM_MediaCenter_Config%,MONITOR%ABN%,Monitorid
-				stringsplit,monix,monid,\
-				if (monid = CORMON)
-					{
+						abn+=1
 						continue
 					}
 				stringsplit,monix,monid,\
@@ -345,17 +311,34 @@ if (MonitorMode > 0)
 					{
 						dspx:= % dispn%A_Index%
 						stringsplit,gkh,dspx,|
-						if (monix2 = COREID)
-							{
-								continue
-							}
 						if (monix2 = gkh1)
 							{
-								iniread,tba,%MM_MEDIACENTER_Config%,MONITOR%ABN%,MonitorID
-								if (tba <> "ERROR")
-									{
-										iniwrite,%gkh2%,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
-									}
+								iniwrite,%gkh2%,%MM_Game_Config%,MONITOR%ABN%,MonitorID
+								inidelete,%MM_Game_Config%,MONITOR%ABN%,Name
+								break
+							}
+					}
+				abn+=1	
+			}
+		abn= 0
+		Loop,7
+			{
+				iniread,monid,%MM_MediaCenter_Config%,MONITOR%ABN%,Monitorid
+				if (monid = "ERROR")
+					{
+						abn+=1
+						continue
+					}
+				stringsplit,monix,monid,\
+				Loop,7
+					{
+						dspx:= % dispn%A_Index%
+						stringsplit,gkh,dspx,|
+						if (monix2 = gkh1)
+							{
+								iniwrite,%gkh2%,%MM_MediaCenter_Config%,MONITOR%ABN%,MonitorID
+								inidelete,%MM_MediaCenter_Config%,MONITOR%ABN%,Name
+								break
 							}
 					}
 				abn+=1	

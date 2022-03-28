@@ -3869,7 +3869,6 @@ Loop,parse,rlsgrps,`n`r
 					}
 			}
 	}
-
 stringreplace,njname,njname,_,%A_Space%,All	
 str:= njname
 StrReplace(str, A_Space,, scnt)
