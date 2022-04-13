@@ -1,0 +1,12 @@
+set pro1=%1%
+set ProX=%2%
+set ProG=%3%
+
+start "" "[JOYXO]" -close
+start "" "[JOYXO]"
+start /wait "" "[JOYXO]" -import -srcpath %pro1% -all
+start /wait "" "[JOYXO]" -add -procpath %proX% -procname %ProG%
+start "" "[JOYXO]" -close
+start "" "[JOYXO]"
+
+ 

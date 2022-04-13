@@ -51,6 +51,7 @@ if fileexist(scpini)
 	{
 		inif= %scpini%
 	}
+ProgramFilesX86 := A_ProgramFiles . (A_PtrSize=8 ? " (x86)" : "")	
 READINI:
 sect= GENERAL|JOYSTICKS
 Loop,parse,sect,|
@@ -75,7 +76,42 @@ Loop,parse,sect,|
 					}
 			}
 	}
-	
+if fileexist(Install_Directory . "\" . Exe_file)
+	{
+		gamepath= %Install_Directory%\%Exe_file%
+	}
+if (gamepath = "")
+	{
+		FileGetShortcut,%plink%,gamepath,,,gamealtpth
+		if instr(gamepath,"jkvtx")
+			{
+				gamepvm=%gamealtpath%
+				if instr(gamepvm,A_Space . "")
+					{
+						splitpath,gmsx,gamepvm,%A_Space%
+						Loop,%gmsx0%
+							{
+								jjh:= % A_Index
+								if instr(jjh,":")
+									{
+										stringreplace,gamepvm,gamepvm,%jjh%,,	
+										gamepvm.= %gamealtpath%
+										break
+									}
+								stringreplace,gamepvm,gamepvm,%jjh%,,	
+							}
+					}
+				if instr(gamepvm,"" . A_Space)
+					{
+						stringreplace,gamepvm,gamepvm,"%A_Space%,,All   
+						;"
+					}	
+				if fileexist(gamepvm)
+					{
+						gamepath= %gamepvm%
+					}
+			}
+	}
 if (MULTIMONITOR_TOOL <> "")
 	{
 		splitpath,multimonitor_tool,mmtof,mmpath
@@ -127,8 +163,16 @@ Loop,parse,rjtgl,`n`r
 					}
 			}
 	}
-
-
+/*	
+if (Run_Options = "")
+	{
+		Run_Options:= A_Space
+	}
+if (Run_Arguments = "")
+	{
+		Run_Arguments:= A_Space
+	}
+*/
 Loop,10
 	{
 		kvl:= A_Index + 1
@@ -164,12 +208,27 @@ if (scextn = "lnk")
 		if (plarg <> "")
 			{
 				plarg:= A_Space . plarg
-				LinkOptions= 
-			}	
+				/*
+				if (Run_Options <> A_Space)
+					{
+						LinkOptions.= Run_Options . A_Space
+					}
+				if (Run_Arguments <> A_Space)
+					{
+						plarg.= A_Space . Run_Arguments
+					}
+				*/	
+			}
 	}
 	else {
 		plfp= %plink%
 		splitpath,plfp,,pldr,,plfname
+		/*
+		if (Run_Arguments <> A_Space)
+			{
+				plarg:= A_Space . Run_Arguments
+			}
+		*/	
 	}
 splitpath,plfp,pfilef,pfdir,plxtn,plnkn
 tempn= %gmname%	
@@ -242,6 +301,10 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		if (instr(prestk1,"H")&& (runhow = ""))
+			{
+				runhow= hide
+			}	
 		if fileexist(prestk2)
 			{
 				if instr(prestk1,"W")
@@ -394,7 +457,10 @@ if (jalprog <> "")
 						runhow= Max
 					}
 			}
-		
+		if (instr(prestk1,"H")&& (runhow = ""))
+			{
+				runhow= hide
+			}
 		if fileexist(prestk2)
 			{
 				if instr(presA,"0")
@@ -431,6 +497,10 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		if (instr(prestk1,"H")&& (runhow = ""))
+			{
+				runhow= hide
+			}	
 		if fileexist(prestk2)
 			{
 				if instr(prestk1,"W")
@@ -504,6 +574,16 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				splitpath,antimicro_executable,mapperxn,mapperp
 				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
 				process,close,%mapperxn%
+				sleep,600
+			}
+		if (JMap = "JoyXoff")
+			{
+				splitpath,JoyXoff_executable,mapperxn,mapperp
+				Run, %comspec% "%JoyXoff_executable%" -close,%mapperp%,hide
+				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				process,close,%mapperxn%
+				player2t:= A_Space . "" . gamepath . ""
+				player3t:= A_Space . "" . gmname . ""
 				sleep,600
 			}
 		ToolTip, %joycnt% Joysticks found
@@ -589,7 +669,11 @@ if (prestk2 <> "")
 					}
 			}
 		if fileexist(prestk2)
-			{
+			{	
+				if (instr(prestk1,"H")&& (runhow = ""))
+					{
+						runhow= hide
+					}
 				if instr(prestk1,"W")
 					{
 						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,precpid
@@ -611,7 +695,9 @@ if (nrx > 2)
 	}
 Blockinput, Off	
 ToolTip,
-Run, %plfp%%linkoptions%%plarg%,%pldr%,max UseErrorLevel,dcls
+tvi= %plfp%%linkoptions%%plarg%
+gosub,TransformVarInput
+Run, %tvo%,%pldr%,max UseErrorLevel,dcls
 nerlv= %errorlevel%
 Tooltip,
 Process, Exist, %bgmexe%
@@ -805,6 +891,10 @@ if (prestk2 <> "")
 			}
 		if fileexist(prestk2)
 			{
+				if (instr(prestk1,"H")&& (runhow = ""))
+					{
+						runhow= hide
+					}
 				if instr(prestk1,"W")
 					{
 						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,postapid
@@ -853,6 +943,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 					else {
 						MEDIACENTER_PROFILE_N= %GAME_PROFILES%\%MEDIACENTER_Profilen%_%JoyCount%.%Mapper_Extension%
 						if (JMap = "antimicro")
+							{
+								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
+								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . ""				
+							}
+						if (JMap = "JoyXoff")
 							{
 								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
 								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . ""				
@@ -947,6 +1042,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
 													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
 												}		
+											if (JMap = "JoyXoff")
+												{
+													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
+													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
+												}		
 											if (JMap = "xpadder")
 												{
 													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
@@ -973,6 +1073,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 											mcmnm= %pl1pth%\MediaCenter_%P_LoopInd%.%mapper_extension%
 										}
 									if (JMap = "antimicro")
+										{
+											mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
+											mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
+										}		
+									if (JMap = "JoyXoff")
 										{
 											mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
 											mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
@@ -1078,6 +1183,11 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		
+		if (instr(prestk1,"H")&& (runhow = ""))
+			{
+				runhow= hide
+			}		
 		if fileexist(prestk2)
 			{
 				if instr(prestk1,"W")
@@ -1156,6 +1266,10 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		if (instr(prestk1,"H")&& (runhow = ""))
+			{
+				runhow= hide
+			}	
 		if fileexist(prestk2)
 			{
 				if instr(prestk1,"W")
@@ -1213,9 +1327,19 @@ if (instr(bgm,GMGDBCHK)&& fileexist(Borderless_Gaming_Program))or (instr(bgm,gmn
 return
 
 
-
-
-
+TransformVarInput:
+stringreplace,tvo,tvi,#!#,|,All
+stringreplace,tvo,tvo,{GamePath},%Install_Directory%,All
+stringreplace,tvo,tvo,{GameExe},%Exe_File%,All
+stringreplace,tvo,tvo,{ProfileDir},%scpath%,All
+stringreplace,tvo,tvo,`%programfiles`%,%A_ProgramFiles%,All
+stringreplace,tvo,tvo,`%programfilesx86`%,%ProgramFilesx86%,All
+stringreplace,tvo,tvo,`%username`%,%A_Username%,All
+stringreplace,tvo,tvo,`%Windir`%,%A_Windir%,All
+stringreplace,tvo,tvo,`%appdata`%,%A_AppData%,All
+stringreplace,tvo,tvo,`%programdata`%,%A_AppDatacommon%,All
+stringreplace,tvo,tvo,`%temp`%,%A_Temp%,All
+return
 
 ;;#####################################################################
 AltKey:

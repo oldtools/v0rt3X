@@ -68,9 +68,11 @@ fileread,exclfls,%source%\exclfnms.set
 fileread,rlsgrps,%source%\rlsgrps.set
 ;filextns= exe|lnk
 filextns= exe
+SPCFIX= .|-|_
 RLSPFX= .|-|(|[|_|%A_Space%|
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
-remotebins= _BorderlessGaming_|_Antimicro_|_JoyToKey_|_Xpadder_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
+MAPCFGS= Antimicro|AntimicroX|JoyToKey|Xpadder|JoyXoff
+remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff__MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|script|nocd|Tool|trainer|
@@ -93,13 +95,21 @@ STDVARS= SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
+ascinumerate=!|#|$|@|`%|&|(|)|[|]|{|}|'|;
+alphanumiterate=a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
+chariterate=%ascrinumerate%|%alphanumerate%
+Loop,parse,chariterate,|
+	{
+		uv_%A_Index%= %A_LoopField%
+	}
 ifnotexist,%home%\RJDB.ini
 	{
 		ASADMIN= 1
 		gosub,INITALL
-		gosub,INITJTK
-		gosub,INITXPD
-		gosub,INITAMIC
+		Loop,parse,MAPCFGS,|
+			{
+				gosub, INIT%A_LoopField%
+			}
 		gosub,MM_AUTO
 	}
 gosub, popgui
@@ -178,6 +188,7 @@ Loop,files,%binhome%\*.exe,F
 Menu,RCLButton,Add,Reset ,ResetButs
 Menu,AddProgs,Add,Download,DownloadAddons
 Menu,UCLButton,Add,Download,DownloadButs
+Menu,UCLButton,Add,RESET,CfgInstMprs
 Menu,UCLButton,Add,Disable ,DisableButs
 Menu,DCLButton,Add,Delete ,DeleteButs
 Menu,UPDButton,Add,Update,UpdateRJLR
@@ -192,7 +203,7 @@ Gui, Add, Button, x565 y12 w14 h14 disabled,X
 Gui, Font, Bold
 Gui, Add, Button, x590 y8 vButtonCreate gButtonCreate hidden disabled,CREATE
 Gui, Font, Normal
-Gui, Add, ListView, r44 x310 y35 h560 w340 -Readonly vMyListView gMyListView hwndHLV1 AltSubmit Checked hidden,Name|Type|Directory/Location|Size (KB)|Name Override|KBM|P1|P2|McP|MMT|GM|DM|JAL|JBE|Pre|Pst
+Gui, Add, ListView, r44 x310 y35 h560 w340 -Readonly vMyListView gMyListView hwndHLV1 AltSubmit Checked hidden,Name|Directory/Location|Opt /s|Arg /s|Name Override|KBM|P1|P2|McP|MMT|GM|DM|JAL|JBE|Pre|Pst
 
 LV_ModifyCol(3, "Integer") 
 
@@ -205,6 +216,7 @@ LV_SetImageList(ImageListID1)
 LV_SetImageList(ImageListID2)
 
 Menu, MyContextMenu, Add, Open in Explorer, ContextOpenFile
+Menu, MyContextMenu, Add, Add CLI opts/args, AddCLI
 Menu, MyContextMenu, Add, Toggle KBM, ContextProperties
 Menu, MyContextMenu, Add, Assign Player1 Template, ContextProperties
 Menu, MyContextMenu, Add, Assign Player2 Template, ContextProperties
@@ -403,8 +415,8 @@ OVERWRT_TT :="overwrite and recreate settings"
 UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values"
 Game_ProfB_TT :="Sets the directory where profiles will be created"
 GAME_ProfilesT_TT :="the profiles directory"
-Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/xpadder/joytokey)"
-KBM_RC_TT :="disable or download and assign a supported keymapper`n(antimicro/xpadder/joytokey)"
+Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
+KBM_RC_TT :="disable or download and assign a supported keymapper`n(antimicro/JoyXoff/xpadder/...)"
 Keyboard_MapperT_TT :="the current keyboard mapper`n(supported mappers are auto-scripted '~_!.cmd')"
 Player1_TempB_TT :="sets the keymapper's configuration-template file for Player 1"
 Player1_TemplateT_TT :="the keymapper's configuration-template  for Player 1"
@@ -624,49 +636,14 @@ return
 
 Keyboard_MapB:
 gui,submit,nohide
+mapovr=
 kbmdefloc= %home%
 xpadtmp=
 Antimtmp=
 jtktmp=
-if fileexist(Programfilesx86 . "\" . "joytokey" . "\" . "joytokey.exe")
-	{
-		kbmdefloc= %programfilesx86%\joytokey
-		jtktmp= %kbmdefloc%\joytokey.exe
-		iniwrite,%jtktmp%,%RJDB_Config%,JOYSTICKS,joytokey_executable
-	}
-if fileexist(Programfilesx86 . "\" . "Xpadder" . "\" . "Xpadder.exe")
-	{
-		kbmdefloc= %programfilesx86%\Xpadder
-		Xpadtmp= %kbmdefloc%\Xpadder.exe
-		iniwrite,%Xpadtmp%,%RJDB_Config%,JOYSTICKS,XPADDER_executable
-	}
-if fileexist(Programfilesx86 . "\" . "Antimicro" . "\" . "Antimicro.exe")
-	{
-		kbmdefloc= %programfilesx86%\Antimicro
-		Antimtmp= %kbmdefloc%\antimicro.exe
-		iniwrite,%Antimtmp%,%RJDB_Config%,JOYSTICKS,antimicro_executable
-	}
-if fileexist(binhome . "\" . "Xpadder" . "\" . "Xpadder.exe")
-	{
-		kbmdefloc= %binhome%\Xpadder
-		Xpadtmp= %kbmdefloc%\Xpadder.exe
-		iniwrite,%Xpadtmp%,%RJDB_Config%,JOYSTICKS,XPADDER_executable
-	}
-if fileexist(binhome . "\" . "JoyToKey" . "\" . "JoyToKey.exe")
-	{
-		kbmdefloc= %binhome%\JoyToKey
-		jtktmp= %kbmdefloc%\JoyToKey.exe
-		iniwrite,%jtktmp%,%RJDB_Config%,JOYSTICKS,joytokey_executable
-}
-if fileexist(binhome . "\" . "Antimicro" . "\" . "Antimicro.exe")
-	{
-		kbmdefloc= %binhome%\Antimicro
-		Antimtmp= %kbmdefloc%\antimicro.exe
-		iniwrite,%Antimtmp%,%RJDB_Config%,JOYSTICKS,antimicro_executable
-}
 if (dchk = "")
 	{
-		FileSelectFile,kbmpprt,35,%kbmdefloc%,Select File,xpadder.exe; antimicro.exe; JoyToKey.exe
+		FileSelectFile,kbmpprt,35,%kbmdefloc%,Select File,xpadder.exe; antimicro.exe; JoyToKey.exe; JoyXoff.exe; DS4Windows.exe; rewasd.exe; antimicrox.exe
 		;
 	}
 if ((kbmpprt <> "")&& !instr(kbmpprt,"<"))
@@ -677,30 +654,32 @@ if ((kbmpprt <> "")&& !instr(kbmpprt,"<"))
 		guicontrol,,Keyboard_MapperT,
 		return
 	}
+prglp= %ProgramFiles%|%Programfilesx86%|%binhome%
+Loop,parse,MAPCFGS,|
+	{
+		gnm= %A_LoopField%
+		abb:= % %gnm%_executable
+		if (abb = "")
+			{
+				lkgn= %gnm%\%gnm%.exe
+				Loop,prglp,|
+					{
+						if fileexist(A_LoopField . "\" . lkgn)
+							{
+								kbmdefloc= %A_LoopField%\%gnm%
+								gnmte= %kbmdefloc%\%gnm%.exe
+								iniwrite,%gnmte%,%RJDB_Config%,JOYSTICKS,%gnm%_executable
+							}
+					}
+			}
+	}
 Mapper=
-if ((antimicro_executable = Antimtmp)&& !fileexist(antimicro_executable))
+Loop,parse,MAPCFGS,|
 	{
-		antimicro_executable= %Antimtmp%
-	}
-if ((joytokey_executable = jtktmp)&& !fileexist(joytk_executable))
-	{
-		joytokey_executable= %jtktmp%
-	}
-if ((xpadder_executable = xpadtmp)&& !fileexist(xpadder_executable))
-	{
-		xpadder_executable= %Xpadtmp%
-	}
-if instr(kbmpprt,"JoyToKey")
-	{
-		gosub, INITJTK
-	}
-if instr(kbmpprt,"Xpadder")
-	{
-		gosub, INITXPD
-	}
-if instr(kbmpprt,"Antimicro")
-	{
-		gosub, INITAMIC
+		if instr(kbmpprt,A_LoopField)
+			{
+				gosub, INIT%A_LoopField%
+			}
 	}
 guicontrol,,keyboard_MapperT,%keyboard_Mapper%
 tooltip,
@@ -768,7 +747,7 @@ if (butrclick = "POSTAPP")
 				guicontrol,disable,%A_LoopField%
 			}
 		filedelete,%home%\MediaCenterAudio.cmd	
-		fileappend,"%binhome%\soundvolumeView.exe" %ADMNV%/setDefault "%sndvice%" all`nexit /b`n,%home%\MediaCenterAudio.cmd
+		fileappend,start "" "%binhome%\soundvolumeView.exe" %ADMNV%/setDefault "%sndvice%" all`n`nexit /b`n,%home%\MediaCenterAudio.cmd
 		gosub,DeviceReturn
 		POSTAPPF= %home%\MediaCenterAudio.cmd
 		gosub, POSTAPP
@@ -782,7 +761,7 @@ if (butrclick = "PREAPP")
 			}
 		gosub,DeviceReturn
 		filedelete,%home%\GameAudio.cmd
-		fileappend,"%binhome%\soundvolumeView.exe" %ADMNV%/setDefault "%sndvice%" all`nexit /b`n,%home%\GameAudio.cmd
+		fileappend,start "" "%binhome%\soundvolumeView.exe" %ADMNV%/setDefault "%sndvice%" all`n`nexit /b`n,%home%\GameAudio.cmd
 		PREAPPF= %home%\GameAudio.cmd
 		gosub, PREAPP
 	}
@@ -1335,6 +1314,10 @@ if (Postwait = 1)
 	{
 		Postwl= W
 	}
+if instr(POSTAPPF,"audio.cmd")
+	{
+		Postwl.= "H"
+	}
 iniread,inn,%RJDB_CONFIG%,CONFIG,%fbdnum%_Post
 if (inn = A_SPace)
 	{
@@ -1386,6 +1369,10 @@ prewl=
 if (prewait = 1)
 	{
 		prewl= W
+	}
+if instr(PREAPPF,"audio.cmd")
+	{
+		prewl.= "H"
 	}
 iniread,inn,%RJDB_CONFIG%,CONFIG,%fbdnum%_Pre
 if (inn = A_SPace)
@@ -1777,8 +1764,10 @@ ifMsgbox,Yes
     {
         gosub,INITALL
         resetting= 1
+        filedelete,%home%\AntimicroX_!.cmd
         filedelete,%home%\Antimicro_!.cmd
         filedelete,%home%\xpadder_!.cmd
+        filedelete,%home%\joyXoff_!.cmd
         filedelete,%home%\joytokey_!.cmd
         filedelete,%home%\MediaCenter.xpadderprofile
         filedelete,%home%\MediaCenter2.xpadderprofile
@@ -1823,8 +1812,9 @@ else {
 	SB_SetText("no log exists")
 }
 return
+WRITEMAPR:
 
-INITAMIC:
+INITANTIMICRO:
 Mapper= 1
 prf= am
 JMAP= antimicro
@@ -1833,7 +1823,8 @@ mapper_extension= gamecontroller.amgp
 goto,KEYMAPSET
 return
 
-INITXPD:
+
+INITXPADDER:
 Mapper= 2
 prf= xp
 JMAP= Xpadder
@@ -1843,7 +1834,7 @@ goto,KEYMAPSET
 return
 
 
-INITJTK:
+INITJOYTOKEY:
 Mapper= 3
 prf= jk
 JMAP= JoyToKey
@@ -1852,6 +1843,23 @@ mapper_extension= cfg
 goto,KEYMAPSET
 return
 
+INITJOYXOFF:
+Mapper= 4
+prf= of
+JMAP= JoyXoff
+%JMAP%_executable=%kbmpprt%
+mapper_extension= joyx
+goto,KEYMAPSET
+return
+
+INITANTIMICROX:
+Mapper= 5
+prf= ax
+JMAP= antimicrox
+%JMAP%_executable=%kbmpprt%
+mapper_extension= gamecontroller.amgp
+goto,KEYMAPSET
+return
 KEYMAPSET:
 if (kbmpprt = "")
 	{
@@ -1884,6 +1892,7 @@ if (kbmpprt = "")
 	}
 if (kbmpprt <> "")
 	{
+		tmpx:= % %JMAP%_executable
 		oskloc= %binhome%\NewOSK.exe
 		stringreplace,osklok,oskloc,\,/,All
 		fileread,jtktmp,%source%\%prf%_Trigger.set
@@ -1898,18 +1907,22 @@ if (kbmpprt <> "")
 		FileDelete,%Player1_Template%
 		FileDelete,%Player2_Template%
 		FileDelete,%MediaCenter_Profile_Template%
+		stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 		stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
 		stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
+		stringreplace,amcb,amcb,[AMICRX],%kbmpprt%,All
 		stringreplace,amcb,amcb,[AMICRO],%kbmpprt%,All
 		stringreplace,amcp,amcp,[NEWOSK],%osklok%,All
+		stringreplace,amcp,amcp,[AMICRX],%antimicrox_executable%,All
 		stringreplace,amcp,amcp,[AMICRO],%antimicro_executable%,All
 		stringreplace,amcd,amcd,[NEWOSK],%osklok%,All
+		stringreplace,amcd,amcd,[AMICRX],%antimicrox_executable%,All
 		stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
 		FileAppend,%amcb%,%home%\%JMAP%_!.cmd
 		FileAppend,%amcp%,%Player1_Template%
 		FileAppend,%amcp%,%Player2_Template%
 		FileAppend,%amcd%,%MediaCenter_Profile_Template%
-		iniwrite,%JMAP%,%RJDB_Config%,GENERAL,JMAP
+		iniwrite,%JMAP%,%RJDB_Config%,JOYSTICKS,JMAP
 		iniwrite,%Mapper%,%RJDB_Config%,GENERAL,Mapper
 		iniwrite,%Mapper_Extension%,%RJDB_Config%,JOYSTICKS,Mapper_Extension
 		iniwrite,%kbmpprt%,%RJDB_Config%,JOYSTICKS,%JMAP%_executable
@@ -2469,9 +2482,9 @@ if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
 	{
 		XSRCADD.= filepath . "|"
 	}
-SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+SOURCEDLIST.= FileNM . "|" . FilePath . "|" . FileOpts . "|" . FileArgs . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
 Gui,ListView,MyListView
-LV_Add(lvachk,FileNM, FileExt, FilePath,filez,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
+LV_Add(lvachk,FileNM, FilePath, FileOpts, FileArgs,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
 LV_ModifyCol()
 return
 
@@ -2561,6 +2574,7 @@ if (BOTHSRCH = 1)
 	}
 lvachk= +Check
 fullist=
+/*(
 if (SOURCEDLIST <> "")
 	{
 		Loop,parse,SOURCEDLIST,`n
@@ -2568,10 +2582,11 @@ if (SOURCEDLIST <> "")
 				stringsplit,rni,A_LoopField,|
 
 				LV_Add(lvachk,rni1, rni2, rni3,  rni4, A_Space,"y", "<", "<","<","y","<","<","<","<","y","y")
-				fullist.= rni3 . "\" . rni1 . "|"
+				fullist.= rni2 . "\" . rni1 . "|"
 			}
 		goto,REPOP
 	}
+*/
 SOURCEDLIST=
 FileDelete,%home%\simpth.db
 sivk=
@@ -2607,7 +2622,7 @@ Loop,parse,SPLIT_SRC,|
 				VarSetCapacity(sfi, sfi_size)
 				Loop,files,%SRCLOOP%\*,D
 					{
-						allfld.= A_LoopFileFullPath . "|"
+						allfld.= A_LoopFileLongPath . "|"
 					}
 				loop, Files, %SRCLOOP%\*.%fsext%,FR
 					{
@@ -2631,9 +2646,10 @@ Loop,parse,SPLIT_SRC,|
 							}
 						excl=
 						lvachk= +Check
-						FileName := A_LoopFileFullPath
+						FileName := A_LoopFileLongPath
 						filez:= A_LoopFileSizeKB
 						splitpath,FileName,FileNM,FilePath,FileExt,filtn
+						FilePPUT=%FilePath%
 						splitpath,FilePath,filpn,filpdir,,filpjn
 						stringreplace,simpath,FilePath,%SRCLOOP%,,
 						if (simpth = "")
@@ -2659,6 +2675,12 @@ Loop,parse,SPLIT_SRC,|
 										trukpath= %A_loopField%
 									}
 							}
+						stringsplit,smjk,simpath,\	
+						rootn= %smjk1%
+						if (rootn = "")
+							{
+								rootn= %smjk2%
+							}
 						splitpath,simpath,simpn,simpdir
 						splitpath,trukpath,truknm,farpth
 						splitpath,farpth,farnm,
@@ -2672,7 +2694,7 @@ Loop,parse,SPLIT_SRC,|
 									}
 								if instr(FileNM,A_LoopField)
 									{
-										omitd.= filenm . "|" . "|" . simploc . "`n"
+										omitd.= filenm . "|" . simploc . "|"  . "`n"
 										excl= 1
 										break
 									}
@@ -2709,7 +2731,8 @@ Loop,parse,SPLIT_SRC,|
 									}
 								stringlen,hh,A_LoopField
 								stringright,an,filtn,%hh%
-								if (an = A_LoopField)
+								stringLeft,az,filtn,%hh%
+								if ((an = A_LoopField) or (az = A_LoopField) && !instr(rootn,A_LoopField))
 									{
 										lvachk=
 										simpnk.= FileName . "`n"
@@ -2723,19 +2746,35 @@ Loop,parse,SPLIT_SRC,|
 									{
 										continue
 									}
-								stringlen,hh,A_LoopField
-								stringright,an,filtn,%hh%
-								if (an = A_LoopField)
+								prbn= %A_LoopField%
+								if (instr(filtn,prbn)or instr(rootn,prbn))
 									{
-										lvachk=
-										simpnk.= FileName . "`n"
-										fileappend,%FileName%`n,%home%\simpth.db
+										continue
+									}
+								smf=
+								Loop,parse,simpath,\
+									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
+										if instr(A_LoopField,prbn)
+											{
+												lvachk=
+												simpnk.= FileName . "`n"
+												fileappend,%FileName%`n,%home%\simpth.db
+												smf= 1
+												break
+											}
+									}
+								if (smf = 1)
+									{
 										goto,Chkcon
 									}
 							}
 						if (lvachk <> "")
 							{
-								fullist.= A_LoopFileFullPath . "|"
+								fullist.= A_LoopFileLongPath . "|"
 							}
 						Chkcon:
 						njName= 
@@ -2743,10 +2782,13 @@ Loop,parse,SPLIT_SRC,|
 							{
 								splitpath,filename,exnm,exep,exet,exechk
 								gosub, GETGOODNAME
+								FilePPUT= %FilePath%
 							}
+						FileOpts:= A_SPace
+						FileArgs:= A_SPace
 						SB_SetText("added " FileNM "")	
-						LV_Add(lvachk,FileNM, FileExt, FilePath, filez, njName,"y","<","<","<","y","<","<","<","<","y","y")
-						SOURCEDLIST.= FileNM . "|" . FileExt . "|" . FilePath . "|" . filez . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
+						LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y")
+						SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
 					}
 			}
 	}
@@ -2781,14 +2823,15 @@ Loop,parse,simpnk,`r`n
 								rplt= %fenum1%\%fenum2%
 							}
 						stringreplace,jtst,fltsmp,%rplt%,,UseErrorLevel
+						vd=
 						if (errorlevel = 0)
 							{
 								if (enablelogging = 1)
 									{
 										fileappend,%fenx%|`n,%home%\log.txt
 									}
-								LV_Add(lvachk,fenf, fenxtn, fendir, 0, A_Space,"y","<","<","<","y","<","<","<","<","y","y")
-								SOURCEDLIST.= fenf . "|" . fenxtn . "|" fendir . "|" . 0 . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+								LV_Add(lvachk,fenf, fendir, ,, A_Space,"y","<","<","<","y","<","<","<","<","y","y")
+								SOURCEDLIST.= fenf . "|" . fendir . "|" . vd . "|" . vd . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
 								fullist.= fenx . "|"
 								break
 							}
@@ -2806,9 +2849,9 @@ Guicontrol,Show,SELNONEBUT
 
 GuiControl, +Redraw, MyListView 
 LV_ModifyCol(1, 140) 
-LV_ModifyCol(2, 40) 
-LV_ModifyCol(3, 130) 
-LV_ModifyCol(4, 60) 
+LV_ModifyCol(2, 140) 
+LV_ModifyCol(3, 60) 
+LV_ModifyCol(4, 50) 
 LV_ModifyCol(5, 100) 
 listView_autoSize:
 GUI, +LastFound 
@@ -2829,7 +2872,7 @@ Loop,parse,GUIVARS,|
 	}
 
 ICELV1 := New LV_InCellEdit(HLV1)
-ICELV1.SetColumns(5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+ICELV1.SetColumns(3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
 ICELV1.OnMessage()
 Gui, +Resize
 SB_SetText("Completed Aquisition")
@@ -2888,7 +2931,6 @@ guicontrolget,Hide_Taskbar,,Hide_Taskbar
 guicontrolget,EnableLogging,,EnableLogging
 complist:= LVGetCheckedItems("SysListView321","[RJ_PROJ]_GUI")
 fullist= %complist%
-
 stringsplit,fullstn,fullist,|
 gmnames= |
 gmnameds= |
@@ -2907,7 +2949,7 @@ Loop,%fullstn0%
 	{
 		nameOverride=
 		przn= % fullstn%A_Index%
-		if ((przn = "")or(przn = "?/>>>>>>>>>>>"))
+		if ((przn = "")or(przn = "\?>>>>>>>>>>")or(przn = "?/>>>>>>>>>>>"))
 			{
 				continue
 			}	
@@ -2915,7 +2957,7 @@ Loop,%fullstn0%
 			{
 				stringsplit,prvn,przn,?>
 				prn= %prvn1%
-				nameOverride= %prvn2%
+				nameOverride= %prvn4%
 				INSAN= %NAMEOVERRIDE%
 				gosub, SANITIZER
 				nameOverride= %outsan%
@@ -2929,39 +2971,41 @@ Loop,%fullstn0%
 			{
 				continue
 			}
-		kbmovr= %prvn2%
-		mmovr= %prvn6%
-		jlovr= %prvn9%
-		jbovr= %prvn10%
-		preovr= %prvn11%
-		pstovr= %prvn12%
+		gmopts= %prvn2%	
+		gmargs= %prvn3%	
+		kbmovr= %prvn4%
+		mmovr= %prvn8%
+		jlovr= %prvn11%
+		jbovr= %prvn12%
+		preovr= %prvn13%
+		pstovr= %prvn14%
 		if (prvn7 <> "<")
 			{
-				pl1ovr= %prvn3%
+				pl1ovr= %prvn5%
 			}
 		if (prvn8 <> "<")
 			{
-				pl2ovr= %prvn4%
+				pl2ovr= %prvn6%
 			}
 		if (prvn9 <> "<")
 			{
-				mcpovr= %prvn5%
+				mcpovr= %prvn7%
 			}
 		if (prvn11 <> "<")
 			{
-				mgovr= %prvn7%
+				mgovr= %prvn9%
 			}
 		if (prvn12 <> "<")
 			{
-				dgovr= %prvn8%
+				dgovr= %prvn10%
 			}
 		if (prvn13 <> "<")
 			{
-				jlovr= %prvn9%
+				jlovr= %prvn11%
 			}
 		if (prvn14 <> "<")
 			{
-				jbovr= %prvn10%
+				jbovr= %prvn12%
 			}
 		fnd64=
 		fnd32=
@@ -2984,18 +3028,21 @@ Loop,%fullstn0%
 							}
 					}
 			}
+		exep= %OutDir%
+		tlevel= %OutDir%
 		if (nameOverride <> "")
 			{
 				gmnamed= %nameOverride%
+				gmnamex= %gmnamed%
 				goto, nameOVR
 			}
-		exep= %OutDir%	
 		gosub, GETGOODNAME
 		gmnamed= %njname%
 		nameOVR:	
 		invar= %gmnamed%
 		gosub, CleanVar
 		gmnamecm= %invarx%
+		gmnamedx= |%gmnamecm%|
 		invar= %gmnamex%
 		gosub, CleanVar
 		ExeSN= %invarx%
@@ -3028,6 +3075,10 @@ Loop,%fullstn0%
 			}
 		Loop,parse,gfnamex,\
 			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
 				kinn= %A_LoopField%
 				invar= %kinn%
 				gosub, CleanVar
@@ -3047,6 +3098,10 @@ Loop,%fullstn0%
 							else {
 								Loop,parse,priorbb,|
 									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
 										if instr(gmnamex,A_LoopField)
 											{
 												priority+=-1
@@ -3055,7 +3110,7 @@ Loop,%fullstn0%
 									}
 							}
 					}
-				if (instr(unlike,kinn)or instr(reduced,kinn))
+				if (instr(unselect,kinn)or instr(reduced,kinn))
 					{
 						priority+=-1
 					}
@@ -3072,13 +3127,13 @@ Loop,%fullstn0%
 						break
 					}
 			}
-		Loop,parse,unlike,`r`n
+		Loop,parse,unselect,`r`n
 			{
 				if (A_LoopField = "")
 					{
 						continue
 					}
-				if (instr(refname,A_LoopField)or instr(gmnamex,A_LoopField))
+				if (instr(refname,A_LoopField)or instr(gmnamex,A_LoopField)&& !instr(rootn,A_LoopField))
 					{
 						priority+=-1
 						break
@@ -3259,6 +3314,7 @@ Loop,%fullstn0%
 				linkprox= %sidn%\%subfldrep%%gmnamex%
 				linkproxy:= linkprox . ".lnk"
 				linkproxz:= linkprox . ".cmd"
+				jkoptz= 
 				if ((OVERWRT = 1)&&(prnxtn = "lnk"))
 					{
 						if (!fileexist(linkproxy) or (renum = 1))
@@ -3269,12 +3325,25 @@ Loop,%fullstn0%
 						if (!fileexist(linktarget)or(renum = 1))
 							{
 								FileDelete,%linktarget%
-								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
 					}
 				if (prnxtn = "exe")
 					{
-						OutArgs=
+						OutArgs=						
+						OutArgz=						
+						if (gmopts <> "")
+							{
+								OutArgs:= gmopts
+							}
+						if (gmargs <> "")
+							{
+								if (outopts <> "")
+									{
+										OutArgs:= A_Space
+									}
+								OutArgs.= gmargs
+							}
 						if ((OVERWRT = 1)or(renum = 1))
 							{
 								FileDelete,%linkproxy%
@@ -3289,11 +3358,11 @@ Loop,%fullstn0%
 							}
 						if ((rn = "")or(renum = 1))
 							{
-								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
 						if (!fileexist(linktarget)&&(renum = "")&&(SETALTSALL = 1))
 							{
-								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%OutArgs%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+								FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 							}
 					}
 				if (ASADMIN = 1)
@@ -3427,6 +3496,8 @@ Loop,%fullstn0%
 							}
 						GameProfs= %sidn%
 						iniwrite,%GameMon%,%gamecfg%,GENERAL,MM_Game_Config
+						iniwrite,%OutDir%,%gamecfg%,GENERAL,Install_Directory
+						iniwrite,%prnmx%,%gamecfg%,GENERAL,Exe_File
 						killist:
 						klist=%prnmx%|
 						if (KILLCHK = 1)
@@ -3458,7 +3529,29 @@ Loop,%fullstn0%
 										iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
 									}
 							}
-							
+						if (OVERWRT = 1)
+							{	
+								if (gmopts <> "")
+									{
+										iniwrite,%gmopts%,%GAMECFG%,CONFIG,Run_Options	
+									}
+								if (gmargs <> "")
+									{
+										iniwrite,%gmargs%,%GAMECFG%,CONFIG,Run_Arguments	
+									}
+							}
+						else {
+								iniread,tvo,%GAMECFG%,CONFIG,Run_Options
+								if ((tvo = "ERROR")or(tvo = ""))
+										{
+											iniwrite,%gmopts%,%GAMECFG%,CONFIG,Run_Options
+										}
+								iniread,tva,%GAMECFG%,CONFIG,Run_Arguments
+								if ((tva = "ERROR")or(tva = ""))
+										{
+											iniwrite,%gmargs%,%GAMECFG%,CONFIG,Run_Arguments
+										}
+							}
 					}
 			}
 		if (GMJOY = 1)
@@ -3521,7 +3614,7 @@ Loop,%fullstn0%
 						if ((mmovr = "n") or (mmovr ="0"))
 							{
 								MonitorMode=0
-								}
+							}
 						stringreplace,cmdtmp,cmdtpp,[MonitorMode],%MonitorMode%
 						stringreplace,cmdtmp,cmdtmp,[multimonitor_tool],%multimonitor_tool%
 						stringreplace,cmdtmp,cmdtmp,[Mapper],%mapper%
@@ -3660,6 +3753,30 @@ Loop,parse,GUIVARS,|
 	}
 return
 
+RlsGrpRoll:
+stringlen,rgv,rgg
+stringright,nv,njname,%rgv%
+if (instr(njname,rgg)&&(nv = rgg))
+	{
+		Loop,parse,RLSPFX,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				ccba:= A_LoopField . rgg
+				stringreplace,sexenj,njname,%ccba%,,
+				if (sexenj <> njname)
+					{
+						nJname= %sexenj%
+						hh= 1
+						break
+					}
+			}
+	}
+return
+
+	
 CleanVar:
 stringreplace,invarx,invar,.,,All
 stringreplace,invarx,invarx,`,,,All
@@ -3844,29 +3961,32 @@ Loop,parse,rlsgrps,`n`r
 			}
 		hh=	
 		rgg:= A_LoopField
-		stringlen,rgv,rgg
-		stringright,nv,njname,%rgv%
-		if (instr(njname,rgg)&&(nv = rgg))
+		rgj:= A_LoopField
+		if instr(rgg,A_Space)
 			{
-				Loop,parse,RLSPFX,|
+				if (A_LoopField = "")
 					{
-						if (A_LoopField = "")
+						continue
+					}
+				Loop,parse,SPCFIX,|
+					{
+						stringreplace,rgg,rgg,%A_Space%,%A_LoopField%,All
+						gosub,RlsGrpRoll
+						if (hh = 1)
 							{
-								continue
-							}
-						ccba:= A_LoopField . rgg
-						stringreplace,sexenj,njname,%ccba%,,
-						if (sexenj <> njname)
-							{
-								nJname= %sexenj%
-								hh= 1
 								break
 							}
 					}
+				stringreplace,rgg,rgj,%A_SPace%,,,All	
 				if (hh = 1)
 					{
 						break
 					}
+			}
+		gosub,RlsGrpRoll			
+		if (hh = 1)
+			{
+				break
 			}
 	}
 stringreplace,njname,njname,_,%A_Space%,All	
@@ -3885,7 +4005,6 @@ stringreplace,excn,excn,%A_Space%,,All
 stringreplace,excn,excn,-,,All
 stringreplace,excn,excn,.,,All
 stringreplace,excn,excn,_,,All
-
 
 stringleft,rlschkn,njname,7
 stringleft,dplychkn,njname,6
@@ -4039,14 +4158,27 @@ kbmrc=1
 Menu,UCLBUtton,Show, x52 y224
 return
 
+CfgInstMprs:
+Loop,parse,MAPCFGS,|
+	{
+		abb:= % %A_LoopField%_executable
+		if fileexist(abb)
+			{
+				menu,keycfgm,Add,%A_LoopField%,INIT%A_LOOPFIELD%
+			}
+	}
+menu,keycfgm,Show
+return
+
 DownloadButs:
 Menu,keymapd,Add
 Menu,keymapd,DeleteAll
 if ((butrclick = "Keyboard_MapB")or(kbmrc = 1))
 	{
-		Menu,keymapd,Add,Antimicro,keymapdownload
-		Menu,keymapd, Add,Xpadder,keymapdownload
-		Menu,keymapd, Add,JoyToKey,keymapdownload
+		Loop,parse,MAPCFGS,|
+			{
+				Menu,keymapd,Add,%A_LoopField%,keymapdownload
+			}
 	}
 if ((butrclick = "MM_ToolB")or(mmtrc = 1))
 	{
@@ -4093,34 +4225,10 @@ SSDDownload:
 
 
 keymapdownload:
-if (A_ThisMenuItem = "Antimicro")
-	{
-		curemote= _Antimicro_
-		gosub, BINGETS
-		gosub, DOWNLOADIT
-		gosub, INITAMIC
-	}
-if (A_ThisMenuItem = "DS4Windows")
-	{
-		curemote= _DS4Windows_
-		gosub, BINGETS
-		gosub, DOWNLOADIT
-		;gosub, INITDS4WIN
-	}
-if (A_ThisMenuItem = "JoyToKey")
-	{
-		curemote= _JoyToKey_
-		gosub, BINGETS
-		gosub, DOWNLOADIT
-		gosub, INITJTK
-	}
-if (A_ThisMenuItem = "Xpadder")
-	{
-		curemote= _Xpadder_
-		gosub, BINGETS
-		gosub, DOWNLOADIT
-		gosub, INITXPD
-	}
+curemote= _%A_ThisMenuItem%_
+gosub, BINGETS
+gosub, DOWNLOADIT
+gosub, INIT%A_ThisMenuItem%
 SB_SetText("")
 dchk=
 return
@@ -4135,7 +4243,11 @@ return
 MyListView:
 FocusedRowNumber := LV_GetNext(0, "F")
 if not FocusedRowNumber 
-LV_GetText(nmFDir, FocusedRowNumber, 3)
+{
+}
+LV_GetText(nmFDir, FocusedRowNumber, 2)
+LV_GetText(nmopts, FocusedRowNumber, 3)
+LV_GetText(nmargs, FocusedRowNumber, 4)
 LV_GetText(nmovr, FocusedRowNumber, 5)
 LV_GetText(kbmstat, FocusedRowNumber, 6)
 LV_GetText(pl1stat, FocusedRowNumber, 7)
@@ -4165,16 +4277,20 @@ If (A_GuiEvent == "F") {
 				SB_SetText("Booleans Only: 0`,off`,n`,1`,on`,or y")
 			}
 	}
-  if ((O.Col = 7)or(O.Col = 8)or(O.Col = 9)or(O.Col = 11)or(O.Col = 13)or(O.Col = 14)or(O.Col = 12))
+  if ((O.Col = 3)or(O.Col = 4)or(O.Col = 7)or(O.Col = 8)or(O.Col = 9)or(O.Col = 11)or(O.Col = 13)or(O.Col = 14)or(O.Col = 12))
 	{
 		;FileSelectFile,replathis,35,,Select File,*.*
-		SB_SetText("input an unquoted path to the file")
+		SB_SetText("input commands, paths, anything")
 	}
 }
 return
 
 DOWNLOADIT:
 extractloc= %binhome%%xtractpath%
+if (redp = 1)
+	{
+		extractloc= %xtractpath%
+	}
 extractlocf= "%extractloc%"
 filecreateDir,%home%\downloaded
 save= %home%\downloaded\%binarcf%
@@ -4254,6 +4370,10 @@ if (fileexist(save)&& !fileexist(exetfnd))
 			{
 				FileMoveDir,%extractloc%,%rento%,R
 			}
+		if (msi = 1)
+			{
+				RunWait, MSIEXEC /I "%extractloc%\%exetfndsp%" DIR="%renfrm%" INSTALLDIR="%renfrm%" INSTALLLOCATION="%renfrm%" APPDIR="%renfrm%" DEFAULTPATHC="%renfrm%" APPLICATIONFOLDER="%renfrm%" DIRECTORY="%renfrm%" TARGETDIR="%renfrm%" INSTALLFOLDER="%renfrm%" /quiet /passive /norestart,%extractloc%
+			}
 	}
 
 Loop,parse,GUIVARS,|
@@ -4294,9 +4414,22 @@ URLFILE=%URLNX1%
 Splitpath,URLFILE,binarcf
 exetfndsp=%URLNX2%
 xtractpath=%URLNX3%
+redp= 
+if instr(xtractpath,"{temp}")
+	{
+		stringreplace,xtractpath,xtractpath,{temp},%home%\downloaded
+		redp= 1
+	}
 stringsplit,rensp,urlnx4,?
+	
 renfrm= %rensp1%
+stringreplace,renfrm,renfrm,{home},%home%,
 rento= %rensp2%
+msi= 	
+if instr(exetfndsp,".msi")
+	{
+		msi= 1
+	}
 if (URLFILE = "") or (URLFILE = "ERROR")
 	{
 		URLFILE= %URLFILEX%
@@ -4358,7 +4491,10 @@ FocusedRowNumber := LV_GetNext(0, "F")
 if not FocusedRowNumber 
     return
 LV_GetText(nmFName, FocusedRowNumber, 1) 
-LV_GetText(nmFDir, FocusedRowNumber, 3)
+LV_GetText(nmFDir, FocusedRowNumber, 2)
+LV_GetText(nmOpt, FocusedRowNumber, 3)
+LV_GetText(nmArg, FocusedRowNumber, 4)
+
 LV_GetText(nmovr, FocusedRowNumber, 5)
 LV_GetText(kbmstat, FocusedRowNumber, 6)
 LV_GetText(pl1stat, FocusedRowNumber, 7)
@@ -4385,13 +4521,93 @@ if ErrorLevel
 	}
 return
 
+AddCLI:
+RowNumber := 0
+clth=
+Loop
+	{
+	RowNumber := LV_GetNext(RowNumber)
+	if not RowNumber
+		{
+			break
+		}
+	LV_GetNext(RowNumber, Focused)
+	LV_GetText(nmFName, RowNumber, 1) 
+	LV_GetText(nmFDir, RowNumber, 2)
+	LV_GetText(nmovr, RowNumber, 5)
+    if not RowNumber 
+		{
+			break
+		}
+	clth.= 	RowNumber . "|" . nmFDir . "\" . nmFName . "`n"
+}
+Gui +LastFound +OwnDialogs +AlwaysOnTop
+tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{ProfileDir}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
+InputBox, CLIADDED, add opts and args,replace [variables] with options and arguments,,520,,,,,,[options] "{TARGET}" [arguments]
+stringreplace,CLIADDED,CLIADDED,|,#!#,All
+stringreplace,CLIADDED,CLIADDED,"{TARGET}",|,All
+stringreplace,CLIADDED,CLIADDED,[options],,All
+stringreplace,CLIADDED,CLIADDED,[arguments],,All
+stringsplit,CLISPL,CLIADDED,|
+clioptions= %CLISPL1%
+cliargs= %CLISPL2%
+cli_obj= 
+Gui,ListView,MyListView
+srcdlrpl=
+Loop,parse,clth,`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		stringsplit,lsvs,A_LoopField,|
+		rwnm:= lsvs1
+		mdo= lsvs2
+		mdo= lsvs3
+		LV_Modify(lsvs1,"COL3", clioptions)
+		LV_Modify(lsvs1,"COL4", cliargs)
+		cli_obj.= A_LoopField . "|" . clioptions . "|" . cliargs . "`n"
+		Loop,parse,SOURCEDLIST,`n
+			{
+				stringsplit,oab,A_LoopField,|
+				splitpath,oab1,rpxe,rppth
+				if ((rpxe = lsvs1)&&(rppth = mdo))
+					{
+						srcdlrpl:= rpxe . "|" . rppth . "|" . clioptions . "|" . cliargs . "|"
+						Loop, %oab0%
+							{
+								if (A_Index < 5)
+									{
+										continue
+									}
+								au:= % oab%A_Index%
+								if (au = "")
+									{
+										au:= A_Space
+									}
+								srcdlrpl.= au . "|"
+							}
+						stringreplace,srcdlrpl,srcdlrpl,|||,|,All
+						stringreplace,srcdlrpl,srcdlrpl,||,|,All
+						stringtrimright,srcdlrpl,srcdlrpl,1
+						stringreplace,SOURCEDLIST,SOURCEDLIST,%A_LoopField%,%srcdlrpl%,
+						break
+					}
+			}
+	}
+LV_ModifyCol()	
+Return
+
+MakeMeTop:
+tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{Profile}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
+WinSet, AlwaysOnTop, On, add opts/args
+Return
+return
+
 ContextClearRows:
 RowNumber := 0 
 Loop
-	{
-
-																					
-												 
+	{					 
     RowNumber := LV_GetNext(RowNumber - 1)
     if not RowNumber 
         break
@@ -4410,11 +4626,11 @@ LVGetCheckedItems(cN,wN) {
         ChekItems:=(ErrorLevel ? Item[A_Index-1] "`n" : "")
 		dbb5=
 		stringsplit,dbb,ChekItems,%A_Tab%
-		renafm:= "?" . dbb5 . ">"
-		fprnt:= dbb3 . "\" . dbb1
+		renafm:= "?" . dbb3 . ">" . dbb4 . ">" . dbb5 . ">"
+		fprnt:= dbb2 . "\" . dbb1
 		if (!instr(ChkItems,fprnt)&&(fprnt <> noen))
 			{
-				ChkItems.= dbb3 . "\" . dbb1 . renafm . dbb6 . ">" . dbb7 . ">" . dbb8 . ">" . dbb9 . ">" . dbb10 . ">" . dbb11 . ">" . dbb12 . ">" . dbb13 . ">" . dbb14 . ">" . dbb15 . "|"
+				ChkItems.= dbb2 . "\" . dbb1 . renafm . dbb6 . ">" . dbb7 . ">" . dbb8 . ">" . dbb9 . ">" . dbb10 . ">" . dbb11 . ">" . dbb12 . ">" . dbb13 . ">" . dbb14 . ">" . dbb15 . "|"
 			}
     }
 	stringreplace,chkitems,chkitems,`n,,All
