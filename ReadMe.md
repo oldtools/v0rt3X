@@ -1,12 +1,18 @@
 ## Use Case
 
-Games not installed through steam/gog/epic/origin/etc....
+Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as keyboad-mapping and monitor layout.
+
+Games not installed through steam/gog/epic/origin/etc are detected and given a proper name:
+
+Release/build version, group-names and other extranious title info is culled to facilitate importing into a frontend.
+
+Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.68.422
+This Version:0.99.68.427
 
-This Build: 2022-04-13 8:25 AM
+This Build: 2022-04-14 3:42 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -41,13 +47,17 @@ v0rt3X
 ¦   +-- absol.set
 ¦   +-- am_GameTemplate.set
 ¦   +-- am_DesktopTemplate.set
-¦   +-- amicro.set
+¦   +-- am_Trigger.set
+¦   +-- ax_GameTemplate.set
+¦   +-- ax_DesktopTemplate.set
+¦   +-- ax_Trigger.set
 ¦   +-- build.ahk
 ¦   +-- Buildtools.set
 ¦   +-- cmdtemplate.set
+¦   +-- Deploy.ico
 ¦   +-- exclfnms.set
 ¦   +-- exez.set
-¦   +-- Installer.ico
+¦   +-- Install.ico
 ¦   +-- jk_GameTemplate.set
 ¦   +-- jk_DestktopTemplate.set
 ¦   +-- jk_Trigger.set
@@ -57,6 +67,9 @@ v0rt3X
 ¦   +-- lrDeploy.set
 ¦   +-- newosk.ahk
 ¦   +-- NewOSK.ico
+¦   +-- ox_DesktopTemplate.set
+¦   +-- ox_GameTemplate.set
+¦   +-- ox_Trigger.set
 ¦   +-- rabsol.set
 ¦   +-- readme.set
 ¦   +-- repos.set
@@ -98,12 +111,12 @@ Right-Click on the buttons in the setup tool to download supported executables.
 
 ## Launching Games
 
-It is not necessary, but best if jkvtx.exe, antimicro.exe and xpadder.exe are assigned to run as the administrator.
-Ideally, this can run entirely in userspace, however many gamees require administrator access and manipulating hardware at the user level is often unreliable.
+It is not necessary, but recommended to enable the RunAsAdmin option.
+Ideally, v0rt3X can run entirely in userspace, however many games require administrator access and manipulating hardware at the user level is often unreliable.
 
 ![AsAdmin](https://oldtools.github.io/v0rt3X/runas.png)
 
-During gameplay you may create additional joystick profiles and any found within the game's jacket will be saved and reloaded for player 2/3/4, prioritizing the default profile-name eg: ''Game Jacket.gamecontroller''.amgp, and other "player#" monikers.)
+During gameplay you may modify and/or create additional joystick profiles and any found within the game's jacket will be saved and reloaded for player 2/3/4, prioritizing the default profile-name eg: game-name/_#.gamecontroller.amgp, and other "player#" monikers.)
 
 # Building or compiling from source
 

@@ -1,8 +1,8 @@
 [BINARIES]
 originalBinary=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip|Update.exe|lrdeploy.exe?aria2c.exe?jkvtx.exe?Setup.exe?Build_Source.exe?NewOsk.exe?7za.exe|\..\|
 _BorderlessGaming_=https://github.com/portapps/borderless-gaming-portable/releases/download/9.5.6-3/borderless-gaming-portable-win32-9.5.6-3.7z|Borderless Gaming\borderless-gaming-portable.exe|\Borderless Gaming
-_Antimicro_=https://github.com/oldtools/antimicro/releases/download/portable/antimicro.zip|Antimicro\antimicro.exe|
-_AntimicroX_=https://github.com/oldtools/antimicrox/releases/download/portable/antimicrox.zip|Antimicro\antimicrox.exe|
+_Antimicro_=https://github.com/oldtools/antimicro/releases/download/portable/antimicro.zip|Antimicro\antimicro.exe|antimicro
+_AntimicroX_=https://github.com/oldtools/antimicrox/releases/download/portable/antimicrox.zip|Antimicro\antimicrox.exe|antimicrox
 _JoyXoff_=https://github.com/oldtools/JoyXoff/releases/download/Installer/JoyXoff.7z|JoyXoff.MSI|{temp}|{home}\bin\JoyXoff
 _Xpadder_=https://raw.githubusercontent.com/romjacket/Xpadder/master/Xpadder.7z|Xpadder\xpadder.exe|
 _DS4Windows=https://github.com/Ryochan7/DS4Windows/releases/download/v3.0.18/DS4Windows_3.0.18_x64.7z|
@@ -22,6 +22,6 @@ SOURCEHOST=https://github.com/oldtools/v0rt3X
 UPDATEFILE=https://github.com/oldtools/Vortex/releases/download/portable/portable.zip
 Version=https://raw.githubusercontent.com/oldtools/Vortex/master/site/version.txt
 [GOBAL]
-Version=2022-04-13 8:25 AM
+Version=2022-04-14 3:42 PM
 UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
 HOSTINGURL=

@@ -2235,10 +2235,8 @@ FileRead, sktmp,%SKELD%\src\Setup.tmp
 StringReplace,sktmc,sktmp,[VERSION],%date% %TimeString%,All
 StringReplace,sktmv,sktmc,[CURV],%vernum%,All
 StringReplace,sktmv,sktmc,[RJ_PROJ],%RJPRJCT%,All
-/*
 stringreplace,sktmv,sktmv,`/`*  `;`;[DEBUGOV],,All
 stringreplace,sktmv,sktmv,`*`/  `;`;[DEBUGOV],,All
-*/
 FileAppend,%sktmv%,%SKELD%\src\Setup.ahk
 FileDelete,%SKELD%\src\Setup.tmp
 

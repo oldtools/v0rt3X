@@ -379,8 +379,9 @@ Gui, Add, Button, x20 y96 w36 h21 vRJDB_Location gRJDB_Location hidden disabled,
 Gui, Add, Text,  x64 y96 w222 h14 vRJDB_LocationT  hidden disabled Right,"<%RJDB_Location%"
 Gui, Font, Normal
 Gui, Add, Text,  x64 y110 w222 h14  hidden disabled,<Application Directory>
-
+/*  ;;[DEBUGOV]
 OnMessage(0x200, "WM_MOUSEMOVE")
+*/  ;;[DEBUGOV]
 Gui, Add, StatusBar, x0 y546 w314 h28 vRJStatus, Status Bar
 Gui Show, w314 h624, [RJ_PROJ]_GUI
 
@@ -629,7 +630,7 @@ iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,Player1_Template
 iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,Player2_Template
 iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,MediaCenter_Profile_Template
 GuiControl,,Player1_TemplateT,
-GuiControl,,Player2_TemplateT,
+GuiControl,,Player2_TempjulateT,
 GuiControl,,MediaCenter_ProfileT,
 GuiControl,,Keyboard_MapperT,
 return
@@ -1781,7 +1782,6 @@ ifMsgbox,Yes
         filedelete,%home%\MediaCenter2.cfg
         filedelete,%home%\Player1.cfg
         filedelete,%home%\Player2.cfg
-        filedelete,%home%\simpth.db
         filedelete,%home%\continue.db
         filedelete,%home%\*.tmp
         filedelete,%home%\GameAudio.cmd
@@ -1863,20 +1863,21 @@ return
 KEYMAPSET:
 if (kbmpprt = "")
 	{
+		kbmt= \%jmap%\%jmap%.exe
 		kbmdefloc=
 		kbmpprt=
 		JMAPini=
-		if fileexist(Programfilesx86 . "\" . JMAP . "\" . JMAP . ".exe")
+		if fileexist(Programfilesx86 . kbmt)
 			{
 				kbmdefloc= %programfilesx86%\%JMAP%
 				kbmpprt= %kbmdefloc%\%JMAP%.exe
 			}
-		if fileexist(Programfiles . "\" . JMAP . "\" . JMAP . ".exe")
+		if fileexist(A_Programfiles . kbmt)
 			{
 				kbmdefloc= %programfiles%\%JMAP%
 				kbmpprt= %kbmdefloc%\%JMAP%.exe
 			}	
-		if fileexist(binhome  . "\" . JMAP . "\" . JMAP . ".exe")
+		if fileexist(binhome . kbmt)
 			{
 				kbmdefloc= %binhome%\%JMAP%
 				kbmpprt= %kbmdefloc%\%JMAP%.exe
@@ -2482,9 +2483,9 @@ if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
 	{
 		XSRCADD.= filepath . "|"
 	}
-SOURCEDLIST.= FileNM . "|" . FilePath . "|" . FileOpts . "|" . FileArgs . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+SOURCEDLIST.= FileNM . "|" . FilePath . "|" . A_Space . "|" . A_Space . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
 Gui,ListView,MyListView
-LV_Add(lvachk,FileNM, FilePath, FileOpts, FileArgs,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
+LV_Add(lvachk,FileNM, FilePath, A_Space, A_Space,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
 LV_ModifyCol()
 return
 
@@ -2538,7 +2539,6 @@ SOURCEDLIST=
 fullist=
 simpnk=
 omitd=
-filedelete,%home%\simpth.db
 filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
@@ -2574,21 +2574,17 @@ if (BOTHSRCH = 1)
 	}
 lvachk= +Check
 fullist=
-/*(
 if (SOURCEDLIST <> "")
 	{
 		Loop,parse,SOURCEDLIST,`n
 			{
 				stringsplit,rni,A_LoopField,|
-
-				LV_Add(lvachk,rni1, rni2, rni3,  rni4, A_Space,"y", "<", "<","<","y","<","<","<","<","y","y")
+				LV_Add(lvachk,rni1, rni2, rni3,  rni4, rni5,rni6, rni7, rni8, rni9, rni10, rni11, rni12, rni13, rni14, rni15, rni16)
 				fullist.= rni2 . "\" . rni1 . "|"
 			}
 		goto,REPOP
 	}
-*/
 SOURCEDLIST=
-FileDelete,%home%\simpth.db
 sivk=
 if (namechk = 1)
 	{
@@ -2652,17 +2648,6 @@ Loop,parse,SPLIT_SRC,|
 						FilePPUT=%FilePath%
 						splitpath,FilePath,filpn,filpdir,,filpjn
 						stringreplace,simpath,FilePath,%SRCLOOP%,,
-						if (simpth = "")
-							{
-								Loop,parse,filepath,\
-									{
-										if (A_LoopField = "")
-											{
-												continue
-											}
-										simpth= %A_loopField%
-									}
-							}
 						stringreplace,trukpath,filpdir,%SRCLOOP%,,
 						if ((trukpath = "")or(trukpath = filpdir))
 							{
@@ -2721,7 +2706,6 @@ Loop,parse,SPLIT_SRC,|
 								continue
 							}
 						simpnk.= FileName . "`n"
-						fileappend,%simpath%,%home%\simpth.db
 						PostDirChk:
 						Loop,parse,unselect,`r`n
 							{
@@ -4286,7 +4270,7 @@ If (A_GuiEvent == "F") {
 return
 
 DOWNLOADIT:
-extractloc= %binhome%%xtractpath%
+extractloc= %binhome%\%xtractpath%
 if (redp = 1)
 	{
 		extractloc= %xtractpath%
@@ -4607,10 +4591,14 @@ return
 ContextClearRows:
 RowNumber := 0 
 Loop
-	{					 
+	{				 
     RowNumber := LV_GetNext(RowNumber - 1)
     if not RowNumber 
-        break
+        {
+			break
+		}
+	LV_GetText(lnv,RowNumber)
+	stringreplace,SOURCEDLIST,SOURCEDLIST,%lnv%,,
     LV_Delete(RowNumber)  
 }
 return
