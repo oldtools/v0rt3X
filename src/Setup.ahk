@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-04-14 3:42 PM
+RELEASE= 2022-04-14 6:20 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -2720,7 +2720,6 @@ Loop,parse,SPLIT_SRC,|
 									{
 										lvachk=
 										simpnk.= FileName . "`n"
-										fileappend,%simpath%`n,%home%\simpth.db
 										goto,Chkcon
 									}
 							}
@@ -2746,7 +2745,6 @@ Loop,parse,SPLIT_SRC,|
 											{
 												lvachk=
 												simpnk.= FileName . "`n"
-												fileappend,%FileName%`n,%home%\simpth.db
 												smf= 1
 												break
 											}
@@ -2772,7 +2770,10 @@ Loop,parse,SPLIT_SRC,|
 						FileArgs:= A_SPace
 						SB_SetText("added " FileNM "")	
 						LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y")
-						SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
+						if (lvachk <> "")
+							{
+								SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
+							}
 					}
 			}
 	}
@@ -2949,6 +2950,7 @@ Loop,%fullstn0%
 		else {
 			stringsplit,prvn,przn,>/
 			prn= %prvn1%
+			nameOverride= %prvn3%
 		}
 		stringlen,prt,prn
 		if (!fileexist(prn)or (prt < 6))

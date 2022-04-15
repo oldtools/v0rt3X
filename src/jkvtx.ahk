@@ -581,15 +581,18 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				splitpath,JoyXoff_executable,mapperxn,mapperp
 				Run, %comspec% "%JoyXoff_executable%" -close,%mapperp%,hide
 				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				Run, %comspec% taskkill /f /im "JoyxSvc.exe",,hide
 				process,close,%mapperxn%
+				process,close,JoyxXvc.exe
 				player2t:= A_Space . "" . gamepath . ""
 				player3t:= A_Space . "" . gmname . ""
 				sleep,600
+				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
 		ToolTip, %joycnt% Joysticks found
 		if (fileexist(keyboard_Mapper)&& fileexist(player1))
 			{
-				Run,%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%,,hide,kbmp
+				Run,%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%,%mapperp%,hide,kbmp
 			}
 		if (Logging = 1)
 			{
@@ -1110,7 +1113,9 @@ if ((Mapper > 0)&&(Mapper <> ""))
 		}
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
-		Run, %Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%,,hide,kbmp
+			{
+				Run, %Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%,,hide,kbmp			
+			}
 		Loop,5
 			{
 				Process,Exist,%mapln%
