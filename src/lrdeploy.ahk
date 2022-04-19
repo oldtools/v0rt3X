@@ -10,17 +10,11 @@ Process, Exist,
 CURPID= %ERRORLEVEL%
 cacheloc= %A_Temp%
 ARCH= 64
-rpfs= %A_ProgramFiles%
-rpfsx86= %A_ProgramFiles% (x86)
+ProgramFilesX86 := A_ProgramFiles . (A_PtrSize=8 ? " (x86)" : "")
 if (A_Is64bitOS	= 0)
 	{
 		ARCH= 32
-		stringreplace,rpfs,A_ProgramFiles,%A_Space%(x86),,All
-		rpfsx86= %A_ProgramFiles%
-	}
-ifinstring,A_ProgramFiles,(x86)
-	{
-		stringreplace,rpfs,A_ProgramFiles,%A_Space%(x86),,All
+		ProgramFilesX86 := A_ProgramFiles
 	}
 home= %A_ScriptDir%
 splitpath,home,srcfn,srcpth
@@ -29,12 +23,12 @@ if ((srcfn = "src")or(srcfn = "bin")or(srcfn = "binaries"))
 		home= %srcpth%
 	}	
 binhome= %home%\bin
-source= %home%\src	
+source= %home%\src
 SetWorkingDir, %home%
 ARIA= %binhome%\aria2c.exe
-LKDIRS= %home%|%rpfs%|%rpfsx86%
-GITWEB= https://github.com
+LKDIRS= %ProgramFilesX86%|%A_ProgramFiles%|%binhome%|%home%
 GITSWEB= https://github.com
+
 Loop, %save%
 	{
 		if (A_LoopFileSizeMB < 30)
@@ -121,7 +115,6 @@ RePODATS_TT :="Recompiles any changes to your repository lists"
 PortVer_TT :="compiles the portable executable"
 OvrStable_TT :="compiles the installer"
 DatBld_TT :="Recompiles the metadata database xmls"
-
 
 ;};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -214,7 +207,7 @@ oldsize=
 oldsha= 
 olrlsdt=
 vernum=	
-getversf= %gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html
+getversf= %SITEDIR%\index.html
 
 ifnotexist,%getversf%
 	{
@@ -254,7 +247,7 @@ Loop, Read, %getversf%
 			ifinstring,A_LoopReadLine,<h88>
 					{
 						stringgetpos,verstr,A_LoopReadLine,<h88>
-						FileReadLine,sklin,%gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html,%sklnum%
+						FileReadLine,sklin,%SITEDIR%\index.html,%sklnum%
 						getvern:= verstr+6
 						StringMid,oldsize,sklin,%getvern%,4
 						continue
@@ -262,7 +255,7 @@ Loop, Read, %getversf%
 			ifinstring,A_LoopReadLine,<h87>
 					{
 						stringgetpos,verstr,A_LoopReadLine,<h87>
-						FileReadLine,sklin,%gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html,%sklnum%
+						FileReadLine,sklin,%SITEDIR%\index.html,%sklnum%
 						getvern:= verstr+6
 						StringMid,oldsize,sklin,%getvern%,4
 						continue
@@ -270,7 +263,7 @@ Loop, Read, %getversf%
 			ifinstring,A_LoopReadLine,<h77>
 					{
 						stringgetpos,verstr,A_LoopReadLine,<h77>
-						FileReadLine,sklin,%gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html,%sklnum%
+						FileReadLine,sklin,%SITEDIR%\index.html,%sklnum%
 						getvern:= verstr+6
 						StringMid,oldsha,sklin,%getvern%,40
 						continue
@@ -278,7 +271,7 @@ Loop, Read, %getversf%
 			ifinstring,A_LoopReadLine,<h66>
 					{
 						stringgetpos,verstr,A_LoopReadLine,<h66>
-						FileReadLine,sklin,%gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html,%sklnum%
+						FileReadLine,sklin,%SITEDIR%\index.html,%sklnum%
 						getvern:= verstr+6
 						StringMid,olrlsdt,sklin,%getvern%,18
 						continue
@@ -286,7 +279,7 @@ Loop, Read, %getversf%
 			ifinstring,A_LoopReadLine,<h55>
 					{
 						stringgetpos,donat,A_LoopReadLine,<h55>
-						FileReadLine,donit,%gitroot%\%GITUSER%.github.io\%RJPRJCT%\index.html,%sklnum%
+						FileReadLine,donit,%SITEDIR%\index.html,%sklnum%
 						getvern:= donat+6
 						StringMid,donation,donit,%getvern%,5
 						continue
@@ -384,8 +377,8 @@ iniwrite,%GITUSER%,%home%\skopt.cfg,GLOBAL,git_username
 GITMAIL= %GITUSER%@nomailaddy.org
 iniwrite,%GITMAIL%,%home%\skopt.cfg,GLOBAL,git_email
 GETIPADR= http://www.netikus.net/show_ip.html				
-GITSRC= %GITWEB%/%GITUSER%/%RJPRJCT%
-GITSRC= %GITWEB%/%gituser%/%RJPRJCT%
+GITSRC= %GITSWEB%/%GITUSER%/%RJPRJCT%
+GITSRC= %GITSWEB%/%gituser%/%RJPRJCT%
 iniwrite,%GITSRC%,%home%\skopt.cfg,GLOBAL,git_url
 SITEDIR= %home%\GitHub\%A_Username%.github.io\%RJPRJCT%
 iniwrite,%SITEDIR%,%home%\skopt.cfg,GLOBAL,site_directory
@@ -696,7 +689,7 @@ if (GITD = "")
 			}	
 		if (GITSRC= "")
 			{
-				GITSRC= %GITWEB%/%gituser%/%RJPRJCT%
+				GITSRC= %GITSWEB%/%gituser%/%RJPRJCT%
 			}
 		iniwrite,%GITD%,%home%\skopt.cfg,GLOBAL,Git_Directory	
 		iniwrite,%GITSRC%,%home%\skopt.cfg,GLOBAL,git_url
@@ -804,7 +797,7 @@ guicontrol,,txtGPD,%GITROOT%
 GITD=%GITROOT%\%RJPRJCT%
 iniwrite,%GITD%,%home%\skopt.cfg,GLOBAL,Project_Directory
 guicontrol,,TxtGSD,%GITD%
-GITSRC=%GITWEB%/%gituser%/%RJPRJCT%
+GITSRC=%GITSWEB%/%gituser%/%RJPRJCT%
 iniwrite,%GITSRC%,%home%\skopt.cfg,GLOBAL,git_url
 guicontrol,,txtGWD,%SITEDIR%
 if (!fileExist(SITEDIR)or(SITEDIR = ""))
@@ -894,7 +887,7 @@ guicontrol,,uVer,https://raw.githubusercontent.com/%gituser%/%RJPRJCT%/master/si
 iniwrite,%uVer%,%home%\skopt.cfg,GLOBAL,update_url
 guicontrol,,uFLU,%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/portable/portable.zip
 iniwrite,%uFLU%,%home%\skopt.cfg,GLOBAL,update_file
-GITSRC= %GITWEB%/%GITUSER%/%RJPRJCT%
+GITSRC= %GITSWEB%/%GITUSER%/%RJPRJCT%
 iniwrite,%GITSRC%,%home%\skopt.cfg,GLOBAL,git_url
 if (!fileExist(GITROOT)or(GITROOT = ""))
 	{
@@ -953,7 +946,7 @@ if (IALTH = "")
 	}
 if (IALTH = "")
 	{
-		IALTH= %GITWEB%/%GITUSER%
+		IALTH= %GITSWEB%/%GITUSER%
 	}
 IniWrite,%IALTH%,%home%\skopt.cfg,GLOBAL,alt_host
 guicontrol,,IALTH,%IALTH%
@@ -1069,9 +1062,6 @@ if (STLOCT = "")
 	}
 SITEDIR= %STLOCT%	
 iniwrite, %SITEDIR%,%home%\skopt.cfg,GLOBAL,Site_Directory
-FileDelete,%DEPL%\gitinit.cmd
-FileAppend, "%GITAPP%" config user.email %GITMAIL%`n"%GITAPP%" config user.name %GITNAME%`npopd`n,%DEPL%\gitinit.cmd
-RunWait,%DEPL%\gitinit.cmd,,hide
 guicontrol,,txtGWD,%SITEDIR%
 return
 
@@ -1129,14 +1119,13 @@ return
 SelAHK:
 gui,submit,nohide
 GetComp:
-
-ifexist, %binhome%\AutoHotkey\Compiler\
+Loop,parse,LKDIRS,|
 	{
-		comptmp= %binhome%\AutoHotkey\Compiler
-	}
-ifexist, %rpfs%\AutoHotkey\Compiler\
-	{
-		comptmp= %rpfs%\AutoHotkey\Compiler
+		ifexist, %binhome%\AutoHotkey\Compiler\
+			{
+				comptmp= %A_LoopField%\AutoHotkey\Compiler
+				break
+			}
 	}
 FileSelectFile, AHKDIT,3,%comptmp%\Ahk2Exe.exe,Select AHK2Exe,*.exe
 if (AHKDIT = "")
@@ -1325,15 +1314,15 @@ return
 
 SelNSIS:
 gui,submit,nohide
-
-ifexist, %binhome%\NSIS
+nsisapdtmp=
+Loop,parse,LKDIRS,|
 	{
-		nsisapdtmp= %binhome%\NSIS
-	}
-ifexist, %rpfs%\NSIS
-	{
-		nsisapdtmp= %rpfs%\NSIS
-	}
+		ifexist, %A_LoopField%\NSIS
+			{
+				nsisapdtmp= %A_LoopField%\NSIS
+				break
+			}
+	}		
 ifnotexist, %nsisapdtmp%
 	{
 		nsisapdtmp= 
@@ -1342,7 +1331,6 @@ FileSelectFile, NSIST,3,%nsisapdtmp%\makensis.exe,Select the makensis.exe,*.exe
 nsisapptmp= 
 if (NSIST = "")
 	{
-		
 		guicontrol,,txtNSIS,(not set) makensis.exe
 		inidelete,%home%\skopt.cfg,GLOBAL,NSIS
 		return
@@ -1359,13 +1347,13 @@ SelGit:
 gui,submit,nohide
 GetAPP:
 gitapdtmp=
-ifexist, %rpfs%\git\bin\git.exe
+Loop,parse,LKDIRS,|
 	{
-		gitapdtmp= %rpfs%\git\bin
-	}
-ifexist, %binhome%\Git\bin\git.exe
-	{
-		gitapdtmp= %binhome%\Git\Bin
+		ifexist, %A_LoopField%\git\bin\git.exe
+			{
+				gitapdtmp= %A_LoopField%\git\bin
+				break
+			}
 	}
 FileSelectFile, GITAPPT,3,%gitapdtmp%\git.exe,Select the git.exe,*.exe
 gitapptmp= 
@@ -1409,7 +1397,7 @@ if ((GITT = BUILDIR)or(GITT = SKELD))
 		SB_SetText("Github project directory should not be your source or build directories")
 	}
 GITD:= GITT
-GITSRC= %GITWEB%/%gituser%/%RJPRJCT%
+GITSRC= %GITSWEB%/%gituser%/%RJPRJCT%
 iniwrite, %GITD%,%home%\skopt.cfg,GLOBAL,Project_Directory
 IniWrite,%GitSRC%,%home%\skopt.cfg,GLOBAL,git_url	
 guicontrol,,txtGSD,%GITD%	
@@ -1754,7 +1742,7 @@ if (bldexists = 1)
 		StringReplace, nsiv, nsiv,[RJ_PROJ],%RJPRJCT%,All
 		StringReplace, nsiv, nsiv,[GIT_USER],%GITUSER%,All
 		StringReplace, nsiv, nsiv,[CURV],%vernum%,All
-		FileAppend, %nsiv%,%BUILDIR%\lrdeploy.nsi
+		FileAppend, %nsiv%,%DEPL%\lrdeploy.nsi
 		return
 	}
 Msgbox,3,Build Dir,Build Directory not found`nRetry?
@@ -1815,13 +1803,13 @@ gui,submit,nohide
 GitSRC= 
 if (GitSRCT = "")
 	{
-		GitSRCT= %GITWEB%/%GITUSER%/%RJPRJCT%
+		GitSRCT= %GITSWEB%/%GITUSER%/%RJPRJCT%
 	}
 
 inputbox,GitSRC,Git Repo,Enter the url for the project's git repo,,345,140,,,,,%GitSRCT%
 if (GitSRC = "")
 	{
-		GitSRCT= %GITWEB%/%GITUSER%/%RJPRJCT%
+		GitSRCT= %GITSWEB%/%GITUSER%/%RJPRJCT%
 		GitSRC= %GitSRCT%
 	}
 
@@ -1857,12 +1845,15 @@ if (SRCDD = "Source")
 	}
 if (SRCDD = "Git.exe")
 	{	
-		gitapdtmp= %rpfs%\git\bin
-		ifnotexist, %gitapptmp%
+		Loop,parse,LKDIRS,|
 			{
-				gitapdtmp= %binhome%
+				gitapdtmp= %A_LoopField%\git\bin
+				ifnotexist, %gitapptmp%
+					{
+						gitapdtmp= %binhome%
+					}
+				gosub, GetAPP
 			}
-		gosub, GetAPP
 	}
 if (SRCDD = "GitRoot")
 	{
@@ -1878,13 +1869,13 @@ if (SRCDD = "Compiler")
 	{
 		ahktmp= %binhome%
 		comptmp= %binhome%
-		ifexist, %rpfs%\AutoHotkey\Compiler
+		Loop,parse,LKDIRS,|
 			{
-				comptmp= %rpfs%\AutoHotkey\Compiler
-			}
-		ifexist, %binhome%\AutoHotkey\Compiler
-			{
-				comptmp= %binhome%\AutoHotkey\Compiler
+				ifexist, %A_LoopField%\AutoHotkey\Compiler
+					{
+						comptmp= %A_LoopField%\AutoHotkey\Compiler
+						break
+					}
 			}
 		gosub, GetComp
 	}
@@ -2268,91 +2259,70 @@ if (OvrStable = 1)
 	}
 	
 if (INITINCL = 1)
-	{
-			exprt= 
-			exprt.= "FileCreateDir, site" . "`n"
-			exprt.= "FileCreateDir, site" . "\" . "img" . "`n"
-			exprt.= "FileCreateDir, bin" . "`n"
-			exprt.= "FileCreateDir, src" . "`n"
-			exprt.= "IfNotExist, rj" . "`n" . "{" . "`n" . "FileCreateDir, rj" . "`n" . "FILEINS= 1" . "`n" . "}" . "`n"
-			exprt.= "If (INITIAL = 1)" . "`n" . "{" . "`n" . "FILEINS= 1" . "`n" . "}" . "`n"
-			exprt.= "If (FILEINS = 1)" . "`n" . "{" . "`n" 
-			RunWait, %comspec% cmd /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% cmd /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% cmd /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% cmd /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% cmd /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% cmd /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
-			exprt.= fcdxp . "`n" . "}" . "`n"
+	{		
+			RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+			RunWait, %comspec% /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+			RunWait, %comspec% /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+			RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 			portableincludes= 
 			Loop, files, %SKELD%\site\*.txt
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\*.md
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\src\*.set
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "src" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\src\*.ico
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "src" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\img\*.svg
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . "img" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\img\*.png
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . "img" . "\"  A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\*.html
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\*.ttf
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\site\*.otf
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "site" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\src\*.ahk,R
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "src" . "\" . A_LoopFileName . "|"
 				}
 			Loop, files, %SKELD%\src\*.ico,R
 				{
 					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					exprt.= "FileInstall," . ain . "," . ain . ",1" . "`n"
 					portableincludes.= "src" . "\" . A_LoopFileName . "|"
 				}
-
 			portableincludes.= "bin" . "\" . "aria2c.exe" . "|"
 			portableincludes.= "bin" . "\" . "7za.exe" . "|"
 			portableincludes.= "bin" . "\" . "Setup.exe" . "|"
@@ -2360,18 +2330,6 @@ if (INITINCL = 1)
 			portableincludes.= "bin" . "\" . "Update.exe" . "|"
 			portableincludes.= "bin" . "\" . "NewOSK.exe" . "|"
 			portableincludes.= "bin" . "\" . "lrdeploy.exe" . "|"
-			exprt.= "FileInstall, bin\aria2c.exe,bin\aria2c.exe" . "`n"	
-			exprt.= "FileInstall, bin\7za.exe,bin\7za.exe" . "`n"	
-			exprt.= "FileInstall, bin\NewOSK.exe,bin\NewOSK.exe" . "`n"	
-			exprt.= "FileInstall, bin\source_builder.exe,bin\source_builder.exe" . "`n"	
-			exprt.= "FileInstall, bin\jkvtx.exe,bin\jkvtx.exe" . "`n"	
-			exprt.= "FileInstall, bin\Setup.exe,bin\Setup.exe" . "`n"	
-			exprt.= "FileInstall, site\index.html,site\index.html,1" . "`n"	
-			exprt.= "FileInstall, site\version.txt,site\version.txt,1" . "`n"
-			exprt.= "FileInstall, src\Update.ahk,src\Update.ahk,1" . "`n"	
-			exprt.= "FileInstall, src\jkvtx.ahk,src\jkvtx.ahk,1" . "`n"	
-			exprt.= "FileInstall, src\lrdeploy.ahk,src\lrdeploy.ahk,1" . "`n"
-			exprt.= "FileInstall, Readme.md,Readme.md,1" . "`n"
 	}
 
 if (OvrStable = 1)
@@ -2383,13 +2341,12 @@ if (OvrStable = 1)
 			}
 		if (isSrc <> 1)
 			{
-				RunWait, %comspec% cmd /c echo.##################  COMPILE DEPLOYER  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-				runwait, %comspec% cmd /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\lrdeploy.ahk" /out "%SKELD%\bin\lrdeploy.exe" /icon "%SKELD%\src\Deploy.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%	
+				RunWait, %comspec% /c echo.##################  COMPILE DEPLOYER  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
+				runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\lrdeploy.ahk" /out "%SKELD%\bin\lrdeploy.exe" /icon "%SKELD%\src\Deploy.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%	
 			}	
-		RunWait, %comspec% cmd /c echo.##################  COMPILE %RJPRJCT%  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% cmd /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\jkvtx.ahk" /out "%SKELD%\bin\jkvtx.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-		RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
-		FileDelete,%SKELD%\jkvtx.ahk
+		RunWait, %comspec% /c echo.##################  COMPILE %RJPRJCT%  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\jkvtx.ahk" /out "%SKELD%\bin\jkvtx.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
 		FileCopy, %SKELD%\jkvtx.exe,%DEPL%,1
 	}
 
@@ -2403,17 +2360,16 @@ if (PortVer = 1)
 		COMPLIST= 
 		if (PBOV <> 1)
 			{
-				FileDelete, %DEPL%\%RJPRJCT%.zip
-				RunWait, %comspec% cmd /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
+				FileDelete, %DEPL%\%RJPRJCT%D.zip
+				RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
 				Loop,parse,portableincludes,|
 					{
-						runwait, %comspec% cmd /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" "%A_LoopField%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
+						runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" "%A_LoopField%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
 					}
-				RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
+				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
 				sleep, 1000
 			}
 	}
-
 guicontrol,,progb,35
 if (BCANC = 1)
 	{
@@ -2423,20 +2379,7 @@ if (BCANC = 1)
 		compiling= 
 		return
 	}	
-if (DevlVer = 1)
-	{
-		SB_SetText(" Building Devel ")
-		gosub, BUILDING
-		guicontrol,,progb,55
-}
-if (BCANC = 1)
-	{
-		SB_SetText(" Cancelling Git Push ")
-		guicontrol,,progb,0
-		gosub, canclbld
-		compiling= 
-		return
-	}
+
 if (GitPush = 1)
 	{
 		ifinstring,pushnotes,|
@@ -2445,7 +2388,7 @@ if (GitPush = 1)
 				TAGLINE= %ebeb2%				
 			}
 			else {
-			TAGLINE= Profiles FOR Your Windows Games.
+				TAGLINE= Profiles FOR Your Windows Games.
 			}
 		ifinstring,pushnotes,$
 			{
@@ -2510,9 +2453,9 @@ if (GitPush = 1)
 		FileAppend, copy /y "site\version.txt" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, del /q "%GITD%\jkvtx.exe"`n,%DEPL%\!gitupdate.cmd
 		FileSetAttrib, +h, %DEPL%\!gitupdate.cmd
-	
 		guicontrol,,progb,65
 	}
+
 if (BCANC = 1)
 	{
 		SB_SetText(" Cancelling Stable Overwrite ")
@@ -2521,6 +2464,7 @@ if (BCANC = 1)
 		compiling= 
 		return
 	}
+
 if (OvrStable = 1)
 	{
 		SB_SetText(" overwriting stable ")
@@ -2529,7 +2473,9 @@ if (OvrStable = 1)
 				gosub, BUILDING
 			}
 	}				
+
 guicontrol,,progb,70
+
 if (BCANC = 1)
 	{
 		SB_SetText(" Cancelling Server Upload ")
@@ -2538,6 +2484,26 @@ if (BCANC = 1)
 		compiling= 
 		return
 	}
+
+if (ServerPush = 0)
+	{
+		buildnum= 
+		sha1:= olsha 
+		RDATE:= olrlsdt
+		dvms:= olsize
+		olnan1= 
+		olnan2= 
+		olnan3= 
+		olnan4= 
+		olnan5= 
+		stringsplit, olnan,olrlsb,-
+		date= %olnan2%-%olnan3%-%olnan4% 
+		if (olnan5 <> "")
+			{
+				buildnum= -%olnan5%
+			}
+	}
+
 if (ServerPush = 1)
 	{
 		if (SiteUpdate = 1)
@@ -2556,72 +2522,49 @@ if (ServerPush = 1)
 					{
 						RDATE= reverted
 					}
-				if (ServerPush = 0)
+				FileRead,skelhtml,%BUILDIR%\site\index.html
+				FileMove, %DEPL%\site\index.html, %DEPL%\index.bak,1
+				StringReplace,skelhtml,skelhtml,[CURV],%vernum%,All
+				Fileappend,%vernum%=[CURV]`n,%DEPL%\deploy.log
+				StringReplace,skelhtml,skelhtml,[TAGLINE],%tagline%,All
+				FileDelete,%BUILDIR%\insts.sha1
+				if (OvrStable = 1)
 					{
-						buildnum= 
-						sha1:= olsha 
-						RDATE:= olrlsdt
-						dvms:= olsize
-						olnan1= 
-						olnan2= 
-						olnan3= 
-						olnan4= 
-						olnan5= 
-						stringsplit, olnan,olrlsb,-
-						date= %olnan2%-%olnan3%-%olnan4% 
-						if (olnan5 <> "")
+						ifExist, %DEPL%\%RJPRJCT%-installer.exe
 							{
-								buildnum= -%olnan5%
+								CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
+								gosub, SHA1GET
+								if (SBOV = 1)
+									{
+										ApndSHA= reverted
+									}
+								if (DBOV = 1)
+									{
+										ApndSHA= reverted
+									}
+							}
+						ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
+							{
+								FileGetSize,dvlsize,%DEPL%\%RJPRJCT%-%date%%buildnum%.zip, K
+								dvps:= dvlsize / 1000
+								StringLeft,dvms,dvps,4
+								if (DBOV = 1)
+									{
+										dvms= reverted
+									}
+								if (SBOV = 1)
+									{
+										dvms= reverted
+									}
 							}
 					}
-
-				if (ServerPush = 1)
-					{
-						FileRead,skelhtml,%BUILDIR%\site\index.html
-						FileMove, %DEPL%\site\index.html, %DEPL%\index.bak,1
-						StringReplace,skelhtml,skelhtml,[CURV],%vernum%,All
-						Fileappend,%vernum%=[CURV]`n,%DEPL%\deploy.log
-						StringReplace,skelhtml,skelhtml,[TAGLINE],%tagline%,All
-						FileDelete,%BUILDIR%\insts.sha1
-
-						if (OvrStable = 1)
-							{
-								ifExist, %DEPL%\%RJPRJCT%-installer.exe
-									{
-										CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
-										gosub, SHA1GET
-										if (SBOV = 1)
-											{
-												ApndSHA= reverted
-											}
-										if (DBOV = 1)
-											{
-												ApndSHA= reverted
-											}
-									}
-								ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
-									{
-										FileGetSize,dvlsize,%DEPL%\%RJPRJCT%-%date%%buildnum%.zip, K
-										dvps:= dvlsize / 1000
-										StringLeft,dvms,dvps,4
-										if (DBOV = 1)
-											{
-												dvms= reverted
-											}
-										if (SBOV = 1)
-											{
-												dvms= reverted
-											}
-									}
-							}
-					}		
 				guicontrol,,progb,90
 				StringReplace,skelhtml,skelhtml,[RSHA1],%ApndSHA%,All
 				StringReplace,skelhtml,skelhtml,[WEBURL],https://%GITUSER%.github.io,All
 				StringReplace,skelhtml,skelhtml,[PAYPAL],%donation%
 				StringReplace,skelhtml,skelhtml,[GIT_USER],%GITUSER%,All
 				StringReplace,skelhtml,skelhtml,[GITSRC],%GITSRC%,All
-				StringReplace,skelhtml,skelhtml,[REVISION],%GITWEB%/%gituser%/%RJPRJCT%/releases/download/Installer/%RJPRJCT%.zip,All
+				StringReplace,skelhtml,skelhtml,[REVISION],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/Installer/%RJPRJCT%.zip,All
 				StringReplace,skelhtml,skelhtml,[PORTABLE],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/portable/portable.zip,All
 				
 				StringReplace,skelhtml,skelhtml,[RJ_PROJ],%RJPRJCT%,All
@@ -2644,43 +2587,29 @@ if (ServerPush = 1)
 						FileCopy,%SKELD%\site\img\*,%SITEDIR%\img			
 					}	
 				FileAppend,%skelhtml%,%SITEDIR%\index.html
-			}
-		uptoserv=
-		if (SiteUpdate = 1)
-			{
-				uptoserv= 1
-			}
-		if (ServerPush = 1)
-			{
-				uptoserv= 1
-			}
-		if (uptoserv = 1)
-			{
-				RunWait, %comspec% cmd /c echo.##################  GIT COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
+				RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 				SB_SetText(" committing changes to git ")
-				RunWait, %comspec% cmd /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+				RunWait, %comspec% /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
 				FileAppend, "%PushNotes%`n",%DEPL%\changelog.txt
 
 				SB_SetText(" Source changes committed.  Files Copied to git.")
 				StringReplace,PushNotes,PushNotes,",,All
 				;"
-				FileDelete, %DEPL%\sitecommit.bat
-				FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\*.ico" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\*.otf" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
+				FileDelete, %DEPL%\sitecommit.cmd
+				FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\*.otf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+				FileAppend,copy /y "%BUILDIR%\site\version.txt" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
 
-				;FileAppend,copy /y "%BUILDIR%\site\index.html" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				FileAppend,copy /y "%BUILDIR%\site\version.txt" "%gitroot%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\sitecommit.bat
-				RunWait, %comspec% cmd /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
-				RunWait, %comspec% cmd /c " "%DEPL%\sitecommit.bat" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+				RunWait, %comspec% /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
+				RunWait, %comspec% /c " "%DEPL%\sitecommit.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
 				SB_SetText(" Uploading to server ")
-				RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
+				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 			}
-
 		FileDelete, %DEPL%\gpush.cmd
 		FileAppend,set PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%`n,%DEPL%\gpush.cmd		
 		fileappend,cd "%GITROOT%"`n,%DEPL%\gpush.cmd
@@ -2689,7 +2618,7 @@ if (ServerPush = 1)
 				FileDelete,%GITD%\ReadMe.md
 				FileAppend,%readme%,%GITD%\ReadMe.md
 				FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-				fileappend,git -C "%GITD%" init`n,%DEPL%\gpush.cmd
+				fileappend,if not exist ".git\" cd ..\ && git -C "%GITD%" init && cd "%GITD%"`n,%DEPL%\gpush.cmd
 				FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
 				fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
 				fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd
@@ -2698,7 +2627,7 @@ if (ServerPush = 1)
 				FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd
 				FileAppend,gh repo create %RJPRJCT% --public --source="%GITD%"`n,%DEPL%\gpush.cmd
 				fileappend,git add .`n,%DEPL%\gpush.cmd
-				fileappend,git remote add %RJPRJCT% %GITWEB%/%GITUSER%/%RJPRJCT%`n,%DEPL%\gpush.cmd
+				fileappend,git remote add %RJPRJCT% %GITSWEB%/%GITUSER%/%RJPRJCT%`n,%DEPL%\gpush.cmd
 				FileAppend,git commit -a -m "%PushNotes%"`n,%DEPL%\gpush.cmd
 				FileAppend,git push -f --all %RJPRJCT%`n,%DEPL%\gpush.cmd
 				fileappend,popd`n,%DEPL%\gpush.cmd
@@ -2707,64 +2636,52 @@ if (ServerPush = 1)
 			{
 				FileDelete,%SITEDIR%\ReadMe.md
 				FileAppend,%readme%,%SITEDIR%\ReadMe.md
-				FileAppend,pushd "%GITROOT%\%GITUSER%.github.io"`n,%DEPL%\gpush.cmd
-				fileappend,git -C "%GITROOT%\%GITUSER%.github.io" init`n,%DEPL%\gpush.cmd
-				FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
-				fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
-				fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd	
-				fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd
-				fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd
-				FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd
+				FileAppend,pushd "%SITEDIR%\..\"`n,%DEPL%\gpush.cmd
+				fileappend,if not exist "%SITEDIR%\.git\" git -C "%SITEDIR%\..\" init`n,%DEPL%\gpush.cmd
+				if (GitPush <> 1)
+					{
+						FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
+						fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
+						fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd	
+						fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd
+						fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd
+						FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd					
+					}
 				FileAppend,gh repo create %GITUSER%.github.io --public --source="%GITROOT%\%GITUSER%.github.io"`n,%DEPL%\gpush.cmd
 				FileAppend,git add "%RJPRJCT%"`n,%DEPL%\gpush.cmd
-				FileAppend,pushd "%GITROOT%\%GITUSER%.github.io\%RJPRJCT%"`n,%DEPL%\gpush.cmd
+				FileAppend,pushd "%SITEDIR%"`n,%DEPL%\gpush.cmd
 				FileAppend,git add .`n,%DEPL%\gpush.cmd
-				fileappend,git remote add %GITUSER%.github.io %GITWEB%/%GITUSER%/%GITUSER%.github.io`n,%DEPL%\gpush.cmd		
+				fileappend,git remote add %GITUSER%.github.io %GITSWEB%/%GITUSER%/%GITUSER%.github.io`n,%DEPL%\gpush.cmd		
 				FileAppend,git commit -a -m "%PUSHNOTES%"`n,%DEPL%\gpush.cmd
 				FileAppend,git push -f --all %GITUSER%.github.io`n,%DEPL%\gpush.cmd
 			}
 		;`
-		SB_SetText(" Uploading to server ")
+		SB_SetText(" Uploading binaries to server ")
 		if (PortVer = 1)
 			{
-				if (ServerPush = 1)
-					{	
-						FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-						FileAppend,gh release delete portable -y`n,%DEPL%\gpush.cmd
-						FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip"`n,%DEPL%\gpush.cmd
-					}
+					FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
+					FileAppend,gh release delete portable -y --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
+					FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip" --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
 			}
 		if (OvrStable = 1)
 			{
-				if (ServerPush = 1)
-					{
-						FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-						FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
-						FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
-					}
+				FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
+				FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
+				FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
 			}
 		guicontrol,,progb,80
 		if (GitPush = 1)
 			{
-				RunWait, %comspec% cmd /c echo.###################  GIT DEPLOYMENT PUSH  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-				RunWait, %comspec% cmd /c " "gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
-				RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
+				RunWait, %comspec% /c echo.###################  GIT DEPLOYMENT PUSH  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+				RunWait, %comspec% /c " "gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
+				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 			}
 	}	
-if (BCANC = 1)
-	{
-		SB_SetText(" Cancelling Site Update ")
-		guicontrol,,progb,0
-		gosub, canclbld
-		compiling= 
-		return
-	}
 
 guicontrol,,progb,100
 SB_SetText(" Complete ")
 gosub, canclbld
 guicontrol,,progb,0
-
 guicontrol,enable,OvrStable
 guicontrol,enable,RESDD
 guicontrol,enable,ResB
@@ -2789,21 +2706,21 @@ return
 
 BUILDING:
 BUILT= 1
-ifexist, %DEPL%\skeletonD.zip
+ifexist, %DEPL%\%RJPRJCT%D.zip
 	{
-		FileDelete, %DEPL%\skeletonD.zip
+		FileDelete, %DEPL%\%RJPRJCT%D.zip
 	}
-ifexist, %DEPL%\linKrun.zip
+ifexist, %DEPL%\%RJPRJCT%K.zip
 	{
-		FileDelete, %DEPL%\linKrun.zip
+		FileDelete, %DEPL%\%RJPRJCT%K.zip
 	}
 ifexist, %DEPL%\%RJPRJCT%-installer.exe
 	{
 		FileDelete, %DEPL%\%RJPRJCT%-installer.exe
 	}
-ifexist, %BUILDIR%\lrdeploy.nsi
+ifexist, %DEPL%\lrdeploy.nsi
 	{
-		FileDelete, %BUILDIR%\lrdeploy.nsi
+		FileDelete, %DEPL%\lrdeploy.nsi
 	}
 
 FileRead, nsiv,%BUILDIR%\src\lrdeploy.set
@@ -2814,11 +2731,11 @@ StringReplace, nsiv, nsiv,[SOURCE],%SKELD%,All
 StringReplace, nsiv, nsiv,[BUILD],%BUILDIR%,All
 StringReplace, nsiv, nsiv,[DBP],%DEPL%,All
 StringReplace, nsiv, nsiv,[CURV],%vernum%,All
-FileAppend, %nsiv%, %BUILDIR%\lrdeploy.nsi
+FileAppend, %nsiv%, %DEPL%\lrdeploy.nsi
 SB_SetText("Building Installer")
 FileDelete,%DEPL%\%RJPRJCT%-Installer.exe.bak
 RunWait, %comspec% /c echo.###################  DEPLOYMENT LOG FOR %date%  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-RunWait,"%NSIS%" "%BUILDIR%\lrdeploy.nsi",,hide
+RunWait,"%NSIS%" "%DEPL%\lrdeploy.nsi",,hide
 ;NSITST:= cmdret(nsicommand)
 sleep,1500
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
@@ -2872,28 +2789,28 @@ if (buildnum <> "")
 		buildnum= -%buildnum%
 	}	
 
-RunWait, %comspec% cmd /c echo.##################  CREATE INSTALLER ######################## >>"%DEPL%\deploy.log", ,%rntp%
-RunWait, %comspec% cmd /c " "%BUILDIR%\bin\7za.exe" a "%DEPL%\linKrun.zip" "%DEPL%\%RJPRJCT%-installer.exe" >>"%DEPL%\deploy.log"", %BUILDIR%,%rntp%
-RunWait, %comspec% cmd /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
+RunWait, %comspec% /c echo.##################  CREATE INSTALLER ######################## >>"%DEPL%\deploy.log", ,%rntp%
+RunWait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a "%DEPL%\%RJPRJCT%K.zip" "%DEPL%\%RJPRJCT%-installer.exe" >>"%DEPL%\deploy.log"", %BUILDIR%,%rntp%
+RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 if (DevlVer = 1)
 	{
 		if (DBOV <> 1)
 			{
-				FileMove,%DEPL%\linKrun.zip, %DEPL%\%RJPRJCT%.zip,1	
-				FileMove,%DEPL%\linKrun.zip, %DEPL%\%RJPRJCT%.zip,1	
+				FileMove,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%.zip,1	
+				FileMove,%DEPL%\%RJPRJCT%D.zip, %DEPL%\portable.zip,1	
 			}
 	}
 if (OvrStable = 1)
 	{
-				if (SBOV <> 1)
+		if (SBOV <> 1)
+			{
+				FileCopy,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip,1
+				ifExist, %DEPL%\%RJPRJCT%.zip
 					{
-						FileCopy,%DEPL%\linKrun.zip, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip,1
-						ifExist, %DEPL%\%RJPRJCT%.zip
-							{
-								FileMove,%DEPL%\%RJPRJCT%.zip, %DEPL%\%RJPRJCT%.zip.bak,1
-							}
-						FileMove,%DEPL%\linKrun.zip, %DEPL%\%RJPRJCT%.zip,1
+						FileMove,%DEPL%\%RJPRJCT%.zip, %DEPL%\%RJPRJCT%.zip.bak,1
 					}
+				FileMove,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%.zip,1
+			}
 	}
 return
 ;};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2940,34 +2857,34 @@ return
 esc::
 DEVGUID:= WinActive("_DEV_GUI_")
 if (DEVGUID <> 0)
-{
-	FDME:= 8452
-	quitnum+=1
-	if (quitnum = 3)
-		{
-			FDME:= 8196
-		}
-	if (quitnum > 3)
-		{
-			goto, QUITOUT
-		}
-	sleep,250
-	if (compiling = 1)
-		{
-			goto, CANCEL
-		}
-	msgbox,% FDME,Exiting, Would you like to close the publisher?
-	ifmsgbox, yes
-		{
-			gosub, QUITOUT
-		}
-	ifmsgbox, no
-		{
-			DWNCNCL= 
-			return
-		}
-	return
-}
+	{
+		FDME:= 8452
+		quitnum+=1
+		if (quitnum = 3)
+			{
+				FDME:= 8196
+			}
+		if (quitnum > 3)
+			{
+				goto, QUITOUT
+			}
+		sleep,250
+		if (compiling = 1)
+			{
+				goto, CANCEL
+			}
+		msgbox,% FDME,Exiting, Would you like to close the publisher?
+		ifmsgbox, yes
+			{
+				gosub, QUITOUT
+			}
+		ifmsgbox, no
+			{
+				DWNCNCL= 
+				return
+			}
+		return
+	}
 Return
 
 SHA1GET:

@@ -1,8 +1,9 @@
-#NoEnv  
+#NoEnv
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
+
 Loop %0%  
 	{
 		GivenPath := %A_Index%

@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-04-14 6:20 PM
+RELEASE= 2022-04-19 2:23 AM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth

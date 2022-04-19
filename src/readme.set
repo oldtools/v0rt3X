@@ -4,7 +4,7 @@ Creates a specialized launcher and profile-folder (jacket) for each game which h
 
 Games not installed through steam/gog/epic/origin/etc are detected and given a proper name:
 
-Release/build version, group-names and other extranious title info is culled to facilitate importing into a frontend.
+Release/build versions, group-names and other extranious title-info is culled to facilitate importing into a frontend.
 
 Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
@@ -112,7 +112,7 @@ Right-Click on the buttons in the setup tool to download supported executables.
 ## Launching Games
 
 It is not necessary, but recommended to enable the RunAsAdmin option.
-Ideally, [RJ_PROJ] can run entirely in userspace, however many games require administrator access and manipulating hardware at the user level is often unreliable.
+Ideally, [RJ_PROJ] can run entirely in userspace, however many games require administrator access and manipulating hardware at the user-level is often unreliable.
 
 ![AsAdmin](https://[GIT_USER].github.io/[RJ_PROJ]/runas.png)
 

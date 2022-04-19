@@ -4,15 +4,15 @@ Creates a specialized launcher and profile-folder (jacket) for each game which h
 
 Games not installed through steam/gog/epic/origin/etc are detected and given a proper name:
 
-Release/build version, group-names and other extranious title info is culled to facilitate importing into a frontend.
+Release/build versions, group-names and other extranious title-info is culled to facilitate importing into a frontend.
 
 Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.68.428
+This Version:0.99.68.430
 
-This Build: 2022-04-14 6:20 PM
+This Build: 2022-04-19 2:23 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -112,7 +112,7 @@ Right-Click on the buttons in the setup tool to download supported executables.
 ## Launching Games
 
 It is not necessary, but recommended to enable the RunAsAdmin option.
-Ideally, v0rt3X can run entirely in userspace, however many games require administrator access and manipulating hardware at the user level is often unreliable.
+Ideally, v0rt3X can run entirely in userspace, however many games require administrator access and manipulating hardware at the user-level is often unreliable.
 
 ![AsAdmin](https://oldtools.github.io/v0rt3X/runas.png)
 
