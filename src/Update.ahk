@@ -24,15 +24,15 @@ if (rjrlupdfX <> "")
 		SetWorkingDir, %home%
 		goto, rjrlupdf
 	}
-FileDelete, %home%\version.txt
+FileDelete, %cacheloc%\version.txt
 ARCORG= %source%\repos.set
 
 IniRead,sourceHost,%ARCORG%,GLOBAL,SOURCEHOST
 IniRead,UPDATEFILE,%ARCORG%,GLOBAL,UPDATEFILE
 IniRead,RELEASE,%ARCORG%,GLOBAL,VERSION
 getVer:
-URLDownloadToFile, %sourceHost%,%home%\version.txt
-ifnotexist, %home%\version.txt
+URLDownloadToFile, %sourceHost%,%cacheloc%\version.txt
+ifnotexist, %cacheloc%\version.txt
 	{
 		MsgBox,4,Not Found,Update Versioning File not found.`nRetry?
 		ifMsgBox, Yes
@@ -68,7 +68,7 @@ if ((RJPRJCT = "")or(RJPRJCT = "ERROR"))
 		stringreplace,RJPRJCT,RJPRJCT,!,,All
 		stringreplace,RJPRJCT,RJPRJCT,@,,All
 	}
-FileReadLine,DATECHK,version.txt,1
+FileReadLine,DATECHK,%cacheloc%\version.txt,1
 stringsplit,VERCHKC,DATECHK,=
 if (VERCHKC1 <> RELEASE)
 	{
@@ -102,7 +102,7 @@ ifexist,%save%
 		Process, close, lrdeploy.exe
 		Process, close, %RJPRJCT%.exe
 		Process, close, Build_Source.exe
-		Runwait, %comspec% cmd /c "%binhome%\7za.exe x -y "%save%" -O"`%CD`%" ",,hide
+		Runwait, %comspec% /c "%binhome%\7za.exe x -y "%save%" -O"`%CD`%" ",,hide
 		if (ERRORLEVEL <> 0)
 			{
 				MsgBox,3,Update Failed,Update not found.`n    Retry?
@@ -112,7 +112,7 @@ ifexist,%save%
 					}
 				exitapp
 			}
-		Run, %RJPRJCT%.exe
+		Run, %binhome%\%RJPRJCT%.exe
 		exitapp
 	}
 	else {
@@ -134,7 +134,7 @@ if (ERRORLEVEL <> 0)
 	}
 if (inapp = 1)
 	{
-		Run, %RJPRJCT%.exe
+		Run, %binhome%\%RJPRJCT%.exe
 	}	
 exitapp
 

@@ -2260,78 +2260,14 @@ if (OvrStable = 1)
 	
 if (INITINCL = 1)
 	{		
-			RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-			runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
-			RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
-			portableincludes= 
-			Loop, files, %SKELD%\site\*.txt
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\*.md
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\src\*.set
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "src" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\src\*.ico
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "src" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\img\*.svg
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . "img" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\img\*.png
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . "img" . "\"  A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\*.html
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\*.ttf
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\site\*.otf
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "site" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\src\*.ahk,R
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "src" . "\" . A_LoopFileName . "|"
-				}
-			Loop, files, %SKELD%\src\*.ico,R
-				{
-					stringreplace,ain,A_LoopFileFullPath,%home%\,,All
-					portableincludes.= "src" . "\" . A_LoopFileName . "|"
-				}
-			portableincludes.= "bin" . "\" . "aria2c.exe" . "|"
-			portableincludes.= "bin" . "\" . "7za.exe" . "|"
-			portableincludes.= "bin" . "\" . "Setup.exe" . "|"
-			portableincludes.= "bin" . "\" . "jkvtx.exe" . "|"
-			portableincludes.= "bin" . "\" . "Update.exe" . "|"
-			portableincludes.= "bin" . "\" . "NewOSK.exe" . "|"
-			portableincludes.= "bin" . "\" . "lrdeploy.exe" . "|"
+		RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		RunWait, %comspec% /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		RunWait, %comspec% /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 	}
-
 if (OvrStable = 1)
 	{
 		Process, exist, lrdeploy.exe
@@ -2357,18 +2293,29 @@ guicontrol,,progb,20
 if (PortVer = 1)
 	{		
 		SB_SetText(" Building portable ")
-		COMPLIST= 
-		if (PBOV <> 1)
+		COMPLIST= 	
+		buildnum= 
+		ifExist,%DEPL%\portable.zip
 			{
-				FileDelete, %DEPL%\%RJPRJCT%D.zip
-				RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-				Loop,parse,portableincludes,|
+				Loop,Files, %DEPL%\portable-%date%*.zip
 					{
-						runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" "%A_LoopField%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
+						buildnum+=1
 					}
-				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
-				sleep, 1000
+				FileCopy,%DEPL%\portable.zip, %DEPL%\portable-%date%%buildnum%.zip,1
 			}
+			else {
+				FileCopy,%DEPL%\portable.zip,%DEPL%\portable-%date%.zip,1
+			}
+		FileDelete, %DEPL%\portable.zip
+		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
+		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.set src\*.ico site\*.svg site\*.png site\*.html	site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
+		inclexe= bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\jkvtx.exe|bin\lrdeploy.exe
+		Loop,parse,inclexe,|
+			{
+				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+			}
+		sleep, 1000
+		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
 	}
 guicontrol,,progb,35
 if (BCANC = 1)
@@ -2510,20 +2457,8 @@ if (ServerPush = 1)
 			{
 				SB_SetText(" Updating the website ")
 				RDATE= %date% %timestring%
-				if (DBOV = 1)
-					{
-						RDATE= reverted
-					}
-				if (PBOV = 1)
-					{
-						RDATE= reverted
-					}
-				if (SBOV = 1)
-					{
-						RDATE= reverted
-					}
 				FileRead,skelhtml,%BUILDIR%\site\index.html
-				FileMove, %DEPL%\site\index.html, %DEPL%\index.bak,1
+				FileDelete, %DEPL%\site\index.html
 				StringReplace,skelhtml,skelhtml,[CURV],%vernum%,All
 				Fileappend,%vernum%=[CURV]`n,%DEPL%\deploy.log
 				StringReplace,skelhtml,skelhtml,[TAGLINE],%tagline%,All
@@ -2534,28 +2469,12 @@ if (ServerPush = 1)
 							{
 								CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
 								gosub, SHA1GET
-								if (SBOV = 1)
-									{
-										ApndSHA= reverted
-									}
-								if (DBOV = 1)
-									{
-										ApndSHA= reverted
-									}
 							}
 						ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
 							{
 								FileGetSize,dvlsize,%DEPL%\%RJPRJCT%-%date%%buildnum%.zip, K
 								dvps:= dvlsize / 1000
 								StringLeft,dvms,dvps,4
-								if (DBOV = 1)
-									{
-										dvms= reverted
-									}
-								if (SBOV = 1)
-									{
-										dvms= reverted
-									}
 							}
 					}
 				guicontrol,,progb,90
@@ -2581,10 +2500,10 @@ if (ServerPush = 1)
 				FileDelete,%SITEDIR%\index.html
 				ifnotexist, %SITEDIR%
 					{
-						FileCreateDir,%SITEDIR%
-						FileCreateDir,%SITEDIR%\img
-						FileCopy,%SKELD%\site\*,%SITEDIR%\			
-						FileCopy,%SKELD%\site\img\*,%SITEDIR%\img			
+						FileCreateDir,%SITEDIR%,1
+						FileCreateDir,%SITEDIR%\img,1
+						FileCopy,%SKELD%\site\*,%SITEDIR%,1
+						FileCopy,%SKELD%\site\img\*,%SITEDIR%\img,1			
 					}	
 				FileAppend,%skelhtml%,%SITEDIR%\index.html
 				RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
@@ -2706,23 +2625,10 @@ return
 
 BUILDING:
 BUILT= 1
-ifexist, %DEPL%\%RJPRJCT%D.zip
-	{
-		FileDelete, %DEPL%\%RJPRJCT%D.zip
-	}
-ifexist, %DEPL%\%RJPRJCT%K.zip
-	{
-		FileDelete, %DEPL%\%RJPRJCT%K.zip
-	}
-ifexist, %DEPL%\%RJPRJCT%-installer.exe
-	{
-		FileDelete, %DEPL%\%RJPRJCT%-installer.exe
-	}
 ifexist, %DEPL%\lrdeploy.nsi
 	{
 		FileDelete, %DEPL%\lrdeploy.nsi
 	}
-
 FileRead, nsiv,%BUILDIR%\src\lrdeploy.set
 StringReplace, nsiv, nsiv,[GIT_USER],%GITUSER%,All
 StringReplace, nsiv, nsiv,[RJ_PROJ],%RJPRJCT%,All
@@ -2737,6 +2643,18 @@ FileDelete,%DEPL%\%RJPRJCT%-Installer.exe.bak
 RunWait, %comspec% /c echo.###################  DEPLOYMENT LOG FOR %date%  ####################### >>"%DEPL%\deploy.log", ,%rntp%
 RunWait,"%NSIS%" "%DEPL%\lrdeploy.nsi",,hide
 ;NSITST:= cmdret(nsicommand)
+buildnum= 
+ifExist,%DEPL%\%RJPRJCT%-Installer.exe
+	{
+		Loop,Files, %DEPL%\%RJPRJCT%-%date%*.exe
+			{
+				buildnum+=1
+			}
+		FileCopy,%DEPL%\%RJPRJCT%-Installer.exe, %DEPL%\%RJPRJCT%-%date%%buildnum%.exe,1
+	}
+else {
+	FileCopy,%DEPL%\%RJPRJCT%-Installer.exe,%DEPL%\%RJPRJCT%-%date%.exe,1
+}	
 sleep,1500
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
@@ -2777,41 +2695,10 @@ if (BLDERROR = 1)
 	}
 FileDelete, %SKELD%\site\version.txt
 FileAppend, %date% %timestring%=%nchash%=%vernum%,%SKELD%\site\version.txt
-buildnum= 
-buildtnum= 1
-Loop, %DEPL%\%RJPRJCT%-%date%*.zip
-	{
-		buildnum+=1
-	}
-
-if (buildnum <> "")
-	{
-		buildnum= -%buildnum%
-	}	
-
 RunWait, %comspec% /c echo.##################  CREATE INSTALLER ######################## >>"%DEPL%\deploy.log", ,%rntp%
 RunWait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a "%DEPL%\%RJPRJCT%K.zip" "%DEPL%\%RJPRJCT%-installer.exe" >>"%DEPL%\deploy.log"", %BUILDIR%,%rntp%
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
-if (DevlVer = 1)
-	{
-		if (DBOV <> 1)
-			{
-				FileMove,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%.zip,1	
-				FileMove,%DEPL%\%RJPRJCT%D.zip, %DEPL%\portable.zip,1	
-			}
-	}
-if (OvrStable = 1)
-	{
-		if (SBOV <> 1)
-			{
-				FileCopy,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip,1
-				ifExist, %DEPL%\%RJPRJCT%.zip
-					{
-						FileMove,%DEPL%\%RJPRJCT%.zip, %DEPL%\%RJPRJCT%.zip.bak,1
-					}
-				FileMove,%DEPL%\%RJPRJCT%K.zip, %DEPL%\%RJPRJCT%.zip,1
-			}
-	}
+
 return
 ;};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

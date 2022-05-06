@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-04-19 2:23 AM
+RELEASE= 2022-05-06 9:32 AM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -962,10 +962,14 @@ Menu,AddProgs,Delete
 Loop,files,%binhome%\*.exe,F
   {
 	  if (A_LoopFileName = "soundVolumeView.exe")
-		Menu,AddProgs,Add,soundVoumeView,SVV_Prog
+		{
+			Menu,AddProgs,Add,soundVoumeView,SVV_Prog
+		}
 	  if (A_LoopFileName = "setsounddevice.exe")
-		Menu,AddProgs,Add,setSoundDevice,SSD_Prog
-	  }	
+		{
+			Menu,AddProgs,Add,setSoundDevice,SSD_Prog
+		}
+	}	
 Menu,AddProgs,Add,Download,DownloadAddons
 return
 
@@ -3742,16 +3746,14 @@ return
 RlsGrpRoll:
 stringlen,rgv,rgg
 stringright,nv,njname,%rgv%
+sexenj= %njname%
 if (instr(njname,rgg)&&(nv = rgg))
-	{
+	{		
 		Loop,parse,RLSPFX,|
 			{
-				if (A_LoopField = "")
-					{
-						continue
-					}
 				ccba:= A_LoopField . rgg
-				stringreplace,sexenj,njname,%ccba%,,
+				stringreplace,sexenj,njname,%ccba%,,All
+				;stringreplace,sexenj,sexenj,%rgg%,,All
 				if (sexenj <> njname)
 					{
 						nJname= %sexenj%
@@ -3938,7 +3940,7 @@ if (nexenj = "")
 	{
 		nexenj= %njname%
 	}
-
+sexjnj= %njName%
 Loop,parse,rlsgrps,`n`r
 	{
 		if (A_LoopField = "")
@@ -3948,15 +3950,11 @@ Loop,parse,rlsgrps,`n`r
 		hh=	
 		rgg:= A_LoopField
 		rgj:= A_LoopField
-		if instr(rgg,A_Space)
+		if instr(A_LoopField,A_Space)
 			{
-				if (A_LoopField = "")
-					{
-						continue
-					}
 				Loop,parse,SPCFIX,|
 					{
-						stringreplace,rgg,rgg,%A_Space%,%A_LoopField%,All
+						stringreplace,rgg,rgj,%A_Space%,%A_LoopField%,All
 						gosub,RlsGrpRoll
 						if (hh = 1)
 							{
