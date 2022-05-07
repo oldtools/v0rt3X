@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-05-06 9:32 AM
+RELEASE= 2022-05-07 2:03 AM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -68,8 +68,8 @@ fileread,exclfls,%source%\exclfnms.set
 fileread,rlsgrps,%source%\rlsgrps.set
 ;filextns= exe|lnk
 filextns= exe
-SPCFIX= .|-|_
-RLSPFX= .|-|(|[|_|%A_Space%|
+SPCFIX= .|-|%A_Space%|_
+RLSPFX= .|-|(|[|%A_Space%|_|
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
 MAPCFGS= Antimicro|AntimicroX|JoyToKey|Xpadder|JoyXoff
 remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff__MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
@@ -3753,7 +3753,6 @@ if (instr(njname,rgg)&&(nv = rgg))
 			{
 				ccba:= A_LoopField . rgg
 				stringreplace,sexenj,njname,%ccba%,,All
-				;stringreplace,sexenj,sexenj,%rgg%,,All
 				if (sexenj <> njname)
 					{
 						nJname= %sexenj%
