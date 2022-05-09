@@ -1043,9 +1043,9 @@ Guicontrol,,MM_MediaCenter_ConfigT,
 return
 
 MM_AUTO:
-MultiMonitor_Tool= %A_Space%
-MM_GAME_Config= %A_Space%
-MM_MediaCenter_Config= %A_Space%
+MultiMonitor_Tool:= A_Space
+MM_GAME_Config:= A_Space
+MM_MediaCenter_Config:= A_Space
 if fileexist(ProgramFiles . "\Multimonitortool.exe")
 	{
 		MultiMonitor_Tool= %ProgramFiles%\Nirsoft\x64\Multimonitortool.exe
@@ -3727,7 +3727,7 @@ Loop,%fullstn0%
 			}
 		if (mcpovr <> "<")
 			{
-				iniwrite,%mcpovr%,%GAMECFG%,GENERAL,MediaCenter_Profile
+				iniwrite,%mcpovr%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
 			}
 		SB_SetText("creaed profile for " gmnamex "")
 	}

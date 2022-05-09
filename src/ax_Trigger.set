@@ -6,3 +6,4 @@ if "%~4" == "" set pro4=
 if "%~3" == "" set pro3= 
 if "%~2" == "" set pro2= 
 start "" "[AMICRX]" --tray --hidden --profile-controller 1 --profile %pro1%%pro2%%pro3%%pro4%
+exit /b

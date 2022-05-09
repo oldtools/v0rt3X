@@ -8,5 +8,4 @@ start /wait "" "[JOYXO]" -import -srcpath %pro1% -all
 start /wait "" "[JOYXO]" -add -procpath %proX% -procname %ProG%
 start "" "[JOYXO]" -close
 start "" "[JOYXO]"
-
- 
+exit /b

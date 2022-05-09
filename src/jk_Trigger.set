@@ -9,4 +9,4 @@ if "%ProX%" == "" set ProX=%proxn%&&set proXProfile=[JOYTKINI]
 if %ProX%" == "" set proXProfile= "[JOYTKINI]"&&set ProX=%proxn%
 copy /N "%proXProfile%" "%ProX%"
 start "" "[JOYTK]" -r %pro1%
- 
+exit /b

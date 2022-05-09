@@ -4,3 +4,4 @@ if "%~4" == "" set proX= %2% %3% /M
 if "%~3" == "" set proX= %2% /M
 if "%~2" == "" set proX= /M
 start "" "[XPADR]" %pro1%%proX%
+exit /b
