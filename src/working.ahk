@@ -2770,8 +2770,8 @@ Loop,parse,SPLIT_SRC,|
 								gosub, GETGOODNAME
 								FilePPUT= %FilePath%
 							}
-						FileOpts:= A_SPace
-						FileArgs:= A_SPace
+						FileOpts:= <
+						FileArgs:= <
 						SB_SetText("added " FileNM "")	
 						LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y")
 						if (lvachk <> "")
@@ -2961,41 +2961,42 @@ Loop,%fullstn0%
 			{
 				continue
 			}
+		;msgbox,,,1=%prvn1%`n2=%prvn2%`n3=%prvn3%`n4=%prvn4%`n5=%prvn5%`n6=%prvn6%`n7=%prvn7%`n8=%prvn8%`n9=%prvn9%`n10=%prvn10%`n11=%prvn11%`n12=%prvn12%`n13=%prvn13%`n14=%prvn14%`n15=%prvn15%`n16=%prvn16%
 		gmopts= %prvn2%	
 		gmargs= %prvn3%	
-		kbmovr= %prvn4%
+		kbmovr= %prvn5%
 		mmovr= %prvn8%
 		jlovr= %prvn11%
 		jbovr= %prvn12%
 		preovr= %prvn13%
 		pstovr= %prvn14%
+		if (prvn2 <> "<")
+			{
+				pl1ovr= %prvn6%
+			}
 		if (prvn7 <> "<")
 			{
-				pl1ovr= %prvn5%
+				pl2ovr= %prvn7%
 			}
 		if (prvn8 <> "<")
 			{
-				pl2ovr= %prvn6%
+				mcpovr= %prvn8%
 			}
-		if (prvn9 <> "<")
+		if (prvn10 <> "<")
 			{
-				mcpovr= %prvn7%
+				mgovr= %prvn10%
 			}
 		if (prvn11 <> "<")
 			{
-				mgovr= %prvn9%
+				dgovr= %prvn11%
 			}
 		if (prvn12 <> "<")
 			{
-				dgovr= %prvn10%
+				jlovr= %prvn12%
 			}
 		if (prvn13 <> "<")
 			{
-				jlovr= %prvn11%
-			}
-		if (prvn14 <> "<")
-			{
-				jbovr= %prvn12%
+				jbovr= %prvn13%
 			}
 		fnd64=
 		fnd32=
@@ -3322,11 +3323,11 @@ Loop,%fullstn0%
 					{
 						OutArgs=						
 						OutArgz=						
-						if (gmopts <> "")
+						if ((gmopts <> "")&&(gmopts <> "<"))
 							{
 								OutArgs:= gmopts
 							}
-						if (gmargs <> "")
+						if ((gmargs <> "")&&(gmargs <> "<"))
 							{
 								if (outopts <> "")
 									{
