@@ -1153,7 +1153,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 					}
 			}
 	}
-
+ 
 if (Logging = 1)
 	{
 		FileAppend,Run="%plfp%[%linkoptions%|%plarg%]in%pldr%"`nkeyboard=|%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%|`njoycount1="%joycnt%"`n%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%`njoycount2=%joucount%`n`n,%home%\log.txt

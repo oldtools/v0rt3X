@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-05-12 6:47 AM
+RELEASE= 2022-05-14 5:22 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -2482,14 +2482,117 @@ gui,submit,NoHide
 FileSelectFile,Gametoadd,35,,Select a Game,*.exe;*.lnk
 fullist.= GametoAdd . "|"
 FileGetSize,filez,%GameToAdd%
-splitpath,GameToAdd,filenm,filepath,fileext
+splitpath,GameToAdd,filenm,filepath,fileext,filejnm
 if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
 	{
 		XSRCADD.= filepath . "|"
 	}
-SOURCEDLIST.= FileNM . "|" . FilePath . "|" . A_Space . "|" . A_Space . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+nfilepath= %filepath%	
+rgetsn:	
+adgname:= A_Space	
+Loop,parse,nfilepath,\
+	{
+		odlnx= %A_LoopField%
+		stringreplace,splp,A_LoopField,.,%A_Space%,All
+		stringreplace,spnp,A_LoopField,.,,All
+		stringreplace,filenspc,filejnm,.,,All
+		stringsplit,dba,A_LoopField,%A_Space%
+		stringsplit,aba,A_LoopField,([-_
+		stringsplit,bba,aba1,.%A_Space%
+		stringsplit,cba,A_LoopField,([
+		stringreplace,ba,aba1,%A_Space%,,All
+		stringreplace,ba,ba,',,All
+		stringreplace,ca,cba1,',,All
+		stringreplace,da,dba1,',,All
+		stringreplace,ca,ca,.,,All
+		stringreplace,ca,ca,_,,All
+		stringreplace,ca,ca,-,,All
+		stringreplace,ca,ca,%A_Space%,,All
+		if instr(spnp,filejnm)
+			{
+				Loop,%bba0%
+					{
+						axi= bba%A_Index%
+						if instr(filenspc,axi)
+							{
+								adgname.= axi
+								stringreplace,odlnx,odlnx,%axi%,,
+							}
+						else {
+							break
+						}	
+					}
+				if (adgname = filenspc)
+					{
+						adgname= %odlnx%
+					}
+			}
+		if (ca = filejnm)
+			{
+				adgname= %ca%
+				break
+			}
+		if (da = filejnm)
+			{
+				adgname= %da%
+				break
+			}
+		if (ba = filejnm)
+			{
+				adgname= %ba%
+				break
+			}
+	}
+Loop,parse,absol,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if (adgname = A_LoopField)
+			{
+				splitpath,nfilepath,,tfilepath,,filejnm
+				nfilepath= %tfilepath%
+				goto, rgetsn
+			}
+	}
+	
+Loop,parse,rabsol,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if (adgname = A_LoopField)
+			{
+				splitpath,nfilepath,,tfilepath,,filejnm
+				nfilepath= %tfilepath%
+				goto, rgetsn
+			}
+	}
+cadgname= |%adgname%|
+Loop,parse,exclfls,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if (cadgname = A_LoopField)
+			{
+				splitpath,nfilepath,,tfilepath,,filejnm
+				nfilepath= %tfilepath%
+				goto, rgetsn
+			}
+	}
+		
+		
+;exep= %agdname%
+;gosub,GETGOODNAME
+GTACSTM:= FileNM . "|" . FilePath . "|||" . adgname . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"
+SOURCEDLIST.= GTACSTM
+fileappend,%GTACSTM%,%home%\continue.db
 Gui,ListView,MyListView
-LV_Add(lvachk,FileNM, FilePath, A_Space, A_Space,A_Space,"y","<","<","<","y","<","<","<","<","y","y")
+LV_Add(lvachk,FileNM, FilePath, , , adgname,"y","<","<","<","y","<","<","<","<","y","y")
 LV_ModifyCol()
 return
 
@@ -2776,7 +2879,7 @@ Loop,parse,SPLIT_SRC,|
 						LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y")
 						if (lvachk <> "")
 							{
-								SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"	
+								SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"	
 							}
 					}
 			}
@@ -2812,15 +2915,15 @@ Loop,parse,simpnk,`r`n
 								rplt= %fenum1%\%fenum2%
 							}
 						stringreplace,jtst,fltsmp,%rplt%,,UseErrorLevel
-						vd=
+						vd= <
 						if (errorlevel = 0)
 							{
 								if (enablelogging = 1)
 									{
 										fileappend,%fenx%|`n,%home%\log.txt
 									}
-								LV_Add(lvachk,fenf, fendir, ,, A_Space,"y","<","<","<","y","<","<","<","<","y","y")
-								SOURCEDLIST.= fenf . "|" . fendir . "|" . vd . "|" . vd . "|" . A_Space . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "<" . "|" . "y" . "|" . "y" . "`n"
+								LV_Add(lvachk,fenf, fendir, , , A_Space,"y","<","<","<","y","<","<","<","<","y","y")
+								SOURCEDLIST.= fenf . "|" . fendir . "|" . vd . "|" . vd . "|" . A_Space . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"
 								fullist.= fenx . "|"
 								break
 							}
@@ -2861,7 +2964,7 @@ Loop,parse,GUIVARS,|
 	}
 
 ICELV1 := New LV_InCellEdit(HLV1)
-ICELV1.SetColumns(3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+ICELV1.SetColumns(3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
 ICELV1.OnMessage()
 Gui, +Resize
 SB_SetText("Completed Aquisition")
@@ -2961,7 +3064,6 @@ Loop,%fullstn0%
 			{
 				continue
 			}
-		;msgbox,,,1=%prvn1%`n2=%prvn2%`n3=%prvn3%`n4=%prvn4%`n5=%prvn5%`n6=%prvn6%`n7=%prvn7%`n8=%prvn8%`n9=%prvn9%`n10=%prvn10%`n11=%prvn11%`n12=%prvn12%`n13=%prvn13%`n14=%prvn14%`n15=%prvn15%`n16=%prvn16%
 		gmopts= %prvn2%	
 		gmargs= %prvn3%	
 		kbmovr= %prvn5%
@@ -2970,7 +3072,7 @@ Loop,%fullstn0%
 		jbovr= %prvn12%
 		preovr= %prvn13%
 		pstovr= %prvn14%
-		if (prvn2 <> "<")
+		if (prvn6 <> "<")
 			{
 				pl1ovr= %prvn6%
 			}
@@ -3002,6 +3104,7 @@ Loop,%fullstn0%
 		fnd32=
 		getaplist=
 		splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
+		
 		sx= 0
 		Loop,parse,SPLIT_SRC,|
 			{
@@ -3726,7 +3829,7 @@ Loop,%fullstn0%
 				iniwrite,%A_Space%,%GAMECFG%,CONFIG,2_Post
 				iniwrite,%A_Space%,%GAMECFG%,CONFIG,3_Post
 			}
-		if (mcpovr <> "<")
+		if ((mcpovr <> "<")&&(mcpovr <> ""))
 			{
 				iniwrite,%mcpovr%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
 			}
@@ -3781,6 +3884,7 @@ return
 
 GETGOODNAME:
 stringreplace,exep,exep,%SRCLOOP%,,
+scrtst=
 if (exep = "")
 	{
 		Loop,parse,srcloop,\
@@ -3791,11 +3895,18 @@ if (exep = "")
 					}
 				exep= %A_LoopField%
 			}
+	}	
+if instr(XSRCADD,SRCLOOP . "\" . exep)
+	{
+		scrtst= 1
 	}
 exepN= %exep%
 jpd:
 stringreplace,exep,exep,\\,\,All
-tlevel= %SRCLOOP%\%exep%
+if (scrtst = "")
+	{
+		tlevel= %SRCLOOP%\%exep%
+	}
 stringreplace,tlevel,tlevel,\\,\,All
 stringright,te,tlevel,1
 if (te = "\")
@@ -3821,6 +3932,18 @@ Loop,parse,exep,\
 						njname=
 						stringreplace,vv,A_LoopField,|,,All
 						stringreplace,exep,exep,%vv%,,
+						if (scrtst = 1)
+							{
+								if (exep = "")
+									{
+										splitpath,SRCLOOP,nfn,scrrp
+										tlevel= %SRCLOOP%
+										exep= %nfn%
+									}
+								else {
+									tlevel= %SRCLOOP%\%exep%
+								}	
+							}
 						goto,jpd
 					}
 			}	
