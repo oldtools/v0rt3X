@@ -532,57 +532,36 @@ if ((Mapper > 0)&&(Mapper <> ""))
 		stringreplace,MEDIACENTER_Profilen,MEDIACENTER_PROFILE,%mapper_extension%,,All
 		splitpath,MEDIACENTER_Profilen,mcnm,mcntp,mcnxtn,mcntrn	
 		splitpath,Player1,p1fn,pl1pth,,plgetat
-		loop, 16 
-			{
-				joypartX:= % joyGetName(A_Index)
-				joypart%A_Index%:= joypartX
-				if (joypartX = "failed")
-					{
-						PlayerVX= 
-						player%A_Index%n=
-						player%A_Index%t=
-						continue
-					}
-				joycount+= 1
-				if (2 > JoyCount)
-					{
-						continue
-					}
-				playerVX:= % player%JoyCount%	
-				player%JoyCount%X:= % player%JoyCount%	
-				player%JoyCount%n= "%playerVX%"
-				player%JoyCount%t:= A_Space . (player%JoyCount%n)
-				iniwrite,%PlayerVX%,%inif%,JOYSTICKS,Player%JoyCount%
-			}
+		gosub, joytest
 		Joycnt= %joycount%
 		if (JMap = "joytokey")
 			{
 				player2t:= A_Space . "" . Game_profiles . "\" . gmnamex . ""
 				splitpath,joytokey_executable,mapperxn,mapperp
-				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
 				process,close,%mapperxn%
 				sleep,600
 			}
 		if (JMap = "xpadder")
 			{
 				splitpath,xpadder_executable,mapperxn,mapperp
-				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
 				process,close,%mapperxn%
 				sleep,600
 			}
 		if (JMap = "antimicro")
 			{
 				splitpath,antimicro_executable,mapperxn,mapperp
-				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
+				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
 				process,close,%mapperxn%
 				sleep,600
 			}
 		if (JMap = "JoyXoff")
 			{
 				splitpath,JoyXoff_executable,mapperxn,mapperp
-				Run, %comspec% "%JoyXoff_executable%" -close,%mapperp%,hide
-				Run, %comspec% taskkill /f /im "%mapperxn%",,hide
-				Run, %comspec% taskkill /f /im "JoyxSvc.exe",,hide
+				Run, %comspec% /c "" "%JoyXoff_executable%" -close,%mapperp%,hide
+				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
+				Run, %comspec% /c "" taskkill /f /im "JoyxSvc.exe",,hide
 				process,close,%mapperxn%
 				process,close,JoyxXvc.exe
 				player2t:= A_Space . "" . gamepath . ""
@@ -591,6 +570,67 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
 		ToolTip, %joycnt% Joysticks found
+		JoyAsk:
+		if ((joycnt = 0)or if (joycnt = ""))
+			{
+				if (joyrtry <> "")
+					{
+						if (joyrtry > 1)
+							{
+								Msgbox,4610,CONTROLLERS,Polling the Joysticks again in %joyrtry% seconds,%joyrtry%
+								ifmsgbox, Abort
+									{
+										iniwrite,0,%inif%,JOYSTICKS,MAPPER
+										Blockinput, on
+										return
+									}
+								ifmsgbox,Retry
+									{
+										bretrt:
+										if (joyrtry > 40)
+											{
+												joyrtry= 
+												goto, PopCont
+											}
+										gosub, JoyTest
+										if ((joycount = 0) or if (joycount = ""))
+											{
+												joyrtry+= 10
+												goto,bretrt
+											}
+										goto, ContinueJoy
+									}
+								ifmsgbox, Ignore
+									{
+										Blockinput, on
+										goto, ContinueJoy
+									}
+							}
+					}
+				PopCont:	
+				Msgbox,4610,CONTROLLERS,CLick "Abort" to Disable Joysticks or "Ignore" to dismiss this prompt,3
+				ifmsgbox, Abort
+					{
+						iniwrite,0,%inif%,JOYSTICKS,MAPPER
+						Blockinput, on
+						return
+					}
+				ifmsgbox,Retry
+					{
+						gosub, JoyTest
+						if ((joycnt = 0)or if (joycnt = ""))
+							{
+								joyrtry+= 10
+								goto,JoyAsk
+							}
+					}
+				ifmsgbox, Ignore
+					{
+						Blockinput, on
+						goto, ContinueJoy
+					}
+			}
+		ContinueJoy:
 		if (fileexist(keyboard_Mapper)&& fileexist(player1))
 			{
 				Run,%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%,%mapperp%,hide,kbmp
@@ -1302,8 +1342,7 @@ if (exe_list <> "")
 				process,close,%A_LoopField%
 			}
 	}
-Run, taskkill /f /im "%plnkn%*",,hide
-
+Run,%comspec%  /c "" taskkill /f /im "%plnkn%*",,hide
 if (Logging = 1)
 	{
 		fileappend,er=%erahkpid%`ndcls=%dcls%`npfile=%pfile%,%home%\log.txt
@@ -1384,8 +1423,31 @@ FileCreateShortcut,%plink%,%This_Profile%\%gmnamex%.lnk,%scpath%, ,%gmnamex%,%pl
 FileCreateShortcut,%binhome%\%RJPRJCT%.exe, %Game_Directory%\%gmnamex%.lnk,%scpath%, `"%This_Profile%\%gmname%.lnk`",%gmname%,%plink%,,%iconnumber%
 inif= %RJDB_Config%,%GAME_PROFILES%\game.ini
 iniwrite,%Game_Profile%,%inif%,JOYSTICKS,Game_Profile
-Return	
+Return
 
+JoyTest:
+loop, 16 
+	{
+		joypartX:= % joyGetName(A_Index)
+		joypart%A_Index%:= joypartX
+		if (joypartX = "failed")
+			{
+				PlayerVX= 
+				player%A_Index%n=
+				player%A_Index%t=
+				continue
+			}
+		joycount+= 1
+		if (2 > JoyCount)
+			{
+				continue
+			}
+		playerVX:= % player%JoyCount%	
+		player%JoyCount%X:= % player%JoyCount%	
+		player%JoyCount%n= "%playerVX%"
+		player%JoyCount%t:= A_Space . (player%JoyCount%n)
+	}
+return
 NameTuning:
 StringReplace,gmnamex,tempn,%A_Space%Launcher,,All
 StringReplace,gmnamex,gmnamex,_Launcher,,All

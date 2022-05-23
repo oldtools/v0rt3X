@@ -2571,6 +2571,7 @@ Loop,parse,rabsol,`r`n
 			}
 	}
 cadgname= |%adgname%|
+
 Loop,parse,exclfls,`r`n
 	{
 		if (A_LoopField = "")
@@ -2584,8 +2585,10 @@ Loop,parse,exclfls,`r`n
 				goto, rgetsn
 			}
 	}
-		
-		
+if ((adgname = "")or(adgname = A_Space))
+	{
+		adgname= %filejnm%
+	}
 ;exep= %agdname%
 ;gosub,GETGOODNAME
 GTACSTM:= FileNM . "|" . FilePath . "|||" . adgname . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"
