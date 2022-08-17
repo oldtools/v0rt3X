@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-05-22 8:50 PM
+RELEASE= 2022-08-16 9:01 PM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -71,7 +71,7 @@ filextns= exe
 SPCFIX= .|-|%A_Space%|_
 RLSPFX= .|-|(|[|%A_Space%|_|
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
-MAPCFGS= Antimicro|AntimicroX|JoyToKey|Xpadder|JoyXoff
+MAPCFGS= JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
 remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff__MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
@@ -1297,7 +1297,7 @@ return
 
 BGP_DataB:
 gui,submit,nohide
-FileSelectFile,Borderless_Gaming_DatabaseT,3,%A_Appdata%\Andrew Sampson\Borderless Gaming,Select File,config.bin
+FileSelectFile,Borderless_Gaming_DatabaseT,3,%A_Appdata%\Andrew Sampson\Borderless Gaming,Select File,config.bin;fullscreenizer.cfg
 if ((Borderless_Gaming_DatabaseT <> "")&& !instr(Borderless_Gaming_DatabaseT,"<"))
 	{
 		Borderless_Gaming_Database= %Borderless_Gaming_DatabaseT%
@@ -1477,29 +1477,17 @@ gui,submit,nohide
 guicontrolget,DELpostDD,,postDD
 stringsplit,dxb,DELpostDD,<
 stringreplace,dxn,dxb1,W,,
+stringreplace,dxn,dxn,H,,
 iniWrite,%dxn%<,%RJDB_Config%,CONFIG,%dxn%_post
 postList= |
 postWaitn=
-Loop,3
+tpds=
+Loop, 3
 	{
+		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_post
+		postList.= tpds . "|"
 		if (A_Index = dxn)
 			{
-				postList.= dxn . "<" "|"
-				if (A_Index = 1)
-					{
-						postlist.= "|"
-					}
-				continue
-			}
-		iniread,daa,%RJDB_Config%,CONFIG,%A_Index%_post
-		postList.= daa . "|"
-		if (A_Index = 1)
-			{
-				stringsplit,dant,daa,<
-				if instr(dant1,"W")
-					{
-						postWaitn= 1
-					}
 				postList.= "|"
 			}
 	}
@@ -1513,29 +1501,17 @@ gui,submit,nohide
 guicontrolget,DELPreDD,,PreDD
 stringsplit,dxb,DELPreDD,<
 stringreplace,dxn,dxb1,W,,
-iniWrite,%dxn%<,%RJDB_Config%,CONFIG,%dxn%_Pre
+stringreplace,dxn,dxn,H,,
+iniWrite,%dxn%<,%RJDB_Config%,CONFIG,%dxn%_Pre	
 PreList= |
 PreWaitn=
-Loop,3
+tpds=
+Loop, 3
 	{
+		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_pre
+		PreList.= tpds . "|"
 		if (A_Index = dxn)
 			{
-				PreList.= dxn . "<" "|"
-				if (A_Index = 1)
-					{
-						Prelist.= "|"
-					}
-				continue
-			}
-		iniread,daa,%RJDB_Config%,CONFIG,%A_Index%_Pre
-		PreList.= daa . "|"
-		if (A_Index = 1)
-			{
-				stringsplit,dant,daa,<
-				if instr(dant1,"W")
-					{
-						PreWaitn= 1
-					}
 				PreList.= "|"
 			}
 	}
@@ -2479,27 +2455,55 @@ Return
 
 ADDGAME:
 gui,submit,NoHide
+											
 FileSelectFile,Gametoadd,35,,Select a Game,*.exe;*.lnk
 fullist.= GametoAdd . "|"
+					 
+
+excl=
+lvachk= +Check
 FileGetSize,filez,%GameToAdd%
-splitpath,GameToAdd,filenm,filepath,fileext,filejnm
-if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
+FileName:= GameToAdd
+splitpath,FileName,FileNM,FilePath,FileExt,filtn
+fnCAPS:= % RegexReplace(filtn, "((?<=[a-z])[A-Z]|[A-Z](?=[a-z]))", " $1")	
+fnCAPS= %fnCAPS%
+fnSPX := filtn, fnSPC := ""
+Loop, Parse, fnSPX, %A_Space%
 	{
+		fnSPC := fnSPC SubStr(A_LoopField, "1", "1")
+	}
+stringreplace,fnNSPC,fnSPC,%A_Space%,,All
+
+if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(XSRCADD,filepath))
+	{ 
 		XSRCADD.= filepath . "|"
 	}
+splitpath,filepath,nfpth,jthfp	
+SRCLOOP= %jthfp%	
 nfilepath= %filepath%	
 rgetsn:	
-adgname:= A_Space	
+adgname:= A_Space
+
+/*
 Loop,parse,nfilepath,\
 	{
 		odlnx= %A_LoopField%
-		stringreplace,splp,A_LoopField,.,%A_Space%,All
-		stringreplace,spnp,A_LoopField,.,,All
+		exep= %filepath%
+		gosub, GETGOODNAME
+		odlnx:= njname
+		fnDIRCAP:= % RegexReplace(odlnx, "[^A-Z]", "")
+		fnDIRX := odlnx, fnDIR := ""
+		Loop, Parse, fnDIRX, %A_Space%
+			{
+				fnDIR := fnDIR SubStr(A_LoopField, "1", "1")
+			}
+		stringreplace,splp,odlnx,.,%A_Space%,All
+		stringreplace,spnp,odlnx,.,,All
 		stringreplace,filenspc,filejnm,.,,All
-		stringsplit,dba,A_LoopField,%A_Space%
-		stringsplit,aba,A_LoopField,([-_
+		stringsplit,dba,odlnx,%A_Space%
+		stringsplit,aba,odlnx,([-_
 		stringsplit,bba,aba1,.%A_Space%
-		stringsplit,cba,A_LoopField,([
+		stringsplit,cba,odlnx,([
 		stringreplace,ba,aba1,%A_Space%,,All
 		stringreplace,ba,ba,',,All
 		stringreplace,ca,cba1,',,All
@@ -2508,6 +2512,12 @@ Loop,parse,nfilepath,\
 		stringreplace,ca,ca,_,,All
 		stringreplace,ca,ca,-,,All
 		stringreplace,ca,ca,%A_Space%,,All
+		msgbox,,,filename=%FileName%`nfn=%filenm%`npath=%filepath%`njustname=%filejnm%`nscrtst=%scrtst%`nloop=%srcloop%`nnjname=%njname%`nfndir=%fndir%`nfnspc=%fnspc%`nfncaps=%fncaps%`nfndircap=%fndircap%`nspnp=%spnp%`nsplp=%splp%`ntlevel=%tlevel%`nexenj=%exenj%
+		if ((fnDIR = fnSPC)or(fnCAPS = fnDIRCAP))
+			{
+				adgname= %odlnx%
+				break
+			}
 		if instr(spnp,filejnm)
 			{
 				Loop,%bba0%
@@ -2591,6 +2601,138 @@ if ((adgname = "")or(adgname = A_Space))
 	}
 ;exep= %agdname%
 ;gosub,GETGOODNAME
+*/
+FilePPUT= %FilePath%
+splitpath,FilePath,filpn,filpdir,,filpjn
+stringreplace,simpath,FilePath,%SRCLOOP%,,
+stringreplace,trukpath,filpdir,%SRCLOOP%,,
+if ((trukpath = "")or(trukpath = filpdir))
+	{
+		Loop,parse,filpdir,\
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				trukpath= %A_loopField%
+			}
+	}
+stringsplit,smjk,simpath,\	
+rootn= %smjk1%
+if (rootn = "")
+	{
+		rootn= %smjk2%
+	}
+splitpath,simpath,simpn,simpdir
+splitpath,trukpath,truknm,farpth
+splitpath,farpth,farnm,
+simploc= %simpath%
+SB_SetText("adding " filenm "")
+Loop,parse,absol,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if instr(FileNM,A_LoopField)
+			{
+				omitd.= filenm . "|" . simploc . "|"  . "`n"
+				excl= 1
+				break
+			}
+	}
+if (excl = 1)
+	{
+		SB_SetText("in steam library")
+		return
+	}
+Loop,parse,rabsol,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if ((FileNM = A_LoopField) or (filtn = A_LoopField))
+			{
+				omitd.= filenm . "|" . simploc . "`n"
+				excl= 1
+				break
+			}	
+	}
+if (excl = 1)
+	{
+		SB_SetText("in steam library")
+		return
+	}
+simpnk.= FileName . "`n"
+PostDirChkx:
+Loop,parse,unselect,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		stringlen,hh,A_LoopField
+		stringright,an,filtn,%hh%
+		stringLeft,az,filtn,%hh%
+		if ((an = A_LoopField) or (az = A_LoopField) && !instr(rootn,A_LoopField))
+			{
+				lvachk=
+				simpnk.= FileName . "`n"
+				goto,Chkcox
+			}
+	}
+Loop,parse,unlike,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		prbn= %A_LoopField%
+		if (instr(filtn,prbn)or instr(rootn,prbn))
+			{
+				continue
+			}
+		smf=
+		Loop,parse,simpath,\
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if instr(A_LoopField,prbn)
+					{
+						lvachk=
+						simpnk.= FileName . "`n"
+						smf= 1
+						break
+					}
+			}
+		if (smf = 1)
+			{
+				goto,Chkcox
+			}
+	}
+if (lvachk <> "")
+	{
+		fullist.= FilePath . "|"
+	}
+Chkcox:
+njName= 
+if ((namechk = 1)&&(lvachk <> ""))
+	{
+		splitpath,filename,exnm,exep,exet,exechk
+		gosub, GETGOODNAME
+		FilePPUT= %FilePath%
+	}
+FileOpts:= <
+FileArgs:= <
+SB_SetText("added " FileNM "")	
+LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y")
+if (lvachk <> "")
+	{
+		SOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"	
+	}
 GTACSTM:= FileNM . "|" . FilePath . "|||" . adgname . "|y|<|<|<|y|<|<|<|<|y|y" . "`n"
 SOURCEDLIST.= GTACSTM
 fileappend,%GTACSTM%,%home%\continue.db
@@ -2652,6 +2794,7 @@ omitd=
 filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
+bsvl=
 SPLIT_SRC:= SOURCE_DIRECTORY . "|" . XSRCADD
 Gui,Listview,MyListView
 guicontrolget,enablelogging,,enablelogging
@@ -2731,7 +2874,7 @@ Loop,parse,SPLIT_SRC,|
 						allfld.= A_LoopFileLongPath . "|"
 					}
 				loop, Files, %SRCLOOP%\*.%fsext%,FR
-					{
+					{		   
 						stmexcl= 	
 						Loop,parse,DIST_DIRECTORY,|
 							{
@@ -3030,7 +3173,7 @@ stringsplit,fullstn,fullist,|
 gmnames= |
 gmnameds= |
 gmnamed=
-exlist=
+exlist=|
 fullstx= %fullstn%
 if !fileexist(GAME_Directory)
 	{
@@ -3040,6 +3183,7 @@ if !fileexist(GAME_Profiles)
 	{
 		filecreatedir,%GAME_Profiles%
 	}
+bsvl=|
 Loop,%fullstn0%
 	{
 		nameOverride=
@@ -3107,9 +3251,8 @@ Loop,%fullstn0%
 		fnd32=
 		getaplist=
 		splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
-		
 		sx= 0
-		Loop,parse,SPLIT_SRC,|
+		Loop,parse,SPLIT_SRC,| 
 			{
 				if (A_LoopField = "")
 					{
@@ -3122,29 +3265,65 @@ Loop,%fullstn0%
 							{
 								SRCLOOP= %A_LoopField%
 								sx= %tn%
+								goto, SCRLOOPFND
 							}
 					}
 			}
+		CONTINUE
+		
+		SCRLOOPFND:
 		exep= %OutDir%
 		tlevel= %OutDir%
-		if (nameOverride <> "")
+		Stringreplace,gfnamecx,outdir,%SRCLOOP%\,,All
+		Loop,parse,gfnamecx,\
+			{
+				gfnamex= %A_LoopField%
+				break
+			}	
+
+		priority:= 0
+		filtnx= %gmnamex%
+		gosub,PAPT
+		filtv= %gmnamex%
+		exCAP= %sepr%
+		exABR= %abbrv%
+		stringreplace,exCAPs,exCAP,%A_Space%,,All
+		njName= 	
+		if ((nameOverride <> "")&& (nameOverride <> gmnamex) && !instr(bsvl,nameOverride))
 			{
 				gmnamed= %nameOverride%
-				gmnamex= %gmnamed%
+				sexjnj= %nameOverride%
+				njName= %gmnamed%
+				exedp= %gmnamed%
+				stringreplace,excp,gmnamed,%A_Space%,,All
+				excn=|%excp%|
+				;;msgbox,,,nameOverride=%nameOverride%`nbsvl=%bsvl%
+				;gmnamex= %gmnamed%
 				goto, nameOVR
 			}
+		
 		gosub, GETGOODNAME
 		gmnamed= %njname%
-		nameOVR:	
+		
+		nameOVR:						
+
 		invar= %gmnamed%
 		gosub, CleanVar
+		
 		gmnamecm= %invarx%
+		
+		filtnx=%gmnamecm%	
+		filtv= %njName%
+		gosub,PAPT
+		gnCAP= %sepr%
+		gnABR= %abbrv%
+		stringreplace,gnCAPs,gnCAP,%A_Space%,,All
+		
 		gmnamedx= |%gmnamecm%|
 		invar= %gmnamex%
 		gosub, CleanVar
 		ExeSN= %invarx%
 		gmnamfcm= %invarx%
-		priority:= 0
 		if instr(gmnamecm,ExeSN)
 			{
 				priority:= 2
@@ -3154,6 +3333,10 @@ Loop,%fullstn0%
 				priority:= 4
 			}
 		if (gmnamfcm = gmnamecm)
+			{
+				priority:= 5
+			}
+		if ((exABR = gnABR) or (exCAPs = gnABR) or (exCAP = gnCAP) or (gnCAPs = exCAPs))
 			{
 				priority:= 5
 			}
@@ -3170,6 +3353,9 @@ Loop,%fullstn0%
 			{
 				priority:= 10
 			}
+			
+		;msgbox,,,njname=%njname%`n exedp=%exedp%`nexcn=%excn%`nexep=%exep%`nscrloop=%srcloop%`n%priority%`ngmnamex=%gmnamex%`ngmnamed=%gmnamed%`nover=%nameOverride%`ngmnamfcm =%gmnamfcm%`n gmnamecm=%gmnamecm%`nexcaps=%excaps%`ngncaps=%gncaps%`nexcap=%excap%`ngncap=%gncap%`nexabr=%exabr%`ngnabr=%gnabr%`n`n`nexlist=%exlist%
+		
 		Loop,parse,gfnamex,\
 			{
 				if (A_LoopField = "")
@@ -3218,7 +3404,7 @@ Loop,%fullstn0%
 					{
 						continue
 					}
-				if (instr(gfnamex,A_LoopField)or instr(gmnamex,A_LoopField))
+				if (instr(gfnamex,A_LoopField)org instr(gmnamex,A_LoopField))
 					{
 						priority+=-1
 						break
@@ -3278,7 +3464,7 @@ Loop,%fullstn0%
 			}
 		exlist.= posa . "|" . priority . "|"
 		subfldrep=
-		if (rn = 1)
+		if ((rn = 1)or instr(bsvl,gmnamex))
 			{
 				poscntx:= poscnt + 1
 				if (poscnt > 0)
@@ -3352,10 +3538,11 @@ Loop,%fullstn0%
 						}
 				}
 			}
+		bsvl.= gmnamed . "|"
 		stringtrimright,subfldrepn,subfldrep,1
 		if (enablelogging = 1)
 			{
-				fileappend,%rn%==%subfldrep%%gmnamed%|%gmnamex%(%renum%):%tot%<!%priority%!`n,%home%\log.txt
+				fileappend,ovr=%nameOverride%`nnjns=%njns%`nsexjnj=%sexjnj%`nnjname=%njname%`ngmnamecm=%gmnamecm%`ngmnamfcm=%gmnamfcm%`ngfnamex=%gfnamex%`n%rn%==subfldr\gmnamed=%gmnamed%`n%subfldrep%%gmnamed%|gmnamex=%gmnamex%(%renum%):%tot%<!%priority%!`n,%home%\log.txt
 			}
 		sidn= %Game_Profiles%\%gmnameD%
 		if (Localize = 1)
@@ -3789,6 +3976,11 @@ Loop,%fullstn0%
 						stringreplace,cmdtmp,cmdtmp,[MediaCenter_profile],%MediaCenter_ProfileX%
 						stringreplace,cmdtmp,cmdtmp,[Player1],%Player1x%
 						stringreplace,cmdtmp,cmdtmp,[Player2],%Player2x%
+						stringreplace,cmdtmp,cmdtmp,1<,,All
+						stringreplace,cmdtmp,cmdtmp,2<,,All
+						stringreplace,cmdtmp,cmdtmp,3<,,All				 
+										 
+										 
 						FileDelete,%linkproxz%
 					}
 				if (renum = 1)
@@ -3870,6 +4062,33 @@ if (instr(njname,rgg)&&(nv = rgg))
 	}
 return
 
+PAPT:
+inpapt=%filtnx%
+stringreplace,filtnx,filtnx,_,,All
+stringreplace,filtnx,filtnx,Win32,,
+stringreplace,filtnx,filtnx,Win64,,
+stringreplace,filtnx,filtnx,x86,,
+stringreplace,filtnx,filtnx,x86,,
+stringreplace,filtnx,filtnx,x64,,
+stringreplace,filtnx,filtnx,-64,,
+stringreplace,filtnx,filtnx,-32,,
+stringreplace,filtnx,filtnx,-,,All
+if instr(filtnx,"Shipping")
+	{
+		stringreplace,filtnx,filtnx,Shipping,,	
+		priority+= -1
+	}
+if ((filtni <> filtnx) && !instr(filtnx,"Shipping"))
+sepr:= % RegexReplace(filtnx, "[^A-Z\s]\K([A-Z])", " $1")
+fnCAPS:= % RegexReplace(filtv,"((?<=[a-z])[A-Z]|[A-Z](?=[a-z]))", " $1")	
+fsCAPS= %fnCAPS%
+r:= "" . sepr . ""
+var := r, abbrv := ""
+Loop, Parse, var, %A_Space%
+	{
+		abbrv := abbrv SubStr(A_LoopField, "1", "1")
+	}
+return
 	
 CleanVar:
 stringreplace,invarx,invar,.,,All
@@ -3904,6 +4123,7 @@ if instr(XSRCADD,SRCLOOP . "\" . exep)
 		scrtst= 1
 	}
 exepN= %exep%
+
 jpd:
 stringreplace,exep,exep,\\,\,All
 if (scrtst = "")
@@ -3922,34 +4142,46 @@ Loop,parse,exep,\
 			{
 				continue
 			}
-		din= %A_LoopField%							
-		Loop,parse,exclfls,`n`r
+		din= %A_LoopField%
+		stringreplace,xin,din,%A_Space%,,All
+		stringreplace,xin,xin,.,,All
+		stringreplace,xin,xin,',,All
+		stringreplace,xin,xin,`,,,All
+		stringreplace,xin,xin,`%,,All
+		stringreplace,xin,xin,!,,All
+		stringreplace,xin,xin,-,,All
+		stringreplace,xin,xin,=,,All
+		stringreplace,xin,xin,+,,All
+		stringreplace,xin,xin,$,,All
+		stringreplace,xin,xin,#,,All
+		stringreplace,xin,xin,_,,All     
+		stringreplace,xin,xin,&,,All
+		stringreplace,xin,xin,(,,All
+		stringreplace,xin,xin,),,All
+		stringreplace,xin,xin,[,,All
+		stringreplace,xin,xin,],,All
+		brk= |%din%|	
+		xrk= |%xin%|
+		if (instr(brk,exclfls) or instr(xrk,exclfls))
 			{
-				if (A_Loopfield = "")
+				njname=
+				stringreplace,vv,A_LoopField,%xrk%,,All
+				stringreplace,vv,vv,%brk%,,All
+				stringreplace,exep,exep,%vv%,,
+				if (scrtst = 1)
 					{
-						continue
-					}
-				brk= |%din%|	
-				if (brk = A_LoopField)
-					{
-						njname=
-						stringreplace,vv,A_LoopField,|,,All
-						stringreplace,exep,exep,%vv%,,
-						if (scrtst = 1)
+						if (exep = "")
 							{
-								if (exep = "")
-									{
-										splitpath,SRCLOOP,nfn,scrrp
-										tlevel= %SRCLOOP%
-										exep= %nfn%
-									}
-								else {
-									tlevel= %SRCLOOP%\%exep%
-								}	
+								splitpath,SRCLOOP,nfn,scrrp
+								tlevel= %SRCLOOP%
+								exep= %nfn%
 							}
-						goto,jpd
+						else {
+							tlevel= %SRCLOOP%\%exep%
+						}	
 					}
-			}	
+				goto,jpd
+			}
 		Loop,parse,rabsol,`n`r
 			{
 				if (A_LoopField = "")
@@ -4099,16 +4331,51 @@ Loop,parse,rlsgrps,`n`r
 				break
 			}
 	}
-stringreplace,njname,njname,_,%A_Space%,All	
-str:= njname
+stringlen,njlen,njname
+stringreplace,njname,njname,_,%A_Space%,All
+stringreplace,njname,njname,%A_Space%%A_Space%,%A_Space%,All
+njnameX= %njname%
+if (nameOverride <> "")
+	{
+		stringreplace,njns,njname,.,%A_Space%,All
+		njnamex := RegExReplace(njns, "[^A-Z\s]\K([A-Z])", " $1",aoa)
+		r:= "" . njnamex . ""
+		var := r, njabrv := ""
+		Loop, Parse, var, %A_Space%
+			{
+				njabrv := njabrv SubStr(A_LoopField, "1", "1")
+			}		
+		stringlen,njabrl,njabrv	
+		if ((aoa >= 3) && (aoa > njabrl))
+			{
+				njname:= njnameX				
+			}
+			
+	}
+	else {
+		r:= "" . njnamex . ""
+		var := r, njabrv := ""
+		Loop, Parse, var, %A_Space%
+			{
+				njabrv := njabrv SubStr(A_LoopField, "1", "1")
+			}		
+		stringlen,njabrl,njabrv	
+	}
+str= %njname%
 StrReplace(str, A_Space,, scnt)
-str:= njname
+str= %njname%
 StrReplace(str, ".",, ncnt)
+clpc:= ncnt + scnt
 stringlen,kinm,str			
 kivm:= (3 . ncnt ) + 1 
-if ((ncnt > scnt) or (ncnt = scnt) && (njname > kivm))
+if ((clpc > njabrl) or (kinm > clpc) && (njabrl < kinm))
 	{
 		stringreplace,njname,njname,.,%A_Space%,All
+		stringreplace,njname,njname,%A_Space%%A_Space%%A_Space%%A_Space%%A_Space%,%A_Space%,All
+		stringreplace,njname,njname,%A_Space%%A_Space%%A_Space%%A_Space%,%A_Space%,All
+		stringreplace,njname,njname,%A_Space%%A_Space%%A_Space%,%A_Space%,All
+		stringreplace,njname,njname,%A_Space%%A_Space%,%A_Space%,All
+		njname= %njname%
 	}
 excn=|%njname%|
 stringreplace,excn,excn,%A_Space%,,All

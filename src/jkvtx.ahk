@@ -515,6 +515,10 @@ if (prestk2 <> "")
 			}
 	}
 return
+killmapper:
+process,close,%mapperxn%
+sleep,600
+return
 
 PRE_MAP:
 premapper:	
@@ -538,32 +542,25 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			{
 				player2t:= A_Space . "" . Game_profiles . "\" . gmnamex . ""
 				splitpath,joytokey_executable,mapperxn,mapperp
-				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
-				process,close,%mapperxn%
-				sleep,600
+				gosub,killmapper
 			}
 		if (JMap = "xpadder")
 			{
 				splitpath,xpadder_executable,mapperxn,mapperp
-				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
-				process,close,%mapperxn%
-				sleep,600
+				gosub,killmapper
 			}
 		if (JMap = "antimicro")
 			{
 				splitpath,antimicro_executable,mapperxn,mapperp
-				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
-				process,close,%mapperxn%
-				sleep,600
+				gosub,killmapper
 			}
 		if (JMap = "JoyXoff")
 			{
 				splitpath,JoyXoff_executable,mapperxn,mapperp
-				Run, %comspec% /c "" "%JoyXoff_executable%" -close,%mapperp%,hide
-				Run, %comspec% /c "" taskkill /f /im "%mapperxn%",,hide
+				Run, "%JoyXoff_executable%" -close,%mapperp%,hide
 				Run, %comspec% /c "" taskkill /f /im "JoyxSvc.exe",,hide
-				process,close,%mapperxn%
 				process,close,JoyxXvc.exe
+				gosub,killmapper
 				player2t:= A_Space . "" . gamepath . ""
 				player3t:= A_Space . "" . gmname . ""
 				sleep,600
@@ -959,7 +956,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				tooltip,''page_up'' detected`n.Saving aborted.
 				goto, savemap
 			}
-		loop, 4 
+		loop, 16 
 			{
 				PlayerVX=
 				joypartX:= % joyGetName(A_Index)
@@ -968,11 +965,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 					{
 						break
 					}
-				joycount+= 1
 				if (JoyCount >= joycnt)
 					{
 						continue
 					}
+				joycount+= 1
 				playerVX:= % player%JoyCount%	
 				player%JoyCount%X:= playerVX
 				player%JoyCount%n= "%playerVX%"
@@ -1010,11 +1007,15 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			}
 		if (joycount < 2)
 			{
-				Loop,4
+				Loop, 16
 					{
 						if (A_Index = 1)
 							{
 								continue
+							}
+						if (joycount < A_Index)
+							{
+								break
 							}
 						mediacenter_profile_%A_Index%= 
 						mediacenter_profile_%A_Index%t= 
@@ -1025,9 +1026,13 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				{
 					joyindex=
 					splitpath,Player1,p1fn,pl1pth,,plgetat
-					Loop, 4
+					Loop, 16
 						{
 							joyindex+=1
+							if (joycount < A_Index)
+								{
+									break
+								}
 							Loop,files,%pl1pth%\*.%mapper_extension%
 								{
 									PlayerVX= 
@@ -1052,7 +1057,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 									}
 								}
 						}
-					Loop,%joycount%	
+					Loop, %joycount%	
 						{
 							plyrnx:= % Player%A_Index%
 							P_LoopInd= %A_Index%
@@ -1152,6 +1157,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 						}
 				}
 		}
+		
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
 			{
@@ -1171,12 +1177,16 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			{
 				goto, Logout
 			}
-		Loop, 4
+		Loop, 16
 			{
 				if (A_Index = 1)
 					{
 						iniwrite,%MediaCenter_Profile%,%inif%,JOYSTICKS,MediaCenter_Profile
 						continue
+					}
+				if (A_Index > joycount)
+					{
+						break
 					}
 				mcpn:= % MediaCenter_Profile%A_Index%	
 				if (mcpn <> "")
@@ -1184,13 +1194,17 @@ if ((Mapper > 0)&&(Mapper <> ""))
 						iniwrite,%mcpn%,%inif%,JOYSTICKS,MediaCenter_Profile%A_Index%
 					}
 			}
-		Loop,4
+		Loop, 16
 			{
 				plyrn:= % Player%A_index%
 				if (plyrn <> "")
 					{
 						iniwrite,%plyrn%,%inif%,JOYSTICKS,Player%A_Index%	
 					}
+				if (A_Index > joycount)
+					{
+						break
+					}	
 			}
 	}
  

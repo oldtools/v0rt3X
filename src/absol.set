@@ -55,7 +55,6 @@ Downloader
 du.exe
 du64.exe
 dude.exe
-dude.exe
 dump-analyzer
 dumpedid
 dxsetup.exe
@@ -192,6 +191,7 @@ sha2
 sha3
 sha5
 shutdown
+Soundtrack
 sqlite
 srvc.exe
 statist

@@ -2007,7 +2007,9 @@
 |win11|
 |win2k|
 |Win32|
+|Win32x86Release|
 |Win64|
+|Win64x86Release|
 |win8|
 |win95|
 |win98|
