@@ -22,6 +22,6 @@ SOURCEHOST=https://github.com/oldtools/v0rt3X
 UPDATEFILE=https://github.com/oldtools/Vortex/releases/download/portable/portable.zip
 Version=https://raw.githubusercontent.com/oldtools/Vortex/master/site/version.txt
 [GOBAL]
-Version=2022-08-21 5:06 AM
+Version=2022-08-21 5:13 AM
 UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
 HOSTINGURL=
