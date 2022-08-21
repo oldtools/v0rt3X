@@ -187,6 +187,20 @@
                             <code>0x1000012</code>
                             <mode>keyboard</mode>
                         </slot>
+                            <code>3100</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000021</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000039</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000022</code>
+                            <mode>keyboard</mode>	  
                     </slots>
                 </dpadbutton>
             </dpad>

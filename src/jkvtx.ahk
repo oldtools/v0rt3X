@@ -268,7 +268,7 @@ else {
 }	
 
 
-PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|BEGIN
+PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|PRE_BGP|BEGIN
 /*	
 PRERUNORDERPROC:
 */
@@ -311,22 +311,47 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,preapid
-						gosub,nonmres
 					}
-				Run,%prestk2%,%A_ScriptDir%,,preapid	
-				iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
+					else {
+						Run,%prestk2%,%A_ScriptDir%,,preapid	
+					}
 			}
+		iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
 	}
 return	
 
 PRE_BGP:
 GMGDBCHK= %gmnamex%	
 Tooltip, Configuration Created`n:::running %gmnamx% preferences:::
-if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> ""))
+if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BGP_State <> 0)&&(BGP_State <> ""))
 	{
-		bgpon= 1
-		gosub, nonmres
+		splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
+		process,exist,%Borderless_Gaming_Program%
+		bgpid= %errorlevel%
+		if ((BGP_State = 1)or(BGP_State = 6)or(BGP_State = 9)or(BGP_State = 14))
+			{
+				if (bgpid = 0)
+					{
+						Run, "%Borderless_Gaming_Program%",%bgpdir%,,bgpid
+						sleep, 1200
+					}
+			}
+			else {
+				process,close,%bgpexe%
+				process,close,%bgpid%
+			}
 	}
+	else {
+		if ((bgpid <> 0)&&((BGP_State = 5)or(BGP_State = 8)))
+			{
+				splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
+				process,exist,%Borderless_Gaming_Program%
+				bgpid= %errorlevel%
+				process,close,%bgpexe%
+				process,close,%bgpid%
+			}
+	}
+	
 return
 
 
@@ -515,6 +540,7 @@ if (prestk2 <> "")
 			}
 	}
 return
+
 killmapper:
 process,close,%mapperxn%
 sleep,600
@@ -533,7 +559,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				player%A_Index%n=
 				player%A_Index%t=
 			}
-		stringreplace,MEDIACENTER_Profilen,MEDIACENTER_PROFILE,%mapper_extension%,,All
+		stringreplace,MEDIACENTER_Profilen,MEDIACENTER_PROFILE,.%mapper_extension%,,All
 		splitpath,MEDIACENTER_Profilen,mcnm,mcntp,mcnxtn,mcntrn	
 		splitpath,Player1,p1fn,pl1pth,,plgetat
 		gosub, joytest
@@ -800,7 +826,6 @@ BlockInput, On
 nrx+=1
 goto, begin
 return
-
 Ctrl & f2::
 process,close,%dcls%
 ToolTip,Closing
@@ -821,8 +846,88 @@ return
 Run, NewOsk.exe
 Return
 
+Ctrl & f10::
+Sleep, 1000
+CWIN:= GetKeyState("LWin")
+if (CWIN = 1)
+	{
+		playerVX=
+		joypartX=
+		Loop,16
+			{
+				if (3 >= A_Index)
+					{
+						continue
+					}
+				player%A_Index%= 0
+				player%A_Index%X=
+				player%A_Index%t=
+				player%A_Index%n=
+				joyPart%A_Index%=
+				MediaCenter_Profile_%A_Index%=
+				MediaCenter_Profile_%A_Index%t=
+			}
+		joycnt:= 0
+		joycount:= 0
+		AmicroSize:= "@Size(700 400)"
+		AmicroPos:= "@Point(100 100)"
+		AmicroTray=0
+		AmicroTB=1
+		AmicroAP=0
+		gosub killmapper
+		iniwrite,%AmicroPos%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowPosition
+		iniwrite,%AmicroSize%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowSize
+		iniwrite,%AmicroTray%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,LaunchInTray
+		iniwrite,%AmicroTB%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,MinimizeToTaskbar
+		iniwrite,%AmicroAP%,%localappdata%\antimicro\antimicro_settings.ini,AutoProfiles,AutoProfilesActive
+		iniwrite,0,%localappdata%\antimicro\antimicro_settings.ini,DefaultAutoProfileAll,Active
+		gosub PRE_MAP
+		blockinput,on
+		Send {RWin Up}
+		Send {LWin Up}
+		Send {RCtrl Up}
+		Send {LCtrl Up}
+		DetectHiddenWindows, On
+		WinGet, vWinList, List, ahk_class Qt5QWindowIcon
+		;vOutput := ""
+		Loop, % vWinList
+			{
+				hWnd := vWinList%A_Index%
+				WinGetTitle, vWinTitle, % "ahk_id " hWnd
+				WinGetClass, vWinClass, % "ahk_id " hWnd
+				WinGet, vPID, PID, % "ahk_id " hWnd
+				WinGet, vWinStyle, Style, % "ahk_id " hWnd
+				WinGet, vWinExStyle, ExStyle, % "ahk_id " hWnd
+				vWinStyle := Format("0x{:08X}", vWinStyle)
+				vWinExStyle := Format("0x{:08X}", vWinExStyle)
+				;vOutput .= vWinTitle "|" vWinStyle "|" vWinExStyle "`r`n"
+			}
+		blockinput,off
+		ToolTip,
+		if !DllCall("user32\IsWindowVisible", Ptr,hWnd)
+			{
+				PostMessage, 0x8065, 0, 0x203,, ahk_class %vWinClass%
+				PostMessage, 0x0112, 0xF120,,, %vWinTitle%
+				PostMessage, 0x8065, 0, 0x0203,, ahk_class %vWinClass%
+				PostMessage, 0x8065, 0, 0x400,, ahk_class %vWinClass%
+				PostMessage, 0x8065, 0, 0x0400,, ahk_class %vWinClass%
+				WinShow, antimicro ahk_class %vWinClass%
+				WinActivate, antimicro ahk_class %vWinClass%
+				WinRestore, antimicro ahk_class %vWinClass%
+			}
+	}
+return	
+	
+
 Ctrl & f8::
 nosave= 1
+Sleep, 1000
+CWIN:= GetKeyState("LWin")
+if (CWIN = 0)
+	{
+		nosave=
+		return
+	}
 goto,givup
 Ctrl & f12::
 nosave= 
@@ -833,7 +938,7 @@ gii= 1
 Quitout:
 Blockinput,On
 
-POSTRUNORDER=POST_MON|POST_JBE|LOGOUT|POST_1|POST_MAP|POST_2|POST_3
+POSTRUNORDER=POST_BGP|POST_MON|POST_JBE|LOGOUT|POST_1|POST_MAP|POST_2|POST_3
 /*	
 POSTRUNORDERPROC:
 */
@@ -956,6 +1061,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				tooltip,''page_up'' detected`n.Saving aborted.
 				goto, savemap
 			}
+		joycount= 	
 		loop, 16 
 			{
 				PlayerVX=
@@ -978,11 +1084,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				iniwrite,%PlayerVX%,%inif%,JOYSTICKS,Player%A_index%
 				if (JoyCount = 1)
 					{
-						MediaCenter_Profile= %Game_Profiles%\%MEDIACENTER_Profilen%.%Mapper_Extension%
+						MediaCenter_Profile= %Game_Profiles%\%mcnm%.%Mapper_Extension%
 						continue
 					}
 					else {
-						MEDIACENTER_PROFILE_N= %GAME_PROFILES%\%MEDIACENTER_Profilen%_%JoyCount%.%Mapper_Extension%
+						MEDIACENTER_PROFILE_N= %GAME_PROFILES%\%mcnm%_%JoyCount%.%Mapper_Extension%
 						if (JMap = "antimicro")
 							{
 								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
@@ -1015,10 +1121,10 @@ if ((Mapper > 0)&&(Mapper <> ""))
 							}
 						if (joycount < A_Index)
 							{
-								break
+								mediacenter_profile_%A_Index%= 
+								mediacenter_profile_%A_Index%t= 
+								continue
 							}
-						mediacenter_profile_%A_Index%= 
-						mediacenter_profile_%A_Index%t= 
 					}
 			}
 		else {
@@ -1031,7 +1137,10 @@ if ((Mapper > 0)&&(Mapper <> ""))
 							joyindex+=1
 							if (joycount < A_Index)
 								{
-									break
+									Player%A_Index%= 
+									mediacenter_profile_%A_Index%=
+									mediacenter_profile_%A_Index%t=
+									continue
 								}
 							Loop,files,%pl1pth%\*.%mapper_extension%
 								{
@@ -1161,7 +1270,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
 			{
-				Run, %Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%,,hide,kbmp			
+				Run, %Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%,,hide,kbmp
+				if (Logging = 1)
+					{
+						fileappend,%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%,%home%\log.txt
+					}
 			}
 		Loop,5
 			{
@@ -1210,7 +1323,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
  
 if (Logging = 1)
 	{
-		FileAppend,Run="%plfp%[%linkoptions%|%plarg%]in%pldr%"`nkeyboard=|%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%|`njoycount1="%joycnt%"`n%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%`njoycount2=%joucount%`n`n,%home%\log.txt
+		FileAppend,Run="%plfp%[%linkoptions%|%plarg%]in%pldr%"`nkeyboard=|%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%|`njoycount1="%joycnt%"`n%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%`njoycount2=%joycount%`n`n,%home%\log.txt
 	} 	
 iniwrite,%KeyBoard_Mapper%,%inif%,JOYSTICKS,KeyBoard_Mapper
 iniwrite,%Jmap%,%inif%,JOYSTICKS,Jmap
@@ -1261,6 +1374,17 @@ if (prestk2 <> "")
 	}
 return
 
+POST_BGP:
+if ((Borderless_Gaming_Program <> "")&&(BGP_State > 4))
+	{
+		splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
+		process,exist,%Borderless_Gaming_Program%
+		bgpid= %errorlevel%
+		process,close,%bgpexe%
+		process,close,%bgpid%
+	}
+return
+
 POST_MON:
 if (MonitorMode > 0)
 	{
@@ -1286,12 +1410,6 @@ iniwrite,%MM_MEDIACENTER_Config%,%inif%,GENERAL,MM_MEDIACENTER_Config
 iniwrite,%MultiMonitor_Tool%,%inif%,GENERAL,MultiMonitor_Tool
 monsave:
 sleep, 1000
-WinGet, WindowList, List
-Loop, %WindowList%
-	{
-		WinRestore, % "ahk_id " . WindowList%A_Index%
-	}
-
 Process,close,dsplo
 Loop,20
 	{
@@ -1361,10 +1479,16 @@ if (Logging = 1)
 	{
 		fileappend,er=%erahkpid%`ndcls=%dcls%`npfile=%pfile%,%home%\log.txt
 	}
+
+WinGet, WindowList, List
+Loop, %WindowList%
+	{
+		WinRestore, % "ahk_id " . WindowList%A_Index%
+	}
 return
 
 nonmres:
-FileRead,bgm,%Borderless_Gaming_Database%
+FileRead,bgm,Borderless_Gaming_Program
 if (instr(bgm,GMGDBCHK)&& fileexist(Borderless_Gaming_Program))or (instr(bgm,gmname)&& fileexist(Borderless_Gaming_Program))
 	{
 		splitpath,Borderless_Gaming_Program,bgmexe,BGMLOC

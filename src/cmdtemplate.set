@@ -7,6 +7,8 @@ for /f "usebackq tokens=1,*eol=^delims==" %%a in ("Game.ini") do IF "%%b" NEQ ""
 :ZETA
 for /f "delims=" %%a in ("[Mapper]") do if "%Mapper%" == "" set Mapper=%%~a
 for /f "delims=" %%a in ("[MonitorMode]") do if "%MonitorMode%" == "" set MonitorMode=%%~a
+for /f "delims=" %%a in ("[Borderless_Gaming_Program]") do if "%Borderless_Gaming_Program%" == "" set Borderless_Gaming_Program=%%~nxa
+for /f "delims=" %%a in ("[BGP_State]") do if "%BGP_State%" == "" set BGP_State=%%~nxa
 for /f "delims=" %%a in ("[1_Post]") do if "%A_Post%" == "" set A_Post=%%~a
 for /f "delims=" %%a in ("[2_Post]") do if "%B_Post%" == ""  set B_Post=%%~a
 for /f "delims=" %%a in ("[3_Post]") do if "%C_Post%" == "" set C_Post=%%~a

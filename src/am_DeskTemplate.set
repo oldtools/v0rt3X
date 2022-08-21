@@ -222,7 +222,7 @@
             <button index="10">
                 <slots>
                     <slot>
-                        <code>0x1000062</code>
+                        <code>0x1000003</code>
                         <mode>keyboard</mode>
                     </slot>
                 </slots>
@@ -230,7 +230,7 @@
             <button index="11">
                 <slots>
                     <slot>
-                        <code>0x1000061</code>
+                        <code>0x20</code>
                         <mode>keyboard</mode>
                     </slot>
                 </slots>
