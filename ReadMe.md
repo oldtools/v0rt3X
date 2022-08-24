@@ -10,9 +10,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.68.509
+This Version:0.99.68.518
 
-This Build: 2022-08-21 5:13 AM
+This Build: 2022-08-24 4:44 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh

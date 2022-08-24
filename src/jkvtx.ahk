@@ -265,9 +265,35 @@ else {
 			gosub, NameTuning
 			gosub, SetupINIT
 		}
-}	
+}
+SplitPath,Player1,Pl1file,pl1pth,pl1ext,pl1fnm
+SplitPath,Player2,Pl2file,pl2pth,pl2ext,pl2fnm
+SplitPath,MediaCenter_Profile,MCP1file,MCP1pth,MCP1ext,MCP1fnm
+SplitPath,MediaCenter_Profile2,MCP2file,MCP2pth,MCP2ext,MCP2fnm
 
-
+SplitPath,Player1_Template,Pt1file,pt1pth,pt1ext,pt1fnm
+SplitPath,Player2_Template,Pt2file,pt2pth,pt2ext,pt2fnm
+SplitPath,MediaCenter_Profile_Template,MCTfile,MCTpth,MCText,MCTfnm
+MediaCenter_Profile1=%MediaCenter_Profile%
+if ((Player1 = "")or !fileExist(Player1))
+	{
+		Player1t= %scpath%\%gmnamex%.%mapper_extension%
+	}
+if ((MediaCenter_Profile = "")!fileExist(MediaCenter_Profile))
+	{
+		MediaCenter_Profilet= %scpath%\MediaCenter.%mapper_extension%
+	}
+Loop, 16
+	{
+		if ((Player%A_Index% = "")or !fileExist(Player1%A_Index%))
+			{
+				Player%A_Index%VX= %scpath%\%gmnamex%.%mapper_extension%
+			}
+		if ((Mediacenter_Profile%A_Index% = "")or !fileExist(Mediacenter_Profile%A_Index%))
+			{
+				MediaCenter_Profile%Index%VX= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
+			}
+	}
 PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|PRE_BGP|BEGIN
 /*	
 PRERUNORDERPROC:
@@ -559,9 +585,6 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				player%A_Index%n=
 				player%A_Index%t=
 			}
-		stringreplace,MEDIACENTER_Profilen,MEDIACENTER_PROFILE,.%mapper_extension%,,All
-		splitpath,MEDIACENTER_Profilen,mcnm,mcntp,mcnxtn,mcntrn	
-		splitpath,Player1,p1fn,pl1pth,,plgetat
 		gosub, joytest
 		Joycnt= %joycount%
 		if (JMap = "joytokey")
@@ -658,15 +681,10 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			{
 				Run,%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%,%mapperp%,hide,kbmp
 			}
-		if (Logging = 1)
-			{
-				fileappend,`n#####`n%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%`npid=%kbmp%`n#####`n,%home%\log.txt
-			}
-		Sleep,600
 		Loop,5
 			{
-				Process,Exist,%mapln%
-				if (errorlevel <> 0)
+				Process,Exist,%mapperp%
+				if ((errorlevel <> 0)&&(errorlevel = kbmp))
 					{
 						enfd= %errorlevel%
 						break
@@ -675,45 +693,10 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			}
 		iniwrite,%joycnt%,%curpidf%,Mapper,connected
 		iniwrite,%kbmp%,%curpidf%,Mapper,pid
-		joyncnt:= joycnt
-		if (Joycnt >= 2)
-			{
-				Loop,files,%pl1pth%\*.%mapper_extension%
-					{
-						if (A_LoopFileFullPath = Player1X)
-							{
-								joyncnt+= 1
-								continue
-							}
-						joyncnt+= 1
-						PlayerN= %gmnamex%_%joyncnt%.%mapper_extension%
-						if (A_LoopFileName = PlayerN)
-							{
-								joypartX:= % joyGetName(joyncnt)
-								iniwrite,%A_LoopFileFullPath%,%inif%,JOYSTICKS,Player%joyncnt%
-								Player%joycnt%= %A_loopFileFullPath%
-							}
-					}
-				Loop,%joycnt%
-					{
-						if (A_Index = 1)
-							{
-								continue
-							}
-						PlayerZ= %pl1pth%\%gmname%_%A_Index%.%mapper_extension%
-						NPlayer:= % Player%A_Index%
-						if (!fileexist(PlayerZ)&& !fileexist(NPlayer))
-							{
-								FileCopy, %Player2_Template%, %PlayerZ%
-								iniwrite,%A_LoopFileFullPath%,%inif%,JOYSTICKS,Player%joyncnt%
-							}
-						ifnotexist,%mcntp%\%mcntrn%_%A_index%.%mapper_extension%
-							{
-								filecopy,%MediaCenter_Profile_Template%,%mcntp%\%mcntrn%_%A_Index%.%mapper_extension%
-								iniwrite,%mcntp%\%mcntrn%_%A_Index%.%mapper_extension%,%inif%,JOYSTICKS,MediaCenter_Profile%A_Index%
-							}
-					}
-			}
+	}
+if (Logging = 1)
+	{
+		fileappend,`n#####`n%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%`npid=%kbmp%`n#####`n,%home%\log.txt
 	}
 return
 
@@ -869,18 +852,21 @@ if (CWIN = 1)
 			}
 		joycnt:= 0
 		joycount:= 0
-		AmicroSize:= "@Size(700 400)"
-		AmicroPos:= "@Point(100 100)"
-		AmicroTray=0
-		AmicroTB=1
-		AmicroAP=0
 		gosub killmapper
-		iniwrite,%AmicroPos%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowPosition
-		iniwrite,%AmicroSize%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowSize
-		iniwrite,%AmicroTray%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,LaunchInTray
-		iniwrite,%AmicroTB%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,MinimizeToTaskbar
-		iniwrite,%AmicroAP%,%localappdata%\antimicro\antimicro_settings.ini,AutoProfiles,AutoProfilesActive
-		iniwrite,0,%localappdata%\antimicro\antimicro_settings.ini,DefaultAutoProfileAll,Active
+		if (mapperp = "antimicro")
+			{
+				AmicroSize:= "@Size(700 400)"
+				AmicroPos:= "@Point(100 100)"
+				AmicroTray=0
+				AmicroTB=1
+				AmicroAP=0
+				iniwrite,%AmicroPos%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowPosition
+				iniwrite,%AmicroSize%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,WindowSize
+				iniwrite,%AmicroTray%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,LaunchInTray
+				iniwrite,%AmicroTB%,%localappdata%\antimicro\antimicro_settings.ini,GENERAL,MinimizeToTaskbar
+				iniwrite,%AmicroAP%,%localappdata%\antimicro\antimicro_settings.ini,AutoProfiles,AutoProfilesActive
+				iniwrite,0,%localappdata%\antimicro\antimicro_settings.ini,DefaultAutoProfileAll,Active
+			}
 		gosub PRE_MAP
 		blockinput,on
 		Send {RWin Up}
@@ -888,32 +874,35 @@ if (CWIN = 1)
 		Send {RCtrl Up}
 		Send {LCtrl Up}
 		DetectHiddenWindows, On
-		WinGet, vWinList, List, ahk_class Qt5QWindowIcon
-		;vOutput := ""
-		Loop, % vWinList
+		if (mapperp = "antimicro")
 			{
-				hWnd := vWinList%A_Index%
-				WinGetTitle, vWinTitle, % "ahk_id " hWnd
-				WinGetClass, vWinClass, % "ahk_id " hWnd
-				WinGet, vPID, PID, % "ahk_id " hWnd
-				WinGet, vWinStyle, Style, % "ahk_id " hWnd
-				WinGet, vWinExStyle, ExStyle, % "ahk_id " hWnd
-				vWinStyle := Format("0x{:08X}", vWinStyle)
-				vWinExStyle := Format("0x{:08X}", vWinExStyle)
-				;vOutput .= vWinTitle "|" vWinStyle "|" vWinExStyle "`r`n"
-			}
-		blockinput,off
-		ToolTip,
-		if !DllCall("user32\IsWindowVisible", Ptr,hWnd)
-			{
-				PostMessage, 0x8065, 0, 0x203,, ahk_class %vWinClass%
-				PostMessage, 0x0112, 0xF120,,, %vWinTitle%
-				PostMessage, 0x8065, 0, 0x0203,, ahk_class %vWinClass%
-				PostMessage, 0x8065, 0, 0x400,, ahk_class %vWinClass%
-				PostMessage, 0x8065, 0, 0x0400,, ahk_class %vWinClass%
-				WinShow, antimicro ahk_class %vWinClass%
-				WinActivate, antimicro ahk_class %vWinClass%
-				WinRestore, antimicro ahk_class %vWinClass%
+				WinGet, vWinList, List, ahk_class Qt5QWindowIcon
+				;vOutput := ""
+				Loop, % vWinList
+					{
+						hWnd := vWinList%A_Index%
+						WinGetTitle, vWinTitle, % "ahk_id " hWnd
+						WinGetClass, vWinClass, % "ahk_id " hWnd
+						WinGet, vPID, PID, % "ahk_id " hWnd
+						WinGet, vWinStyle, Style, % "ahk_id " hWnd
+						WinGet, vWinExStyle, ExStyle, % "ahk_id " hWnd
+						vWinStyle := Format("0x{:08X}", vWinStyle)
+						vWinExStyle := Format("0x{:08X}", vWinExStyle)
+						;vOutput .= vWinTitle "|" vWinStyle "|" vWinExStyle "`r`n"
+					}
+				blockinput,off
+				ToolTip,
+				if !DllCall("user32\IsWindowVisible", Ptr,hWnd)
+					{
+						PostMessage, 0x8065, 0, 0x203,, ahk_class %vWinClass%
+						PostMessage, 0x0112, 0xF120,,, %vWinTitle%
+						PostMessage, 0x8065, 0, 0x0203,, ahk_class %vWinClass%
+						PostMessage, 0x8065, 0, 0x400,, ahk_class %vWinClass%
+						PostMessage, 0x8065, 0, 0x0400,, ahk_class %vWinClass%
+						WinShow, antimicro ahk_class %vWinClass%
+						WinActivate, antimicro ahk_class %vWinClass%
+						WinRestore, antimicro ahk_class %vWinClass%
+					}
 			}
 	}
 return	
@@ -1062,211 +1051,36 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				goto, savemap
 			}
 		joycount= 	
-		loop, 16 
+		gosub, joytest
+		if (JMap = "joytokey")
 			{
-				PlayerVX=
-				joypartX:= % joyGetName(A_Index)
-				joypart%A_Index%:= joypartX
-				if (joypartX = "failed")
-					{
-						break
-					}
-				if (JoyCount >= joycnt)
-					{
-						continue
-					}
-				joycount+= 1
-				playerVX:= % player%JoyCount%	
-				player%JoyCount%X:= playerVX
-				player%JoyCount%n= "%playerVX%"
-				playerVN= "%playerVX%"
-				player%JoyCount%t:= A_Space . (playerVN)
-				iniwrite,%PlayerVX%,%inif%,JOYSTICKS,Player%A_index%
-				if (JoyCount = 1)
-					{
-						MediaCenter_Profile= %Game_Profiles%\%mcnm%.%Mapper_Extension%
-						continue
-					}
-					else {
-						MEDIACENTER_PROFILE_N= %GAME_PROFILES%\%mcnm%_%JoyCount%.%Mapper_Extension%
-						if (JMap = "antimicro")
-							{
-								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
-								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . ""				
-							}
-						if (JMap = "JoyXoff")
-							{
-								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
-								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . ""				
-							}		
-						if (JMap = "JoyToKey")
-							{
-								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
-								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . "" . A_Space "" . GAME_PROFILES . "\" . GMNAMEX . "" 
-							}
-						if (JMap = "xpadder")
-							{
-								mediacenter_profile_%JoyCount%n= "%MEDIACENTER_PROFILE_N%"
-								mediacenter_profile_%JoyCount%t:=  A_Space . "" . MEDIACENTER_PROFILE_N . ""				
-							}
-					}
+				player2t:= A_Space . "" . Game_profiles . "\" . gmnamex . ""
+				splitpath,joytokey_executable,mapperxn,mapperp
+				gosub,killmapper
 			}
-		if (joycount < 2)
+		if (JMap = "xpadder")
 			{
-				Loop, 16
-					{
-						if (A_Index = 1)
-							{
-								continue
-							}
-						if (joycount < A_Index)
-							{
-								mediacenter_profile_%A_Index%= 
-								mediacenter_profile_%A_Index%t= 
-								continue
-							}
-					}
+				splitpath,xpadder_executable,mapperxn,mapperp
+				gosub,killmapper
 			}
-		else {
-			if (joycount > 1)
-				{
-					joyindex=
-					splitpath,Player1,p1fn,pl1pth,,plgetat
-					Loop, 16
-						{
-							joyindex+=1
-							if (joycount < A_Index)
-								{
-									Player%A_Index%= 
-									mediacenter_profile_%A_Index%=
-									mediacenter_profile_%A_Index%t=
-									continue
-								}
-							Loop,files,%pl1pth%\*.%mapper_extension%
-								{
-									PlayerVX= 
-									if ((A_LoopFileFullPath = Player1) or (A_LoopFileFullPath = Player2) or (A_LoopFileFullPath = Player3) or (A_LoopFileFullPath = Player4) or instr(A_LoopFileName,"MediaCenter"))
-										{
-											continue
-										}
-									if (A_LoopFileName = plgetat . "_" . joyindex)
-										{
-											PlayerVX= %A_LoopFileFullPath%
-											Player%joyindex%= %A_LoopFileFullPath%
-											break
-										}
-									if (instr(A_LoopFileName,"Player" . joyindex)or instr(A_LoopFileName,"Player_" . joyindex)or instr(A_LoopFileName,"Player" . A_Space . joyindex)or instr(A_LoopFileName,"Player" . joyindex))
-										{
-											Player%joyindex%= %A_LoopFileFullPath%
-											break
-										}
-									else {
-											Player%joyindex%= %A_LoopFileFullPath%
-											break
-									}
-								}
-						}
-					Loop, %joycount%	
-						{
-							plyrnx:= % Player%A_Index%
-							P_LoopInd= %A_Index%
-							if ((plyrnx = "")or !fileexist(plyrnx))
-								{
-									if (plyrnx = "")
-										{
-											plyrnx= %pl1pth%\%gmnamex%_%P_LoopInd%.%mapper_extension%
-										}
-									FileCopy,%Player2_Template%,%plyrnx%
-								}
-							Loop,Files,%pl1pth%\MediaCenter*.%mapper_extension%
-								{
-									mcmnm= 
-									if ((A_LoopFileFullPath = MediaCenter_Profile)or(P_LoopInd = 1))
-										{
-											if (A_LoopFileFullPath = MediaCenter_Profile)
-												{
-													mcmnm= 	%A_LoopFileFullPath%							
-												}
-											continue
-										}
-									stringreplace,mctmpx,A_LoopFileName,%mapper_extension%,,All
-									stringright,mctmpnn,mctmpx,1
-									if ((P_LoopInd = mctmpnn)&&(P_LoopInd <> 1))
-										{
-											MediaCenter_Profile_%P_LoopInd%= %A_LoopFileFullPath%
-											mcmnm= %MediaCenter_Profile%_%P_LoopInd%
-											if (JMap = "antimicro")
-												{
-													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-												}		
-											if (JMap = "JoyXoff")
-												{
-													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-												}		
-											if (JMap = "xpadder")
-												{
-													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-												}		
-											if (JMap = "joytokey")
-												{
-													if (A_index = 1)
-														{
-															mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-															mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""	. A_Space . "" . GAME_PROFILES . "\" . GMNAMEX . "" 
-														}
-													else {
-														continue
-														}	
-												}
-											break
-										}
-								}
-							if ((mcmnm = "")or !fileexist(mcmnm))
-								{
-									if (mcmnm = "")
-										{
-											mcmnm= %pl1pth%\MediaCenter_%P_LoopInd%.%mapper_extension%
-										}
-									if (JMap = "antimicro")
-										{
-											mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-											mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-										}		
-									if (JMap = "JoyXoff")
-										{
-											mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-											mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-										}		
-									if (JMap = "JoyToKey")
-										{
-											if (A_Index = 1)
-												{
-													mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-													mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . GAMEPROFILES . "\" . GMNAMEX . ""				
-													}
-
-												else {
-													continue
-													}	
-										}			
-									if (JMap = "xpadder")
-										{
-											mediacenter_profile_%P_LoopInd%n= "%mcmnm%"
-											mediacenter_profile_%P_LoopInd%t:=  A_Space . "" . mcmnm . ""				
-										}	
-									if (Logging = 1)
-										{
-											FileAppend,%MediaCenter_Profile_Template%==%pl1pth%\MediaCenter_%P_LoopInd%.%mapper_extension%	,%home%\log.txt
-										}
-									FileCopy,%MediaCenter_Profile_Template%,%pl1pth%\MediaCenter_%P_LoopInd%.%mapper_extension%	
-								}
-						}
-				}
-		}
-		
+		if (JMap = "antimicro")
+			{
+				splitpath,antimicro_executable,mapperxn,mapperp
+				gosub,killmapper
+			}
+		if (JMap = "JoyXoff")
+			{
+				splitpath,JoyXoff_executable,mapperxn,mapperp
+				Run, "%JoyXoff_executable%" -close,%mapperp%,hide
+				Run, %comspec% /c "" taskkill /f /im "JoyxSvc.exe",,hide
+				process,close,JoyxXvc.exe
+				gosub,killmapper
+				player2t:= A_Space . "" . gamepath . ""
+				player3t:= A_Space . "" . gmname . ""
+				sleep,600
+				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
+			}
+		ToolTip, %joycnt% Joysticks found
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
 			{
@@ -1278,8 +1092,8 @@ if ((Mapper > 0)&&(Mapper <> ""))
 			}
 		Loop,5
 			{
-				Process,Exist,%mapln%
-				if (errorlevel <> 0)
+				Process,Exist,%mapperp%
+				if ((errorlevel <> 0)&&(errorlevel = kbmp))
 					{
 						enfd= %errorlevel%
 						break
@@ -1289,35 +1103,6 @@ if ((Mapper > 0)&&(Mapper <> ""))
 		if (nosave = 1)
 			{
 				goto, Logout
-			}
-		Loop, 16
-			{
-				if (A_Index = 1)
-					{
-						iniwrite,%MediaCenter_Profile%,%inif%,JOYSTICKS,MediaCenter_Profile
-						continue
-					}
-				if (A_Index > joycount)
-					{
-						break
-					}
-				mcpn:= % MediaCenter_Profile%A_Index%	
-				if (mcpn <> "")
-					{
-						iniwrite,%mcpn%,%inif%,JOYSTICKS,MediaCenter_Profile%A_Index%
-					}
-			}
-		Loop, 16
-			{
-				plyrn:= % Player%A_index%
-				if (plyrn <> "")
-					{
-						iniwrite,%plyrn%,%inif%,JOYSTICKS,Player%A_Index%	
-					}
-				if (A_Index > joycount)
-					{
-						break
-					}	
 			}
 	}
  
@@ -1576,14 +1361,48 @@ loop, 16
 				continue
 			}
 		joycount+= 1
-		if (2 > JoyCount)
+		templt= %Player2_Template%
+		templm= %MediaCenter_Profile_Template%
+		pinum:= % Player%A_Index%
+		minum:= % MediaCenter_Profile%A_Index%
+		if (A_Index = 1)
 			{
-				continue
+				minum= %MediaCenter_Profile%
 			}
-		playerVX:= % player%JoyCount%	
-		player%JoyCount%X:= % player%JoyCount%	
-		player%JoyCount%n= "%playerVX%"
-		player%JoyCount%t:= A_Space . (player%JoyCount%n)
+		playerVX:= % player%JoyCount%VX
+		MediaCenter_ProfileVX:= % MediaCenter_Profile_%JoyCount%VX
+		
+		cpyplyrs:
+		if !fileExist(pinum)
+			{
+				if (A_Index = 1)
+					{
+						templt= %Player1_Template%
+					}	
+				fileCopy,%templt%,%pinum%,1
+				if ((errorlevel <> 0)&&(PlayerVX <> pinum))
+					{
+						pinum= %PlayerVX%
+						Player%A_Index%= %playerVX%
+						goto, cpyplyrs
+					}
+			}
+			
+		cpymcntrs:
+		if !fileExist(minum)
+			{
+				fileCopy,%MediaCenter_Profile_Template%, %minum%,1
+				if ((errorlevel <> 0)&&(MediaCenter_ProfileVX <> minum))
+					{
+						minum= %MediaCenter_ProfileVX%
+						MediaCenter_Profile%A_Index%= %MediaCenter_ProfileVX%
+						goto, cpymcntrs
+					}
+			}
+		player%JoyCount%t:= A_Space . "" . pinum . ""		
+		MediaCenter_Profile_%JoyCount%t:= A_Space . "" . minum . ""
+		iniwrite,%pinum%,%curpidf%,JOYSTICKS,Player%A_Index%
+		iniwrite,%minum%,%curpidf%,JOYSTICKS,MediaCenter_Profile%A_Index%
 	}
 return
 NameTuning:
