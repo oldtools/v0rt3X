@@ -277,21 +277,23 @@ SplitPath,MediaCenter_Profile_Template,MCTfile,MCTpth,MCText,MCTfnm
 MediaCenter_Profile1=%MediaCenter_Profile%
 if ((Player1 = "")or !fileExist(Player1))
 	{
-		Player1t= %scpath%\%gmnamex%.%mapper_extension%
+		Player1= %scpath%\%gmnamex%.%mapper_extension%
 	}
 if ((MediaCenter_Profile = "")!fileExist(MediaCenter_Profile))
 	{
-		MediaCenter_Profilet= %scpath%\MediaCenter.%mapper_extension%
+		MediaCenter_Profile= %scpath%\MediaCenter.%mapper_extension%
 	}
 Loop, 16
 	{
-		if ((Player%A_Index% = "")or !fileExist(Player1%A_Index%))
+		nts:= % Player%A_Index%
+		rnt:= % Mediacenter_Profile%A_Index%
+		if ((nts = "")or !fileExist(nts))
 			{
 				Player%A_Index%VX= %scpath%\%gmnamex%.%mapper_extension%
 			}
-		if ((Mediacenter_Profile%A_Index% = "")or !fileExist(Mediacenter_Profile%A_Index%))
+		if ((rnt = "")or !fileExist(rnt))
 			{
-				MediaCenter_Profile%Index%VX= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
+				MediaCenter_Profile%A_Index%VX= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
 			}
 	}
 PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|PRE_BGP|BEGIN
@@ -575,18 +577,16 @@ return
 PRE_MAP:
 premapper:	
 Mapper_Extension:= % Mapper_Extension
-if ((Mapper > 0)&&(Mapper <> ""))
+if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 	{
 		ToolTip,Running %gmnamx% preferences`n:::Loading Joystick Configurations:::
-		joyncnt=
-		joycnt=	
 		Loop, 16
 			{
 				player%A_Index%n=
 				player%A_Index%t=
 			}
 		gosub, joytest
-		Joycnt= %joycount%
+		RESETJOY=	
 		if (JMap = "joytokey")
 			{
 				player2t:= A_Space . "" . Game_profiles . "\" . gmnamex . ""
@@ -615,9 +615,9 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				sleep,600
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
-		ToolTip, %joycnt% Joysticks found
+		ToolTip, %JoyCount% Joysticks found
 		JoyAsk:
-		if ((joycnt = 0)or if (joycnt = ""))
+		if ((JoyCount = 0)or if (JoyCount = ""))
 			{
 				if (joyrtry <> "")
 					{
@@ -664,7 +664,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				ifmsgbox,Retry
 					{
 						gosub, JoyTest
-						if ((joycnt = 0)or if (joycnt = ""))
+						if ((JoyCount = 0)or if (JoyCount = ""))
 							{
 								joyrtry+= 10
 								goto,JoyAsk
@@ -691,7 +691,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 					}
 				Sleep,500
 			}
-		iniwrite,%joycnt%,%curpidf%,Mapper,connected
+		iniwrite,%JoyCount%,%curpidf%,Mapper,connected
 		iniwrite,%kbmp%,%curpidf%,Mapper,pid
 	}
 if (Logging = 1)
@@ -850,7 +850,7 @@ if (CWIN = 1)
 				MediaCenter_Profile_%A_Index%=
 				MediaCenter_Profile_%A_Index%t=
 			}
-		joycnt:= 0
+		RESETJOY= 1	
 		joycount:= 0
 		gosub killmapper
 		if (mapperp = "antimicro")
@@ -868,6 +868,10 @@ if (CWIN = 1)
 				iniwrite,0,%localappdata%\antimicro\antimicro_settings.ini,DefaultAutoProfileAll,Active
 			}
 		gosub PRE_MAP
+		if (joycount > 0)
+			{
+				MAPPER= 1
+			}
 		blockinput,on
 		Send {RWin Up}
 		Send {LWin Up}
@@ -904,7 +908,7 @@ if (CWIN = 1)
 						WinRestore, antimicro ahk_class %vWinClass%
 					}
 			}
-	}
+	}	
 return	
 	
 
@@ -1048,7 +1052,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 		if (nosave = 1)
 			{
 				tooltip,''page_up'' detected`n.Saving aborted.
-				goto, savemap
+				gosub, joytest
 			}
 		joycount= 	
 		gosub, joytest
@@ -1080,7 +1084,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				sleep,600
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
-		ToolTip, %joycnt% Joysticks found
+		ToolTip, %joycount% Joysticks found
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
 			{
@@ -1108,7 +1112,7 @@ if ((Mapper > 0)&&(Mapper <> ""))
  
 if (Logging = 1)
 	{
-		FileAppend,Run="%plfp%[%linkoptions%|%plarg%]in%pldr%"`nkeyboard=|%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%|`njoycount1="%joycnt%"`n%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%`njoycount2=%joycount%`n`n,%home%\log.txt
+		FileAppend,Run="%plfp%[%linkoptions%|%plarg%]in%pldr%"`nkeyboard=|%Keyboard_Mapper% "%player1%"%player2t%%player3t%%player4t%|`njoycount1="%JoyCount%"`n%Keyboard_Mapper% "%MediaCenter_Profile%"%MediaCenter_Profile_2t%%MediaCenter_Profile_3t%%MediaCenter_Profile_4t%`njoycount2=%joycount%`n`n,%home%\log.txt
 	} 	
 iniwrite,%KeyBoard_Mapper%,%inif%,JOYSTICKS,KeyBoard_Mapper
 iniwrite,%Jmap%,%inif%,JOYSTICKS,Jmap
@@ -1349,6 +1353,7 @@ iniwrite,%Game_Profile%,%inif%,JOYSTICKS,Game_Profile
 Return
 
 JoyTest:
+joycount=
 loop, 16 
 	{
 		joypartX:= % joyGetName(A_Index)
@@ -1371,12 +1376,16 @@ loop, 16
 			}
 		playerVX:= % player%JoyCount%VX
 		MediaCenter_ProfileVX:= % MediaCenter_Profile_%JoyCount%VX
-		
 		cpyplyrs:
 		if !fileExist(pinum)
 			{
+				if (pinum = "")
+					{
+						pinum= %scpath%\%gmnamex%_%A_Index%.%mapper_extension%
+					}	
 				if (A_Index = 1)
 					{
+						pinum= %scpath%\%gmnamex%.%mapper_extension%
 						templt= %Player1_Template%
 					}	
 				fileCopy,%templt%,%pinum%,1
@@ -1387,10 +1396,16 @@ loop, 16
 						goto, cpyplyrs
 					}
 			}
-			
+			else {
+				Player%joycount%= %pinum%
+				}
 		cpymcntrs:
 		if !fileExist(minum)
 			{
+				if (minum = "")
+					{
+						minum= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
+					}
 				fileCopy,%MediaCenter_Profile_Template%, %minum%,1
 				if ((errorlevel <> 0)&&(MediaCenter_ProfileVX <> minum))
 					{
@@ -1399,10 +1414,18 @@ loop, 16
 						goto, cpymcntrs
 					}
 			}
-		player%JoyCount%t:= A_Space . "" . pinum . ""		
-		MediaCenter_Profile_%JoyCount%t:= A_Space . "" . minum . ""
-		iniwrite,%pinum%,%curpidf%,JOYSTICKS,Player%A_Index%
-		iniwrite,%minum%,%curpidf%,JOYSTICKS,MediaCenter_Profile%A_Index%
+			else {
+			MediaCenter_Profile_%joycount%= %minum%
+			}
+		zinum="%minum%"
+		MediaCenter_Profile_%joycount%t:= A_Space . zinum
+		vinum="%pinum%"
+		player%joycount%t:= A_Space . vinum
+		if (nosave <> 1)
+			{
+				iniwrite,%pinum%,%curpidf%,JOYSTICKS,Player%joycount%
+				iniwrite,%minum%,%curpidf%,JOYSTICKS,MediaCenter_Profile%joycount%
+			}
 	}
 return
 NameTuning:
