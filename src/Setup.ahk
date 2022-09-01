@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 
 RJPRJCT= v0rt3X
-RELEASE= 2022-08-25 6:28 AM
+RELEASE= 2022-09-01 8:33 AM
 VERSION= [CURV]
 home= %A_ScriptDir%
 Splitpath,A_ScriptDir,tstidir,tstipth
@@ -16,6 +16,7 @@ if ((tstidir = "src")or(tstidir = "bin")or(tstidir = "binaries"))
 source= %home%\src
 Loop %0%
 	{
+		
 		GivenPath := %A_Index%
 		Loop %GivenPath%,
 			{
@@ -76,6 +77,7 @@ MAPCFGS= JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
 remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff__MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
+ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
 reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|script|nocd|Tool|trainer|
 priora= |Launcher64|Launcherx64|Launcherx8664|Launcher64bit|Launcher64|Launchx64|Launch64|Launchx8664|
 priorb= |Launcher32|Launcherx86|Launcher32bit|Launcher32|Launchx86|Launch32|
@@ -91,7 +93,7 @@ GenQuery= Games|Gaymes|My Games|juegos|spellen|Spiele|Jeux|Giochi|PC_Games|PC Ga
 AllQuery:= GogQuery . | . "Origin" . "|" . "Epic Games" . "|" . steamhome
 undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|
 undirs= %undira%
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK
 STDVARS= SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Pre|2_Pre|3_Pre|1_Post|2_Post|3_Post|switchcmd|switchback
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
@@ -171,6 +173,10 @@ if (BGP_State = 14)
 cfgenbl= disabled
 joyenbl= disabled
 lnkenbl= disabled
+if (IncludeDD = 1)
+	{
+		InclDD= checked
+	}
 if (CREFLD = 1)
 	{
 		fldrget= checked
@@ -330,7 +336,8 @@ Gui, Add, Text,  x64 y110 w222 h14  hidden disabled,<Application Directory>
 Gui, Font, Normal
 Gui, Add, DropDownList, x64 y56 w190 vSOURCE_DirectoryT gSOURCE_DirectoryDD,%SOURCE_Directory%
 Gui, Add, Button, x271 y61 w15 h15 vREMSRC gREMSRC,X
-Gui, Add, Text, x73 y80 h14 vCURDP Right,<Game Exe/Lnk Source Directories>
+Gui, Add, Text, x63 y80 h14 vCURDP Right,<Game Fldrs>
+GUi, Add, Checkbox, x150 y80 h14 vIncludeDD gIncludeDD %InclDD%,Incl Steam/GOG etc...
 
 Gui, Font, Bold
 Gui, Add, Button, x24 y108 w36 h21 vGame_DirB gGame_DirB,OUT
@@ -517,6 +524,7 @@ JustBeforeExitT_TT :="program to run prior to executable termination"
 PREAPP_TT :="Assign a program to run before the game is launched"
 PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
 PRETNUM_TT :=""
+IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
 JARWAIT_TT :="waits for the program to exit"
 JBEWAIT_TT :="waits for the program to exit"
 PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )"
@@ -2067,13 +2075,13 @@ Loop,parse,STMORG,|
 		kman= %A_LoopField%\steamapps
 		if (fileexist(kman)&& !instr(CONCAT_ROOT,kman))
 				{
-					CONCAT_ROOT.= kman . "|"
-					GENERIC_ROOT.= kman . "|"
+					CONCAT_ROOT.= kman . "\common" . "|"
+					GENERIC_ROOT.= kman .  "\common" . "|"
 				}
 		if !instr(CONCAT_ROOT,kman)
 					{
-						CONCAT_ROOT.= kman . "|"
-						GENERIC_ROOT.= kman . "|"
+						CONCAT_ROOT.= kman . "\common" . "|"
+						GENERIC_ROOT.= kman . "\common" . "|"
 					}
 		Loop,files,%kman%\appmanifest*.acf
 			{
@@ -2089,41 +2097,41 @@ stringsplit,ebb,krmi,_.
 steamid= %ebb2%
 fileread,stmocs,%krmx%
 Loop,parse,stmocs,`r`n
-{
-	if (A_LoopField = "")
-		{
-			continue
-		}	
-	stringsplit,fie,A_LoopField,"
-	;"
-	aeb=
-	fii=
-	Loop,%fie0%
-		{
-			fixf:= (A_Index + 2)
-			aeb:= % fie%A_Index%
-			fii:= % fie%fixf%
-			if (aeb = "installdir")
-				{
-					steamins= %fii%
-					stinsd= %kman%\common\%fii%
-					if (fileexist(stinsd)&& !instr(STMLKUP,stinsd))
-							{
-								STMLKUP.= stinsd . "|"
-							}	
-				}
-			if (aeb = "appid")
-				{
-					steamid= %fii%
-				}
-			if (aeb = "name")
-				{
-					insan= %fii%
-					gosub, sanitizer
-					stringreplace,clnname,outsan,\,-,All
-				}
-		}
-}
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}	
+		stringsplit,fie,A_LoopField,"
+		;"
+		aeb=
+		fii=
+		Loop,%fie0%
+			{
+				fixf:= (A_Index + 2)
+				aeb:= % fie%A_Index%
+				fii:= % fie%fixf%
+				if (aeb = "installdir")
+					{
+						steamins= %fii%
+						stinsd= %kman%\common\%fii%
+						if (fileexist(stinsd)&& !instr(STMLKUP,stinsd))
+								{
+									STMLKUP.= stinsd . "|"
+								}	
+					}
+				if (aeb = "appid")
+					{
+						steamid= %fii%
+					}
+				if (aeb = "name")
+					{
+						insan= %fii%
+						gosub, sanitizer
+						stringreplace,clnname,outsan,\,-,All
+					}
+			}
+	}
 steamdba= %steamid%|%clnname%|%stinsd%
 if !instr(steamdb,steamdba)
 	{
@@ -2140,12 +2148,12 @@ RegRead, steamdir, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam,InstallPa
 if fileExist(steamdir)
 	{
 			Loop,files,%steamdir%\*.vdf,R
-			{	
-				if (A_Loopfilename = "libraryfolders.vdf")
-					{
-						vdfile= %A_LoopFileFullPath%
-						gosub, ReadLBF
-						;break
+				{	
+					if (A_Loopfilename = "libraryfolders.vdf")
+						{
+							vdfile= %A_LoopFileFullPath%
+							gosub, ReadLBF
+							;break
 						}
 						
 				}
@@ -2629,13 +2637,15 @@ omitd=
 filedelete,%home%\continue.db
 guicontrol,hide,REINDEX
 POPULATE:
+FileDelete,%home%\log.txt
 bsvl=
 INFN=
 SPLIT_SRC:= SOURCE_DIRECTORY . "|" . XSRCADD
+fileread,stmfz,%home%\steam.db	
 Gui,Listview,MyListView
 guicontrolget,enablelogging,,enablelogging
 guicontrolget,NameChk,,NameChk
-
+guicontrolget,IncludeDD,,IncludeDD
 guicontrolget,BGP_Enable,,BGP_Enable
 guicontrolget,teval,,BGP_TE
 teval:= (teval * 8)
@@ -2695,7 +2705,7 @@ if (namechk = 1)
 						continue
 					}
 				stringsplit,ge,A_Loopfield,|
-				invar= ge2
+				invar= %ge2%
 				gosub, StripVar
 				op= %invarx%
 				Nsivk.= "|" . op . "|" . ge1 . "|" . "`n"
@@ -2703,7 +2713,7 @@ if (namechk = 1)
 	}
 stringreplace,Nsivk,Nsivk,[,,All	
 stringreplace,Nsivk,Nsivk,],,All	
-stringreplace,Nsivk,Nsivk,/,,All
+stringreplace,Nsivk,Nsivk,\,,All
 stringreplace,Nsivk,Nsivk,/,,All
 stringreplace,Nsivk,Nsivk,:,-,All	
 stringreplace,Nsivk,Nsivk,*,,All	
@@ -2744,16 +2754,21 @@ Loop,parse,NSPLIT,|
 							{
 								return
 							}
-						stmexcl= 	
+						stmexcl= 
 						Loop,parse,DIST_DIRECTORY,|
 							{
+								if (A_LoopField = "")
+									{
+										continue
+									}
 								if instr(A_LoopFileLongPath,A_LoopField)
 									{
-										break
+										TOPSTM= %A_LoopField%
 										stmexcl= 1
+										break
 									}
 							}
-						if (stmexcl = 1)
+						if ((stmexcl = 1)&& (IncludeDD <> 1))
 							{
 								continue
 							}
@@ -2772,10 +2787,16 @@ Loop,parse,NSPLIT,|
 							}
 						filez:= A_LoopFileSizeKB
 						splitpath,FileName,FileNM,FilePath,FileExt,filtn
+						exechk= %filtn%
 						FilePPUT=%FilePath%
 						splitpath,FilePath,filpn,filpdir,,filpjn
-						stringreplace,simpath,FilePath,%SRCLOOP%,,
-						stringreplace,trukpath,filpdir,%SRCLOOP%,,
+						TOPSCR= %SRCLOOP%
+						if ((stmexcl = 1)&&(IncludeDD = 1))
+							{
+								TOPSCR= %TOPSTM%
+							}
+						stringreplace,simpath,FilePath,%TOPSCR%,,
+						stringreplace,trukpath,filpdir,%TOPSCR%,,
 						if ((trukpath = "")or(trukpath = filpdir))
 							{
 								Loop,parse,filpdir,\
@@ -2886,13 +2907,14 @@ Loop,parse,NSPLIT,|
 								fullist.= A_LoopFileLongPath . "|"
 							}
 						Chkcon:
-						njName= 
-						if ((namechk = 1)&&(lvachk <> ""))
+						njName=
+					if ((namechk = 1)&&(lvachk <> ""))
 							{
 								splitpath,filename,exnm,exep,exet,exechk
 								gosub, GETGOODNAME
 								FilePPUT= %FilePath%
 							}
+						AddCPL:	
 						FileOpts:= <
 						FileArgs:= <
 						SB_SetText("added " FileNM "")	
@@ -3168,6 +3190,7 @@ Loop, %fullstn0%
 		fnd32=
 		getaplist=
 		splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
+		exechk= %gmnamex%
 		sx= 0
 		Loop,parse,SPLIT_SRC,| 
 			{
@@ -3180,7 +3203,7 @@ Loop, %fullstn0%
 						stringlen,tn,A_LoopField
 						if (tn > sx)
 							{
-								SRCLOOP= %A_LoopField%
+								TOPSCR= %A_LoopField%
 								sx= %tn%
 								goto, SCRLOOPFND
 							}
@@ -3191,7 +3214,7 @@ Loop, %fullstn0%
 		SCRLOOPFND:
 		exep= %OutDir%
 		tlevel= %OutDir%
-		Stringreplace,gfnamecx,outdir,%SRCLOOP%\,,All
+		Stringreplace,gfnamecx,outdir,%TOPSCR%\,,All
 		Loop,parse,gfnamecx,\
 			{
 				gfnamex= %A_LoopField%
@@ -3969,7 +3992,7 @@ if (instr(njname,rgg)&&(nv = rgg))
 			{
 				ccba:= A_LoopField . rgg
 				stringreplace,sexenj,njname,%ccba%,,All
-				if (sexenj <> njname)
+				if ((sexenj <> njname)&& !instr(exechk,ccba))
 					{
 						nJname= %sexenj%
 						hh= 1
@@ -4019,9 +4042,9 @@ stringreplace,invarx,invarx,{,,All
 stringreplace,invarx,invarx,\,,All
 stringreplace,invarx,invarx,/,,All
 stringreplace,invarx,invarx,},,All
-stringreplace,invarx,invarx,`,,All
-stringreplace,invarx,invarx,+,All
-stringreplace,invarx,invarx,',All
+stringreplace,invarx,invarx,`,,,All
+stringreplace,invarx,invarx,+,,All
+stringreplace,invarx,invarx,',,All
 stringreplace,invarx,invarx,!,All
 stringreplace,invarx,invarx,&,All
 stringreplace,invarx,invarx,$,All
@@ -4043,12 +4066,18 @@ stringreplace,invarx,invarx,{,,All
 stringreplace,invarx,invarx,},,All
 stringreplace,invarx,invarx,[,,All
 stringreplace,invarx,invarx,],,All
+stringreplace,invarx,invarx,',,All
 stringreplace,invarx,invarx,-,,All
 stringreplace,invarx,invarx,%A_Space%,,All
 return
 
+IncludeDD:
+gui,submit,nohide
+iniwrite,%IncludeDD%,%RJDB_CONFIG%,GENERAL,IncludeDD
+return
+
 GETGOODNAME:
-stringreplace,exep,exep,%SRCLOOP%,,
+stringreplace,exep,exep,%TOPSCR%,,
 scrtst=
 if (exep = "")
 	{
@@ -4061,7 +4090,7 @@ if (exep = "")
 				exep= %A_LoopField%
 			}
 	}	
-if instr(XSRCADD,SRCLOOP . "\" . exep)
+if instr(XSRCADD,TOPSCR . "\" . exep)
 	{
 		scrtst= 1
 	}
@@ -4071,7 +4100,7 @@ jpd:
 stringreplace,exep,exep,\\,\,All
 if (scrtst = "")
 	{
-		tlevel= %SRCLOOP%\%exep%
+		tlevel= %TOPSCR%\%exep%
 	}
 stringreplace,tlevel,tlevel,\\,\,All
 stringright,te,tlevel,1
@@ -4105,7 +4134,7 @@ Loop,parse,exep,\
 		stringreplace,xin,xin,],,All
 		brk= |%din%|	
 		xrk= |%xin%|
-		if (instr(brk,exclfls) or instr(xrk,exclfls))
+		if (instr(exclfls,brk) or instr(exclfls,xrk))
 			{
 				njname=
 				stringreplace,vv,A_LoopField,%xrk%,,All
@@ -4115,12 +4144,12 @@ Loop,parse,exep,\
 					{
 						if (exep = "")
 							{
-								splitpath,SRCLOOP,nfn,scrrp
-								tlevel= %SRCLOOP%
+								splitpath,TOPSCR,nfn,scrrp
+								tlevel= %TOPSCR%
 								exep= %nfn%
 							}
 						else {
-							tlevel= %SRCLOOP%\%exep%
+							tlevel= %TOPSCR%\%exep%
 						}	
 					}
 				goto,jpd
@@ -4150,6 +4179,7 @@ Loop,parse,exep,\
 						stringreplace,exep,exep,%A_LoopField%,,
 						goto, jpd
 					}
+					
 			}
 		stringreplace,ack,din,%A_Space%,,
 		stringreplace,ack,ack,_,,
@@ -4206,7 +4236,7 @@ Loop,parse,rlspfx,|
 								break
 							}
 					}
-				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",tmp)
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",tmp)
 				if (ap = 1)
 					{
 						stringreplace,njname,njname,%vmind%%tmp%,,
@@ -4297,6 +4327,7 @@ if (nameOverride <> "")
 	}
 	else {
 		r:= "" . njnamex . ""
+		njns= %njnamex%
 		var := r, njabrv := ""
 		Loop, Parse, var, %A_Space%
 			{
@@ -4342,6 +4373,16 @@ if ((rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dply
 		exepN= %jik%
 		goto, redux
 	}
+stringsplit,njtest,njname,(
+if (njtest2 <> "")
+	{
+		njname= %njtest1%
+	}
+stringsplit,njtest,njname,[
+if (njtest2 <> "")
+	{
+		njname= %njtest1%
+	}
 stringreplace,exedp,njname,.,,All
 stringreplace,exedp,exedp,%A_SPace%,,All
 stringreplace,exedp,exedp,(,,All
@@ -4353,10 +4394,10 @@ stringreplace,exedp,exedp,{,,All
 stringreplace,exedp,exedp,},,All
 stringreplace,exedp,exedp,`,,All
 stringreplace,exedp,exedp,+,All
-stringreplace,exedp,exedp,',All
-stringreplace,exedp,exedp,!,All
-stringreplace,exedp,exedp,&,All
-stringreplace,exedp,exedp,$,All
+stringreplace,exedp,exedp,',,All
+stringreplace,exedp,exedp,!,,All
+stringreplace,exedp,exedp,&,,All
+stringreplace,exedp,exedp,$,,All
 stringreplace,exedp,exedp,`%,,All
 stringreplace,exedp,exedp,@,,All
 stringreplace,exedp,exedp,;,,All
@@ -4366,29 +4407,77 @@ stringreplace,exedp,exedp,_,,All
 stringlen,exelen,exedp
 bexp=|%exedp%|
 xenjx=|%njname%|
-if instr(Nsivk,bexp . xenjx)
+snov=
+spechar=
+if (instr(Nsivk,bexp) or instr(Nsivk,xenjx))
 	{
-		Loop,parse,Nsivk,`n
+		njx=|%njnamex%|
+		njj=|%njns%|
+		Loop,parse,Nsivk,`n`r
 			{
-				stringsplit,bei,A_LoopField,|
-				if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
+				if (A_LoopField = "")
 					{
-						njName=%bei2%
-						break
+						continue
+					}
+				stringsplit,bei,A_LoopField,|
+				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj)or instr(bei3,njns)) && instr(A_LoopField,bexp))
+					{
+						njName=%bei3%
+						snov= %A_LoopField%
+						loop,parse,snov,`
+							   {
+								   Transform,B2,ASC,%A_LOOPFIELD%
+								   bf=|%b2%|								   bf=|%b2%|								   bf=|%b2%|
+									if ((b2>47) and (b2<58)) or ((b2>64) and (b2<91)) or ((b2>96) and (b2<123)) or (instr(ptyx,bf))
+										 {
+											continue
+										 }else {
+											spechar= 1
+											break
+										 }
+							   }
+						if (spechar <> 1)
+							{
+								break
+							}
 					}
 			}
 	}
-	else {
-		if (instr(Nsivk,bexp)&&(exedp <> "")&&(exelen > 2))
+if (snov = "")
+	{
+		invar= %filtn%
+		gosub, cleanvar
+		nbv= %invarx%
+		if (instr(Nsivk,xenj)&&(exedp <> "")&&(exelen > 2))
 			{
-				Loop,parse,Nsivk,`n
+				Loop,parse,Nsivk,`n`r
 					{
-						stringsplit,bei,A_LoopField,|,
-						if (instr(A_LoopField,bexp)&& instr(A_LoopField,xenjx))
+						if (A_LoopField = "")
 							{
-								njName=%bei2%
+								continue
+							}
+						stringsplit,bei,A_LoopField,|
+						if ((bei2 = exedp) or (bei3 = exedp) && instr(A_LoopField,nbv))
+							{
+								njName=%bei3%
+								snov= %A_LoopField%
+								loop,parse,snov,`
+								   {
+									   Transform,B2,ASC,%A_LOOPFIELD%
+									   bf=|%b2%|
+										if ((b2>47) and (b2<58)) or ((b2>64) and (b2<91)) or ((b2>96) and (b2<123)) or (instr(ptyx,bf))
+											 {
+												continue
+											 }else {
+												spechar= 1
+												break
+											 }
+								   }
+						if (spechar <> 1)
+							{
 								break
 							}
+						}	
 					}
 			}
 	}
