@@ -209,7 +209,7 @@ olrlsdt=
 vernum=	
 getversf= %SITEDIR%\index.html
 
-ifnotexist,%getversf%
+if !fileexist(getversf)
 	{
 		FileDelete,ORIGHTML.html
 		save= ORIGHTML.html
@@ -224,7 +224,7 @@ Loop, Read, %getversf%
 	{
 		sklnum+=1
 		getvern= 
-		ifinstring,A_LoopReadLine,<h99>
+		if instr(A_LoopReadLine,"<h99>")
 			{
 				stringgetpos,verstr,A_LoopReadLine,<h99>
 				stringgetpos,endstr,A_LoopReadLine,</h99>
@@ -309,7 +309,7 @@ gui,font,bold
 Gui, Add, Button, x408 y123 w75 h23 vCANCEL gCANCEL hidden, CANCEL
 gui,font,normal
 Gui, Add, Text, x308 y155, Version
-Gui, Add, CheckBox, x204 y76 w114 h13 vINITINCL gINITINCL checked hidden, Initialize-Include
+Gui, Add, CheckBox, x204 y76 w114 h13 vINITINCL gINITINCL checked, Initialize-Include
 Gui, Add, CheckBox, x90 y95 w104 h13 vPortVer gPortVer checked  hidden, Portable/Update
 Gui, Add, CheckBox, x90 y76 w104 h13 vOvrStable gOvrStable hidden checked,Stable
 Gui, Add, CheckBox, x90 y95 w154 h13 vDevlVer gDevlVer hidden, Development Version
@@ -597,7 +597,7 @@ Loop,parse,BLDITEMS,|
 		iniread,nwurl,src\BuildTools.set,BUILDENV,%BLIT%
 		%dwnlsi%URL= %nwurl%
 		splitpath,nwurl,nwurlf
-		Loop,LKDIRS,|
+		Loop,parse,LKDIRS,|
 			{
 				Loop,Files,%A_LoopFileFullPath%\*,R
 					{

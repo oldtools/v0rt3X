@@ -10,83 +10,83 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.71.001
+This Version:0.99.75.06
 
-This Build: 2022-09-01 8:33 AM
+This Build: 2022-09-15 10:14 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
 v0rt3X
 +-- bin
-¦   +-- aria2c.exe
-¦   +-- 7za.exe
-¦   +-- lrDeploy.exe
-¦   +-- NewOSK.exe
-¦   +-- jkvtx.exe
-¦   +-- Setup.exe
-¦   +-- Source_Builder.exe
-¦   +-- Update.exe
-¦
+Â¦   +-- aria2c.exe
+Â¦   +-- 7za.exe
+Â¦   +-- lrDeploy.exe
+Â¦   +-- NewOSK.exe
+Â¦   +-- jkvtx.exe
+Â¦   +-- Setup.exe
+Â¦   +-- Source_Builder.exe
+Â¦   +-- Update.exe
+Â¦
 +-- site
-¦   +-- img
-¦       +-- Install.png
-¦       +-- key.png
-¦       +-- runas.png
-¦       +-- Setup.png
-¦       +-- Tip.png
-¦       +-- Update.png
+Â¦   +-- img
+Â¦       +-- Install.png
+Â¦       +-- key.png
+Â¦       +-- runas.png
+Â¦       +-- Setup.png
+Â¦       +-- Tip.png
+Â¦       +-- Update.png
 |
-¦   +-- index.html
-¦   +-- Hermit-Regular.otf
-¦   +-- key.ico
-¦   +-- ReadMe.md
-¦   +-- TruenoLt.otf
-¦   +-- version.txt
-¦
+Â¦   +-- index.html
+Â¦   +-- Hermit-Regular.otf
+Â¦   +-- key.ico
+Â¦   +-- ReadMe.md
+Â¦   +-- TruenoLt.otf
+Â¦   +-- version.txt
+Â¦
 +-- src
-¦   +-- absol.set
-¦   +-- am_GameTemplate.set
-¦   +-- am_DesktopTemplate.set
-¦   +-- am_Trigger.set
-¦   +-- ax_GameTemplate.set
-¦   +-- ax_DesktopTemplate.set
-¦   +-- ax_Trigger.set
-¦   +-- build.ahk
-¦   +-- Buildtools.set
-¦   +-- cmdtemplate.set
-¦   +-- Deploy.ico
-¦   +-- exclfnms.set
-¦   +-- exez.set
-¦   +-- Install.ico
-¦   +-- jk_GameTemplate.set
-¦   +-- jk_DestktopTemplate.set
-¦   +-- jk_Trigger.set
-¦   +-- Joystick.ico
-¦   +-- jkvtx.ahk
-¦   +-- lrDeploy.ahk
-¦   +-- lrDeploy.set
-¦   +-- newosk.ahk
-¦   +-- NewOSK.ico
-¦   +-- ox_DesktopTemplate.set
-¦   +-- ox_GameTemplate.set
-¦   +-- ox_Trigger.set
-¦   +-- rabsol.set
-¦   +-- readme.set
-¦   +-- repos.set
-¦   +-- RJDB.set
-¦   +-- rlsgrps.set
-¦   +-- Run.ico
-¦   +-- Setup.ico
-¦   +-- Setup.ahk
-¦   +-- Source_Builder.ico
-¦   +-- Steamlkp.set
-¦   +-- unlike.set
-¦   +-- unsel.set
-¦   +-- Update.ahk
-¦   +-- xp_GameTemplate.set
-¦   +-- xp_DesktopTemplate.set
-¦   +-- xp_Trigger.set
-¦
+Â¦   +-- absol.set
+Â¦   +-- am_GameTemplate.set
+Â¦   +-- am_DesktopTemplate.set
+Â¦   +-- am_Trigger.set
+Â¦   +-- ax_GameTemplate.set
+Â¦   +-- ax_DesktopTemplate.set
+Â¦   +-- ax_Trigger.set
+Â¦   +-- build.ahk
+Â¦   +-- Buildtools.set
+Â¦   +-- cmdtemplate.set
+Â¦   +-- Deploy.ico
+Â¦   +-- exclfnms.set
+Â¦   +-- exez.set
+Â¦   +-- Install.ico
+Â¦   +-- jk_GameTemplate.set
+Â¦   +-- jk_DestktopTemplate.set
+Â¦   +-- jk_Trigger.set
+Â¦   +-- Joystick.ico
+Â¦   +-- jkvtx.ahk
+Â¦   +-- lrDeploy.ahk
+Â¦   +-- lrDeploy.set
+Â¦   +-- newosk.ahk
+Â¦   +-- NewOSK.ico
+Â¦   +-- ox_DesktopTemplate.set
+Â¦   +-- ox_GameTemplate.set
+Â¦   +-- ox_Trigger.set
+Â¦   +-- rabsol.set
+Â¦   +-- readme.set
+Â¦   +-- repos.set
+Â¦   +-- RJDB.set
+Â¦   +-- rlsgrps.set
+Â¦   +-- Run.ico
+Â¦   +-- Setup.ico
+Â¦   +-- Setup.ahk
+Â¦   +-- Source_Builder.ico
+Â¦   +-- Steamlkp.set
+Â¦   +-- unlike.set
+Â¦   +-- unsel.set
+Â¦   +-- Update.ahk
+Â¦   +-- xp_GameTemplate.set
+Â¦   +-- xp_DesktopTemplate.set
+Â¦   +-- xp_Trigger.set
+Â¦
 +-- README.md
 ```
 # Documentation
@@ -97,7 +97,7 @@ v0rt3X
 
 Setup (bin\Setup.exe) configures v0rt3X. Initializing the tool will index your drives for common game folders used by many delivery providers.
 
-Steam and other digital-delivery providers' games detected will be added as entities indipendently in the source list regardless of where they may appear in your global libraries.
+Steam and other digital-delivery providers' games detected will be excluded from your new library unless you specify "Include Steam/GOG...etc".
 
 Use the "SRC" button to add a folder/s where games have been installed. EG: C:\Games, or C:\Program Files
 
@@ -117,6 +117,11 @@ Ideally, v0rt3X can run entirely in userspace, however many games require admini
 ![AsAdmin](https://oldtools.github.io/v0rt3X/runas.png)
 
 During gameplay you may modify and/or create additional joystick profiles and any found within the game's jacket will be saved and reloaded for player 2/3/4, prioritizing the default profile-name eg: game-name/_#.gamecontroller.amgp, and other "player#" monikers.)
+
+# W.I.P/To Do
+
+Cloud-Backup of Game-Saves and Game-Configuration files
+
 
 # Building or compiling from source
 

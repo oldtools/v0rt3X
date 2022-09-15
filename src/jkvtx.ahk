@@ -3,6 +3,16 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
+FileEncoding UTF-8
+EnvGet,LADTA,LOCALAPPDATA
+EnvGet,USRPRF,USERPROFILE
+EnvGet,SYSTMRT,SYSTEMROOT
+EnvGet,PBLCFLDR,ALLUSERSPROFILE
+EnvGet,DRVSYSTM,SYSTEM
+EnvGet,xprgfls,PROGRAMFILES(X86)
+EnvGet,DRVRT,WINDIR
+rootiterate=%LADTA%|%A_AppData%|%USRPRF%|%xprgfls%|%A_Temp%|%PBLCFLDR%|%DRVSYSTM%|%PBLCFLDR%
+
 
 Loop %0%  
 	{
@@ -994,16 +1004,130 @@ if (jbeprog <> "")
 					}
 				if instr(presA,"W")
 					{
-						RunWait,%jbeprog%,%A_ScriptDir%,%runhow%,jbepid
 						ToolTip,
 						;goto,LOGOUT
-						return
+						;return
 					}
 				Run,%jbeprog%,%A_ScriptDir%,%runhow%,jbepid	
 				iniwrite,%jbepid%,%curpidf%,JustBeforeExit,pid
 			}
+		if instr(jbeprog,">")	
+			{
+				gosub, JBECall
+			}
 	}
 return
+
+JBECall:
+jbeprogs= %jbeprog%\%gmname%\SAVDATA
+jbeprogd= %jbeprog%\%gmname%\CFGDATA
+filecreatedir,%jbeprogd%
+filecreatedir,%jbeprogs%
+if (SaveData <> "")
+	{
+		Loop,parse,SaveData,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				Loop,files,%A_LoopField%,R
+					{
+						if fileexist(A_LoopFileFullPath)
+							{
+								sdatb.= A_LoopFileFullPath . "|"
+								Filecopy,%A_LoopFileFullPath%,%jbeprogd%,1
+							}
+					}
+			}
+	}
+if (GameData <> "")
+	{
+		Loop,parse,GameData,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				stringright,baV,A_LoopField,1
+				splitpath,A_LoopField,ALPFN,ALPTH
+				if ((fileexist(A_LoopField . "\"))   or ((baV = "\") && fileexist(A_LoopField))  or      (instr(ALPFN,"*")&& fileexist(ALPTH)))
+					{
+						dcir= %A_LoopField%
+						if instr(ALPFN,"*")
+							{
+								dcir= %ALPTH%							
+							}
+						else {
+							ALPFN= *
+						}	
+						gdatb.= A_LoopFileFullPath . "|"
+						if (presa = "W")
+							{
+								Loop,files,%dcir%\%ALPFN%,R
+									{
+										splitpath,A_LoopFileFullPath,jbeprogd,jbeprgp
+										rootiteratex= %rootiterate%|%Install_Directory%
+										Loop,parse,rootiteratex,|
+											{
+												if instr(A_LoopFileLongPath,A_LoopField)
+													{
+														stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
+														if (errorlevel <> 0)
+															{
+																stringreplace,bab,bab,%A_LoopField%,,
+															}
+														if (errorlevel = 0)
+															{
+																jbeprogdx= %jbeprogd%\%bab%
+																goto copybk
+															}
+													}
+											}
+										splitpath,jbeprgp,jbeprx
+										jbeprogdx= %jbeprogd%\%jbeprx%												
+										copybk:	
+										FilecreateDir,%Jbeprogdx%
+										Filecopy,%A_LoopFileFullPath%,%jbeprogdx%,1
+									}
+							}
+						else {
+							Run, %comspec% /c robocopy "%dcir%" "%jbeprogd%" /E,,hide
+						}	
+					}
+				else {
+					splitpath,ALPTH,ALPTHN
+					jbeprogdx= %jbeprogd%\%ALPFN%
+					rootiteratex= %rootiterate%|%Install_Directory%
+					Loop,parse,rootiteratex,|
+						{
+							if instr(A_LoopFileLongPath,A_LoopField)
+									{
+										stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
+										if (errorlevel <> 0)
+											{
+												stringreplace,bab,bab,%A_LoopField%,,
+											}
+										if (errorlevel = 0)
+											{
+												jbeprogdx= %jbeprogd%\%bab%
+												goto copybkf
+											}
+									}
+						}
+					copybkf:	
+					if (presa = "W")
+						{
+							FileCopy,%A_LoopField%,%jbeprogdx%,1
+						}
+					else {
+						Run, %comspec% /c copy /y "%A_LoopField%" "%jbeprogdx%",,hide
+					}	
+				}
+			}
+	}
+return	
+
 
 POST_1:
 if (nosave = 1)
@@ -1195,7 +1319,7 @@ if (nosave = 1)
 	}
 iniwrite,%MONITORMODE%,%inif%,GENERAL,MonitorMode
 iniwrite,%disprogw%,%inif%,GENERAL,disprogw
-iniwrite,%MM_MEDIACENTER_Config%,%inif%,GENERAL,MM_MEDIACENTER_Config
+iniwrite,%MM_MEDIACENTER_Config%,%inif%,CONFIG,MM_MEDIACENTER_Config
 iniwrite,%MultiMonitor_Tool%,%inif%,GENERAL,MultiMonitor_Tool
 monsave:
 sleep, 1000
@@ -1341,8 +1465,8 @@ Filecopy,%home%\GameMonitors.mon,%This_Profile%\GameMonitors.mon
 Filecopy,%home%\DesktopMonitors.mon,%This_Profile%\DesktopMonitors.mon
 Filecopy,%home%\Mediacenter.%mapper_extension%,%This_Profile%\Mediacenter.%mapper_extension%
 FileCopy,%home%\RJDB.ini,%This_Profile%\Game.ini
-iniwrite,%This_Profile%\DesktopMonitors.mon,%Game_Profile%,GENERAL,MM_MEDIACENTER_Config
-iniwrite,%This_Profile%\GameMonitors.mon,%Game_Profile%,GENERAL,MM_Game_Config
+iniwrite,%This_Profile%\DesktopMonitors.mon,%Game_Profile%,CONFIG,MM_MEDIACENTER_Config
+iniwrite,%This_Profile%\GameMonitors.mon,%Game_Profile%,CONFIG,MM_Game_Config
 iniwrite,%player1%,%Game_Profile%,JOYSTICKS,Player1
 iniwrite,%player2%,%Game_Profile%,JOYSTICKS,Player2
 iniwrite,%This_Profile%\MediaCenter.%mapper_extension%,%Game_Profile%,JOYSTICKS,MediaCenter_Profile

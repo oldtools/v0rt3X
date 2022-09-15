@@ -1,17 +1,20 @@
-#NoEnv
+SendMode Input
+SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
+#Persistent
 SetBatchLines -1
-localdir=%A_ScriptDir%
-home= %A_ScriptDir%
+FileEncoding UTF-8
+rjrlupdfX= %1%
+splitpath,rjrlupdfX,,rjrlupdpth
+home= %rjrlupdpth%
 splitpath,home,srcfn,srcpth
-if ((srcfn = "src")or(srcfn = "bin")or(srcfn = "binaries"))
+if ((srcfn = "src")or(srcfn = "bin")or(srcfn = "binaries")or(srcfn = "downloaded"))
 	{
 		home= %srcpth%
 	}	
 binhome= %home%\bin
 source= %home%\src
 SetWorkingDir, %home%
-rjrlupdfX= %1%
 cacheloc= %home%\downloaded
 inapp= 
 if (rjrlupdfX <> "")
