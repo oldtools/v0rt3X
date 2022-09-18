@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-09-15 10:33 AM
+RELEASE= 2022-09-18 2:01 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -115,7 +115,7 @@ undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|
 undirs= %undira%
 nopcgw= There is currently no text in this page.
 STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRALIZE|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRALIZE|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 STDVARS= SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|switchcmd|switchback
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
@@ -213,10 +213,123 @@ if (BGP_State = 14)
 		bgptu= checked
 		bgpte= checked
 	}
-cntrlz=
-if (CENTRALIZE = 1)
+cntz=
+CENTRLZ=
+Loop,parse,CENTRALIZE,|
 	{
-		cntrlz= checked
+		if (A_Index = 1)
+			{
+				if (A_LoopField = 1)
+					{
+						cntz= checked
+						centz= %A_LoopField%	
+					}
+			   CENTRLZ.= %A_LoopField%
+			}
+		if (A_Index = 2)
+			{
+				if (A_LoopField = 1)
+					{
+						cnKBM= checked
+						cenKBM= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 3)
+			{
+				if (A_LoopField = 1)
+					{
+						cnPL1= checked
+						cenPL1= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 4)
+			{
+				if (A_LoopField = 1)
+					{
+						cnPl2= checked
+						cenPl2= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 5)
+			{
+				if (A_LoopField = 1)
+					{
+						cnMC= checked
+						cenMC= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 6)
+			{
+				if (A_LoopField = 1)
+					{
+						cnGM= checked
+						cenGM= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 7)
+			{
+				if (A_LoopField = 1)
+					{
+						cnMM= checked
+						cenMM= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 8)
+			{
+				if (A_LoopField = 1)
+					{
+						cnJAL= checked
+						cenJAL= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 9)
+			{
+				if (A_LoopField = 1)
+					{
+						cnJBE= checked
+						cenJBE= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 10)
+			{
+				if (A_LoopField = 1)
+					{
+						cnpre= checked
+						cenpre= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+
+			}
+		if (A_Index = 11)
+			{
+				if (A_LoopField = 1)
+					{
+						cnpst= checked
+						cenpst= %A_LoopField%
+					}
+			   CENTRLZ.= %A_LoopField%
+			}
+	}
+CENTRALIZE= 0	
+if (cntz = "checked")
+	{
+		CENTRALIZE= 1
 	}
 netnchk= 
 cfgenbl= disabled
@@ -416,10 +529,10 @@ Gui, Add, Text, x64 y100 w222 h14 vGAME_DirectoryT Disabled Right,%GAME_Director
 Gui, Font, Normal
 Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 
-GUi, Add, Checkbox, x28 y137 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
-Gui, Add, Checkbox, x85 y137 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
+GUi, Add, Checkbox, x120 y137 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
+Gui, Add, Checkbox, x185 y137 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
 Gui, Font, Bold
-Gui, Add, Checkbox, x190 y137 h14 vCentralize gCentralize Right %cntrlz%,CENTRALIZE
+Gui, Add, Checkbox, x1 y137 h14 vCentralize gCentralize %cntz%, CENTRALIZE
 Gui, Font, Normal
 GUi, Add, Checkbox, x28 y157 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
 GUi, Add, Checkbox, x70 y157 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
@@ -436,6 +549,7 @@ Gui, Add, Checkbox, x208 y189 w61 h14 vLocalize gLocalize right,Localize
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y224 w36 h21 vKeyboard_MapB gKeyboard_MapB,KBM
+Gui, Add, Checkbox, x1 y227 w14 h14 vCenKBM gCenKBM %cnkbm%,
 Gui Add, Button, x52 y224 w10 h21 vKBM_RC gKBM_RC, v
 Gui, Add, Text,  x64 y224 w222 h14 vKeyboard_MapperT Disabled Right,%Keyboard_Mapper%
 Gui, Font, Normal
@@ -443,18 +557,21 @@ Gui, Add, Text,  x64 y238 w222 h14,<Keyboard Mapper Program>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y256 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
+Gui, Add, Checkbox, x1 y259 w14 h14 vCenPL1 gCenPL1 %cnpl1%,
 Gui, Add, Text,  x64 y256 w222 h14 vPlayer1_TemplateT Disabled Right,%Player1_Template%
 Gui, Font, Normal
 Gui, Add, Text,  x64 y270 w222 h14,.....Template Profile for Player 1>
 Gui, Font, Bold
 
 Gui, Add, Button, x21 y288 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
+Gui, Add, Checkbox, x1 y291 w14 h14 vCenPL2 gCenPL2 %cnpl2%,
 Gui, Add, Text,  x64 y288 w222 h14 vPlayer2_TemplateT Disabled Right,%Player2_Template%
 Gui, Font, Normal
 Gui, Add, Text,  x64 y302 w222 h14,.....Template Profile for Player 2>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y320 w36 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
+Gui, Add, Checkbox, x1 y323 w14 h14 vCenMC gCenMC %cnMC%,
 Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_ProfileT Disabled Right,%MediaCenter_Profile_Template%
 Gui, Font, Normal
 Gui, Add, Text,  x64 y334 w222 h14,.....Template Profile for MediaCenter/Desktop>
@@ -487,17 +604,20 @@ Gui, Add, Text,  x64 y432 w222 h14,<Multimonitor Program>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y448 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
+Gui, Add, Checkbox, x1 y451 w14 h14 vCenGM gCenGM %cnGM%,
 Gui, Add, Text,  x64 y448 w222 h14 vMM_Game_ConfigT Disabled Right,%MM_Game_Config%
 Gui, Font, Normal
 Gui, Add, Text,  x64 y462 w222 h14,.....Gaming Configuration File>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y480 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
+Gui, Add, Checkbox, x1 y480 w14 h14 vCenMM gCenMM %cnMM%,
 Gui, Add, Text,  x64 y480 w222 h14 vMM_MediaCenter_ConfigT Disabled Right,%MM_MediaCenter_Config%
 Gui, Font, Normal
 Gui, Add, Text,  x64 y494 w234 h14,.....MediaCenter/Desktop Configuration File>
   
 Gui, Font, Bold
+Gui, Add, Checkbox, x1 y515 w14 h14 vCenJAL gCenJAL %cnJAL%,
 Gui, Add, Button, x17 y512 w36 h21 vJAL_ProgB gJAL_ProgB,JAL
 Gui Add, Button, x53 y512 w10 h21 vJAL_RC gJAL_RC, v
 Gui, Add, Text,  x64 y512 w198 h14 vJustAfterLaunchT Disabled Right,%JustAfterLaunchT%
@@ -507,6 +627,7 @@ Gui, Add, Checkbox, x270 y514 w12 h14 vJALWait gJALWait %jalstatus%
 
 
 Gui, Font, Bold
+Gui, Add, Checkbox, x1 y547 w14 h14 vCenJBE gCenJBE %cnJBE%,
 Gui, Add, Button, x17 y544 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
 Gui Add, Button, x53 y544 w10 h21 vJBE_RC gJBE_RC, v
 Gui, Add, Text, x64 y544 w198 h14 vJustBeforeExitT Disabled Right,%JustBeforeExitT%
@@ -515,17 +636,19 @@ Gui, Add, Checkbox, x270 y546 w12 h14 vJBEWait gJBEWait %jbestatus%
 ;Gui, Add, Text, x64 y548 w198 h14,<Run Before Exit>	   
 
 Gui, Font, Bold
+Gui, Add, Checkbox, x1 y579 w14 h14 vCenPRE gCenPRE %cnPRE%,
 Gui, Add, Button, x17 y576 w36 h21 vPREAPP gPREAPP ,PRE
 Gui Add, Button, x53 y576 w10 h21 vPRE_RC gPRE_RC, v
 Gui, Font, Normal
 Gui, Add, Text, x65 y578 h12 vPRETNUM,1
 Gui, Add, DropDownList, x75 y576 w193 vPREDD gPREDD Right,%prelist%
 Gui, Add, Text, x64 y596 h14 w230 vPREDDT,<$This_Prog$><Monitor><Mapper><game.exe>
-Gui, Add, Checkbox, x270 y515 w12 h14 vPreWait gPreWait %prestatus%,
+Gui, Add, Checkbox, x270 y578 w12 h14 vPreWait gPreWait %prestatus%,
 								  
 Gui, Add, Button, x283 y579 w14 h14 vDELPREAPP gDELPREAPP ,X
 
 Gui, Font, Bold
+Gui, Add, Checkbox, x1 y617 w14 h14 vCenPST gCenPST %cnPST%,
 Gui, Add, Button, x17 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
 Gui Add, Button, x53 y614 w10 h21 vPOST_RC gPOST_RC, v
 Gui, Font, Normal
@@ -606,7 +729,17 @@ JustBeforeExitT_TT :="program to run prior to executable termination"
 PREAPP_TT :="Assign a program to run before the game is launched"
 PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
 PRETNUM_TT :=""
-CENTRALIZE :="Joystick profiles, monitor configs and pre/post scritps are centralized in the program directory`nand not copied to each profile folder."
+CENTRALIZE_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
+CenKBM_TT := ""
+CenPL1_TT := ""
+CenPL2_TT := ""
+CenMC_TT := ""
+CenGM_TT := ""
+CenMM_TT := ""
+CenJAL_TT := ""
+CenJBE_TT := ""
+CenPRE_TT := ""
+CenPST_TT := ""
 IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
 JARWAIT_TT :="waits for the program to exit"
 JBEWAIT_TT :="waits for the program to exit"
@@ -1451,10 +1584,10 @@ if (dchk = "")
 	{
 		FileSelectFile,JustBeforeExitT,3,%home%,*.*
 	}
-if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "<Run Before Exit>"))
+if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "JustBeforeExit"))
 	{
 		predl=<
-		if (instr(JustBeforeExitT,".cmd")or instr(JustAfterLaunch,".bat") or instr(JustAfterLaunch,".ps1")or instr(JustAfterLaunch,".psd"))
+		if (instr(JustBeforeExitT,".cmd")or instr(JustBeforeExitT,".bat") or instr(JustBeforeExitT,".ps1")or instr(JustBeforeExitT,".psd")or instr(JustBeforeExitT,".vbe")or instr(JustBeforeExitT,".wsf")or instr(JustBeforeExitT,".wsc"))
 			{
 				predl=0W<
 				JBEWait= 1
@@ -1463,9 +1596,10 @@ if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "<Run Before Exit>"))
 		iniwrite,%JustBeforeExit%,%RJDB_Config%,GENERAL,JustBeforeExit
 	}
 	else {
-		guicontrol,,JustBeforeExitT,
+		guicontrol,,JustBeforeExitT,JustBeforeExit
 		return
 	}
+iniwrite,%JustBeforeExitT%,%RJDB_CONFIG%,GENERAL,JustBeforeExit
 guicontrol,,JustBeforeExitT,%JustBeforeExitT%
 guicontrol,,JBEWAIT,%JBEWAIT%
 return
@@ -1490,24 +1624,29 @@ return
 
 JAL_ProgB:
 gui,submit,nohide
+guicontrolget,JALWait,,JALWait
 if (dchk = "")
 	{
 		FileSelectFile,JustAfterLaunchT,3,After Launch,Select File,*.*
 	}
-if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "<Run After Launch>"))
+if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "JustAfterLaunch"))
 	{
 		predl=<
-		if (instr(JustAfterLaunch,".cmd")or instr(JustAfterLaunch,".bat") or instr(JustAfterLaunch,".ps1")or instr(JustAfterLaunch,".psd"))
+		if (instr(JustAfterLaunchT,".cmd")or instr(JustAfterLaunchT,".bat") or instr(JustAfterLaunchT,".ps1")or instr(JustAfterLaunchT,".psd")or instr(JustAfterLaunchT,".vbs")or instr(JustAfterLaunchT,".vbe")or instr(JustAfterLaunchT,".wsf")or instr(JustAfterLaunchT,".wsc"))
 			{
-				predl=0<
+				predl=0W<
+				JALWait= 1
 			}
 		JustAfterLaunch= %predl%%JustAfterLaunchT%
+		iniwrite,%JustAfterLaunch%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
 	}
 	else {
-		guicontrol,,JustAfterLaunchT,<JustAfterLaunch
+		guicontrol,,JustAfterLaunchT,JustAfterLaunch
 		return
 	}
+iniwrite,%JustAfterLaunch%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
 guicontrol,,JustAfterLaunchT,%JustAfterLaunch%
+guicontrol,,JALWAIT,%JALWAIT%
 return
 
 BGP_TE:
@@ -1762,7 +1901,6 @@ guicontrol,,PreDD,%PreList%
 guicontrol,,PreWAIT,%prewaitn%
 guicontrol,,PRETNUM,1
 return
-
 
 EXEONLY:
 filextns= exe
@@ -2407,7 +2545,26 @@ STMEND:
 
 
 GOGROOT=
-
+;HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games
+Loop, Reg, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games, K
+	{
+		if (A_LoopRegType = "key")
+			value := ""
+		else
+		{
+			RegRead, value
+			if ((A_LoopRegType = "KEY") && A_LoopRegName is digit)
+				{
+					RegRead, gogname, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, GameName
+					RegRead, gogPth, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, Path
+					RegRead, gogExe, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, exe
+					CONCAT_ROOT.= gogPth . "|"
+					GOG_ROOT.= gogPth . "|"
+				}
+				
+				
+		}
+	}	
 Loop,parse,progdirs
 	{
 		srclocd= %A_LoopField%
@@ -2448,9 +2605,146 @@ Loop,parse,dralbet,|
 
 			}
 	}
+ITCHROOT=
 
+Loop,parse,progdirs
+	{
+		srclocd= %A_LoopField%
+		Loop,Files,%srclocd%,D
+			{
+				Loop,files,%A_LoopFileFullPath%,D
+					{
+						StringLeft,itchtst,A_LoopFilename,5
+						if (instr(A_LoopFileName,"Itch.io") or (itchtst = "Itch ") or (A_LoopFileName = "Itch") && !instr(CONCAT_ROOT,A_LoopFileName))
+							{
+								CONCAT_ROOT.= ITCHchkh . "|"
+								ITCH_ROOT.= ITCHchkh . "|"
+							}
+					}
+			}
+	}
+Loop,parse,dralbet,|
+	{
+		srchdrl= %A_LoopField%:
+		Loop,parse,remProgdirs,|
+			{
+				Loop,files,%srchdrl%\%A_LoopField%,D
+					{
+						ITCHchkd= %A_LoopFileFullPath%
+						StringLeft,itchtst,A_LoopFilename,5
+						if (instr(A_LoopFileName,"Itch.io") or (itchtst = "Itch ") or (A_LoopFileName = "Itch"))
+							{
+								AnItch= %A_LoopFileFullPath%\Itch.exe
+								if (fileexist(AnItch)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
+									{
+										CONCAT_ROOT.= ITCHchkh . "|"
+										ITCH_ROOT.= ITCHchkh . "|"
+									}
+							}
+					}
+
+			}
+	}
+EPICROOT=
+
+Loop,parse,progdirs
+	{
+		srclocd= %A_LoopField%
+		Loop,Files,%srclocd%,D
+			{
+				Loop,files,%A_LoopFileFullPath%,D
+					{
+						StringLeft,epictst,A_LoopFilename,5
+						if (instr(A_LoopFileName,"Epic Games") or (epictst = "Epic ") or (A_LoopFileName = "Epic") && !instr(CONCAT_ROOT,A_LoopFileName))
+							{
+								CONCAT_ROOT.= EPICchkh . "|"
+								EPIC_ROOT.= EPICchkh . "|"
+							}
+					}
+			}
+	}
+Loop,parse,dralbet,|
+	{
+		srchdrl= %A_LoopField%:
+		Loop,parse,remProgdirs,|
+			{
+				Loop,files,%srchdrl%\%A_LoopField%,D
+					{
+						EPICchkd= %A_LoopFileFullPath%
+						StringLeft,epictst,A_LoopFilename,5
+						if (instr(A_LoopFileName,"Epic Games") or (epictst = "Epic ") or (A_LoopFileName = "Epic"))
+							{
+								AnEpic= %A_LoopFileFullPath%\Epic.exe
+								if (fileexist(AnEpic)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
+									{
+										CONCAT_ROOT.= EPICchkh . "|"
+										EPIC_ROOT.= EPICchkh . "|"
+									}
+							}
+					}
+
+			}
+	}	
+AMAZONROOT=
+
+Loop,parse,progdirs
+	{
+		srclocd= %A_LoopField%
+		Loop,Files,%srclocd%,D
+			{
+				Loop,files,%A_LoopFileFullPath%,D
+					{
+						StringLeft,amazontst,A_LoopFilename,8
+						if (instr(A_LoopFileName,"Amazon Games") or (amazontst = "Amazon ") or (A_LoopFileName = "Amazon") && !instr(CONCAT_ROOT,A_LoopFileName))
+							{
+								CONCAT_ROOT.= AMAZONchkh . "|"
+								AMAZON_ROOT.= AMAZONchkh . "|"
+							}
+					}
+			}
+	}
+Loop,parse,dralbet,|
+	{
+		srchdrl= %A_LoopField%:
+		Loop,parse,remProgdirs,|
+			{
+				Loop,files,%srchdrl%\%A_LoopField%,D
+					{
+						AMAZONchkd= %A_LoopFileFullPath%
+						StringLeft,amazontst,A_LoopFilename,8
+						if (instr(A_LoopFileName,"Amazon Games") or (amazontst = "Amazon ") or (A_LoopFileName = "Amazon"))
+							{
+								AnAmazon= %A_LoopFileFullPath%\Amazon.exe
+								if (fileexist(AnAmazon)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
+									{
+										CONCAT_ROOT.= AMAZONchkh . "|"
+										AMAZON_ROOT.= AMAZONchkh . "|"
+									}
+							}
+					}
+
+			}
+	}	
 ORIGINROOT=
-
+OriginPGD= %A_ProgramData%\Origin\LocalContent\
+if fileExist(OriginPGD)
+	{
+		Loop,Files,%OriginPGD%*,D
+			{
+				Loop,files,%A_LoopFileLongPath%\*.mfst
+					{
+						fileread,mfst,%A_LoopFileLongPath%
+						trnsl:= % uriDecode(mfst)
+						pthxtra:= % RegExReplace(trnsl, "^(.*installpath=)([A-Z]\:)" "", "$2")
+						mfstpth:= % RegExReplace(pthxtra,"" "&download" "(.*)", "")
+						if fileexist(mfstpth)
+							{
+								CONCAT_ROOT.= mfstpth . "|"
+								ORIGIN_ROOT.= mfstpth . "|"
+							}
+					}
+			}
+	}
 Loop,parse,progdirs
 	{
 		srclocd= %A_LoopField%
@@ -2646,8 +2940,238 @@ return
 
 CENTRALIZE:
 gui,submit,nohide
-guicontrolget,CENTRALIZE,,CENTRALIZE
-iniwrite,%CENTRALIZE%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+guicontrolget,CENUM,,CENTRALIZE
+guicontrol,,CenKBM,%CENUM%
+guicontrol,,CenPL1,%CENUM%
+guicontrol,,CenPL2,%CENUM%
+guicontrol,,CenMC,%CENUM%
+guicontrol,,CenGM,%CENUM%
+guicontrol,,CenMM,%CENUM%
+guicontrol,,CenJAL,%CENUM%
+guicontrol,,CenJBE,%CENUM%
+guicontrol,,CenPRE,%CENUM%
+guicontrol,,CenPST,%CENUM%
+CENTRLZ=%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenKBM:
+gui,submit,nohide
+guicontrolget,CenKBM,,CenKBM
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 2)
+			{
+				cen%A_Index%= %CenKBM%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenPL1:
+gui,submit,nohide
+guicontrolget,CenPL1,,CenPL1
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 3)
+			{
+				cen%A_Index%= %CenPL1%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenPL2:
+gui,submit,nohide
+guicontrolget,CenPL2,,CenPL2
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 4)
+			{
+				cen%A_Index%= %CenPL2%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenMC:
+gui,submit,nohide
+guicontrolget,CenMC,,CenMC
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 5)
+			{
+				cen%A_Index%= %CenMC%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenGM:
+gui,submit,nohide
+guicontrolget,CenGM,,CenGM
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 6)
+			{
+				cen%A_Index%= %CenGM%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+
+CenMM:
+gui,submit,nohide
+guicontrolget,CenMM,,CenMM
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 7)
+			{
+				cen%A_Index%= %CenMM%
+
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenJAL:
+gui,submit,nohide
+guicontrolget,CenJAL,,CenJAL
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 8)
+			{
+				cen%A_Index%= %CenJAL%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenJBE:
+gui,submit,nohide
+guicontrolget,CenJBE,,CenJBE
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 9)
+			{
+				cen%A_Index%= %CenJBE%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenPRE:
+gui,submit,nohide
+guicontrolget,CenPRE,,CenPRE
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 10)
+			{
+				cen%A_Index%= %CenPRE%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+return
+CenPST:
+gui,submit,nohide
+guicontrolget,CenPST,,CenPST
+Loop,parse,CENTRLZ,|
+	{
+		if (A_Index = 11)
+			{
+				cen%A_Index%= %CenPST%
+				continue
+			}
+		cen%A_Index%= %A_LoopField%
+
+	}
+if instr(CENTRLZ,0)
+   {
+      Cen1= 0
+	  guicontrol,,CENTRALIZE,0
+   }
+CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+
+iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
 return
 
 
@@ -3211,7 +3735,7 @@ Loop % LV_GetCount("Column")
 								 
 GuiControl, Move, MyListView, w500
 
-GUI, Show, AutoSize
+GUI, Show,  w817 h713
 Loop,parse,GUIVARS,|
 	{
 		guicontrol,enable,%A_LoopField%
@@ -3833,29 +4357,64 @@ Loop, %fullstn0%
 											Continue
 										}
 								}
-							if (instr(vb,"GameAudio.cmd")or instr(vb,"MediaCenterAudio.cmd")or instr(vb,"_!.cmd"))
+							if (instr(vb,".cmd")or instr(vb,".bat")or instr(vb,".vbs")or instr(vb,".ps1")or instr(vb,".vbe")or instr(vb,".wsc")or instr(vb,".wsf")or instr(vb,".psd"))
 							  {
 									eb2= 
 									stringsplit,eb,vb,<
 									if (eb2 <> "")
 										{
 											splitpath,eb2,vb
+											vbp= %eb2%
 											eb1.= "<"
 										}
 										else {
 												splitpath,eb1,vb
+												vbp= %eb1%
 												eb1= 
 										}
 									%an1%= %vb%
-									if ((OVERWRT = 1)&&(CENTRALIZE <> 1))
+									if ((OVERWRT = 1)&& instr(an1,"Before") && (CENJBE <> 1))
 										{
-										  filecopy,%home%\%vb%,%sidn%,%OVERWRT%
+											filecopy,%vbp%,%sidn%,%OVERWRT%
+											iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+										}
+										else {
+											if ((CENJBE = 1)&& instr(an1,"Before") && (OVERWRT = 1))
+												{
+													iniwrite,%vb%,%GAMECFG%,CONFIG,%an1%
+												}
+										}
+									if ((OVERWRT = 1)&& instr(an1,"After") && (CENJAL <> 1))
+										{
+											filecopy,%vbp%,%sidn%,%OVERWRT%
+											iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+										}
+										else {
+											if ((CENJAL = 1)&& instr(an1,"After") && (OVERWRT = 1))
+												{
+													iniwrite,%vb%,%GAMECFG%,CONFIG,%an1%
+												}
+										}
+									if ((OVERWRT = 1)&& instr(an1,"Pre") && (CENPRE <> 1))
+										{
+										  filecopy,%vbp%,%sidn%,%OVERWRT%
 										  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
 										} 
 										else {
-											if ((CENTRALIZE = 1)&&(OVERWRT = 1))
+											if ((CENPRE = 1)&& instr(an1,"Pre")&&(OVERWRT = 1))
 												{
 													iniwrite,%home%\%vb%,%gamecfg%,%section%,%an1%
+												}
+											}
+									if ((OVERWRT = 1)&& instr(an1,"Post") && (CENPST <> 1))
+										{
+										  filecopy,%vbp%,%sidn%,%OVERWRT%
+										  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
+										} 
+										else {
+											if ((CENPST = 1)&& instr(an1,"Post")&&(OVERWRT = 1))
+												{
+													iniwrite,%vbp%,%gamecfg%,%section%,%an1%
 												}
 										}
 									CONTINUE
@@ -4026,10 +4585,13 @@ Loop, %fullstn0%
 								}
 							DeskMon= %sidn%\%subfldrep%%DMon%
 							GameMon= %sidn%\%subfldrep%%GMon%
-							if (CENTRALIZE = 1)
+							if (CENMM = 1)
 								{
 									DeskMon= %R_MM_MediaCenter_Config%
-									DeskMon= %R_MM_Game_Config%
+								}
+							if (CENMM = 1)
+								{
+									GameMon= %R_MM_Game_Config%
 								}
 							if ((dgovr <> "<")&&(dgovr <> "")&&fileexist(dgovr))
 								{
@@ -4416,35 +4978,22 @@ Loop, Parse, var, %A_Space%
 return
 	
 StripVar:
-stringreplace,invarx,invar,.,,All
-stringreplace,invarx,invarx,%A_SPace%,,All
-stringreplace,invarx,invarx,(,,All
-stringreplace,invarx,invarx,),,All
-stringreplace,invarx,invarx,-,,All
-stringreplace,invarx,invarx,[,,All
-stringreplace,invarx,invarx,],,All
-stringreplace,invarx,invarx,{,,All
-stringreplace,invarx,invarx,\,,All
+stringreplace,invarx,invar,\,,All
 stringreplace,invarx,invarx,/,,All
-stringreplace,invarx,invarx,},,All
-stringreplace,invarx,invarx,`,,,All
-stringreplace,invarx,invarx,+,,All
-stringreplace,invarx,invarx,',,All
-stringreplace,invarx,invarx,!,All
-stringreplace,invarx,invarx,&,All
-stringreplace,invarx,invarx,$,All
+stringreplace,invarx,invarx,!,,All
+stringreplace,invarx,invarx,&,and,All
+stringreplace,invarx,invarx,$,,All
 stringreplace,invarx,invarx,`%,,All
 stringreplace,invarx,invarx,@,,All
-stringreplace,invarx,invarx,;,,All
+stringreplace,invarx,invarx,+,,All
 stringreplace,invarx,invarx,~,,All
 stringreplace,invarx,invarx,#,,All
-stringreplace,invarx,invarx,_,,All	
-return
-
+stringreplace,invarx,invarx,`;,,All
+invar=%invarx%
 CleanVar:
 stringreplace,invarx,invar,.,,All
 stringreplace,invarx,invarx,`,,,All
-stringreplace,invarx,invarx,_,,All
+stringreplace,invarx,invarx,_,,All	
 stringreplace,invarx,invarx,(,,All
 stringreplace,invarx,invarx,),,All
 stringreplace,invarx,invarx,{,,All
@@ -4453,8 +5002,9 @@ stringreplace,invarx,invarx,[,,All
 stringreplace,invarx,invarx,],,All
 stringreplace,invarx,invarx,',,All
 stringreplace,invarx,invarx,-,,All
-stringreplace,invarx,invarx,%A_Space%,,All
+stringreplace,invarx,invarx,%A_SPace%,,All
 return
+
 
 IncludeDD:
 gui,submit,nohide
@@ -4837,7 +5387,7 @@ if (instr(Nsivk,bexp) or instr(Nsivk,xenjx))
 if (snov = "")
 	{
 		invar= %filtn%
-		gosub, cleanvar
+		gosub, stripvar
 		nbv= %invarx%
 		if (instr(Nsivk,xenj)&&(exedp <> "")&&(exelen > 2))
 			{
@@ -6564,7 +7114,13 @@ Class LV_InCellEdit {
 }
 												   
   
-																		  
+uriDecode(str) {
+    Loop
+ If RegExMatch(str, "i)(?<=%)[\da-f]{1,2}", hex)
+    StringReplace, str, str, `%%hex%, % Chr("0x" . hex), All
+    Else Break
+ Return, str
+}															  
 																  
 
 																	 
