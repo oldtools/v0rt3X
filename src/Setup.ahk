@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-09-23 6:27 AM
+RELEASE= 2022-09-23 11:37 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -465,20 +465,23 @@ ImageListID2 := IL_Create(10, 10, true)
 LV_SetImageList(ImageListID1)
 LV_SetImageList(ImageListID2)
 
-Menu, MyContextMenu, Add, Open in Explorer, ContextOpenFile
+Menu, MyContextMenu, Add, Open Profile, ContextOpenFile
+Menu, MyContextMenu, Add, Open Directory, ContextOpenGame
+Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Add CLI opts/args, AddCLI
-Menu, MyContextMenu, Add, Toggle KBM, ContextProperties
-Menu, MyContextMenu, Add, Assign Player1 Template, ContextProperties
-Menu, MyContextMenu, Add, Assign Player2 Template, ContextProperties
-Menu, MyContextMenu, Add, Toggle MMT, ContextProperties
-Menu, MyContextMenu, Add, Assign Game-Monitor Config, ContextProperties
-Menu, MyContextMenu, Add, Assign Desktop-Monitor Config, ContextProperties
+;Menu, MyContextMenu, Add, Toggle KBM, ContextProperties
+;Menu, MyContextMenu, Add, Assign Player1 Template, ContextProperties
+;Menu, MyContextMenu, Add, Assign Player2 Template, ContextProperties
+;Menu, MyContextMenu, Add, Toggle MMT, ContextProperties
+;Menu, MyContextMenu, Add, Assign Game-Monitor Config, ContextProperties
+;Menu, MyContextMenu, Add, Assign Desktop-Monitor Config, ContextProperties
 
-Menu, MyContextMenu, Add, Toggle JAL, ContextProperties
-Menu, MyContextMenu, Add, Toggle JBE, ContextProperties
+;Menu, MyContextMenu, Add, Toggle JAL, ContextProperties
+;Menu, MyContextMenu, Add, Toggle JBE, ContextProperties
 													   
-Menu, MyContextMenu, Add, Toggle PRE, ContextProperties
-Menu, MyContextMenu, Add, Toggle PST, ContextProperties
+;Menu, MyContextMenu, Add, Toggle PRE, ContextProperties
+;Menu, MyContextMenu, Add, Toggle PST, ContextProperties
+;Menu, MyContextMenu, Add, Toggle BGM, ContextProperties
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
 
@@ -4777,6 +4780,12 @@ Loop, %fullstn0%
 										}
 								}
 						}
+						else {
+							if ((G_Player1 = "ERROR")or(G_Player1 = "")or(OVERWRT = 1))
+								{
+									iniwrite,%Player1_Template%,%gamecfg%,JOYSTICKS,Player1
+								}
+						}
 					if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
 						{
 							if (CENPL2 <> 1)
@@ -4799,6 +4808,12 @@ Loop, %fullstn0%
 												}
 										}
 								}
+							else {
+								if ((G_Player2 = "ERROR")or(G_Player2 = "")or(OVERWRT = 1))
+									{
+										iniwrite,%Player2_Template%,%gamecfg%,JOYSTICKS,Player2
+									}
+							}	
 						}
 					if (CENMC <> 1)
 						{
@@ -4820,6 +4835,12 @@ Loop, %fullstn0%
 										}
 								}	
 						}
+					else {
+						if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = "")or(OVERWRT = 1))
+							{
+								iniwrite,%MediaCenter_Profile_Template%,%gamecfg%,JOYSTICKS,MediaCenter_Profile
+							}
+					}	
 				}
 			if (GMLNK = 1)
 				{
@@ -5733,6 +5754,16 @@ dchk=
 return
 
 ButtonClear:
+if (srcntot > 25)
+	{
+		Msgbox,8449,Confirm,You are about to clear an item list of`n     %srcntot% games.`nAre you sure?
+		ifmsgbox,Ok
+			{
+				goto, CLRLIST
+			}
+		return	
+	}
+CLRLIST:	
 LV_Delete()
 SOURCEDLIST=
 fileDelete,%home%\continue.db
@@ -5791,38 +5822,47 @@ If (A_GuiEvent == "F") {
 		stringtrimright,ReplRw,ReplRw,1	
 		redo:= % baj%OnCol%
  }
-  if ((O.Col = 6)or(O.Col = 10)or(O.Col = 13)or(O.Col = 14)or(O.Col = 15))
+  if ((OnCol = 6)or(OnCol = 10)or(OnCol = 13)or(OnCol = 14)or(OnCol = 15)or(OnCol = 16))
 	{
-		if ((O.Txt <> 0) or (O.Txt <> 1) or (O.Txt <> "y") or (O.Txt <> "n") or (O.Txt <> "off") or (O.Txt <> "on"))
+		if ((OnTxt = "0") or (OnTxt = "1") or (OnTxt = "y") or (OnTxt = "n") or (OnTxt = "off") or (OnTxt = "on"))
 			{
+				goto, RECONT
+			}
+			else {
 				LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
 				SB_SetText("Booleans Only: 0`,off`,n`,1`,on`,or y")
 				return
 			}
 	}
-  if ((O.Col = 3)or(O.Col = 4)or(O.Col = 7)or(O.Col = 8)or(O.Col = 9)or(O.Col = 11)or(O.Col = 13)or(O.Col = 14)or(O.Col = 12))
+  if ((OnCol = 3)or(OnCol = 4)or(OnCol = 7)or(OnCol = 8)or(OnCol = 9)or(OnCol = 11)or(OnCol = 13)or(OnCol = 14)or(OnCol = 12))
 	{
 		SB_SetText("input commands, paths, anything")
 	}
-  if (O.Col = 17)
+  if (OnCol = 17)
 	{
-		if ((O.Txt <> "0") or (O.Txt <> "y") or (O.Txt <> "1") or (O.Txt <> "5")  or (O.Txt <> "6") or (O.Txt <> "8") or (O.Txt <> "9") or (O.Txt <> "n"))
+		if ((OnTxt = "0") or (OnTxt = "y") or (OnTxt = "1") or (OnTxt = "5")  or (OnTxt = "6") or (OnTxt = "8") or (OnTxt = "9") or (OnTxt = "n"))
 			{
+				goto, RECONT
+			}
+		else {
+				msgbox,,,%ontxt%`n%redo%
 				LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
 				SB_SetText("0 or N=off,1 or Y=on, 5=unused kill,8=exit kill, 9= all on")
 				return
-			}
+		}	
 	}
-  if (O.Col = 18)
+  if (OnCol = 18)
 	{
-		if onTxt is not digit
+		if onTxt is digit
 			{
+				goto, RECONT
+			}
+		else {
 				LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
 				SB_SetText("SteamID must be a number and only a number")
 				return
-			}
+		}	
 	}
-	gosub, RECONT
 }
 return
 
@@ -5853,6 +5893,7 @@ if (RRP <> rpl)
 		fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
 	}
 return
+
 steamappinfo:
 URLFILE=%STEAMIDB%%steamquery%
 jsave= %sidn%\%steamquery%.json
@@ -6168,38 +6209,108 @@ if (A_GuiControl != "MyListView")
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
 }
 return
-
+ContextOpenGame:  
+openum=
+Loop
+	{
+		FocusedRowNumber := LV_GetNext(0, "F") 
+		if not FocusedRowNumber 
+		   {
+			continue
+		   }
+		 else {
+			opnum+=1
+			LV_GetText(nmFDir, FocusedRowNumber, 2)
+			Run, Explorer "%nmFDir%", %nmfdir%,,
+			break
+			}
+	}
+return
 ContextOpenFile:  
-ContextProperties: 
-																				   
-FocusedRowNumber := LV_GetNext(0, "F") 
-if not FocusedRowNumber 
-    return
-LV_GetText(nmFName, FocusedRowNumber, 1) 
-LV_GetText(nmFDir, FocusedRowNumber, 2)
-LV_GetText(nmOpt, FocusedRowNumber, 3)
-LV_GetText(nmArg, FocusedRowNumber, 4)
+openum=
+Loop
+	{
+		FocusedRowNumber := LV_GetNext(0, "F") 
+		if not FocusedRowNumber 
+		   {
+			continue
+		   }
+		 else {
+				LV_GetText(nmFDir, FocusedRowNumber, 2)
+				LV_GetText(nmovr, FocusedRowNumber, 5)
+				LV_GetText(nmFName, FocusedRowNumber, 1)
+				splitpath,nmfdir,nmfnm
+				splitpath,nmfname,,,,nmfno
+				explthf= %Game_Profiles%							
+				if (fileExist(Game_Profiles . "\" . nmfno . "\"))
+					{
+						explthf= %Game_Profiles%\%nmfnm%							
+					}
+				if (fileExist(Game_Profiles . "\" . nmfnm . "\"))
+					{
+						explthf= %Game_Profiles%\%nmfnm%							
+					}
+				if ((nmovr <> "") && fileExist(Game_Profiles . "\" . nmOvr . "\"))
+					{
+						explthf= %Game_Profiles%\%nmOvr%
+					}
+				Run, Explorer "%explthf%", %nmfdir%,,
+				break
+			}
+	}
+return
 
-LV_GetText(nmovr, FocusedRowNumber, 5)
-LV_GetText(kbmstat, FocusedRowNumber, 6)
-LV_GetText(pl1stat, FocusedRowNumber, 7)
-LV_GetText(pl2stat, FocusedRowNumber, 8)
-LV_GetText(mcpstat, FocusedRowNumber, 9)
-LV_GetText(mmtstat, FocusedRowNumber, 10)
-LV_GetText(gmsstat, FocusedRowNumber, 11)
-LV_GetText(dmsstat, FocusedRowNumber, 12)
-LV_GetText(jaltat, FocusedRowNumber, 13)
-LV_GetText(jbetat, FocusedRowNumber, 14)
-LV_GetText(prestat, FocusedRowNumber, 15)
-LV_GetText(pststat, FocusedRowNumber, 16)
-LV_GetText(bgmstat, FocusedRowNumber, 17)
-LV_GetText(stqstat, FocusedRowNumber, 18)
+ContextProperties: 
+
+Loop
+	{																				   
+		FocusedRowNumber := LV_GetNext(0, "F") 
+		if not FocusedRowNumber 
+		   {
+			continue
+		   }
+		 else {
+				LV_GetText(nmFName, FocusedRowNumber, 1) 
+				LV_GetText(nmFDir, FocusedRowNumber, 2)
+				LV_GetText(nmOpt, FocusedRowNumber, 3)
+				LV_GetText(nmArg, FocusedRowNumber, 4)
+
+				LV_GetText(nmovr, FocusedRowNumber, 5)
+				LV_GetText(kbmstat, FocusedRowNumber, 6)
+				LV_GetText(pl1stat, FocusedRowNumber, 7)
+				LV_GetText(pl2stat, FocusedRowNumber, 8)
+				LV_GetText(mcpstat, FocusedRowNumber, 9)
+				LV_GetText(mmtstat, FocusedRowNumber, 10)
+				LV_GetText(gmsstat, FocusedRowNumber, 11)
+				LV_GetText(dmsstat, FocusedRowNumber, 12)
+				LV_GetText(jaltat, FocusedRowNumber, 13)
+				LV_GetText(jbetat, FocusedRowNumber, 14)
+				LV_GetText(prestat, FocusedRowNumber, 15)
+				LV_GetText(pststat, FocusedRowNumber, 16)
+				LV_GetText(bgmstat, FocusedRowNumber, 17)
+				LV_GetText(stqstat, FocusedRowNumber, 18)
+				gosub, TOGITMLST
+		 }  
+	}
+return
+TOGITMLST:
 if InStr(A_ThisMenuItem, "Open in Explorer") 
 	{
 		Run, Explorer `"%nmfDir%`"
 	}
 
 	else {
+		if InStr(A_ThisMenuItem, "Toggle")
+			{
+				if instr(A_ThisMenuItem, "KBM")
+					{
+						if ((kmstat = "1")or(kmstat = "on")or(kmstat = "y"))
+							{
+								LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
+							}
+					}
+			}
+	
 														  
 	} 
 if ErrorLevel
@@ -6219,20 +6330,19 @@ Loop
 	RowNumber := LV_GetNext(RowNumber)
 	if not RowNumber
 		{
-			break
+		continue
 		}
-		
-	LV_GetNext(RowNumber, Focused)
-	LV_GetText(nmFName, RowNumber, 1) 
-	LV_GetText(nmFDir, RowNumber, 2)
-	LV_GetText(nmovr, RowNumber, 5)
-    if not RowNumber 
-		{
-			break
+		else {
+			LV_GetNext(RowNumber, Focused)
+			LV_GetText(nmFName, RowNumber, 1) 
+			LV_GetText(nmFDir, RowNumber, 2)
+			LV_GetText(nmovr, RowNumber, 5)
+			clth.= 	RowNumber . "|" . nmFDir . "\" . nmFName . "`n"
+			gosub, ADCLIFUNC
 		}
-	clth.= 	RowNumber . "|" . nmFDir . "\" . nmFName . "`n"
 }
-
+return
+ADCLIFUNC:
 Gui +LastFound +OwnDialogs +AlwaysOnTop
 tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{ProfileDir}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
 InputBox, CLIADDED, add opts and args,replace [variables] with options and arguments,,520,,,,,,[options] "{TARGET}" [arguments]
@@ -6445,7 +6555,6 @@ MakeMeTop:
 tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{Profile}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
 WinSet, AlwaysOnTop, On, add opts/args
 Return
-return
 
 ContextClearRows:
 RowNumber := 0 
@@ -6462,8 +6571,8 @@ Loop
 	stringreplace,SOURCEDLIST,SOURCEDLIST,%remvln%,,
 }
 filedelete,%home%\continue.db
-fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
 vavn=
+nsrcdl=
 Loop,parse,sourcedlist,`n`r
 	{
 		if (A_LoopField = "")
@@ -6476,6 +6585,7 @@ Loop,parse,sourcedlist,`n`r
 			}
 		vavn+=1	
 		%vavn%SDL= %A_LoopField%
+		nsrcdl= %A_LoopField%
 	}
 subtrfm:= (srcntot	- vavn)
 krnf:= vavn
@@ -6485,6 +6595,8 @@ Loop, %subtrfrm%
 		%krnf%SDL= 
 	}
 srcntot:= vavn
+SOURCEDLIST= %nsrcdl%
+fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
 return
 
 LVGetCheckedItems(cN,wN) {
