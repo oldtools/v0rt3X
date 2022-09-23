@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-09-18 2:01 AM
+RELEASE= 2022-09-23 6:27 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -136,10 +136,11 @@ TrigN= class="table-gamedata-body-system">
 SupData=</span><sup id="cite_ref-gamedir_
 ;"
 trig3= <span class="mw-headline" id="Save_game_cloud_syncing">
+DBINF=(mounted in <a href="/wiki/DOSBox" title="DOSBox">DOSBox</a>)</i>
 STINF=<a href="/wiki/Glossary:Game_data#Steam_client" title="Glossary:Game data"><abbr title="The base Steam installation folder">&lt;Steam-folder&gt;</abbr></a>
-STUNF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt;user-id&gt;</abbr></a>
 PRINF=<a href="/wiki/Glossary:Game_data#User_profile" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%USERPROFILE`%</abbr></a>
 UAINF=<a href="/wiki/Glossary:Game_data#User_application_data" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%LOCALAPPDATA`%</abbr></a>
+STUNF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt;user-id&gt;</abbr></a>
 GSUIF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt;user-id&gt;</abbr></a>
 REGIF=<a href="/wiki/Glossary:Game_data#Windows_registry" title="Glossary:Game data"><abbr title="Windows Registry path (use the Registry Editor to access)">
 BSINF=<a href="/wiki/Glossary:Game_data#Installation_folder" title="Glossary:Game data"><abbr title="The base installation folder">&lt;path-to-game&gt;</abbr></a>
@@ -326,10 +327,10 @@ Loop,parse,CENTRALIZE,|
 			   CENTRLZ.= %A_LoopField%
 			}
 	}
-CENTRALIZE= 0	
+CENTRLCKB= 0	
 if (cntz = "checked")
 	{
-		CENTRALIZE= 1
+		CENTRLCKB= 1
 	}
 netnchk= 
 cfgenbl= disabled
@@ -420,9 +421,9 @@ if (steamdir = "")
 	{
 		steamdir=[STEAMDIRECTORY]
 	}
-if (steamuid = "")
+if (SteamUser = "")
 	{
-		steamuid=[STEAMUSERID]
+		SteamUser=[STEAMUSERID]
 	}
 Menu,RCLButton,Add,Reset ,ResetButs
 Menu,AddProgs,Add,Download,DownloadAddons
@@ -532,7 +533,7 @@ Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 GUi, Add, Checkbox, x120 y137 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
 Gui, Add, Checkbox, x185 y137 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
 Gui, Font, Bold
-Gui, Add, Checkbox, x1 y137 h14 vCentralize gCentralize %cntz%, CENTRALIZE
+Gui, Add, Checkbox, x1 y137 h14 vCENTRLCKB gCENTRLCKB %cntz%, CENTRALIZE
 Gui, Font, Normal
 GUi, Add, Checkbox, x28 y157 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
 GUi, Add, Checkbox, x70 y157 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
@@ -729,7 +730,7 @@ JustBeforeExitT_TT :="program to run prior to executable termination"
 PREAPP_TT :="Assign a program to run before the game is launched"
 PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
 PRETNUM_TT :=""
-CENTRALIZE_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
+CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
 CenKBM_TT := ""
 CenPL1_TT := ""
 CenPL2_TT := ""
@@ -1405,6 +1406,7 @@ MM_ToolB:
 gui,submit,nohide
 if (dchk = "")
 	{
+		MultiMonitor_ToolT=
 		FileSelectFile,MultiMonitor_ToolT,3,%binhome%,Select File,multimonitor*.exe
 	}
 if ((MultiMonitor_ToolT <> "")&& !instr(MultiMonitor_ToolT,"<"))
@@ -1579,9 +1581,9 @@ return
 JBE_ProgB:
 gui,submit,nohide
 guicontrolget,JBEWait,,JBEWait
-JustBeforeExitT=
 if (dchk = "")
 	{
+		JustBeforeExitT=
 		FileSelectFile,JustBeforeExitT,3,%home%,*.*
 	}
 if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "JustBeforeExit"))
@@ -1627,6 +1629,7 @@ gui,submit,nohide
 guicontrolget,JALWait,,JALWait
 if (dchk = "")
 	{
+		JustAfterLaunchT=
 		FileSelectFile,JustAfterLaunchT,3,After Launch,Select File,*.*
 	}
 if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "JustAfterLaunch"))
@@ -2129,7 +2132,8 @@ Loop,parse,STDVARS,|
 initz= 1
 stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
 FileDelete,%home%\RJDB.ini
-FileAppend,%RJTMP%,%home%\RJDB.ini
+fileappend,`n,%home%\RJDB.ini,UTF-16
+FileAppend,%RJTMP%,%home%\RJDB.ini,UTF-16
 return
 
 RESET:
@@ -2387,7 +2391,7 @@ return
 
 PASTM:
 stringsplit,ebb,krmi,_.
-steamid= %ebb2%
+steamidx= %ebb2%
 fileread,stmocs,%krmx%
 Loop,parse,stmocs,`r`n
 	{
@@ -2415,7 +2419,7 @@ Loop,parse,stmocs,`r`n
 					}
 				if (aeb = "appid")
 					{
-						steamid= %fii%
+						steamidx= %fii%
 					}
 				if (aeb = "name")
 					{
@@ -2425,10 +2429,10 @@ Loop,parse,stmocs,`r`n
 					}
 			}
 	}
-steamdba= %steamid%|%clnname%|%stinsd%
+steamdba= %steamidx%|%clnname%|%stinsd%
 if !instr(steamdb,steamdba)
 	{
-		fileappend,%steamid%|%clnname%|%stinsd%|%steamins%`n,%home%\steam.db	
+		fileappend,%steamidx%|%clnname%|%stinsd%|%steamins%`n,%home%\steam.db	
 		steamdb.= steamdba . "`n"
 		}
 return	
@@ -2448,6 +2452,33 @@ if fileExist(steamdir)
 							vdfile= %A_LoopFileFullPath%
 							gosub, ReadLBF
 							;break
+						}
+					if (A_LoopFilename = "loginusers.vdf")
+						{
+							fileread,logonu,%A_LoopFileLongPath%
+							fndnum=
+							Loop,parse,logonu,`r`n
+								{
+									stringreplace,lnm,A_LoopField,",,
+									;"
+									if (lnm = "users")
+										{
+											fndnum=1
+											continue
+										}
+									stringlen,stuid,A_LoopField	
+									if ((fndnum = 1)&&(stuid = 17))
+										{
+											SteamUser= %A_LoopField%
+											break
+										}
+									if instr(A_LoopField,"<STEAMID64>")
+										{
+											stringsplit,dstb,A_LoopField,<>
+											SteamUser= %dstb3%
+											break
+										}
+								}
 						}
 						
 				}
@@ -2938,9 +2969,9 @@ ifnotexist,%home%\MediaCenter.cfg
 
 return
 
-CENTRALIZE:
+CENTRLCKB:
 gui,submit,nohide
-guicontrolget,CENUM,,CENTRALIZE
+guicontrolget,CENUM,,CENTRLCKB
 guicontrol,,CenKBM,%CENUM%
 guicontrol,,CenPL1,%CENUM%
 guicontrol,,CenPL2,%CENUM%
@@ -2957,16 +2988,19 @@ return
 CenKBM:
 gui,submit,nohide
 guicontrolget,CenKBM,,CenKBM
+CENTRALIZE= 
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 2)
 			{
 				cen%A_Index%= %CenKBM%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -2978,17 +3012,19 @@ return
 CenPL1:
 gui,submit,nohide
 guicontrolget,CenPL1,,CenPL1
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 3)
 			{
 				cen%A_Index%= %CenPL1%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
-
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3000,16 +3036,19 @@ return
 CenPL2:
 gui,submit,nohide
 guicontrolget,CenPL2,,CenPL2
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 4)
 			{
 				cen%A_Index%= %CenPL2%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3021,39 +3060,44 @@ return
 CenMC:
 gui,submit,nohide
 guicontrolget,CenMC,,CenMC
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 5)
 			{
 				cen%A_Index%= %CenMC%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-
 iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
 return
 CenGM:
 gui,submit,nohide
 guicontrolget,CenGM,,CenGM
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 6)
 			{
 				cen%A_Index%= %CenGM%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3066,17 +3110,19 @@ return
 CenMM:
 gui,submit,nohide
 guicontrolget,CenMM,,CenMM
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 7)
 			{
 				cen%A_Index%= %CenMM%
-
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3088,39 +3134,43 @@ return
 CenJAL:
 gui,submit,nohide
 guicontrolget,CenJAL,,CenJAL
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 8)
 			{
 				cen%A_Index%= %CenJAL%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-
 iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
 return
 CenJBE:
 gui,submit,nohide
 guicontrolget,CenJBE,,CenJBE
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 9)
 			{
 				cen%A_Index%= %CenJBE%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
-
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3132,17 +3182,19 @@ return
 CenPRE:
 gui,submit,nohide
 guicontrolget,CenPRE,,CenPRE
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 10)
 			{
 				cen%A_Index%= %CenPRE%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
-
+		CENTRALIZE.= A_LoopField . "|"
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3154,17 +3206,20 @@ return
 CenPST:
 gui,submit,nohide
 guicontrolget,CenPST,,CenPST
+CENTRALIZE=
 Loop,parse,CENTRLZ,|
 	{
 		if (A_Index = 11)
 			{
 				cen%A_Index%= %CenPST%
+				CENTRALIZE.= A_LoopField . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
+		CENTRALIZE.= A_LoopField . "|"
 
 	}
-if instr(CENTRLZ,0)
+if instr(CENTRALIZE,0)
    {
       Cen1= 0
 	  guicontrol,,CENTRALIZE,0
@@ -3433,7 +3488,7 @@ Loop,parse,NSPLIT,|
 				break
 			}
 		SRCLOOP= %A_LoopField%
-		if (!fileexist(SRCLOOP)or(A_LoopField= ""))
+		if (!fileexist(SRCLOOP)or(A_LoopField = ""))
 			{
 				continue
 			}
@@ -3534,13 +3589,16 @@ Loop,parse,NSPLIT,|
 						splitpath,farpth,farnm,
 						simploc= %simpath%
 						SB_SetText("adding " filenm "")
+						invar= %filtn%
+						gosub, StripVar
+						chkstrip= %invarx%
 						Loop,parse,absol,`r`n
 							{
 								if (A_LoopField = "")
 									{
 										continue
 									}
-								if instr(FileNM,A_LoopField)
+								if instr(chkstrip,A_LoopField)
 									{
 										omitd.= filenm . "|" . simploc . "|"  . "`n"
 										excl= 1
@@ -3557,12 +3615,15 @@ Loop,parse,NSPLIT,|
 									{
 										continue
 									}
-								if ((FileNM = A_LoopField) or (filtn = A_LoopField))
+								stringlen,hh,A_LoopField
+								stringright,an,chkstrip,%hh%
+								stringLeft,az,chkstrip,%hh%
+								if ((an = A_LoopField) or (az = A_LoopField) or (chkstrip = A_LoopField) && !instr(rootn,A_LoopField))
 									{
 										omitd.= filenm . "|" . simploc . "`n"
 										excl= 1
 										break
-									}	
+									}
 							}
 						if (excl = 1)
 							{
@@ -3577,9 +3638,9 @@ Loop,parse,NSPLIT,|
 										continue
 									}
 								stringlen,hh,A_LoopField
-								stringright,an,filtn,%hh%
-								stringLeft,az,filtn,%hh%
-								if ((an = A_LoopField) or (az = A_LoopField) && !instr(rootn,A_LoopField))
+								stringright,an,chkstrip,%hh%
+								stringLeft,az,chkstrip,%hh%
+								if ((an = A_LoopField) or (az = A_LoopField) or (chkstrip = A_LoopField) && !instr(rootn,A_LoopField))
 									{
 										lvachk=
 										simpnk.= FileName . "`n"
@@ -3593,7 +3654,7 @@ Loop,parse,NSPLIT,|
 										continue
 									}
 								prbn= %A_LoopField%
-								if (instr(filtn,prbn)or instr(rootn,prbn))
+								if (instr(chkstrip,prbn)&& instr(rootn,prbn))
 									{
 										continue
 									}
@@ -3840,6 +3901,16 @@ guicontrolget,tuval,,BGP_TU
 tuval:= (tuval * 5)
 BGP_State:= (tuval + BGP_Enable + teval)
 guicontrolget,GMJOY,,GMJOY
+guicontrolget,CenKBM,,CenKBM
+guicontrolget,CenPL1,,CenPL1
+guicontrolget,CenPL2,,CenPL2
+guicontrolget,CenMC,,CenMC
+guicontrolget,CenGM,,CenGM
+guicontrolget,CenMM,,CenMM
+guicontrolget,CenJAL,,CenJAL
+guicontrolget,CenJBE,,CenJBE
+guicontrolget,CenPRE,,CenPRE
+guicontrolget,CenPST,,CenPST
 guicontrolget,GMCONF,,GMCONF
 guicontrolget,NameChk,,NameChk
 guicontrolget,NetChk,,NetChk
@@ -3977,7 +4048,7 @@ Loop, %fullstn0%
 						steamquery= %A_LoopField%
 					}
 			}
-			if (!instr(stmdbfnd,steamquery)OR(STEAMQUERY = "")or(STEAMQUERY = 0))
+			if (!instr(stmdbfnd,steamquery)or(STEAMQUERY = 0))
 				{
 					GameData=
 					SaveData=
@@ -4300,11 +4371,12 @@ Loop, %fullstn0%
 					DMon= DesktopMonitors.mon
 					gamecfgn= Game.ini
 					gmnamex= %gmnamed%
+					
 					FileMove,%sidn%\%gmnamed%.lnk,%sidn%\alternates\%gmnamed%_[0%poscntx%].lnk,1
 					FileMove,%sidn%\Game.ini,%sidn%\alternates\%gmnamed%_[0%poscntx%].ini,1
-					FileMove,%sidn%\*.xpadderprofile,%sidn%\alternates,1
-					FileMove,%sidn%\*.amgp,%sidn%\alternates,1
-					FileMove,%sidn%\*.cfg,%sidn%\alternates,1
+					filedelete,%sidn%\*.xpadderprofile
+					filedelete,%sidn%\*.amgp
+					filedelete,%sidn%\.cfg
 				}
 			gamecfg= %sidn%\%subfldrep%%gamecfgn%
 			if (CREFLD = 1)
@@ -4322,9 +4394,40 @@ Loop, %fullstn0%
 						continue
 					}
 				}
+			if fileExist(sidn . "\" . gamecfgn)
+				{
+					fileread,gfg,%sidn%\%gamecfgn%
+					Loop,parse,gfg,`n`r
+						{
+							if (A_LoopField = "")
+								{
+									continue
+								}
+							stringleft,bb,A_LoopField,1
+							if (bb = "[")
+								{
+									stringreplace,sect,A_LoopField,[,,
+									stringreplace,section,sect,],,
+									continue
+								}
+							stringsplit,an,A_LoopField,=<
+							stringreplace,vb,A_LoopField,%an1%=,,
+							stringright,pptx,an2,1
+							if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")) or ((an3 = "") && (an1 = "JustBeforeExit") or (an1 = "JustAfterLaunch")))
+								{
+									vb=
+								}
+							if ((vb <> "")&&(vb <> "ERROR"))
+								{
+									%an1%= %vb%
+									G_%an1%= %vb%
+								}
+						}
+				
+				}	
 			skip=
 			cfgcopied=
-			if !FileExist(gamecfg)
+			if (!FileExist(gamecfg)or(OVERWRT = 1))
 				{
 					Filecopy,%RJDB_Config%,%gamecfg%
 					cfgcopied= 1
@@ -4333,6 +4436,10 @@ Loop, %fullstn0%
 			fileread,grg,%RJDB_CONFIG%
 			Loop,parse,grg,`n`r
 				{
+					if (A_LoopField = "")
+						{
+							continue
+						}
 					stringleft,bb,A_LoopField,1
 					if (bb = "[")
 						{
@@ -4343,7 +4450,9 @@ Loop, %fullstn0%
 					stringsplit,an,A_LoopField,=<
 					stringreplace,vb,A_LoopField,%an1%=,,
 					stringright,pptx,an2,1
-					if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")))
+					gexprv:= % (%an1%)
+					gexpr:= % (G_%an1%)
+					if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")) or ((an3 = "") && (an1 = "JustBeforeExit") or (an1 = "JustAfterLaunch")))
 						{
 							vb=
 						}
@@ -4357,116 +4466,102 @@ Loop, %fullstn0%
 											Continue
 										}
 								}
+							R_%an1%= %vb%	
 							if (instr(vb,".cmd")or instr(vb,".bat")or instr(vb,".vbs")or instr(vb,".ps1")or instr(vb,".vbe")or instr(vb,".wsc")or instr(vb,".wsf")or instr(vb,".psd"))
-							  {
-									eb2= 
-									stringsplit,eb,vb,<
-									if (eb2 <> "")
-										{
-											splitpath,eb2,vb
-											vbp= %eb2%
-											eb1.= "<"
-										}
-										else {
-												splitpath,eb1,vb
-												vbp= %eb1%
-												eb1= 
-										}
-									%an1%= %vb%
-									if ((OVERWRT = 1)&& instr(an1,"Before") && (CENJBE <> 1))
-										{
-											filecopy,%vbp%,%sidn%,%OVERWRT%
-											iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
-										}
-										else {
-											if ((CENJBE = 1)&& instr(an1,"Before") && (OVERWRT = 1))
-												{
-													iniwrite,%vb%,%GAMECFG%,CONFIG,%an1%
-												}
-										}
-									if ((OVERWRT = 1)&& instr(an1,"After") && (CENJAL <> 1))
-										{
-											filecopy,%vbp%,%sidn%,%OVERWRT%
-											iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
-										}
-										else {
-											if ((CENJAL = 1)&& instr(an1,"After") && (OVERWRT = 1))
-												{
-													iniwrite,%vb%,%GAMECFG%,CONFIG,%an1%
-												}
-										}
-									if ((OVERWRT = 1)&& instr(an1,"Pre") && (CENPRE <> 1))
-										{
-										  filecopy,%vbp%,%sidn%,%OVERWRT%
-										  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
-										} 
-										else {
-											if ((CENPRE = 1)&& instr(an1,"Pre")&&(OVERWRT = 1))
-												{
-													iniwrite,%home%\%vb%,%gamecfg%,%section%,%an1%
-												}
+								  {
+										eb2= 
+										stringsplit,eb,vb,<
+										if (eb2 <> "")
+											{
+												splitpath,eb2,vb
+												vbp= %eb2%
+												eb1.= "<"
 											}
-									if ((OVERWRT = 1)&& instr(an1,"Post") && (CENPST <> 1))
-										{
-										  filecopy,%vbp%,%sidn%,%OVERWRT%
-										  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
-										} 
-										else {
-											if ((CENPST = 1)&& instr(an1,"Post")&&(OVERWRT = 1))
-												{
-													iniwrite,%vbp%,%gamecfg%,%section%,%an1%
+											else {
+													splitpath,eb1,vb
+													vbp= %eb1%
+													eb1= 
+											}
+										R_%an1%= %eb1%%vbp%	
+										%an1%= %eb1%%vbp%
+										if ((OVERWRT = 1)&& instr(an1,"Before") && (CENJBE <> 1))
+											{
+											    G_%an1%= %eb1%%sidn%\%vb%
+												filecopy,%eb1%%vbp%,%sidn%,%OVERWRT%
+												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+											}
+											else {
+												if ((CENJBE = 1)&& instr(an1,"Before") && (OVERWRT = 1))
+													{
+														G_%an1%= %eb1%%vbp%	
+														iniwrite,%eb1%%vbp%,%GAMECFG%,CONFIG,%an1%
+													}
+											}
+										if ((OVERWRT = 1)&& instr(an1,"After") && (CENJAL <> 1))																					
+											{
+											    G_%an1%= %eb1%%sidn%\%vb%
+												filecopy,%vbp%,%sidn%,%OVERWRT%
+												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+											}
+											else {
+												if ((CENJAL = 1)&& instr(an1,"After") && (OVERWRT = 1))										  
+													{
+														G_%an1%= %eb1%%vbp%	
+														iniwrite,%eb1%%vbp%,%GAMECFG%,CONFIG,%an1%
+													}
+											}
+										if ((OVERWRT = 1)&& instr(an1,"Pre") && (CENPRE <> 1))
+											{
+											  G_%an1%= %eb1%%sidn%\%vb%
+											  filecopy,%vbp%,%sidn%,%OVERWRT%
+											  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
+											} 
+											else {
+												if ((CENPRE = 1)&& instr(an1,"Pre")&&(OVERWRT = 1))
+													{
+														G_%an1%= %eb1%%vbp%	
+														iniwrite,%eb1%%vbp%,%gamecfg%,%section%,%an1%
+													}
 												}
-										}
-									CONTINUE
-							  }
-							if ((krs = "")&&!instr(an1,"template"))
+										if ((OVERWRT = 1)&& instr(an1,"Post") && (CENPST <> 1))
+											{
+											  G_%an1%= %eb1%%sidn%\%vb%
+											  filecopy,%vbp%,%sidn%,%OVERWRT%
+											  iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,%section%,%an1%
+											} 			  
+											else {
+												if ((CENPST = 1)&& instr(an1,"Post")&&(OVERWRT = 1))
+													{
+														G_%an1%= %eb1%%vbp%	
+														iniwrite,%eb1%%vbp%,%gamecfg%,%section%,%an1%
+													}
+											}
+										if (OVERWRT = 1)
+											{
+												G_%an1%= %vb%	
+											}
+										R_%an1%= %vb%
+										CONTINUE
+								  }
+							if !instr(an1,"template")
 								{
-									%an1%= %vb%
-									G_%an1%= %vb%
-									R_%an1%= %vb%
 									if (OVERWRT = 1)
 										{
+											G_%an1%= %vb%
+											R_%an1%= %vb%
 											iniwrite,%vb%,%gamecfg%,%section%,%an1%
 										}
-									else {
-										iniread,vtmb,%gamecfg%,%section%,%an1%
-										if ((vtmb = "ERROR")or(vtmb = ""))
-											{
-												iniwrite,%vb%,%gamecfg%,%section%,%an1%
-											}
-										}
-								}
+									continue
+								}	
+						}
+					if (gexpr <> "")
+						{
+							vb= %gexpr%
 							%an1%= %vb%
 							G_%an1%= %vb%
 							R_%an1%= %vb%
 						}
-				}
-			if (fileExist(gamecfg) && (OVERWRT <> 1))
-				{
-					fileread,gfg,%gamecfg%
-					Loop,parse,gfg,`n`r
-						{
-							stringleft,bb,A_LoopField,1
-							if (bb = "[")
-								{
-									stringreplace,sect,A_LoopField,[,,
-									stringreplace,section,sect,],,
-									continue
-								}
-							stringsplit,an,A_LoopField,=<
-							stringreplace,vb,A_LoopField,%an1%=,,
-							stringright,pptx,an2,1
-							if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")))
-								{
-									vb=
-								}
-							if ((vb <> "")&&(vb <> "ERROR"))
-								{
-									%an1%= %vb%
-									G_%an1%= %vb%
-								}
-						}
-				
+					iniwrite,%vb%,%gamecfg%,%section%,%an1%	
 				}
 			if (GMLNK = 1)
 				{
@@ -4543,12 +4638,6 @@ Loop, %fullstn0%
 							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_ProfileName%	
 							Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
 							Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
-							if (CENTRALIZE = 1)
-								{
-									Player1x= %Player1_Template%
-									Player2x= %Player2_Template%
-									MediaCenter_ProfileX= %MediaCenter_Profile_Template%
-								}
 							if ((pl1ovr <> "<")&&(pl1ovr <> "")&&fileexist(pl1ovr))
 								{
 									Player1_Template= %pl1ovr%
@@ -4562,6 +4651,18 @@ Loop, %fullstn0%
 							if ((mcpovr <> "<")&&(mcpovr <> "")&&fileExist(mcpovr))
 								{
 									MediaCenter_Profile_Template= %mcpovr%
+								}
+							if (CENPL1 = 1)
+								{
+									Player1x= %Player1_Template%
+								}
+							if (CENPL2 = 1)
+								{
+									Player2x= %Player2_Template%
+								}
+							if (CENMC = 1)
+								{
+									MediaCenter_ProfileX= %MediaCenter_Profile_Template%
 								}	
 							if ((G_SaveData = "") or (G_SaveData = "ERROR"))
 								{
@@ -4570,7 +4671,7 @@ Loop, %fullstn0%
 							if ((G_GameData = "") or (G_GameData = "ERROR"))
 								{
 									iniwrite, %GameData%,%gamecfg%,CONFIG,GameData
-								}
+								}	
 							if ((OVERWRT = 1)or(cfgcopied = 1))
 								{
 									iniwrite, %sidn%,%gamecfg%,CONFIG,GAME_PROFILES
@@ -4603,12 +4704,18 @@ Loop, %fullstn0%
 								}
 							if ((OVERWRT = 1) or (G_MM_MediaCenter_Config = "") or (G_MM_MediaCenter_Config = "ERROR")) or (!fileexist(DeskMon)&& fileexist(MM_MediaCenter_Config))
 								{
-									filecopy, %MM_MediaCenter_Config%,%DeskMon%,%OVERWRT%
+									if (MM_MediaCenter_Config <> DeskMon)
+										{
+											filecopy, %MM_MediaCenter_Config%,%DeskMon%,%OVERWRT%
+										}
 									iniwrite,%DeskMon%,%gamecfg%,CONFIG,MM_MediaCenter_Config
 								}
 							if ((OVERWRT = 1) or (G_MM_Game_Config = "") or (G_MM_Game_Config = "ERROR"))or (!fileexist(GameMon)&& fileexist(MM_Game_Config))
 								{
-									filecopy, %MM_GAME_Config%,%GameMon%,%OVERWRT%
+									if (MM_Game_Config <> GameMon)
+										{
+											filecopy, %MM_GAME_Config%,%GameMon%,%OVERWRT%
+										}
 									iniwrite,%GameMon%,%gamecfg%,CONFIG,MM_Game_Config
 								}
 							GameProfs= %sidn%
@@ -4646,80 +4753,73 @@ Loop, %fullstn0%
 											iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
 										}
 								}
-							/*	
-							if (OVERWRT = 1)
-								{	
-									if (gmopts <> "")
-										{
-											iniwrite,%gmopts%,%GAMECFG%,CONFIG,Run_Options	
-										}
-									if (gmargs <> "")
-										{
-											iniwrite,%gmargs%,%GAMECFG%,CONFIG,Run_Arguments	
-										}
-								}
-							else {
-									iniread,tvo,%GAMECFG%,CONFIG,Run_Options
-									if ((tvo = "ERROR")or(tvo = ""))
-											{
-												iniwrite,%gmopts%,%GAMECFG%,CONFIG,Run_Options
-											}
-									iniread,tva,%GAMECFG%,CONFIG,Run_Arguments
-									if ((tva = "ERROR")or(tva = ""))
-											{
-												iniwrite,%gmargs%,%GAMECFG%,CONFIG,Run_Arguments
-											}
-								}
-							*/
 						}
 				}
-			if (GMJOY = 1)
+			if ((GMJOY = 1) && (subfldrep = ""))
 				{
-					Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
-					if ((errorlevel = 0)or fileexist(player1X))
+					IF (CENPL1 <> 1)
 						{
-							if (OVERWRT = 1)
+							if (Player1_Template <> player1X)
 								{
-									iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+									Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
 								}
-							else {
-									if ((G_Player1 = "ERROR")or(G_Player1 = ""))
+							if ((errorlevel = 0)or fileexist(player1X))
+								{
+									if (OVERWRT = 1)
 										{
 											iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+										}
+									else {
+											if ((G_Player1 = "ERROR")or(G_Player1 = ""))
+												{
+													iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+												}
 										}
 								}
 						}
 					if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
 						{
-							Filecopy,%Player2_Template%,%player2X%,%OVERWRT%
-							if ((errorlevel = 0)or fileexist(player2x))
+							if (CENPL2 <> 1)
 								{
-									if (OVERWRT = 1)
+									if (Player2_Template <> player2X)
 										{
-											iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+											Filecopy,%Player2_Template%,%player2X%,%OVERWRT%
 										}
-									else {
-											if ((G_Player2 = "ERROR")or(G_Player2 = ""))
+									if ((errorlevel = 0)or fileexist(player2x))
+										{
+											if (OVERWRT = 1)
 												{
 													iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+												}
+											else {
+													if ((G_Player2 = "ERROR")or(G_Player2 = ""))
+														{
+															iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+														}
 												}
 										}
 								}
 						}
-					Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
-					if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
+					if (CENMC <> 1)
 						{
-							if (OVERWRT = 1)
+							if (MediaCenter_Profile_Template <> MediaCenter_ProfileX)
 								{
-									iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+									Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
 								}
-							else {
-									if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = ""))
+							if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
+								{
+									if (OVERWRT = 1)
 										{
 											iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
 										}
-								}
-						}	
+									else {
+											if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = ""))
+												{
+													iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+												}
+										}
+								}	
+						}
 				}
 			if (GMLNK = 1)
 				{
@@ -4762,7 +4862,7 @@ Loop, %fullstn0%
 												}
 											%A_Index%_Post= %prea2%
 										}
-									}
+								}
 							prea2=
 							stringsplit,prea,JustBeforeExit,<
 							JBEW=call
@@ -4856,11 +4956,11 @@ Loop, %fullstn0%
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,1_Pre
 				}
-			if (((preovr = "n") or (preovr ="0")) && ((G_2_Pre = "ERROR")&&(OVERWRT = 2)))
+			if (((preovr = "n") or (preovr ="0")) && ((G_2_Pre = "ERROR")&&(OVERWRT = 1)))
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,2_Pre
 				}
-			if (((preovr = "n") or (preovr ="0")) && ((G_3_Pre = "ERROR")&&(OVERWRT = 3)))
+			if (((preovr = "n") or (preovr ="0")) && ((G_3_Pre = "ERROR")&&(OVERWRT = 1)))
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,3_Pre
 				}
@@ -4868,51 +4968,42 @@ Loop, %fullstn0%
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,1_Post
 				}
-			if (((Pstovr = "n") or (Pstovr ="0")) && ((G_2_Post = "ERROR")&&(OVERWRT = 2)))
+			if (((Pstovr = "n") or (Pstovr ="0")) && ((G_2_Post = "ERROR")&&(OVERWRT = 1)))
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,2_Post
 				}
-			if (((Pstovr = "n") or (Pstovr ="0")) && ((G_3_Post = "ERROR")&&(OVERWRT = 3)))
+			if (((Pstovr = "n") or (Pstovr ="0")) && ((G_3_Post = "ERROR")&&(OVERWRT = 1)))
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,3_Post
 				}
-			if ((G_Steam_ID = "")&&(steamquery <> "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> "")&&(steamquery <> 0))
+			if ((G_Steam_ID = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
 				{
 					iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
 				}
-			if ((steamquery <> "")or((steamquery = "")or(steamquery = 0)&&(G_Steam_ID <> "")&& !fileExist(sidn . "\" G_Steam_ID . ".json")))
+			if (((steamquery = 0)&&(G_Steam_ID <> "")&& !fileExist(sidn . "\" G_Steam_ID . ".json"))or (!instr(stmdbfnd,steamquery)&&(steamquery <> 0)))
 				{
-					if (((GLBTRY < 4)&& !instr(stmdbfnd,steamquery))or((steamquery = "") or (steamquery = 0)&& !instr(stmdbfnd,G_Steam_ID)))
+					if (steamquery = 0)
 						{
-							if ((steamquery = "")or(steamquery = 0))
-								{
-									steamquery= %G_Steam_ID%
-									iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
-								}
+							steamquery= %G_Steam_ID%
+							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
+						}
+					if !instr(stmdbfnd,steamquery)
+						{
 							GameData=
 							SaveData=
 							SB_SetText("Querying intenet-databases")
+							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
 							stmdbfnd.= steamquery . "|"
 							gosub, steamappinfo
 						}
 				}
 				else {
-					if ((steamquery = "") or (steamquery = 0)or(GLBTRY > 3))
+					if ((steamquery = 0)&&(G_Steam_ID = 0)or(G_Steam_ID = ""))
 						{
 							GameData=
 							SaveData=
 						}
 				}
-			/*	
-			if ((G_SaveData = "")or(G_SaveData = "|")or(G_SaveData = "ERROR")or(OVERWRT = 1))
-				{
-					iniwrite,%SaveData%,%GAMECFG%,GENERAL,SaveData
-				}
-			if ((G_GameData = "")or(G_GameData = "|")or(G_GameData = "ERROR")or(OVERWRT = 1))
-				{
-					iniwrite,%gamedata%,%GAMECFG%,GENERAL,GameData
-				}	
-			*/	
 			SB_SetText("created profile for " gmnamex "")
 	}
 SB_SetText("Shortcuts Created")
@@ -5062,7 +5153,7 @@ Loop,parse,exep,\
 		stringreplace,xin,xin,$,,All
 		stringreplace,xin,xin,#,,All
 		stringreplace,xin,xin,_,,All     
-		stringreplace,xin,xin,&,,All
+		stringreplace,xin,xin,&,and,All
 		stringreplace,xin,xin,(,,All
 		stringreplace,xin,xin,),,All
 		stringreplace,xin,xin,[,,All
@@ -5331,7 +5422,7 @@ stringreplace,exedp,exedp,`,,All
 stringreplace,exedp,exedp,+,All
 stringreplace,exedp,exedp,',,All
 stringreplace,exedp,exedp,!,,All
-stringreplace,exedp,exedp,&,,All
+stringreplace,exedp,exedp,&,and,All
 stringreplace,exedp,exedp,$,,All
 stringreplace,exedp,exedp,`%,,All
 stringreplace,exedp,exedp,@,,All
@@ -5771,16 +5862,16 @@ if !fileexist(jsave)
 	{
 		gosub, DWNCONFIRM
 	}
-if (!fileexist(jsave)&&(STMTRY < 4))
+if (!fileexist(jsave)&&(STMTRY < 4)&&(GLBTRY < 4))
 	{
 		STMTRY+=1
 		goto, steamappinfo
 	}
 else {
-	if (STMTRY > 3)
+	if ((STMTRY > 3)or(GLBTRY > 3))
 		{
 			SB_SetText("SteamPowered Data not found for " njName "")
-			GLBTRY:= +1
+			GLBTRY+=1
 			return
 		}
 }	
@@ -5793,7 +5884,7 @@ Loop,read,%jsave%
 		if (instr(A_LoopReadLine,nosuc)&&(STMTRY < 4))
 			{
 				filedelete,%jsave%
-				STMTRY:= +1
+				STMTRY+=1
 				goto, steamappinfo
 			}
 		break	
@@ -5802,10 +5893,15 @@ Loop,read,%jsave%
 if (STMTRY > 3)
 	{
 		SB_SetText("SteamPowered Data not found for " njName "")
-		GLBTRY:= +1
+		GLBTRY+=1
 		return
 	}		
 STEAMDBINFO:
+if (PCGWTRY > 3)
+	{
+		GLBTRY+=1
+		return
+	}
 if fileexist(jsave)
 	{
 		STMTRY:=0
@@ -5844,17 +5940,18 @@ if fileexist(jsave)
 									}
 								if !fileExist(hsave)
 									{
+										PCGWTRY+=1
 										goto, GETPCGW
 									}
 								gosub, READPCGW
 							}
 						if !fileExist(hsave)
 							{
-								PCGWTRY= 4
+								PCGWTRY:= 4
 							}
 						if (PCGWTRY > 3)
 							{
-								GLBTRY:= +1
+								GLBTRY+=1
 								return
 							}
 						break
@@ -5892,7 +5989,7 @@ if (fileexist(save)&& (compltdwn = 1))
 		dwnrej=
 	}
 DOWNBIN:
-SB_SetText("Downloading" "" binarcf "")
+SB_SetText("Downloading " "" binarcf "")
 
 Loop,parse,GUIVARS,|
 	{
@@ -5915,8 +6012,8 @@ if (UPDATING = 1)
 if ((STEAMQUERY <> "")&&(STEAMQUERY <> 0))
 	{
 		SB_SetText("")
-		return 
 		goto, STEAMDBINFO
+		return 
 	}
 EXTRACTING:
 ToolTip,
@@ -6205,7 +6302,7 @@ SaveData=
 if instr(pcgw,nopcgw)
 	{
 		filedelete,%hsave%
-		PCGWTRY:= +1
+		PCGWTRY+=1
 		return
 	}
 GLBTRY:= 0
@@ -6257,7 +6354,7 @@ Loop,parse,pcgw,`r`n
 								break
 							}
 						SystemType= %rba%
-						if (instr(SystemType,"windows")or instr(SystemType,"Steam")or instr(SystemType,"Microsoft Store"))
+						if ((SystemType = "windows")or(SystemType = "Steam")or(SystemType = "Microsoft Store"))
 							{
 								pcgwin= 2
 							}
@@ -6282,14 +6379,15 @@ Loop,parse,pcgw,`r`n
 						infolin:= % RegExReplace(A_LoopField, "^(.*)" (TrigDATA) "", "")
 						infolinx:= % RegExReplace(infolin,"" SupData "(.*)", "")
 						stringreplace,infolin,infolinx,%REGIF%,,All
-						stringreplace,infolin,infolin,%STINF%,%STINSTALL%,All
+						stringreplace,infolin,infolin,%DBINF%,,All
+						stringreplace,infolin,infolin,%STINF%,%steamdir%,All
 						stringreplace,infolin,infolin,%PRINF%,%USRPRF%,All
 						stringreplace,infolin,infolin,%UAINF%,%LADTA%,All
-						stringreplace,infolin,infolin,%BSINF%,%sidn%,All
-						stringreplace,infolin,infolin,%GSUIF%,%A_Username%,All
+						stringreplace,infolin,infolin,%BSINF%,%outdir%,All
+						stringreplace,infolin,infolin,%GSUIF%,%SteamUser%,All
 						stringreplace,infolin,infolin,`n,,All
 						stringreplace,infoline,infolin,`r,,All
-						%DATV%.= apnd . infoline
+						%DATV%.= apnd . infoline . "|"
 					}
 				continue	
 			}
@@ -6399,8 +6497,13 @@ LVGetCheckedItems(cN,wN) {
         SendMessage, 0x102c, A_Index-1, 0x2000, % cN, % wN
         ChekItems:=(ErrorLevel ? Item[A_Index-1] "`n" : "")
 		stringsplit,dbb,ChekItems,%A_Tab%
-		ChkItems.= dbb1 . "|" . dbb2 . "|" . dbb3 . "|" . dbb4 . "|" . dbb5 . "|" . dbb6 . "|" . dbb7 . "|" . dbb8 . "|" . dbb9 . "|" . dbb10 . "|" . dbb11 . "|" . dbb12 . "|" . dbb13 . "|" . dbb14 . "|" . dbb15 . "|" . dbb16 . "|" . dbb17 . "|" . dbb18 . "`n"
+		tstchki:= dbb1 . "|" . dbb2 . "|" . dbb3 . "|" . dbb4 . "|" . dbb5 . "|" . dbb6 . "|" . dbb7 . "|" . dbb8 . "|" . dbb9 . "|" . dbb10 . "|" . dbb11 . "|" . dbb12 . "|" . dbb13 . "|" . dbb14 . "|" . dbb15 . "|" . dbb16 . "|" . dbb17 . "|" . dbb18 . "`n"
+		if !instr(ChkItems,tstchki)
+			{
+				ChkItems.= tstchki
+			}
     }
+	stringreplace,chkitems,chkitems,|||||||||||||||||,,All
 	stringreplace,chkitems,chkitems,?%A_Space%,,All
     Return ChkItems
 }

@@ -3,7 +3,7 @@ SendMode Input
 SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
-FileEncoding UTF-8
+FileEncoding, UTF-8
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
 EnvGet,SYSTMRT,SYSTEMROOT
@@ -326,6 +326,7 @@ PRE_1:
 stringsplit,prestk,1_Pre,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -340,6 +341,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		prearun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				prearun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				prearun:= "powershell" . A_Space
+			}
+		prearun.= prestk2
 		if (instr(prestk1,"H")&& (runhow = ""))
 			{
 				runhow= hide
@@ -348,10 +360,10 @@ if (prestk2 <> "")
 			{
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,preapid
+						RunWait,%prearun%%wscrop%,%A_ScriptDir%,%runhow%,preapid
 					}
 					else {
-						Run,%prestk2%,%A_ScriptDir%,,preapid	
+						Run,%prearun%%wscrop%,%A_ScriptDir%,,preapid	
 					}
 			}
 		iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
@@ -490,20 +502,28 @@ if (MonitorMode > 0)
 sleep, 1200
 return
 
-
-
-;regRead,curwlp,HKCU\Control Panel\Desktop, WallPaper
-;regWrite, REG_SZ,HKCU\Control Panel\Desktop,WallPaper," "
-;RunWait, Rundll32.exe user32.dll`, UpdatePerUserSystemParameters
-
 PRE_JAL:
 stringsplit,prestk,JustAfterLaunch,<
 PRESA= %prestk1%
-jalprog= %prestk2%
+jalprog=
+wscrop=
+if (instr(prestk1,".vbs") or instr(prestk1,".vbe") or instr(prestk1,".wsf") or instr(prestk1,".wsc"))
+	{
+		jalprog:= "wscript" . A_Space
+		wscrop:= A_Space . "/b" . A_Space . "/nologo"
+	}
+if (instr(prestk1,".ps1")or instr(prestk1,".psd"))
+	{
+		jalprog:= "powershell" . A_Space
+	}
+if (prestk2 <> "")
+	{
+		jalprog.= prestk2
+	}	
 if (prestk2 = "")
 	{
 		presA= 
-		jalprog= %prestk1%
+		jalprog.= prestk1
 	}
 stringright,lnky,jalprog,4
 runhow= 
@@ -533,11 +553,11 @@ if (jalprog <> "")
 					}
 				if instr(presA,"W")
 					{
-						RunWait,%jalprog%,%A_ScriptDir%,%runhow%,jalpid
+						RunWait,%jalprog%%wscrop%,%A_ScriptDir%,%runhow%,jalpid
 						return
 						;goto, premapper
 					}
-				Run,%jalprog%,%A_ScriptDir%,%runhow%,jalpid
+				Run,%jalprog%%wscrop%,%A_ScriptDir%,%runhow%,jalpid
 				iniwrite,%jalpid%,%curpidf%,JustAfterLaunch,pid
 			}	
 	}
@@ -547,6 +567,7 @@ PRE_2:
 stringsplit,prestk,2_Pre,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -561,6 +582,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		prebrun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				prebrun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . A_Space . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				prebrun:= "powershell" . A_Space
+			}
+		prebrun.= prestk2
 		if (instr(prestk1,"H")&& (runhow = ""))
 			{
 				runhow= hide
@@ -569,11 +601,11 @@ if (prestk2 <> "")
 			{
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,prebpid
+						RunWait,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
 						;goto,postmapper
 						return
 					}
-				Run,%prestk2%,%A_ScriptDir%,%runhow%,prebpid
+				Run,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
 				iniwrite,%prebpid%,%curpidf%,2_Pre,pid
 			}
 	}
@@ -714,6 +746,7 @@ PRE_3:
 stringsplit,prestk,3_Pre,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -728,6 +761,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		precrun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				precrun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . A_Space . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				precrun:= "powershell" . A_Space
+			}
+		precrun.= prestk2
 		if fileexist(prestk2)
 			{	
 				if (instr(prestk1,"H")&& (runhow = ""))
@@ -736,11 +780,11 @@ if (prestk2 <> "")
 					}
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,precpid
+						RunWait,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
 						;goto,postmapper
 						return
 					}
-				Run,%prestk2%,%A_ScriptDir%,%runhow%,precpid
+				Run,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
 				iniwrite,%precpid%,%curpidf%,3_Pre,pid
 			}
 	}
@@ -974,11 +1018,25 @@ if (nosave = 1)
 Tooltip,shutting down game`n:::Writing Settings
 stringsplit,prestk,JustBeforeExit,<
 PRESA= %prestk1%
-jbeprog= %prestk2%
+jbeprog= 
+wscrop=
+if (instr(prestk1,".vbs") or instr(prestk1,".vbe") or instr(prestk1,".wsf") or instr(prestk1,".wsc"))
+	{
+		jbeprog:= "wscript" . A_Space
+		wscrop:= A_Space . "/b" . A_Space . "/nologo"
+	}
+if (instr(prestk1,".ps1")or instr(prestk1,".psd"))
+	{
+		jbeprog:= "powershell" . A_Space
+	}
+if (prestk2 <> "")
+	{
+		jbeprog.= prestk2
+	}
 if (prestk2 = "")
 	{
 		presA= 
-		jbeprog= %prestk1%
+		jbeprog.= prestk1
 	}
 stringright,lnky,jbeprog,4
 runhow= 
@@ -1008,8 +1066,8 @@ if (jbeprog <> "")
 						;goto,LOGOUT
 						;return
 					}
-				Run,%jbeprog%,%A_ScriptDir%,%runhow%,jbepid	
-				iniwrite,%jbepid%,%curpidf%,JustBeforeExit,pid
+				Run,%jbeprog%%wscrop%,%A_ScriptDir%,%runhow%,jbepid	
+				iniwrite,%jbepid%%wscrop%,%curpidf%,JustBeforeExit,pid
 			}
 		if instr(jbeprog,">")	
 			{
@@ -1138,6 +1196,7 @@ if (nosave = 1)
 stringsplit,prestk,1_Post,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -1152,6 +1211,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		pstarun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				pstarun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . A_Space . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				pstarun:= "powershell" . A_Space
+			}
+		pstarun.= prestk2
 		if fileexist(prestk2)
 			{
 				if (instr(prestk1,"H")&& (runhow = ""))
@@ -1160,11 +1230,11 @@ if (prestk2 <> "")
 					}
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,postapid
+						RunWait,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
 						;goto,postmapper
 						return
 					}
-				Run,%prestk2%,%A_ScriptDir%,%runhow%,postapid
+				Run,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
 			}
 	}
 return
@@ -1255,6 +1325,7 @@ if (nosave = 1)
 stringsplit,prestk,2_Post,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -1269,7 +1340,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
-		
+		pstbrun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				pstbrun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . A_Space . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				pstbrun:= "powershell" . A_Space
+			}
+		pstbrun.= prestk2
 		if (instr(prestk1,"H")&& (runhow = ""))
 			{
 				runhow= hide
@@ -1278,11 +1359,11 @@ if (prestk2 <> "")
 			{
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,postBpid
+						RunWait,%pstbrun%%wscrop%,%A_ScriptDir%,%runhow%,postBpid
 						;goto,postmapper
 						return
 					}
-				Run,%prestk2%,%A_ScriptDir%,%runhow%,postbpid
+				Run,%prestk2%%wscrop%,%A_ScriptDir%,%runhow%,postbpid
 			}
 	}
 return
@@ -1343,6 +1424,7 @@ if (nosave = 1)
 stringsplit,prestk,3_Post,<
 stringright,lnky,prestk2,4
 runhow= 
+wscrop=
 if (prestk2 <> "")
 	{
 		if (lnky = ".lnk")
@@ -1357,6 +1439,17 @@ if (prestk2 <> "")
 						runhow= Max
 					}
 			}
+		pstcrun= 
+		if (instr(prestk2,".vbs") or instr(prestk2,".vbe") or instr(prestk2,".wsf") or instr(prestk2,".wsc"))
+			{
+				pstcrun:= "wscript" . A_Space
+				wscrop:= A_Space . "/b" . A_Space . "/nologo"
+			}
+		if (instr(prestk2,".ps1")or instr(prestk2,".psd"))
+			{
+				pstcrun:= "powershell" . A_Space
+			}
+		pstcrun.= prestk2
 		if (instr(prestk1,"H")&& (runhow = ""))
 			{
 				runhow= hide
@@ -1365,11 +1458,11 @@ if (prestk2 <> "")
 			{
 				if instr(prestk1,"W")
 					{
-						RunWait,%prestk2%,%A_ScriptDir%,%runhow%,postcpid
+						RunWait,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
 						;goto,postmapper
 						return
 					}
-				Run,%prestk2%,%A_ScriptDir%,%runhow%,postcpid
+				Run,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
 			}
 	}
 return
