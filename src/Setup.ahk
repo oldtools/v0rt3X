@@ -6,7 +6,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-09-29 9:26 AM
+RELEASE= 2022-10-05 10:29 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -63,30 +63,36 @@ if ((plink = "") or !fileExist(plink) or (scextn = ""))
 		;filedelete,%home%\log.txt
 	}
 gosub, DDPOPS
+SRCFILE= %home%\continue.db
 repopbut= hidden 
 fileread,unlike,%source%\unlike.set
 fileread,unselect,%source%\unsel.set
 fileread,absol,%source%\absol.set
 fileread,rabsol,%source%\rabsol.set
 
-if fileexist(home . "\" . "continue.db")
+NSOURCEDLIST= 	 	
+if fileexist(SRCFILE)
 	{
 		srcntot=
 		vavn=
 		repopbut=
-		fileread,SOURCEDLIST,%home%\continue.db
+		fileread,SOURCEDLIST,%SRCFILE%
 		Loop,parse,SOURCEDLIST,`n`r
 			{
-				if (A_LoopField = "")
+				if ((A_LoopField = "") or instr(NSOURCEDLIST,A_LoopField))
 					{
 						continue
 					}
 				vavn+=1
 				%vavn%SDL= %A_LoopField%
+				NSOURCEDLIST.= A_LoopField . "`n"
 			}
 		srcntot:= vavn	
 	}
-	
+SOURCEDLIST:= NSOURCEDLIST
+NSOURCEDLIST= 	
+filedelete,%SRCFILE%
+fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 FileDelete,%home%\log*.txt
 fileread,exclfls,%source%\exclfnms.set
 fileread,rlsgrps,%source%\rlsgrps.set
@@ -117,12 +123,13 @@ AllQuery:= GogQuery . | . "Origin" . "|" . "Epic Games" . "|" . steamhome
 undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|
 undirs= %undira%
 pcgwbr= 400 Bad Request
+pcgwbt= Bad title
 patsup= Support us on Patreon
 nopcgw= There is currently no text in this page.
 STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
 PCGWURL=https://www.pcgamingwiki.com/wiki/
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRALIZE|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
-STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|Centralize|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
+STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
@@ -447,11 +454,27 @@ Menu,AddProgs,Add,Download,DownloadAddons
 Menu,LookupDBCHK,Add,,
 Menu,LookupDBCHK,Add,Reset the Lookup Table,RELOOKUP
 
+Menu,DelPerg,Add,,
+Menu,DelPerl,Add,Delete Profile Folders,Dellaunch
+Menu,DelPerp,Add,Delete Launcher Folder,Delprof
+Menu,DelPerg,Add,,
+
+Menu,PropKBL,Add,Propagate,PropKBCmd
+Menu,PropPL1,Add,Propagate,PropPl1jp
+Menu,PropPL2,Add,Propagate,PropPl2jp
+Menu,PropMC,Add,Propagate,PropMCjp
+Menu,PropGM,Add,Propagate,PropGMcfg
+Menu,PropDM,Add,Propagate,PropDMcfg
+Menu,PropJAL,Add,Propagate,PropJALc
+Menu,PropJBE,Add,Propagate,PropJBEc
+Menu,PropPRE,Add,Propagate,PropPREc
+Menu,PropPST,Add,Propagate,PropPSTc
 
 Menu,UCLButton,Add,RESET,CfgInstMprs
 Menu,UCLButton,Add,Disable ,DisableButs
 
 Menu,JBEButton,Add,Cloud-Save,DownloadButs
+Menu,JBEButton,Add,soundVolumeView,OtherDownloads
 Menu,JBEButton,Add,RESET,CfgInstMprs
 Menu,JBEButton,Add,Disable ,DisableButs
 
@@ -513,6 +536,7 @@ Gui Add, GroupBox, x16 y408 w283 h103,
 Gui Add, GroupBox, x16 y505 w283 h65,
 Gui Add, GroupBox, x16 y565 w283 h90,
 Gui Add, GroupBox, x130 y649 w169 h27,
+Gui Add, GroupBox, x105 y127 w175 h45,
 ;;Gui, Add, Radio, x95 y32 vEXEONLY gEXEONLY checked hidden, Exe`,Cmd`,Bat
 Gui, Font, Bold
 Gui, Add, Button, x18 y8 h18 w18 vRESET gRESET,R
@@ -563,12 +587,12 @@ Gui, Font, Normal
 Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 
 GUi, Add, Checkbox, x120 y137 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
-Gui, Add, Checkbox, x185 y137 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
+GUi, Add, Checkbox, x188 y137 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
+GUi, Add, Checkbox, x240 y137 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
+Gui, Add, Checkbox, x1 y139 w14 h14 vCENTRLCKB gCENTRLCKB %cntz%, 
 Gui, Font, Bold
-Gui, Add, Checkbox, x1 y137 h14 vCENTRLCKB gCENTRLCKB %cntz%, CENTRALIZE
+Gui, Add, Text, x20 y140 h16,:CENTRALIZE
 Gui, Font, Normal
-GUi, Add, Checkbox, x28 y157 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
-GUi, Add, Checkbox, x70 y157 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
 Gui, Add, Checkbox, x225 y157 w54 h14 vKILLCHK gKILLCHK checked,Kill-List
 GUi, Add, Checkbox, x157 y157 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admin
 GUi, Add, Checkbox, x112 y157 vGMLNK gGMLNK %lnkget% %lnkenbl%,Lnk
@@ -577,8 +601,10 @@ Gui, Font, Bold
 Gui, Add, Button, x21 y180 w36 h21 vGame_ProfB gGame_ProfB,GPD
 Gui, Add, Text, x64 y175 w222 h14 vGAME_ProfilesT Disabled Right,%GAME_Profiles%
 Gui, Font, Normal
-Gui, Add, Text,  x64 y189 w122 h14,<Game Profiles Directory>
-Gui, Add, Checkbox, x208 y189 w61 h14 vLocalize gLocalize right,Localize
+Gui, Font, Bold
+Gui, Add, Text,  x64 y189 w122 h14 vGame_ProfilesR,<Game Profiles Directory>
+Gui, Add, Checkbox, x208 y190 w80 h14 vLocalize gLocalize right,LOCALIZE:
+Gui, Font, Normal
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y224 w36 h21 vKeyboard_MapB gKeyboard_MapB,KBM
@@ -609,17 +635,17 @@ Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_ProfileT Disabled Right,%MediaCe
 Gui, Font, Normal
 Gui, Add, Text,  x64 y334 w222 h14,.....Template Profile for MediaCenter/Desktop>
 
-
 Gui, Font, Bold
 Gui, Add, Button, x17 y352 w36 h21 vBGM_ProgB gBGM_ProgB,GBT
 Gui Add, Button, x53 y352 w10 h21 vBGM_RC gBGM_RC, v
 Gui, Add, Text,  x64 y354 w222 h14 vBorderless_Gaming_ProgramT Disabled Right,%Borderless_Gaming_Program%
 Gui, Font, Normal
-Gui, Add, Text,  x74 y368 w212 h14,<Borderless_Gaming_Program>
+Gui, Add, Text,  x64 y368 w110 h14,<Borderless_Program>
 
 Gui, Font, Bold
 Gui, Add, Checkbox, x20 y380 h19 vBGP_Enable gBGP_Enable %gbtstate%, Enable
 Gui, Font, Normal
+Gui, Add, Checkbox, x205 y382 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
 Gui, Add, Checkbox, x45 y399 h15 vBGP_TU gBGP_TU %bgptu%,Terminate if unused
 Gui, Add, Checkbox, x166 y399 h15 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
 ;Gui, Add, Text,  x64 y378 w222 h14 vMM_GBM_ConfigT Disabled Right,%MM_Game_Config%
@@ -697,8 +723,10 @@ Gui, Font, Bold
 Gui, Add, Button, x18 y656 h18 w18 vOPNLOG gOPNLOG,!
 Gui, Font, Normal
 Gui, Add, Checkbox, x35 y657 h16 vEnableLogging gEnableLogging right %loget%, Log
+Gui, Font, Bold
 Gui, Add, Radio, x143 y659 h14 vOVERWRT gUPDTSC %ovrwrchk%, Overwrite
 Gui, Add, Radio, x225 y659 h14 vUPDTSC gOVERWRT %updtchk%, Update
+gui,font,normal
 
 
 OnMessage(0x200, "WM_MOUSEMOVE")
@@ -720,7 +748,7 @@ POPULATE_TT :="Searches for games or loads the last queue"
 RESET_TT :="resets the application to default settings"
 KILLCHK_TT :="ancilary and executable-subprocess are terminated upon exiting the game"
 NAMECHK_TT :="Matches guessed names at steam database."
-NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases."
+NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases.`nRight Click to reset the Lookup-Table"
 INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
 Localize_TT :="Sets the profile folder to`n the game's installation folder`n*     (not recommended)     *`n"
 SOURCE_DirB_TT :="Add a directory containing the root of game-installation/s."
@@ -734,8 +762,8 @@ GMCONF_TT :="Creates the configuration files"
 GMJOY_TT :="creates the joystick profiles"
 ASADMIN_TT :="sets shortcuts and programs to run as the aministrator."
 GMLNK_TT :="creates the shortcuts"
-OVERWRT_TT :="overwrite and recreate settings"
-UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values"
+OVERWRT_TT :="overwrite and recreate settings`nExisting configuration files *WILL* be overwritten"
+UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values`nExisting configuration files will *NOT* be overwritten"
 Game_ProfB_TT :="Sets the directory where profiles will be created"
 GAME_ProfilesT_TT :="the profiles directory"
 Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
@@ -764,7 +792,8 @@ PREAPP_TT :="Assign a program to run before the game is launched"
 PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
 PRETNUM_TT :=""
 CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
-CenKBM_TT := ""
+CenKBM_TT := "keyboard mapping script"
+BGP_Enable_TT := "Enables the Borderless Gaming Program"
 CenPL1_TT := ""
 CenPL2_TT := ""
 CenMC_TT := ""
@@ -775,7 +804,7 @@ CenJBE_TT := ""
 CenPRE_TT := ""
 CenPST_TT := ""
 IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
-JARWAIT_TT :="waits for the program to exit"
+JALWAIT_TT :="waits for the program to exit"
 JBEWAIT_TT :="waits for the program to exit"
 PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )"
 Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
@@ -903,22 +932,53 @@ if (fileexist(GAME_DirectoryT)&&(GAME_DirectoryT <> "")&& !instr(GAME_DirectoryT
 return
 
 SELALLBUT:
+popui= 1
+NSOURCEDLIST=
 gui,submit,nohide
 Gui, ListView, MyListView
 LV_Modify(0, "+Check")
 stringreplace,SOURCEDLIST,SOURCEDLIST,?,,All
-filedelete,%home%\continue.db
-fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
+vavn=
+Loop,parse,SOURCEDLIST,`n`r
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		vavn+=1
+		%vavn%SDL= %A_LoopField%
+		NSOURCEDLIST.= A_LoopField . "?" . "`n"
+	}
+srcntot:= vavn	
+SOURCEDLIST:= NSOURCEDLIST
+filedelete,%SRCFILE%
+fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
+popui= 
 return
 
 SELNONEBUT:
 gui,submit,nohide
+popui= 1
+NSOURCEDLIST=
 Gui, ListView, MyListView
 LV_Modify(0, "-check")
 stringreplace,SOURCEDLIST,SOURCEDLIST,?,,All
-SOURCEDLIST:= % RegExReplace(SOURCEDLIST, "^(.*)","$1" . "?")
-filedelete,%home%\continue.db
-fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
+vavn=
+Loop,parse,SOURCEDLIST,`n`r
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		vavn+=1
+		%vavn%SDL= %A_LoopField%
+		NSOURCEDLIST.= A_LoopField . "?" . "`n"
+	}
+srcntot:= vavn	
+SOURCEDLIST:= NSOURCEDLIST	
+filedelete,%SRCFILE%
+fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
+popui=
 return
 
 
@@ -1397,11 +1457,15 @@ Menu,addonp,Add
 Menu,addonp,DeleteAll
 if (butrclick = "PREAPP")
 	{
+		Menu,addonp, Add,Cloud-Save,DownloadButs
+		Menu,addonp, Add,,
 		Menu,addonp, Add,soundVolumeView,OtherDownloads
 											  
 	}
 if (butrclick = "POSTAPP")
 	{
+		Menu,addonp, Add,Cloud-Save,DownloadButs
+		Menu,addonp, Add,,
 		Menu,addonp, Add,soundVolumeView,OtherDownloads
 											  
 	}
@@ -2279,7 +2343,7 @@ ifMsgbox,Yes
         filedelete,%home%\MediaCenter2.cfg
         filedelete,%home%\Player1.cfg
         filedelete,%home%\Player2.cfg
-        filedelete,%home%\continue.db
+        filedelete,%SRCFILE%
         filedelete,%home%\*.tmp
         filedelete,%home%\GameAudio.cmd
         filedelete,%home%\MediaCenterAudio.cmd
@@ -3177,7 +3241,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 2)
 			{
 				cen%A_Index%= %CenKBM%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3186,7 +3250,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3201,7 +3265,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 3)
 			{
 				cen%A_Index%= %CenPL1%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3210,7 +3274,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3225,7 +3289,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 4)
 			{
 				cen%A_Index%= %CenPL2%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3234,7 +3298,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3249,7 +3313,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 5)
 			{
 				cen%A_Index%= %CenMC%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3259,7 +3323,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
@@ -3273,7 +3337,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 6)
 			{
 				cen%A_Index%= %CenGM%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3283,7 +3347,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3299,7 +3363,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 7)
 			{
 				cen%A_Index%= %CenMM%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3308,7 +3372,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3323,7 +3387,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 8)
 			{
 				cen%A_Index%= %CenJAL%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3333,7 +3397,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
@@ -3347,7 +3411,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 9)
 			{
 				cen%A_Index%= %CenJBE%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3356,7 +3420,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3371,7 +3435,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 10)
 			{
 				cen%A_Index%= %CenPRE%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3380,7 +3444,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3395,7 +3459,7 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 11)
 			{
 				cen%A_Index%= %CenPST%
-				CENTRALIZE.= A_LoopField . "|"
+				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%= %A_LoopField%
@@ -3405,7 +3469,7 @@ Loop,parse,CENTRLZ,|
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRALIZE,0
+	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 
@@ -3516,6 +3580,20 @@ NSPLIT= %filepath%
 NSOURCEDLIST= 
 ;Nsivk= 
 gosub, ADD_ITER
+fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
+srcntot = "")
+vavn=
+Fileread,SOURCEDLIST,%SRCFILE%
+Loop,parse,SOURCEDLIST,`n`r
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		vavn+=1
+		%vavn%SDL= %A_LoopField%
+	}
+srcntot:= vavn
 LV_ModifyCol()
 guicontrol,hide,CANCLDBUT
 guicontrol,disable,CANCLDBUT
@@ -3573,7 +3651,7 @@ SOURCEDLIST=
 fullist=
 simpnk=
 omitd=
-filedelete,%home%\continue.db
+filedelete,%SRCFILE%
 POPULATE:
 popui= 1
 guicontrol,hide,REINDEX
@@ -3706,7 +3784,6 @@ Loop,parse,NSPLIT,|
 					{		   
 						if (INFN = 2)
 							{
-								fileappend,%NSOURCEDLIST%,%home%\continue.db,UTF-8
 								return
 							}
 						if (CANCLD = 1)
@@ -3987,8 +4064,12 @@ Loop,parse,simpnk,`r`n
 					}
 			}		
 	}
-fileappend,%NSOURCEDLIST%,%home%\continue.db,UTF-8
-vavn=
+SOURCEDCOMPLETE:	
+fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
+if (srcntot = "")
+	{
+		vavn=
+	}
 Loop,parse,NSOURCEDLIST,`n`r
 	{
 		if (A_LoopField = "")
@@ -4257,6 +4338,7 @@ guicontrolget,Hide_Taskbar,,Hide_Taskbar
 guicontrolget,EnableLogging,,EnableLogging
 complist:= LVGetCheckedItems("SysListView321","v0rt3X_GUI")
 fullist= %complist%
+fileappend,%fullist%,%home%\log.txt
 stringsplit,fullstn,fullist,`n
 gmnames= |
 gmnameds= |
@@ -5909,6 +5991,12 @@ return
 Localize:
 gui,submit,NoHide
 guicontrolget,localize,,localize
+if (localize = 1)
+	{
+		Guicontrol,disable,Game_ProfB
+		return
+	}
+Guicontrol,enable,Game_ProfB
 return
 
 Hide_Taskbar:
@@ -6052,6 +6140,10 @@ dchk=
 SB_SetText("")
 return
 
+CloudSaveSetup:
+goto,%butrclick%Download
+
+
 JAL_ProgBDownload:
 JWait=JALWait
 JALPfx=
@@ -6094,8 +6186,8 @@ if ((curemote = "Cloud_Backup")or(curemote = "Cloud_Restore"))
 			}
 		CLDBCK= %CLDBCKT%	
 		KMT= %KXM%T
-		iniwrite,%CLDBCKT%,%RJDB_CONFIG%,GENERAL,%curemote%
-		iniwrite,%curemote%,%RJDB_CONFIG%,GENERAL,%ebe%%KXM%
+		iniwrite,%CLDBCKT%,%RJDB_CONFIG%,CONFIG,%curemote%
+		iniwrite,%ebe%%curemote%,%RJDB_CONFIG%,GENERAL,%KXM%
 		GuiControl,,%KMT%,%curemote%
 	}
 return
@@ -6125,51 +6217,60 @@ if (srcntot > 25)
 CLRLIST:	
 LV_Delete()
 SOURCEDLIST=
-fileDelete,%home%\continue.db
+fileDelete,%SRCFILE%
 guicontrol,show,REINDEX
 return
 
 MyListView:
+if (popui = 1)
+	{
+		return
+	}
 RPL=
 FocusedRowNumber := LV_GetNext(0, "F")
 if not FocusedRowNumber 
 	{
-
-	}
-if (popui = 1)
-	{
-		return
+		
 	}
 chkrepl=
 StringCaseSense, On
 chktest:= % (%A_EventInfo%SDL)
 stringright,chkq,chktest,1
+blockinput,on
 if (A_GuiEvent == "I")
 	{
-		blockinput,on
 		if InStr(ErrorLevel, "C", true)
 			{
 				SPENB:= "+Check"
-				chktest:= % (%A_EventInfo%SDL)
-				stringreplace,chktest,chktest,?,,
+				if (chkq = "?")
+					SPENQ= |
+				stringreplace,chkrepl,chktest,?,,All
+				stringreplace,chkrepl,chkrepl,`n,,All
+				stringreplace,chkrepl,chkrepl,`r,,All
 			}
-		else if InStr(ErrorLevel, "c", true)
+		else 
 			{
 				SPENB:= ""
-				chktest:= % (%A_EventInfo%SDL)
-				stringreplace,chktest,chktest,?,,
-				chkrepl:= chktest . "?"
-				stringreplace,chktest,chktest,`n,,All
+				if (chkq = "?")
+					SPENQ= ?
+				stringreplace,chkrepl,chktest,?,,All
+				stringreplace,chkrepl,chkrepl,`n,,All
+				stringreplace,chkrepl,chkrepl,`r,,All
+				chkrepl.= "?"
 			}
 		if (SPENQ <> chkq)
 			{
 				stringreplace,NSOURCEDLIST,SOURCEDLIST,%chktest%,%chkrepl%,All
-				filedelete,%home%\continue.db
-				fileappend,%NSOURCEDLIST%,%home%\continue.db,UTF-8
+				filedelete,%SRCFILE%
+				fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
+				%A_EventInfo%SDL= %chkrepl%
+				SOURCEDLIST:= NSOURCEDLIST
 				StringCaseSense, Off
+				fileappend,t=%chktest%`nr=%chkrepl%`n%SPENQ%=%chkq%`n,%home%\log.txt
 				blockinput,off
 				return
 			}
+		fileappend,ut=%chktest%`nur=%chkrepl%`nu:%SPENQ%=%chkq%`n,%home%\log.txt
 	}
 blockinput,off
 StringCaseSense, Off	
@@ -6283,8 +6384,8 @@ if (RRP <> rpl)
 	{
 		%FocusedRowNumber%SDL= %RRP%
 		stringreplace,SOURCEDLIST,SOURCEDLIST,%rpl%,%RRP%,All
-		filedelete,%home%\continue.db
-		fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
+		filedelete,%SRCFILE%
+		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 	}
 return
 
@@ -6367,6 +6468,10 @@ if fileexist(jsave)
 						stringreplace,nvar2,nvar2,/,,All
 						stringreplace,nvar2,nvar2,\,,All
 						stringreplace,nvar2,nvar2,\/,-,All
+						stringreplace,nvarz,nvar2,?,-,All
+						stringreplace,nvarz,nvarZ,*,-,All
+						stringreplace,nvarz,nvarZ,<,-,All
+						stringreplace,nvarz,nvarZ,>,-,All
 						stringreplace,pcgws,nvar2,%A_Space%,_,All
 						stringreplace,pcgws,pcgws,*,`%2A,All
 						stringreplace,pcgws,pcgws,<,`%3C,All
@@ -6378,7 +6483,7 @@ if fileexist(jsave)
 						stringreplace,pcgws,pcgws,`%,`%25,All
 						;cvturl:= uriEncode(nvar2)
 						URLFILE:= PCGWURL . pcgws 
-						hsave= %sidn%\%nvar2%.html
+						hsave= %sidn%\%nvarz%.html
 						save= %hsave%
 						if (PCGWTRY < 4)
 							{
@@ -6606,21 +6711,78 @@ If A_GuiControlEvent RightClick
 			Menu,AddProgs,Show,%MENU_X% %MENU_Y%
 			return
 		}
-if A_GuiControl = BGM_ProgB
-		{
-			Menu, UCLButton, Show, %MENU_X% %MENU_Y%
-			return
-		}
-if A_GuiControl = NetChk
-		{
-			Menu, LookupDBCHK, Show, %MENU_X% %MENU_Y%
-			return
-		}
-		
-
-																  
-if (A_GuiControl != "MyListView")
-    return
+	if A_GuiControl = GAME_DirectoryT
+			{
+				Menu, DelPerl, Show, %MENU_X% %MENU_Y%
+				return
+			}
+	if A_GuiControl = GAME_ProfilesT
+			{
+				Menu, DelPerp, Show, %MENU_X% %MENU_Y%
+				return
+			}
+	if A_GuiControl = BGM_ProgB
+			{
+				Menu, UCLButton, Show, %MENU_X% %MENU_Y%
+				return
+			}
+	if A_GuiControl = NetChk
+			{
+				Menu, LookupDBCHK, Show, %MENU_X% %MENU_Y%
+				return
+			}			
+	if A_GuiControl = Keyboard_MapperT
+			{
+				Menu, PROPKBL, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = Player1_MapperT
+			{
+				Menu, PROPPl1, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = Player2_MapperT
+			{
+				Menu, PROPPl2, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = MediaCenter_MapperT
+			{
+				Menu, PROPMC, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = MM_Game_ConfigT
+			{
+				Menu, PROPGM, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = MM_MediaCenter_ConfigT
+			{
+				Menu, PROPDM, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = JustAfterLaunchT
+			{
+				Menu, PropJAL, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = JustBeforeExitT
+			{
+				Menu, PropJBE, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = PREDDT
+			{
+				Menu, PropPRE, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = POSTDDT
+			{
+				Menu, PropPST, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if (A_GuiControl != "MyListView")
+		return
 
 																				 
 Menu, MyContextMenu, Show, %A_GuiX%, %A_GuiY%
@@ -6678,7 +6840,6 @@ Loop
 return
 
 ContextProperties: 
-
 Loop
 	{																				   
 		FocusedRowNumber := LV_GetNext(0, "F") 
@@ -6737,6 +6898,232 @@ if ErrorLevel
 	}
 return
 
+DelProf:
+gui,submit,nohide
+Msgbox,8449,Confirm Delete,Are you sure you want to delete profiles?
+ifmsgbox,ok
+	{
+		SB_SetText("Deleting Profiles")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				FileDelete,%A_LoopFIleFUllPath%
+			}
+		SB_SetText("Profiles Deleted")
+	}
+return
+
+DelLaunch:
+gui,submit,nohide
+Msgbox,8449,Confirm Delete,Are you sure you want to delete launchers?
+ifmsgbox,ok
+	{
+				SB_SetText("Deleting Launchers")
+		Loop,files,%Game_Directory%\*.lnk,R
+			{
+				FileDelete,%A_LoopFIleFUllPath%
+			}
+				SB_SetText("Launchers Deleted")
+	}
+return
+
+PropKBCmd:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenKBM = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%keyboard_Mapper%,%A_LoopFileFullPath%,1
+			}
+				SB_SetText("Propagation Complete")
+	}
+return	
+PropPl1jp:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenPL1 = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%Player1_Template%,%A_LoopFileFullPath%\%A_loopFileName%.%mapper_extension%,1
+			}
+				SB_SetText("Propagation Complete")
+	}
+return	
+PropPl2jp:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenPL2 = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%Player2_Template%,%A_LoopFileFullPath%\%A_loopFileName%_2.%mapper_extension%,1
+			}
+				SB_SetText("Propagation Complete")
+	}
+return	
+PropMCjp:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenMC = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+		SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%MediaCenter_Profile_Template%,%A_LoopFileFullPath%,1
+			}
+		SB_SetText("Propagation Complete")
+	}
+return	
+PropGMcfg:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenGM = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%MM_Game_Config%,%A_LoopFileFullPath%,1
+			}
+		SB_SetText("Propagation Complete")
+	}
+return	
+PropDMcfg:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenMM = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%MM_Mediacenter_Config%,%A_LoopFileFullPath%,1
+			}
+		SB_SetText("Propagation Complete")
+	}
+	}
+return	
+PropJBEc:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles
+ifmsgbox, ok
+	{		
+		if ((localize = 1)or(CenJBE = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+		iniread,prln,%RJDB_CONFIG%,CONFIG,JustBeforeExit
+		stringsplit,prlx,prln,>
+		splitpath,prlx2,,,prxtn
+		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
+			{
+				SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%prlx2%,%A_LoopFileFullPath%,1
+			}
+				SB_SetText("Propagation Complete")
+			}
+	}
+return	
+PropJALc:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenJAL = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+		iniread,prln,%RJDB_CONFIG%,CONFIG,JustAfterLaunch	
+		stringsplit,prlx,prln,>
+		splitpath,prlx2,,,prxtn
+		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
+			{
+										SB_SetText("...Propagating...")
+		Loop,files,%Game_Profiles%\*,D
+			{
+				Filecopy,%prlx2%,%A_LoopFileFullPath%,1
+			}
+				SB_SetText("Propagation Complete")
+			}
+	}
+return	
+PropPREc:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{		
+		if ((localize = 1)or(CenPRE = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}		
+		iniread,prln,%RJDB_CONFIG%,CONFIG,%PRETNUM%_Pre			
+		stringsplit,prlx,prln,>
+		splitpath,prlx2,,,prxtn
+		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
+			{
+						SB_SetText("...Propagating...")
+				Loop,files,%Game_profiles%\*,D
+					{
+						FileCopy,%prlx2%,%A_LoopFIleFUllPath%,1
+					}
+						SB_SetText("Propagation Complete")
+			}
+	}
+return	
+PropPSTc:
+Msgbox,8449,Confirm Propagate,Are you sure you want to propagate this to all profiles?
+ifmsgbox, ok
+	{
+		if ((localize = 1)or(CenPST = 1))
+			{
+				SB_SetText("Propagation not supported for centralized items or localized profile folders")
+				return
+			}
+		iniread,prln,%RJDB_CONFIG%,CONFIG,%POSTDNUM%_Post
+		stringsplit,prlx,prln,>
+		splitpath,prlx2,,,prxtn
+		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
+			{
+						SB_SetText("...Propagating...")
+				Loop,files,%Game_profiles%\*,D
+					{
+						FileCopy,%prln%,%A_LoopFIleFUllPath%,%OVERWRT%
+					}
+						SB_SetText("Propagation Complete")
+			}
+
+	}
+return	
 
 
 
@@ -6816,8 +7203,8 @@ Loop,parse,clth,`n
 			}
 	}
 LV_ModifyCol()
-filedelete,%home%\continue.db
-fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
+filedelete,%SRCFILE%
+fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 Return
 
 READPCGW:
@@ -6827,7 +7214,7 @@ DATV=
 pcgwin= 
 GameData=
 SaveData=
-if (instr(pcgw,nopcgw)or instr(pcgw,pcgwbr) or instr(pcgw,patsup))
+if (instr(pcgw,nopcgw)or instr(pcgw,pcgwbt)or instr(pcgw,pcgwbr) or instr(pcgw,patsup))
 	{
 		filedelete,%hsave%
 		
@@ -6989,7 +7376,7 @@ Loop
 	remvln:= % %RowNumber%SDL
 	stringreplace,SOURCEDLIST,SOURCEDLIST,%remvln%,,
 }
-filedelete,%home%\continue.db
+filedelete,%SRCFILE%
 vavn=
 nsrcdl=
 Loop,parse,sourcedlist,`n`r
@@ -7015,7 +7402,7 @@ Loop, %subtrfrm%
 	}
 srcntot:= vavn
 SOURCEDLIST= %nsrcdl%
-fileappend,%SOURCEDLIST%,%home%\continue.db,UTF-8
+fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 return
 
 LVGetCheckedItems(cN,wN) {
@@ -7253,9 +7640,7 @@ Class LV_InCellEdit {
       If (Class <> "SysListView32") 
          Return False
       If (EditUserFunc <> "") && (Func(EditUserFunc).MaxParams < 6)
-         Return False
-																														
-																		 
+         Return False											 
       SendMessage, 0x1036, 0x010000, 0x010000, , % "ahk_id " . HWND
       This.HWND := HWND
       This.HEDIT := 0
@@ -7391,10 +7776,7 @@ Class LV_InCellEdit {
          }
          Return False
       }
-   }
-																														
-							  
-																														
+   }																							
    On_WM_NOTIFY(W, L) {
       Critical, % This.Critical
       If (H := NumGet(L + 0, 0, "UPtr") = This.HWND) {
@@ -7562,8 +7944,6 @@ Class LV_InCellEdit {
       Return False
    }																											
    NextSubItem(K) {
-																											 
-							 
       H := This.HWND
       Item := This.Item
       SubItem := This.SubItem
@@ -7685,59 +8065,3 @@ StrPutVar(Str, ByRef Var, Enc = "")
 	VarSetCapacity(Var, Len, 0)
 	Return, StrPut(Str, &Var, Enc)
 }
-																				 
-											 
-																
-																			  
-																			  
-	
-															 
-
-																												  
-																				 
-	 
-											
-											 
-								   
-	 
-											 
-										   
-																										 
-														
-													   
-	 
-															  
-																		 
-											
-				  
-  
-				
-							 
-																				 
-				 
-								 
-  
-
-
-			   
-									 
-							
-								
-   
-								 
-							 
-   
-	   
-
-				
-	
-							 
-	  
-		  
-							   
-	   
-
-			   
-		
-	   
- 

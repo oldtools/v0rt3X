@@ -1077,111 +1077,116 @@ if (jbeprog <> "")
 return
 
 JBECall:
-jbeprogs= %jbeprog%\%gmname%\SAVDATA
-jbeprogd= %jbeprog%\%gmname%\CFGDATA
-filecreatedir,%jbeprogd%
-filecreatedir,%jbeprogs%
-if (SaveData <> "")
+if instr(JustBeforeExit,"Cloud_Backup")
 	{
-		Loop,parse,SaveData,|
+		jbeprogs= %jbeprog%\%gmname%\SAVDATA
+		jbeprogd= %jbeprog%\%gmname%\CFGDATA
+		stringreplace,jbeprogs,jbeprogs,\\,\,All
+		stringreplace,jbeprogd,jbeprogd,\\,\,All
+		filecreatedir,%jbeprogd%
+		filecreatedir,%jbeprogs%
+		if (SaveData <> "")
 			{
-				if (A_LoopField = "")
+				Loop,parse,SaveData,|
 					{
-						continue
-					}
-				Loop,files,%A_LoopField%,R
-					{
-						if fileexist(A_LoopFileFullPath)
+						if (A_LoopField = "")
 							{
-								sdatb.= A_LoopFileFullPath . "|"
-								Filecopy,%A_LoopFileFullPath%,%jbeprogd%,1
+								continue
+							}
+						Loop,files,%A_LoopField%,R
+							{
+								if fileexist(A_LoopFileFullPath)
+									{
+										sdatb.= A_LoopFileFullPath . "|"
+										Filecopy,%A_LoopFileFullPath%,%jbeprogd%,1
+									}
 							}
 					}
 			}
-	}
-if (GameData <> "")
-	{
-		Loop,parse,GameData,|
+		if (GameData <> "")
 			{
-				if (A_LoopField = "")
+				Loop,parse,GameData,|
 					{
-						continue
-					}
-				stringright,baV,A_LoopField,1
-				splitpath,A_LoopField,ALPFN,ALPTH
-				if ((fileexist(A_LoopField . "\"))   or ((baV = "\") && fileexist(A_LoopField))  or      (instr(ALPFN,"*")&& fileexist(ALPTH)))
-					{
-						dcir= %A_LoopField%
-						if instr(ALPFN,"*")
+						if (A_LoopField = "")
 							{
-								dcir= %ALPTH%							
+								continue
 							}
-						else {
-							ALPFN= *
-						}	
-						gdatb.= A_LoopFileFullPath . "|"
-						if (presa = "W")
+						stringright,baV,A_LoopField,1
+						splitpath,A_LoopField,ALPFN,ALPTH
+						if ((fileexist(A_LoopField . "\"))   or ((baV = "\") && fileexist(A_LoopField))  or (instr(ALPFN,"*")&& fileexist(ALPTH)))
 							{
-								Loop,files,%dcir%\%ALPFN%,R
+								dcir= %A_LoopField%
+								if instr(ALPFN,"*")
 									{
-										splitpath,A_LoopFileFullPath,jbeprogd,jbeprgp
-										rootiteratex= %rootiterate%|%Install_Directory%
-										Loop,parse,rootiteratex,|
+										dcir= %ALPTH%							
+									}
+								else {
+									ALPFN= *
+								}	
+								gdatb.= A_LoopFileFullPath . "|"
+								if (presa = "W")
+									{
+										Loop,files,%dcir%\%ALPFN%,R
 											{
-												if instr(A_LoopFileLongPath,A_LoopField)
+												splitpath,A_LoopFileFullPath,jbeprogd,jbeprgp
+												rootiteratex= %rootiterate%|%Install_Directory%
+												Loop,parse,rootiteratex,|
 													{
-														stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
-														if (errorlevel <> 0)
+														if instr(A_LoopFileLongPath,A_LoopField)
 															{
-																stringreplace,bab,bab,%A_LoopField%,,
-															}
-														if (errorlevel = 0)
-															{
-																jbeprogdx= %jbeprogd%\%bab%
-																goto copybk
+																stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
+																if (errorlevel <> 0)
+																	{
+																		stringreplace,bab,bab,%A_LoopField%,,
+																	}
+																if (errorlevel = 0)
+																	{
+																		jbeprogdx= %jbeprogd%\%bab%
+																		goto copybk
+																	}
 															}
 													}
+												splitpath,jbeprgp,jbeprx
+												jbeprogdx= %jbeprogd%\%jbeprx%												
+												copybk:	
+												FilecreateDir,%Jbeprogdx%
+												Filecopy,%A_LoopFileFullPath%,%jbeprogdx%,1
 											}
-										splitpath,jbeprgp,jbeprx
-										jbeprogdx= %jbeprogd%\%jbeprx%												
-										copybk:	
-										FilecreateDir,%Jbeprogdx%
-										Filecopy,%A_LoopFileFullPath%,%jbeprogdx%,1
 									}
+								else {
+									Run, %comspec% /c robocopy "%dcir%" "%jbeprogd%" /E,,hide
+								}	
 							}
 						else {
-							Run, %comspec% /c robocopy "%dcir%" "%jbeprogd%" /E,,hide
-						}	
+							splitpath,ALPTH,ALPTHN
+							jbeprogdx= %jbeprogd%\%ALPFN%
+							rootiteratex= %rootiterate%|%Install_Directory%
+							Loop,parse,rootiteratex,|
+								{
+									if instr(A_LoopFileLongPath,A_LoopField)
+											{
+												stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
+												if (errorlevel <> 0)
+													{
+														stringreplace,bab,bab,%A_LoopField%,,
+													}
+												if (errorlevel = 0)
+													{
+														jbeprogdx= %jbeprogd%\%bab%
+														goto copybkf
+													}
+											}
+								}
+							copybkf:	
+							if (presa = "W")
+								{
+									FileCopy,%A_LoopField%,%jbeprogdx%,1
+								}
+							else {
+								Run, %comspec% /c copy /y "%A_LoopField%" "%jbeprogdx%",,hide
+							}	
+						}
 					}
-				else {
-					splitpath,ALPTH,ALPTHN
-					jbeprogdx= %jbeprogd%\%ALPFN%
-					rootiteratex= %rootiterate%|%Install_Directory%
-					Loop,parse,rootiteratex,|
-						{
-							if instr(A_LoopFileLongPath,A_LoopField)
-									{
-										stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
-										if (errorlevel <> 0)
-											{
-												stringreplace,bab,bab,%A_LoopField%,,
-											}
-										if (errorlevel = 0)
-											{
-												jbeprogdx= %jbeprogd%\%bab%
-												goto copybkf
-											}
-									}
-						}
-					copybkf:	
-					if (presa = "W")
-						{
-							FileCopy,%A_LoopField%,%jbeprogdx%,1
-						}
-					else {
-						Run, %comspec% /c copy /y "%A_LoopField%" "%jbeprogdx%",,hide
-					}	
-				}
 			}
 	}
 return	
