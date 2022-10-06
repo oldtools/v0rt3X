@@ -118,7 +118,7 @@ remProgdirs= Program Files|Program Files (x86)|ProgramData|C:\users\%A_username%
 steamhome= Steam\SteamApps\common
 dralbet= c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
 GogQuery= GOG|G.O.G|GOG Games
-GenQuery= Games|Gaymes|My Games|juegos|spellen|Spiele|Jeux|Giochi|PC_Games|PC Games|PCGAMES|Windows Games|WinGames|Windows_Games|Win_Games|Games_for_Windows|Games for Windows|GamesForWindows
+GenQuery= Games|Gaymes|My Games|juegos|spellen|Spiele|Jeux|Giochi|PC_Games|PC Games|PCGAMES|Windows Games|WinGames|Windows_Games|Win_Games|Games_for_Windows|Games for Windows|GamesForWindows|CHRONOS Releases
 AllQuery:= GogQuery . | . "Origin" . "|" . "Epic Games" . "|" . steamhome
 undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|
 undirs= %undira%
@@ -455,14 +455,43 @@ Menu,LookupDBCHK,Add,,
 Menu,LookupDBCHK,Add,Reset the Lookup Table,RELOOKUP
 
 Menu,DelPerg,Add,,
-Menu,DelPerl,Add,Delete Profile Folders,Dellaunch
-Menu,DelPerp,Add,Delete Launcher Folder,Delprof
 Menu,DelPerg,Add,,
 
+Menu,PropKBL,Add,Edit,PropKBCmdE
+Menu,PropPL1,Add,Edit,PropPl1jpE
+Menu,PropPL2,Add,Edit,PropPl2jpE
+Menu,PropMC,Add,Edit,PropMCjpE
+Menu,PropMM,Add,Edit,PropGMcfgE
+Menu,PropGM,Add,Edit,PropGMcfgE
+Menu,PropDM,Add,Edit,PropDMcfgE
+Menu,PropJAL,Add,Edit,PropJALcE
+Menu,PropJBE,Add,Edit,PropJBEcE
+Menu,PropPRE,Add,Edit,PropPREcE
+Menu,PropPST,Add,Edit,PropPSTcE
+Menu,PropLNC,Add,,
+Menu,PropPRO,Add,,
+Menu,PropKBL,Add,,
+Menu,PropPL1,Add,,
+Menu,PropPL2,Add,,
+Menu,PropMC,Add,,
+Menu,PropMM,Add,,
+Menu,PropGM,Add,,
+Menu,PropDM,Add,,
+Menu,PropBGE,Add,,
+Menu,PropJAL,Add,,
+Menu,PropJBE,Add,,
+Menu,PropPRE,Add,,
+Menu,PropPST,Add,,
+Menu,PropLNC,Add,Edit,PropLNCE
+Menu,PropPRO,Add,Edit,PropPROE
+Menu,PropBGE,Add,Edit,PropBGEE
+Menu,PropLNC,Add,Delete Profile Folders,Dellaunch
+Menu,PropPRO,Add,Delete Launcher Folder,Delprof
 Menu,PropKBL,Add,Propagate,PropKBCmd
 Menu,PropPL1,Add,Propagate,PropPl1jp
 Menu,PropPL2,Add,Propagate,PropPl2jp
 Menu,PropMC,Add,Propagate,PropMCjp
+Menu,PropMM,Add,Propagate,PropGMcfg
 Menu,PropGM,Add,Propagate,PropGMcfg
 Menu,PropDM,Add,Propagate,PropDMcfg
 Menu,PropJAL,Add,Propagate,PropJALc
@@ -483,8 +512,8 @@ Menu,BCLButton,Add,RESET,BCfgInstMprs
 Menu,BCLButton,Add,Disable ,DisableButs
 
 Menu,DCLButton,Add,Delete ,DeleteButs
-Menu,UPDButton,Add,Update,UpdateRJLR
 
+Menu,UPDButton,Add,Update,UpdateRJLR
 Gui, Add, Button, x310 y8 vButtonClear gButtonClear hidden disabled, Clear List
 Gui, Add, Text, x377 y8 h12, Check
 Gui, Add, Button, x420 y8 vSELALLBUT gSELALLBUT hidden, All
@@ -556,18 +585,6 @@ Gui, Add, Checkbox, x100 y14 h14 vINCLALTS gINCLALTS hidden,Alts
 Gui, Font, Bold
 Gui, Add, Button, x24 y50 w36 h21 vSOURCE_DirB gSOURCE_DirB,SRC
 
-Gui, Font, Bold
-Gui, Add, Button, x20 y64 w36 h21 vRJDB_Config gRJDB_Config hidden disabled,CFG
-Gui, Add, Text,  x64 y64 w222 h14 vRJDB_ConfigT hidden disabled Right,"<%RJDB_Config%"
-Gui, Font, Normal
-Gui, Add, Text,  x64 y78 w222 h14 hidden disabled,<CONFIG FILE>
-
-Gui, Font, Bold
-Gui, Add, Button, x20 y96 w36 h21 vRJDB_Location gRJDB_Location hidden disabled,DIR
-Gui, Add, Text,  x64 y96 w222 h14 vRJDB_LocationT  hidden disabled Right,"<%RJDB_Location%"
-Gui, Font, Normal
-Gui, Add, Text,  x64 y110 w222 h14  hidden disabled,<Application Directory>
-
 Gui, Font, Normal
 Gui, Add, DropDownList, x64 y50 w200 vSOURCE_DirectoryT gSOURCE_DirectoryDD,%sourcepop%
 Gui, Add, Button, x269 y52 w15 h15 vREMSRC gREMSRC,X
@@ -582,7 +599,9 @@ Gui, Add, Text, x25 y77 h14,<Exclude>
 
 Gui, Font, Bold
 Gui, Add, Button, x24 y108 w36 h21 vGame_DirB gGame_DirB,OUT
-Gui, Add, Text, x64 y100 w222 h14 vGAME_DirectoryT Disabled Right,%GAME_Directory%
+Gui, Font, cSilver
+Gui, Add, Text, x64 y100 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 
@@ -599,46 +618,58 @@ GUi, Add, Checkbox, x112 y157 vGMLNK gGMLNK %lnkget% %lnkenbl%,Lnk
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y180 w36 h21 vGame_ProfB gGame_ProfB,GPD
-Gui, Add, Text, x64 y175 w222 h14 vGAME_ProfilesT Disabled Right,%GAME_Profiles%
+Gui, Font, cSilver
+Gui, Add, Text, x64 y175 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
+Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Font, Bold
 Gui, Add, Text,  x64 y189 w122 h14 vGame_ProfilesR,<Game Profiles Directory>
-Gui, Add, Checkbox, x208 y190 w80 h14 vLocalize gLocalize right,LOCALIZE:
+Gui, Font, Bold
+Gui, Add, Checkbox, x208 y190 w85 h14 vLocalize gLocalize right,LOCALIZE:
 Gui, Font, Normal
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y224 w36 h21 vKeyboard_MapB gKeyboard_MapB,KBM
 Gui, Add, Checkbox, x1 y227 w14 h14 vCenKBM gCenKBM %cnkbm%,
 Gui Add, Button, x52 y224 w10 h21 vKBM_RC gKBM_RC, v
-Gui, Add, Text,  x64 y224 w222 h14 vKeyboard_MapperT Disabled Right,%Keyboard_Mapper%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y238 w222 h14,<Keyboard Mapper Program>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y256 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
 Gui, Add, Checkbox, x1 y259 w14 h14 vCenPL1 gCenPL1 %cnpl1%,
-Gui, Add, Text,  x64 y256 w222 h14 vPlayer1_TemplateT Disabled Right,%Player1_Template%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y256 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y270 w222 h14,.....Template Profile for Player 1>
 Gui, Font, Bold
 
 Gui, Add, Button, x21 y288 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
 Gui, Add, Checkbox, x1 y291 w14 h14 vCenPL2 gCenPL2 %cnpl2%,
-Gui, Add, Text,  x64 y288 w222 h14 vPlayer2_TemplateT Disabled Right,%Player2_Template%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y288 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y302 w222 h14,.....Template Profile for Player 2>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y320 w36 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
 Gui, Add, Checkbox, x1 y323 w14 h14 vCenMC gCenMC %cnMC%,
-Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_ProfileT Disabled Right,%MediaCenter_Profile_Template%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_ProfileT Right,%MediaCenter_Profile_Template%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y334 w222 h14,.....Template Profile for MediaCenter/Desktop>
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y352 w36 h21 vBGM_ProgB gBGM_ProgB,GBT
 Gui Add, Button, x53 y352 w10 h21 vBGM_RC gBGM_RC, v
-Gui, Add, Text,  x64 y354 w222 h14 vBorderless_Gaming_ProgramT Disabled Right,%Borderless_Gaming_Program%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y354 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y368 w110 h14,<Borderless_Program>
 
@@ -657,21 +688,27 @@ Gui, Add, Checkbox, x166 y399 h15 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
 Gui, Font, Bold
 Gui, Add, Button, x17 y416 w36 h21 vMM_ToolB gMM_ToolB,MMT
 Gui Add, Button, x53 y416 w10 h21 vMMT_RC gMMT_RC, v
-Gui, Add, Text,  x64 y418 w222 h14 vMultiMonitor_ToolT Disabled Right,%MultiMonitor_Tool%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y418 w222 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y432 w222 h14,<Multimonitor Program>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y448 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
 Gui, Add, Checkbox, x1 y451 w14 h14 vCenGM gCenGM %cnGM%,
-Gui, Add, Text,  x64 y448 w222 h14 vMM_Game_ConfigT Disabled Right,%MM_Game_Config%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y448 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y462 w222 h14,.....Gaming Configuration File>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y480 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
 Gui, Add, Checkbox, x1 y480 w14 h14 vCenMM gCenMM %cnMM%,
-Gui, Add, Text,  x64 y480 w225 h14 vMM_MediaCenter_ConfigT Disabled Right,%MM_MediaCenter_Config%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y480 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text,  x64 y494 w234 h14,.....MediaCenter/Desktop Configuration File>
   
@@ -679,7 +716,9 @@ Gui, Font, Bold
 Gui, Add, Checkbox, x1 y515 w14 h14 vCenJAL gCenJAL %cnJAL%,
 Gui, Add, Button, x17 y512 w36 h21 vJAL_ProgB gJAL_ProgB,JAL
 Gui Add, Button, x53 y512 w10 h21 vJAL_RC gJAL_RC, v
-Gui, Add, Text,  x64 y515 w198 h14 vJustAfterLaunchT Disabled Right,%JustAfterLaunchT%
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y515 w198 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Checkbox, x270 y514 w12 h14 vJALWait gJALWait %jalstatus%
 ;Gui, Add, Text,  x64 y526 w198 h14,<Run After Launch>
@@ -689,7 +728,9 @@ Gui, Font, Bold
 Gui, Add, Checkbox, x1 y547 w14 h14 vCenJBE gCenJBE %cnJBE%,
 Gui, Add, Button, x17 y544 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
 Gui Add, Button, x53 y544 w10 h21 vJBE_RC gJBE_RC, v
-Gui, Add, Text, x64 y544 w198 h14 vJustBeforeExitT Disabled Right,%JustBeforeExitT%
+Gui, Font, cSilver
+Gui, Add, Text, x64 y544 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
+Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Checkbox, x270 y546 w12 h14 vJBEWait gJBEWait %jbestatus%
 ;Gui, Add, Text, x64 y548 w198 h14,<Run Before Exit>	   
@@ -706,11 +747,6 @@ Gui, Add, Checkbox, x270 y578 w12 h14 vPreWait gPreWait %prestatus%,
 								  
 Gui, Add, Button, x283 y579 w14 h14 vDELPREAPP gDELPREAPP ,X
 
-Gui, Font, Bold
-Gui, Add, Checkbox, x1 y617 w14 h14 vCenPST gCenPST %cnPST%,
-Gui, Add, Button, x17 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
-Gui Add, Button, x53 y614 w10 h21 vPOST_RC gPOST_RC, v
-Gui, Font, Normal
 Gui, Add, Text, x65 y616 h12 vPOSTDNUM,1
 Gui, Add, DropDownList, x75 y616 w193 vPostDD gPostDD Right,%postlist%
 Gui, Add, Text, x64 y638 h14 w230 vPOSTDDT,<game.exe><$This_Prog$><Mapper><Monitor>
@@ -819,10 +855,6 @@ PostDD_TT :="the currently selected post-program`n*  ( ><ThisProg>< )"
 POSTDDT_TT :=""
 PostWait_TT :="Waits for the currently selected post-program to exit"
 DELPOSTAPP_TT :="removes the currently selected post-program"
-RJDB_Config_TT :=""
-RJDB_ConfigT_TT :=""
-RJDB_Location_TT :=""
-RJDB_LocationT_TT :=""
 OPNLOG_TT :="opens the log file for this program"
 EnableLogging_TT :="enables logging"
 RJStatus_TT :="feedback display for the program"
@@ -833,40 +865,6 @@ Return
 GuiEscape:
 GuiClose:
 ExitApp
-
-						
-
-RJDB_Config:
-gui,submit,nohide
-FileSelectFile,RJDB_ConfigT,3,%flflt%,Select File
-if ((RJDB_ConfigT <> "")&& !instr(RJDB_ConfigT,"<"))
-	{
-		RJDB_Config= %RJDB_ConfigT%
-		iniwrite,%RJDB_Config%,%RJDB_Config%,GENERAL,RJDB_Config
-		stringreplace,RJDB_ConfigT,RJDB_ConfigT,%A_Space%,`%,All
-		guicontrol,,RJDB_ConfigT,%RJDB_ConfigT%
-	}
-	else {
-		stringreplace,RJDB_ConfigT,RJDB_ConfigT,%A_Space%,`%,All
-		guicontrol,,RJDB_ConfigT,<RJDB_Config
-	}
-return
-
-RJDB_Location:
-gui,submit,nohide
-FileSelectFolder,RJDB_LocationT,%fldflt%,3,Select Folder
-if (fileexist(RJDB_LocationT)&&(RJDB_LocationT <> "")&& !instr(RJDB_LocationT,"<"))
-	{
-		RJDB_Location= %RJDB_LocationT%
-		iniwrite,%RJDB_Location%,%RJDB_Config%,GENERAL,RJDB_Location
-		stringreplace,RJDB_LocationT,RJDB_LocationT,%A_Space%,`%,All
-		guicontrol,,RJDB_LocationT,%RJDB_LocationT%
-	}
-	else {
-		stringreplace,RJDB_LocationT,RJDB_LocationT,%A_Space%,`%,All
-		guicontrol,,RJDB_LocationT,<RJDB_Location
-	}
-return
 
 
 
@@ -897,7 +895,7 @@ if (fileexist(GAME_ProfilesT)&&(GAME_ProfilesT <> "")&& !instr(GAME_ProfilesT,"<
 	}
 	else {
 		stringreplace,GAME_ProfilesT,GAME_ProfilesT,%A_Space%,`%,All
-		guicontrol,,GAME_ProfilesT,<GAME_Profiles
+		guicontrol,,GAME_ProfilesT,<GAME_Profiles>
 	}
 return
 
@@ -6713,12 +6711,12 @@ If A_GuiControlEvent RightClick
 		}
 	if A_GuiControl = GAME_DirectoryT
 			{
-				Menu, DelPerl, Show, %MENU_X% %MENU_Y%
+				Menu, PropLNC, Show, %MENU_X% %MENU_Y%
 				return
 			}
 	if A_GuiControl = GAME_ProfilesT
 			{
-				Menu, DelPerp, Show, %MENU_X% %MENU_Y%
+				Menu, PropPRO, Show, %MENU_X% %MENU_Y%
 				return
 			}
 	if A_GuiControl = BGM_ProgB
@@ -6736,17 +6734,17 @@ If A_GuiControlEvent RightClick
 				Menu, PROPKBL, Show, %MENU_X% %MENU_Y%
 				return
 			}							  
-	if A_GuiControl = Player1_MapperT
+	if A_GuiControl = Player1_TemplateT
 			{
 				Menu, PROPPl1, Show, %MENU_X% %MENU_Y%
 				return
 			}							  
-	if A_GuiControl = Player2_MapperT
+	if A_GuiControl = Player2_TemplateT
 			{
 				Menu, PROPPl2, Show, %MENU_X% %MENU_Y%
 				return
 			}							  
-	if A_GuiControl = MediaCenter_MapperT
+	if A_GuiControl = vMediaCenter_ProfileT
 			{
 				Menu, PROPMC, Show, %MENU_X% %MENU_Y%
 				return
@@ -6779,6 +6777,16 @@ If A_GuiControlEvent RightClick
 	if A_GuiControl = POSTDDT
 			{
 				Menu, PropPST, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = Borderless_Gaming_ProgramT
+			{
+				Menu, PropBGE, Show, %MENU_X% %MENU_Y%
+				return
+			}							  
+	if A_GuiControl = MultiMonitor_ToolT
+			{
+				Menu, PropMMTE, Show, %MENU_X% %MENU_Y%
 				return
 			}							  
 	if (A_GuiControl != "MyListView")
@@ -6911,6 +6919,121 @@ ifmsgbox,ok
 		SB_SetText("Profiles Deleted")
 	}
 return
+
+PropMMTE:
+InterpXpnd= MultiMonitor_Tool
+goto, EDITPV
+PropKBCmdE:
+InterpXpnd= Keyboard_Mapper
+goto, EDITPV
+
+PropPl1jpE:
+InterpXpnd= Player1_Template
+goto, EDITPV
+
+PropPl2jpE:
+InterpXpnd= Player2_Template
+goto, EDITPV
+
+PropMCjpE:
+InterpXpnd= MediaCenter_Profile
+goto, EDITPV
+
+PropGMcfgE:
+InterpXpnd= MM_Game_Config
+goto, EDITPV
+
+PropDMcfgE:
+InterpXpnd= MM_Mediacenter_Config
+goto, EDITPV
+
+PropJALcE:
+InterpXpnd= JustAfterLaunch
+goto, EDITPV
+
+PropJBEcE:
+InterpXpnd= JustAfterExit
+goto, EDITPV
+
+PropPREcE:
+InterpXpnd= PREDD
+goto, EDITPV
+
+PropPSTcE:
+InterpXpnd= POSTDD
+goto, EDITPV
+
+PropLNCE:
+InterpXpnd= Game_Directory
+goto, EDITPV
+
+PropPROE:
+InterpXpnd= Game_Profiles
+goto, EDITPV
+
+PropBGEE:
+InterpXpnd= Borderles_Gaming_Program
+goto, EDITPV
+
+EDITPV:
+prtxb= 
+epvsec= GENERAL
+iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+if (inrptst = "ERROR")
+	{
+		epvsec= JOYSTICKS
+		iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+	}
+if (inrptst = "ERROR")
+	{
+		epvsec= CONFIG
+		iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+	}
+ExtrpExpnd= %inrptst%
+if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
+	{
+		epvsec= CONFIG
+		iniread,JUSTtmpx,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		stringsplit,ah,JUSTtmpx,<
+		ExtrpExpnd= %ah2%
+		prtxb= %ah1%
+	}
+if ((InterpXpnd = "POSTDD")or(InterpXpnd = "PREDD"))
+	{
+		epvsec= CONFIG
+		guicontrolget,pnum,,POSTDNUM
+		InterpCCn= Post
+		if instr(InterXpnds,"Pre")
+			{
+				InterpCCn= Pre
+				guicontrolget,pnum,,PREDNUM
+				InterpXpnd= %pnum%_%InterpCCn%
+			}
+		iniread,PPRS,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		stringsplit,ah,PPRS,<
+		ExtrpExpnd= %ah2%
+		prtxb= %ah1%
+	}
+if (ExtrpExpnd = "ERROR")
+	{
+		ExtrpExpnd= 
+	}
+Gui +LastFound +OwnDialogs +AlwaysOnTop
+tooltip, !!!!!Incorrect Values may lead to program malfunction!!!!! 
+InputBox, TRNSFERVAR, Invalid Paths will cause errors.,Enter the path for %InterpXpnd%,,520,300,,,Locale,,%ExtrpExpnd%
+if (TRNSFERVAR <> "")
+	{
+		stringright,ablb,InterpXpnd,1
+		if ((ablb = "\") or (ablb = "/"))
+			{
+				stringtrimright,InterpXpnd,InterpXpnd,1
+			}
+		Guicontrol,,%InterpXpnd%T,%TRNSFERVAR%
+		iniwrite,%prtxb%%TRNSFERVAR%,%RJDB_Config%,%epvsec%,%InterpXpnd%
+		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+	}
+return
+
 
 DelLaunch:
 gui,submit,nohide
