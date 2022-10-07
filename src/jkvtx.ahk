@@ -378,17 +378,30 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 		splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
 		process,exist,%Borderless_Gaming_Program%
 		bgpid= %errorlevel%
+		if ((errorlevel = 0)or instr(Borderless_Gaming_Program,"portable"))
+			{
+				process, exist, BorderlessGaming.exe
+				bgpid= %errorlevel%
+			}			
 		if ((BGP_State = 1)or(BGP_State = 6)or(BGP_State = 9)or(BGP_State = 14))
 			{
 				if (bgpid = 0)
 					{
 						Run, "%Borderless_Gaming_Program%",%bgpdir%,,bgpid
 						sleep, 1200
+						if instr(Borderless_Gaming_Program,"portable")
+							{
+								SB_SetText("Enabling Borderless-Gaming")
+								process, wait, "BorderlessGaming.exe", 5
+								bgpidx= %errorlevel%
+							}
 					}
 			}
 			else {
 				process,close,%bgpexe%
 				process,close,%bgpid%
+				process,close,%bgpidx%
+				process,close,BorderlessGaming.exe
 			}
 	}
 	else {
@@ -397,6 +410,13 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 				splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
 				process,exist,%Borderless_Gaming_Program%
 				bgpid= %errorlevel%
+				if instr(Borderless_Gaming_Program,"portable")
+					{
+						process, exist, "BorderlessGaming.exe"
+						bgpidX= %errorlevel%
+						process,close,%bgpidx%
+						process,close,BorderlessGaming.exe
+					}
 				process,close,%bgpexe%
 				process,close,%bgpid%
 			}
@@ -1381,6 +1401,13 @@ if ((Borderless_Gaming_Program <> "")&&(BGP_State > 4))
 		bgpid= %errorlevel%
 		process,close,%bgpexe%
 		process,close,%bgpid%
+		if instr(Borderless_Gaming_Program,"portable")
+			{
+				process, exist, "BorderlessGaming.exe"
+				bgpidX= %errorlevel%
+				process,close,%bgpidx%
+				process,close,BorderlessGaming.exe
+			}
 	}
 return
 

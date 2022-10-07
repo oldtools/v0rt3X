@@ -6,7 +6,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-10-06 3:28 AM
+RELEASE= 2022-10-07 9:54 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -58,9 +58,10 @@ if (scextn = "lnk")
 		RJDB_Config= %CFGDIR%\RJDB.ini
 	}
 binhome= %home%\bin
+THELOG= %home%\log.txt
 if ((plink = "") or !fileExist(plink) or (scextn = ""))
 	{
-		;filedelete,%home%\log.txt
+		;filedelete,%THELOG%
 	}
 gosub, DDPOPS
 SRCFILE= %home%\continue.db
@@ -746,6 +747,11 @@ Gui, Add, Text, x64 y596 h14 w230 vPREDDT,<$This_Prog$><Monitor><Mapper><game.ex
 Gui, Add, Checkbox, x270 y578 w12 h14 vPreWait gPreWait %prestatus%,
 								  
 Gui, Add, Button, x283 y579 w14 h14 vDELPREAPP gDELPREAPP ,X
+Gui, Font, Bold
+Gui, Add, Checkbox, x1 y617 w14 h14 vCenPST gCenPST %cnPST%,
+Gui, Add, Button, x17 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
+Gui Add, Button, x53 y614 w10 h21 vPOST_RC gPOST_RC, v
+Gui, Font, Normal
 
 Gui, Add, Text, x65 y616 h12 vPOSTDNUM,1
 Gui, Add, DropDownList, x75 y616 w193 vPostDD gPostDD Right,%postlist%
@@ -772,92 +778,93 @@ Gui Show, w314 h700, v0rt3X_GUI
 
   
 SB_SetText("")
-ButtonClear_TT :="clears the current queued it"
-Hide_TaskBar_TT :="Hides the windows taskbar while active"
-SELALLBUT_TT :="Selects all items in the current queue"
-SELNONEBUT_TT :="clears the selection of all items in the current queue"
 ADDGAME_TT :="Add a game with the file browser.`nAn attempt will be made to guess the appropriate name"
-ButtonCreate_TT :="creates profiles for selected items in the current queued"
-MyListView_TT :="The current queue"
-REINDEX_TT :="clears the queue and searches for games"
-POPULATE_TT :="Searches for games or loads the last queue"
-RESET_TT :="resets the application to default settings"
-KILLCHK_TT :="ancilary and executable-subprocess are terminated upon exiting the game"
-NAMECHK_TT :="Matches guessed names at steam database."
-NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases.`nRight Click to reset the Lookup-Table"
-INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
-Localize_TT :="Sets the profile folder to`n the game's installation folder`n*     (not recommended)     *`n"
-SOURCE_DirB_TT :="Add a directory containing the root of game-installation/s."
-SOURCE_DirectoryT_TT :="the current source directory"
-REMSRC_TT :="remove the currently selected source directory"
-CURDP_TT :=""
-Game_DirB_TT :="The location where shortcuts will be created"
-GAME_DirectoryT_TT :="the current shortcut directory"
-CREFLD_TT :="Creates the profile folder"
-GMCONF_TT :="Creates the configuration files"
-GMJOY_TT :="creates the joystick profiles"
 ASADMIN_TT :="sets shortcuts and programs to run as the aministrator."
-GMLNK_TT :="creates the shortcuts"
-OVERWRT_TT :="overwrite and recreate settings`nExisting configuration files *WILL* be overwritten"
-UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values`nExisting configuration files will *NOT* be overwritten"
-Game_ProfB_TT :="Sets the directory where profiles will be created"
-GAME_ProfilesT_TT :="the profiles directory"
-Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
-KBM_RC_TT :="disable or download and assign a supported keymapper`n(antimicro/JoyXoff/xpadder/...)"
-Keyboard_MapperT_TT :="the current keyboard mapper`n(supported mappers are auto-scripted '~_!.cmd')"
-Player1_TempB_TT :="sets the keymapper's configuration-template file for Player 1"
-Player1_TemplateT_TT :="the keymapper's configuration-template  for Player 1"
-Player2_TempB_TT :="sets the keymapper's configuration-template file for Player 2"
-Player2_TemplateT_TT :="the keymapper's configuration-template file for Player 2"
-																				 
-MediaCenter_ProfileT_TT :="the keymapper's configuration-template file for the Mediacenter/Frontend"
-MM_ToolB_TT :="Assigns the multimonitor executable"
-MMT_RC_TT :="disable or download and assign the multimonitor program"
-MultiMonitor_ToolT_TT :="the multimonitor program"
-MM_Game_CfgB_TT :="Select the multimonitor configuration template file used for games"
-MM_Game_ConfigT_TT :="the multimonitor game-configuration template file"
-MM_MediaCenter_CfgB_TT :="Select the multimonitor configuration template file used for the MediaCenter/Frontend"
-MM_MediaCenter_ConfigT_TT :="the MediaCenter/Frontend configuration template file"
-JAL_ProgB_TT :="Assign a program to run after the game is launched`n*    (good for trainers or executable-aware programs.)"
-JAL_RC_TT :="disable or download and assign a program after launch"
-JustAfterLaunchT_TT :="a program after launch"
-JBE_RC_TT :="disable or download and assign an executable  prior to termination "
-JBE_ProgB_TT :="Assign a program to run prior to executable termination"
-JustBeforeExitT_TT :="program to run prior to executable termination"
-PREAPP_TT :="Assign a program to run before the game is launched"
-PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
-PRETNUM_TT :=""
-CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
-CenKBM_TT := "keyboard mapping script"
 BGP_Enable_TT := "Enables the Borderless Gaming Program"
-CenPL1_TT := ""
-CenPL2_TT := ""
-CenMC_TT := ""
-CenGM_TT := ""
-CenMM_TT := ""
-CenJAL_TT := ""
-CenJBE_TT := ""
-CenPRE_TT := ""
-CenPST_TT := ""
-IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
-JALWAIT_TT :="waits for the program to exit"
-JBEWAIT_TT :="waits for the program to exit"
-PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )"
-Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
-PREDDT_TT :=""
 BGP_TE_TT :="Kills the windowing program upon exiting a game."
 BGP_TU_TT :="Kills the windowing program if not enabled for a game when launching."
-PreWait_TT :="Waits for the currently selected pre-program to exit"
-DELPREAPP_TT :="removes the currently selected pre-program"
-POSTAPP_TT :="Assign a program to run after the game has exited"
-POST_RC_TT :="disable or download and Assign a program to run after the game has exited"
-PostDD_TT :="the currently selected post-program`n*  ( ><ThisProg>< )"
-POSTDDT_TT :=""
-PostWait_TT :="Waits for the currently selected post-program to exit"
+Borderless_Gaming_ProgramT_TT :="The program used to manage and control the display of games as borderless windowed programs`n     Right_Click to Edit or propagate the selected item"
+ButtonClear_TT :="clears the current queued it"
+ButtonCreate_TT :="creates profiles for selected items in the current queued"
+CenGM_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenJAL_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenJBE_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenKBM_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenMC_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenMM_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenPL1_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenPL2_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenPRE_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CenPST_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
+CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
+CREFLD_TT :="Creates the profile folder"
 DELPOSTAPP_TT :="removes the currently selected post-program"
-OPNLOG_TT :="opens the log file for this program"
+DELPREAPP_TT :="removes the currently selected pre-program"
 EnableLogging_TT :="enables logging"
+EXCLUDE_DirectoryT_TT :="Excluded Directory`n     Right_Click to Edit or propagate the selected item"
+Game_DirB_TT :="The location where shortcuts will be created"
+GAME_DirectoryT_TT :="the current shortcut directory"
+Game_ProfB_TT :="Sets the directory where profiles will be created"
+GAME_ProfilesT_TT :="the profiles directory`n     Right_Click to Edit or propagate the selected item"
+GMCONF_TT :="Creates the configuration files"
+GMJOY_TT :="creates the joystick profiles"
+GMLNK_TT :="creates the shortcuts"
+Hide_TaskBar_TT :="Hides the windows taskbar while active"
+INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
+IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
+JALWAIT_TT :="waits for the program to exit"
+JAL_ProgB_TT :="Assign a program to run after the game is launched`n*    (good for trainers or executable-aware programs.)"
+JAL_RC_TT :="disable or download and assign a program after launch"
+JBEWAIT_TT :="waits for the program to exit"
+JBE_ProgB_TT :="Assign a program to run prior to executable termination"
+JBE_RC_TT :="disable or download and assign an executable  prior to termination "
+JustAfterLaunchT_TT :="a program after launch`n     Right_Click to Edit or propagate the selected item"
+JustBeforeExitT_TT :="program to run prior to executable termination`n     Right_Click to Edit or propagate the selected item"
+KBM_RC_TT :="disable or download and assign a supported keymapper`n(antimicro/JoyXoff/xpadder/...)"
+Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
+Keyboard_MapperT_TT :="the current keyboard mapper`n(supported mappers are auto-scripted '~_!.cmd')`n     Right_Click to Edit or propagate the selected item"
+KILLCHK_TT :="ancilary and executable-subprocess are terminated upon exiting the game"
+Localize_TT :="Sets the profile folder to`n the game's installation folder`n*     (not recommended)     *`n"
+MediaCenter_ProfileT_TT :="the keymapper's configuration-template file for the Mediacenter/Frontend`n     Right_Click to Edit or propagate the selected item"
+MMT_RC_TT :="disable or download and assign the multimonitor program"
+MM_Game_CfgB_TT :="Select the multimonitor configuration template file used for games"
+MM_MediaCenter_CfgB_TT :="Select the multimonitor configuration template file used for the MediaCenter/Frontend"
+MM_ToolB_TT :="Assigns the multimonitor executable"
+MM_Game_ConfigT_TT :="the multimonitor game-configuration template file`n     Right_Click to Edit or propagate the selected item"
+MM_MediaCenter_ConfigT_TT :="the MediaCenter/Frontend configuration template file`n     Right_Click to Edit or propagate the selected item"
+MultiMonitor_ToolT_TT :="the multimonitor program`n     Right_Click to Edit or propagate the selected item"
+MyListView_TT :="The current queue"
+NAMECHK_TT :="Matches guessed names at steam database."
+NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases.`nRight Click to reset the Lookup-Table"
+Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
+OPNLOG_TT :="opens the log file for this program"
+OVERWRT_TT :="overwrite and recreate settings`nExisting configuration files *WILL* be overwritten"
+Player1_TempB_TT :="sets the keymapper's configuration-template file for Player 1"
+Player2_TempB_TT :="sets the keymapper's configuration-template file for Player 2"
+Player1_TemplateT_TT :="the keymapper's configuration-template  for Player 1`n     Right_Click to Edit or propagate the selected item"
+Player2_TemplateT_TT :="the keymapper's configuration-template file for Player 2`n     Right_Click to Edit or propagate the selected item"
+POPULATE_TT :="Searches for games or loads the last queue"
+POSTAPP_TT :="Assign a program to run after the game has exited"
+PostWait_TT :="Waits for the currently selected post-program to exit"
+POST_RC_TT :="disable or download and Assign a program to run after the game has exited"
+PREAPP_TT :="Assign a program to run before the game is launched"
+POSTDDT_TT :="Order of execution."
+PostDD_TT :="the currently selected post-program`n*  ( ><ThisProg>< )`n     Right_Click to Edit or propagate the selected item"
+PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )  *`n     Right_Click to Edit or propagate the selected item"
+PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )"
+POSTNUM_TT :="The Current Post-Config slot"
+PRETNUM_TT :="The Current Pre-Config slot"
+PreWait_TT :="Waits for the currently selected pre-program to exit"
+PRE_RC_TT :="disable or download and Assign a program to run before the game is launched"
+REINDEX_TT :="clears the queue and searches for games"
+REMSRC_TT :="remove the currently selected source directory"
+RESET_TT :="resets the application to default settings"
 RJStatus_TT :="feedback display for the program"
+SELALLBUT_TT :="Selects all items in the current queue"
+SELNONEBUT_TT :="clears the selection of all items in the current queue"
+SOURCE_DirB_TT :="Add a directory containing the root of game-installation/s."
+SOURCE_DirectoryT_TT :="the current source directory`n     Right_Click to Edit or propagate the selected item"
+UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values`nExisting configuration files will *NOT* be overwritten"
 Return
 
 
@@ -936,19 +943,8 @@ gui,submit,nohide
 Gui, ListView, MyListView
 LV_Modify(0, "+Check")
 stringreplace,SOURCEDLIST,SOURCEDLIST,?,,All
-vavn=
-Loop,parse,SOURCEDLIST,`n`r
-	{
-		if (A_LoopField = "")
-			{
-				continue
-			}
-		vavn+=1
-		%vavn%SDL= %A_LoopField%
-		NSOURCEDLIST.= A_LoopField . "?" . "`n"
-	}
-srcntot:= vavn	
-SOURCEDLIST:= NSOURCEDLIST
+stringreplace,SOURCEDLIST,SOURCEDLIST,`n,|`n,All
+stringreplace,SOURCEDLIST,SOURCEDLIST,||`n,|`n,All
 filedelete,%SRCFILE%
 fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 popui= 
@@ -960,20 +956,10 @@ popui= 1
 NSOURCEDLIST=
 Gui, ListView, MyListView
 LV_Modify(0, "-check")
-stringreplace,SOURCEDLIST,SOURCEDLIST,?,,All
-vavn=
-Loop,parse,SOURCEDLIST,`n`r
-	{
-		if (A_LoopField = "")
-			{
-				continue
-			}
-		vavn+=1
-		%vavn%SDL= %A_LoopField%
-		NSOURCEDLIST.= A_LoopField . "?" . "`n"
-	}
-srcntot:= vavn	
-SOURCEDLIST:= NSOURCEDLIST	
+stringreplace,SOURCEDLIST,SOURCEDLIST,`n,|?`n,All
+stringreplace,SOURCEDLIST,SOURCEDLIST,||?,|?,All
+stringreplace,SOURCEDLIST,SOURCEDLIST,||`n,|?`n,All
+stringreplace,SOURCEDLIST,SOURCEDLIST,|`n,|?`n,All
 filedelete,%SRCFILE%
 fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 popui=
@@ -1079,6 +1065,7 @@ GuiControl,,Keyboard_MapperT,
 return
 
 Keyboard_MapB:
+KBMAPALRT= Lime
 gui,submit,nohide
 mapovr=
 kbmdefloc= %home%
@@ -1090,6 +1077,7 @@ if (dchk = "")
 		FileSelectFile,kbmpprt,35,%kbmdefloc%,Select File,xpadder.exe; antimicro.exe; JoyToKey.exe; JoyXoff.exe; DS4Windows.exe; rewasd.exe; antimicrox.exe
 		;
 	}
+dchk=
 if ((kbmpprt <> "")&& !instr(kbmpprt,"<"))
 	{
 		Keyboard_Mappern= %kbmpprt%
@@ -1125,12 +1113,18 @@ Loop,parse,MAPCFGS,|
 				gosub, INIT%A_LoopField%
 			}
 	}
+if !fileExist(Keyboard_Mapper)
+	{
+		KBMAPALRT= Red
+	}
+guicontrol, +c%KBMAPALRT%,keyboard_MapperT,
 guicontrol,,keyboard_MapperT,%keyboard_Mapper%
 tooltip,
 return
 
 Player1_TempB:
 gui,submit,nohide
+PLR1ALRT= Lime
 FileSelectFile,Player1_TemplateT,3,%home%,Select File
 if ((Player1_TemplateT <> "")&& !instr(Player1_TemplateT,"<"))
 	{
@@ -1141,11 +1135,13 @@ if ((Player1_TemplateT <> "")&& !instr(Player1_TemplateT,"<"))
 		guicontrol,,Player1_TemplateT,
 		return
 	}
+guicontrol, +c%PLR1ALRT%,Player1_TemplateT
 guicontrol,,Player1_TemplateT,%Player1_Template%
 return
 
 Player2_TempB:
 gui,submit,nohide
+PLR2ALRT= Lime
 FileSelectFile,Player2_TemplateT,3,%home%,Select File
 if ((Player2_TemplateT <> "")&& !instr(Player2_TemplateT,"<"))
 	{
@@ -1156,11 +1152,13 @@ if ((Player2_TemplateT <> "")&& !instr(Player2_TemplateT,"<"))
 		guicontrol,,Player2_TemplateT,
 		return
 	}
+guicontrol, +c%PLR2ALRT%,Player2_TemplateT
 guicontrol,,Player2_TemplateT,%Player2_Template%
 return
 
 MediaCenter_ProfB:
 gui,submit,nohide
+MCPRFALRT= Lime
 FileSelectFile,MediaCenter_ProfileT,3,%home%,Select File
 if ((MediaCenter_ProfileT <> "")&& !instr(MediaCenter_ProfileT,"<"))
 	{
@@ -1171,6 +1169,7 @@ if ((MediaCenter_ProfileT <> "")&& !instr(MediaCenter_ProfileT,"<"))
 		guicontrol,,MediaCenter_ProfileT,
 		return
 	}
+guicontrol, +c%MCPRFALRT%,MediaCenter_ProfileT
 guicontrol,,MediaCenter_ProfileT,%MediaCenter_Profile_Template%
 return
 
@@ -1552,6 +1551,7 @@ if (dchk = "")
 		MultiMonitor_ToolT=
 		FileSelectFile,MultiMonitor_ToolT,3,%binhome%,Select File,multimonitor*.exe
 	}
+dchk=
 if ((MultiMonitor_ToolT <> "")&& !instr(MultiMonitor_ToolT,"<"))
 	{
 		MultiMonitor_Tool= %MultiMonitor_ToolT%
@@ -1729,6 +1729,7 @@ if (dchk = "")
 		JustBeforeExitT=
 		FileSelectFile,JustBeforeExitT,3,%home%,*.*
 	}
+dchk=
 if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "JustBeforeExit"))
 	{
 		predl=<
@@ -1738,6 +1739,7 @@ if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "JustBeforeExit"))
 				JBEWait= 1
 			}
 		JustBeforeExit= %predl%%JustBeforeExitT%
+		Guicontrol, +cLime, JustBeforeExitT
 		iniwrite,%JustBeforeExit%,%RJDB_Config%,GENERAL,JustBeforeExit
 	}
 	else {
@@ -1775,6 +1777,7 @@ if (dchk = "")
 		JustAfterLaunchT=
 		FileSelectFile,JustAfterLaunchT,3,After Launch,Select File,*.*
 	}
+dchk=
 if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "JustAfterLaunch"))
 	{
 		predl=<
@@ -1784,6 +1787,7 @@ if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "JustAfterLaunch"))
 				JALWait= 1
 			}
 		JustAfterLaunch= %predl%%JustAfterLaunchT%
+		Guicontrol, +cLime, JustAfterLaunchT
 		iniwrite,%JustAfterLaunch%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
 	}
 	else {
@@ -1821,7 +1825,7 @@ return
 BGP_Enable:
 gui,submit,nohide
 BGP_State=
-guicontrolget,BGProg,,Borderless_Gaming_Program
+iniread,BGProg,%RJDB_CONFIG%,GENERAL,Borderless_Gaming_Program
 if ((BGProg = "")or(BGProg = "ERROR"))
 	{
 		guicontrol,,BGP_Enable,0
@@ -2040,11 +2044,8 @@ return
 
 DELpostAPP:
 gui,submit,nohide
-guicontrolget,DELpostDD,,postDD
-stringsplit,dxb,DELpostDD,<
-stringreplace,dxn,dxb1,W,,
-stringreplace,dxn,dxn,H,,
-iniWrite,%dxn%<,%RJDB_Config%,CONFIG,%dxn%_post
+guicontrolget,DELpostDD,,POSTDNUM
+iniWrite,%DELpostDD%<,%RJDB_Config%,CONFIG,%DELpostDD%_post
 postList= |
 postWaitn=
 tpds=
@@ -2052,7 +2053,7 @@ Loop, 3
 	{
 		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_post
 		postList.= tpds . "|"
-		if (A_Index = dxn)
+		if (A_Index = DELpostDD)
 			{
 				postList.= "|"
 			}
@@ -2064,19 +2065,16 @@ return
 
 DELPREAPP:
 gui,submit,nohide
-guicontrolget,DELPreDD,,PreDD
-stringsplit,dxb,DELPreDD,<
-stringreplace,dxn,dxb1,W,,
-stringreplace,dxn,dxn,H,,
-iniWrite,%dxn%<,%RJDB_Config%,CONFIG,%dxn%_Post	
+guicontrolget,DELPreDD,,PRETNUM
+iniWrite,%DELPreDD%<,%RJDB_Config%,CONFIG,%DELPreDD%_Pre
 PreList= |
 PreWaitn=
 tpds=
 Loop, 3
 	{
-		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_Post
+		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_Pre
 		PreList.= tpds . "|"
-		if (A_Index = dxn)
+		if (A_Index = DELPreDD)
 			{
 				PreList.= "|"
 			}
@@ -2365,7 +2363,7 @@ OPNLOG:
 gui,submit,NoHide
 if fileexist(home . "\" . "log.txt")
 	{
-		Run,Notepad %home%\log.txt,
+		Run,Notepad %thelog%,
 	}
 else {
 	SB_SetText("no log exists")
@@ -2471,6 +2469,7 @@ if (kbmpprt <> "")
 		FileDelete,%home%\%JMAP%_!.cmd
 		fileread,amcb,%source%\%prf%_Trigger.set
 		fileread,amcp,%source%\%prf%_GameTemplate.set
+		fileread,kbmamcp,%source%\%prf%_KBMGameTemplate.set
 		fileread,amcd,%source%\%prf%_DeskTemplate.set
 		keyboard_Mapper= %home%\%JMAP%_!.cmd
 		Player1_Template=%home%\Player1.%mapper_extension%
@@ -2484,6 +2483,9 @@ if (kbmpprt <> "")
 		stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
 		stringreplace,amcb,amcb,[AMICRX],%kbmpprt%,All
 		stringreplace,amcb,amcb,[AMICRO],%kbmpprt%,All
+		stringreplace,kbmamcp,kbmamcp,[NEWOSK],%osklok%,All
+		stringreplace,kbmamcp,kbmamcp,[AMICRX],%antimicrox_executable%,All
+		stringreplace,kbmamcp,kbmamcp,[AMICRO],%antimicro_executable%,All
 		stringreplace,amcp,amcp,[NEWOSK],%osklok%,All
 		stringreplace,amcp,amcp,[AMICRX],%antimicrox_executable%,All
 		stringreplace,amcp,amcp,[AMICRO],%antimicro_executable%,All
@@ -2491,6 +2493,7 @@ if (kbmpprt <> "")
 		stringreplace,amcd,amcd,[AMICRX],%antimicrox_executable%,All
 		stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
 		FileAppend,%amcb%,%home%\%JMAP%_!.cmd,UTF-8-RAW
+		FileAppend,%kbmamcp%,KBMGame.%mapper_extension%,UTF-8-RAW
 		FileAppend,%amcp%,%Player1_Template%,UTF-8-RAW
 		FileAppend,%amcp%,%Player2_Template%,UTF-8-RAW
 		FileAppend,%amcd%,%MediaCenter_Profile_Template%,UTF-8-RAW
@@ -2508,10 +2511,35 @@ if (kbmpprt <> "")
 			{
 				RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %kbmpprt%, ~ RUNASADMIN
 			}
+		KBMAPALRT= Lime	
+		PLR1TALRT= Lime	
+		PLR2TALRT= Lime	
+		MCPRFALRT= Lime	
+		if !fileExist(Keyboard_Mapper)
+			{
+				KBMAPALRT= Red
+			}
+		if !fileExist(Player1_Template)
+			{
+				PLR1TALRT= Red
+			}
+		if !fileExist(Player2_Template)
+			{
+				PLR2TALRT= Red
+			}
+		if !fileExist(MediaCenter_Profile)
+			{
+				MCPRFALRT= Red
+			}
+		guicontrol, +c%KBMAPALRT%,Keyboard_MapperT
+		guicontrol, +c%PLR1ALRT%,Player1_TemplateT
+		guicontrol, +c%PLR2ALRT%,Player2_TemplateT
+		guicontrol, +c%MCPRFALRT%,MediaCenter_ProfileT
 		guicontrol,,Keyboard_MapperT,%keyboard_Mapper%
 		guicontrol,,Player1_TemplateT,%Player1_Template%
 		guicontrol,,Player2_TemplateT,%Player2_Template%
 		guicontrol,,MediaCenter_ProfileT,%MediaCenter_Profile_Template%
+		
 	}
 kbmpprt=
 return
@@ -4336,7 +4364,6 @@ guicontrolget,Hide_Taskbar,,Hide_Taskbar
 guicontrolget,EnableLogging,,EnableLogging
 complist:= LVGetCheckedItems("SysListView321","v0rt3X_GUI")
 fullist= %complist%
-fileappend,%fullist%,%home%\log.txt
 stringsplit,fullstn,fullist,`n
 gmnames= |
 gmnameds= |
@@ -6220,21 +6247,62 @@ guicontrol,show,REINDEX
 return
 
 MyListView:
+Gui,ListView,MyListView
+FocusedRowNumber := LV_GetNext(0, "F")
 if (popui = 1)
 	{
 		return
 	}
-RPL=
-FocusedRowNumber := LV_GetNext(0, "F")
-if not FocusedRowNumber 
-	{
-		
-	}
 chkrepl=
-StringCaseSense, On
 chktest:= % (%A_EventInfo%SDL)
+RPL=
+vavn=
+Blockinput, on
+if ((!FocusedRowNumber)&& instr(A_GuiEvent,"ColClick"))
+	{
+		RowNumber = 0 ; This causes the first loop iteration to start the search at the top of the list.
+		SOURCEDLIST=
+		Loop
+			{
+				RowNumber := LV_GetNext()           ;get first selected row
+				RowChecked := LV_GetNext(RowNumber - 1 , "Checked" )
+				If ( RowNumber = RowChecked )
+				   SO:= "|`n"
+				Else
+				   SO:= "|?`n"
+				RowNumber := LV_GetNext(RowNumber) ; Resume the search at the row after that found by the previous iteration.
+				if not RowNumber ; The above returned zero, so there are no more selected rows.
+				break
+				vavn+=1
+				chktest:= % (%A_EventInfo%SDL)
+				LV_GetText(alla , RowNumber , 1)
+				LV_GetText(allb , RowNumber , 2)
+				LV_GetText(allc , RowNumber , 3)
+				LV_GetText(alld , RowNumber , 4)
+				LV_GetText(alle , RowNumber , 5)
+				LV_GetText(allf , RowNumber , 6)
+				LV_GetText(allg , RowNumber , 7)
+				LV_GetText(allh , RowNumber , 8)
+				LV_GetText(alli , RowNumber , 9)
+				LV_GetText(allj , RowNumber , 10)
+				LV_GetText(allk , RowNumber , 11)
+				LV_GetText(alll , RowNumber , 12)
+				LV_GetText(allm , RowNumber , 13)
+				LV_GetText(alln , RowNumber , 14)
+				LV_GetText(allo , RowNumber , 15)
+				LV_GetText(allp , RowNumber , 16)
+				LV_GetText(allq , RowNumber , 17)
+				LV_GetText(allr , RowNumber , 18)
+				prmv:= alla . "|" . allb . "|" . allc . "|" . alld . "|" . alle . "|" . allf . "|" . allg . "|" . allh . "|" . alli . "|" . allj . "|" . allk . "|" . alll . "|" . allm . "|" . alln . "|" . allo . "|" . allp . "|" . allq . "|" . allr
+				%vavn%SDL:= prmv . SO
+				SOURCEDLIST.= prmv . SO
+			}				
+		filedelete,%SRCFILE%
+		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
+		chktest:= % (%A_EventInfo%SDL)
+	}
 stringright,chkq,chktest,1
-blockinput,on
+StringCaseSense, On
 if (A_GuiEvent == "I")
 	{
 		if InStr(ErrorLevel, "C", true)
@@ -6264,13 +6332,12 @@ if (A_GuiEvent == "I")
 				%A_EventInfo%SDL= %chkrepl%
 				SOURCEDLIST:= NSOURCEDLIST
 				StringCaseSense, Off
-				fileappend,t=%chktest%`nr=%chkrepl%`n%SPENQ%=%chkq%`n,%home%\log.txt
 				blockinput,off
+				popui=
 				return
 			}
-		fileappend,ut=%chktest%`nur=%chkrepl%`nu:%SPENQ%=%chkq%`n,%home%\log.txt
 	}
-blockinput,off
+
 StringCaseSense, Off	
 Msx=
 If (A_GuiEvent == "F") {
@@ -6314,6 +6381,8 @@ If (A_GuiEvent == "F") {
 			else {
 				LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
 				SB_SetText("Booleans Only: 0`,off`,n`,1`,on`,or y")
+				popui=
+				blockinput,off
 				return
 			}
 	}
@@ -6334,6 +6403,8 @@ If (A_GuiEvent == "F") {
 		else {
 				LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
 				SB_SetText("0 or N=off,1 or Y=on, 5=unused kill,8=exit kill, 9= all on")
+				popui=
+				blockinput,off
 				return
 		}	
 	}
@@ -6346,10 +6417,13 @@ If (A_GuiEvent == "F") {
 		else {
 				LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
 				SB_SetText("SteamID must be a number and only a number")
+				popui=
 				return
 		}	
 	}
 }
+popui=
+blockinput,off
 return
 
 RECONT:
@@ -6364,6 +6438,8 @@ Loop,parse,rpl,|
 				RRP.= OnTxt . "|"
 				if (OnTxt = semat)
 					{
+						popui=
+						blockinput,off
 						return
 					}
 				continue
@@ -6385,6 +6461,8 @@ if (RRP <> rpl)
 		filedelete,%SRCFILE%
 		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 	}
+popui= 	
+blockinput,off
 return
 
 steamappinfo:
@@ -6976,6 +7054,7 @@ InterpXpnd= Borderles_Gaming_Program
 goto, EDITPV
 
 EDITPV:
+PREPSTALRT= Lime
 prtxb= 
 epvsec= GENERAL
 iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
@@ -6990,6 +7069,10 @@ if (inrptst = "ERROR")
 		iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
 	}
 ExtrpExpnd= %inrptst%
+if !fileExist(ExtrpExpnd)
+	{
+		PREPSTALRT= Red
+	}
 if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
 	{
 		epvsec= CONFIG
@@ -7013,6 +7096,11 @@ if ((InterpXpnd = "POSTDD")or(InterpXpnd = "PREDD"))
 		stringsplit,ah,PPRS,<
 		ExtrpExpnd= %ah2%
 		prtxb= %ah1%
+		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+		if !fileExist(ExtrpExpnd)
+			{
+				PREPSTALRT= Red
+			}	
 	}
 if (ExtrpExpnd = "ERROR")
 	{
@@ -7031,6 +7119,7 @@ if (TRNSFERVAR <> "")
 		Guicontrol,,%InterpXpnd%T,%TRNSFERVAR%
 		iniwrite,%prtxb%%TRNSFERVAR%,%RJDB_Config%,%epvsec%,%InterpXpnd%
 		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+		guicontrol, +c%PREPSTALRT%, %InterpXpnd%
 	}
 return
 
@@ -8152,8 +8241,7 @@ Class LV_InCellEdit {
       }
    }
 }
-												   
-  
+
 uriDecode(str) {
     Loop
  If RegExMatch(str, "i)(?<=%)[\da-f]{1,2}", hex)
