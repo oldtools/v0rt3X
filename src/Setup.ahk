@@ -6,7 +6,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-10-10 7:34 PM
+RELEASE= 2022-10-11 8:25 AM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -169,11 +169,28 @@ ifnotexist,%home%\RJDB.ini
 		gosub,INITALL
 		Loop,parse,MAPCFGS,|
 			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
 				gosub, INIT%A_LoopField%
 			}
 		gosub,MM_AUTO
 		gosub,GBT_AUTO
 	}
+SWAPMAPR=|	
+Loop,parse, MAPCFGS,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		iniread,mpxrf,%RJDBINI%,JOYSTICKS,%A_LoopField%_executable
+		if fileexist(mpxrf)
+			{
+				SWAPMAPR.= A_LoopField . "|"
+			}
+	}	
 gosub, popgui
 /*
 iniread,forecolor,%RJDBINI%,THEME,GUI_foreground
@@ -505,6 +522,8 @@ Menu,MM_RCMenu,Add,Disable,DisableButs
 Menu,KBM_RCMenu,Add,Download,KBMDownload
 Menu,KBM_RCMenu,Add,,
 Menu,KBM_RCMenu,Add,RESET,ResetMprs
+Menu,KBM_RCMenu,Add,,
+Menu,KBM_RCMenu,Add,Enable,Keyboard_MapBEnable
 Menu,KBM_RCMenu,Add,Disable,Keyboard_MapBDisable
 
 Menu,JAL_RCMenu,Add,Disable,JAL_ProgBDisable
@@ -514,11 +533,16 @@ Menu,BGM_RCMenu,Add,Download,BGM_ProgBDownload
 Menu,BGM_RCMenu,Add,,
 Menu,BGM_RCMenu,Add,Disable,BGM_ProgBDisable
 
+Menu,MMCFG_RCMenu,Add,Disable,MMCFGDisable
+Menu,MDCFG_RCMenu,Add,Disable,MDCFGDisable
+Menu,MMCFG_RCMenu,Add,Reset,MMCFGReset
+Menu,MDCFG_RCMenu,Add,Reset,MDCFGReset
+
 Menu,PL1_RCMenu,Add,Disable,PL1Disable
 Menu,PL2_RCMenu,Add,Disable,PL2Disable
-Menu,MCP_RCMenu,Add,Disable,MCPDisable
 Menu,PL1_RCMenu,Add,Reset,PL1Reset
 Menu,PL2_RCMenu,Add,Reset,PL2Reset
+Menu,MCP_RCMenu,Add,Disable,MCPDisable
 Menu,MCP_RCMenu,Add,Reset,MCPReset
 
 Menu,UPDButton,Add,Update,UpdateRJLR
@@ -1091,6 +1115,20 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 	}
 return
 
+Keyboard_MapBenable:
+Menu,KBM_EMEN,Add,,
+Loop, parse, SWAPMAPR,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		Menu,KBM_EMEN,Add,Enable %A_LoopField%,INIT%A_LoopField%
+	}
+Menu,KBM_EMEN,Show, %MENU_X% %MENU_Y%
+Menu,KBM_EMEN,Delete
+return
+
 Keyboard_MapBDisable:
 Keyboard_Mapper=
 Keyboard_MapperT=
@@ -1395,6 +1433,7 @@ Loop,7
 fileMove %home%\tst.tmp,%home%\GameMonitors.mon,1
 MM_GAME_Config= %home%\GameMonitors.mon
 iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
+guicontrol, +cLime, MM_Game_ConfigT
 guicontrol,,MM_GAME_ConfigT,%MM_GAME_Config%
 return
 
@@ -1627,7 +1666,8 @@ BGM_ProgBDisable:
 Borderless_gaming_Program=
 Borderless_gaming_ProgramT=
 iniwrite,%A_Space%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
-Guicontrol,,Borderless_Gaming_ProgramT,
+GuiControl, +cSilver, Borderless_Gaming_ProgramT
+Guicontrol,,Borderless_Gaming_ProgramT,DISABLED
 return
 
 BGM_ProgB:
@@ -2232,7 +2272,7 @@ Loop,parse,STDVARS,|
         %A_LoopField%=
     }
 initz= 1
-stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
+stringreplace,RJTMP,RJTM,[LOCV],%home%,All
 FileDelete,%home%\RJDB.ini
 fileappend,`n,%home%\RJDB.ini,UTF-16
 FileAppend,%RJTMP%,%home%\RJDB.ini,UTF-16
@@ -2299,13 +2339,20 @@ if (MultiMonitor_Tool = "")
 		SB_SetText("Multimonitor Tool is not configured")
 		return
 	}
+mmtclr= Lime
+if !fileExist(MultiMonitor_Tool)
+	{
+		SB_SetText("Multimonitor Tool not found")
+		mmtclr= Red
+	}
+Guicontrol, +c%mmtclr%, MultiMonitor_ToolT
+Guicontrol,, MultiMonitor_ToolT,%MultiMonitor_ToolT%
 MM_GAME_Config=
 MM_GAME_ConfigT=
 MM_MEDIACENTER_Config=
 MM_MEDIACENTER_ConfigT=
 iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
 iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
-Guicontrol,,MultiMonitor_ToolT,
 Guicontrol,,MM_Game_ConfigT,
 Guicontrol,,MM_MediaCenter_ConfigT,
 gosub,MMSETUPD
@@ -2372,6 +2419,7 @@ iniwrite,1,%LADTA%\%JMAP%_settings.ini,GENERAL,MinimizeToTaskbar
 iniwrite,@Size(650 580),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowSize
 iniwrite,@Point(0 0),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowPosition
 return
+
 KEYMAPSET:
 if (kbmpprt = "")
 	{
@@ -2477,8 +2525,8 @@ if (kbmpprt <> "")
 				MCPRFALRT= Red
 			}
 		guicontrol, +c%KBMAPALRT%,Keyboard_MapperT
-		guicontrol, +c%PLR1ALRT%,Player1_TemplateT
-		guicontrol, +c%PLR2ALRT%,Player2_TemplateT
+		guicontrol, +c%PLR1TALRT%,Player1_TemplateT
+		guicontrol, +c%PLR2TALRT%,Player2_TemplateT
 		guicontrol, +c%MCPRFALRT%,MediaCenter_TemplateT
 		guicontrol,,Keyboard_MapperT,%keyboard_Mapper%
 		guicontrol,,Player1_TemplateT,%Player1_Template%
@@ -3487,6 +3535,7 @@ Loop,7
 		inidelete,%MM_Mediacenter_Config%,MONITOR%abn%,Name
 		abn+= 1
 	}
+Guicontrol, +cLime,	MM_MediaCenter_ConfigT
 guicontrol,,MM_MediaCenter_ConfigT,%MM_Mediacenter_Config%
 return
 
@@ -5111,9 +5160,17 @@ Loop, %fullstn0%
 								{
 									DeskMon= %R_MM_MediaCenter_Config%
 								}
-							if (CENMM = 1)
+							if (MM_MediaCenter_Config = "DISABLED")
+								{
+									DeskMon= DISABLED
+								}
+							if (CENGM = 1)
 								{
 									GameMon= %R_MM_Game_Config%
+								}
+							if (MM_Game_Config = "DISABLED")
+								{
+									GameMon= DISABLED
 								}
 							if ((dgovr <> "<")&&(dgovr <> "")&&fileexist(dgovr))
 								{
@@ -5141,6 +5198,7 @@ Loop, %fullstn0%
 								}
 							GameProfs= %sidn%
 							iniwrite,%GameMon%,%gamecfg%,CONFIG,MM_Game_Config
+							iniwrite,%DeskMon%,%gamecfg%,CONFIG,MM_MediaCenter_Config
 							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Directory
 							iniwrite,%prnmx%,%gamecfg%,CONFIG,Exe_File
 							killist:
@@ -5178,7 +5236,7 @@ Loop, %fullstn0%
 				}
 			if ((GMJOY = 1) && (subfldrep = ""))
 				{
-					IF (CENPL1 <> 1)
+					IF ((CENPL1 <> 1)or(Player1_Template = "DISABLED"))
 						{
 							if (Player1_Template <> player1X)
 								{
@@ -5206,7 +5264,7 @@ Loop, %fullstn0%
 						}
 					if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
 						{
-							if (CENPL2 <> 1)
+							if ((CENPL2 <> 1)or(Player2_Template = "DISABLED"))
 								{
 									if (Player2_Template <> player2X)
 										{
@@ -5233,7 +5291,7 @@ Loop, %fullstn0%
 									}
 							}	
 						}
-					if (CENMC <> 1)
+					if ((CENMC <> 1)&&(MediaCenter_Template = "DISABLED"))
 						{
 							if (MediaCenter_Template <> MediaCenter_ProfileX)
 								{
@@ -6136,6 +6194,15 @@ curemote= _%A_ThisMenuItem%_
 gosub, BINGETS
 gosub, DOWNLOADIT
 gosub, INIT%A_ThisMenuItem%
+jkfn:= % (%A_ThisMenuItem%_executable)
+jkAB= |%jkfn%|
+if fileexist(jkfn)
+	{
+		if !instr(SWAPMAPR,jkAB)
+			{
+				SWAPMAPR.= A_ThisMenuItem . "|"
+			}
+	}
 SB_SetText("")
 dchk=
 return
@@ -6885,9 +6952,19 @@ If A_GuiControlEvent RightClick
 			Menu, MM_RCMenu, Show, %MENU_X% %MENU_Y%
 			return
 		}
+	if A_GuiControl = MM_Game_CfgB
+		{
+			Menu, MMCFG_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
+	if A_GuiControl = MM_MediaCenter_CfgB
+		{
+			Menu, MDCFG_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
 	if A_GuiControl = BGM_ProgB
 		{
-			Menu, GBM_RCMenu, Show, %MENU_X% %MENU_Y%
+			Menu, BGM_RCMenu, Show, %MENU_X% %MENU_Y%
 			return
 		}
 	if A_GuiControl = Keyboard_MapB
@@ -7156,75 +7233,88 @@ return
 
 PropMMTE:
 InterpXpnd= MultiMonitor_Tool
+extrpa=T	
 goto, EDITPV
 PropKBCmdE:
 InterpXpnd= Keyboard_Mapper
+extrpa=T	
 goto, EDITPV
 
 PropPl1jpE:
 InterpXpnd= Player1_Template
+extrpa=T	
 goto, EDITPV
 
 PropPl2jpE:
 InterpXpnd= Player2_Template
+extrpa=T	
 goto, EDITPV
 
 PropMCjpE:
-InterpXpnd= MediaCenter_Profile
+InterpXpnd= MediaCenter_Template
+extrpa=T
 goto, EDITPV
 
 PropGMcfgE:
 InterpXpnd= MM_Game_Config
+extrpa=T
 goto, EDITPV
 
 PropDMcfgE:
 InterpXpnd= MM_Mediacenter_Config
+extrpa=T
 goto, EDITPV
 
 PropJALcE:
 InterpXpnd= JustAfterLaunch
+extrpa=T
 goto, EDITPV
 
 PropJBEcE:
 InterpXpnd= JustAfterExit
+extrpa=T
 goto, EDITPV
 
 PropPREcE:
 InterpXpnd= PREDD
+extrpa=
 goto, EDITPV
 
 PropPSTcE:
 InterpXpnd= POSTDD
+extrpa=
 goto, EDITPV
 
 PropLNCE:
 InterpXpnd= Game_Directory
+extrpa=T
 goto, EDITPV
 
 PropPROE:
 InterpXpnd= Game_Profiles
+extrpa=T
 goto, EDITPV
 
 PropBGEE:
 InterpXpnd= Borderles_Gaming_Program
+extrpa=T
 goto, EDITPV
 
 EDITPV:
 PREPSTALRT= Lime
 prtxb= 
 epvsec= GENERAL
-iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
-if (inrptst = "ERROR")
+iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
+if (ExtrpExpnd = "ERROR")
 	{
 		epvsec= JOYSTICKS
-		iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
+		iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
 	}
-if (inrptst = "ERROR")
+if (ExtrpExpnd = "ERROR")
 	{
 		epvsec= CONFIG
-		iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
+		iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
 	}
-ExtrpExpnd= %inrptst%
 if !fileExist(ExtrpExpnd)
 	{
 		PREPSTALRT= Red
@@ -7272,18 +7362,18 @@ if (TRNSFERVAR <> "")
 			{
 				stringtrimright,InterpXpnd,InterpXpnd,1
 			}
-		Guicontrol,,%InterpXpnd%T,%TRNSFERVAR%
+		Guicontrol,,%InterpXpnd%%extrpa%,%TRNSFERVAR%
 		iniwrite,%prtxb%%TRNSFERVAR%,%RJDBINI%,%epvsec%,%InterpXpnd%
-		guicontrol, +c%PREPSTALRT%, %InterpXpnd%
-		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+		guicontrol, +c%PREPSTALRT%, %InterpXpnd%%extrpa%
+		guicontrol,,%InterpXpnd%%extrpa%,%prtxb%%ExtrpExpnd%
 	}
-if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "terminate")or (TRNSFERVAR = "frontend")or (TRNSFERVAR = "nothing")or(TRNSFERVAR = "none"))
+if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "terminate")or (TRNSFERVAR = "frontend")or (TRNSFERVAR = "nothing")or(TRNSFERVAR = "del")or(TRNSFERVAR = "none")or(TRNSFERVAR = "delete")or(TRNSFERVAR = "*.*"))
 	{
 		if ((InterpXpnd = Player1_Template)or (InterpXpnd = Player2_Template)or (InterpXpnd = MediaCenter_Profile))
 			{
 				iniwrite,Disabled,%RJDBINI%,JOYSTICKS,%InterpXpnd%
 				guicontrol, +cLime, %InterpXpnd%
-				guicontrol,,%InterpXpnd%,DISABLED
+				guicontrol,,%InterpXpnd%%extrpa%,DISABLED
 			}			
 	}
 return
@@ -7366,6 +7456,41 @@ guicontrol, +cLime, %InterpXpnd%T
 guicontrol,,%InterpXpnd%T,%ExtrpExpnd%
 return
 
+MMCFGDisable:
+iniwrite,Disable,%RJDBINI%,CONFIG,MM_Game_Config
+guicontrol, +cLime, MM_Game_ConfigT
+guicontrol,,MM_Game_ConfigT,DISABLED
+return
+
+MDCFGDisable:
+iniwrite,Disable,%RJDBINI%,CONFIG,MM_MediaCenter_Config
+guicontrol, +cLime, MM_MediaCenter_ConfigT
+guicontrol,,MM_MediaCenter_ConfigT,DISABLED
+return
+
+MDCFGReset:
+if (MultiMonitor_Tool = "")
+	{
+		SB_SetText("Multimonitor Tool is not configured")
+		return
+	}
+MM_MEDIACENTER_Config=
+MM_MEDIACENTER_ConfigT=
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
+gosub,MMSETUPD
+return
+
+MMCFGReset:
+if (MultiMonitor_Tool = "")
+	{
+		SB_SetText("Multimonitor Tool is not configured")
+		return
+	}
+MM_GAME_Config=
+MM_GAME_ConfigT=
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
+gosub,MMPROG
+return
 
 Pl1Disable:
 InterpXpnd= Player1_Template
