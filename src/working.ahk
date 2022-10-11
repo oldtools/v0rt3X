@@ -41,7 +41,7 @@ Loop %0%
 	}
 splitpath,plink,scname,scpath,scextn,gmname,gmd
 CFGDIR= %SCPATH%
-RJDB_Config= %home%\RJDB.ini
+RJDBINI= %home%\RJDB.ini
 if (scextn = "lnk")
 	{
 		FileGetShortcut,%plink%,inscname,inscpth,chkargl
@@ -49,13 +49,13 @@ if (scextn = "lnk")
 			{
 				splitpath,chkargl,chkargxe,chkargpth
 				CFGDIR= %CHKARGPTH%
-				RJDB_Config= %CFGDIR%\RJDB.ini
+				RJDBINI= %CFGDIR%\RJDB.ini
 			}
 
 	}
 	else {
 		CFGDIR= %home%
-		RJDB_Config= %CFGDIR%\RJDB.ini
+		RJDBINI= %CFGDIR%\RJDB.ini
 	}
 binhome= %home%\bin
 THELOG= %home%\log.txt
@@ -175,6 +175,57 @@ ifnotexist,%home%\RJDB.ini
 		gosub,GBT_AUTO
 	}
 gosub, popgui
+/*
+iniread,forecolor,%RJDBINI%,THEME,GUI_foreground
+if ((forecolor = "")or(forecolor = "ERROR"))
+	{
+		forecolor= Default
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_foreground
+	}
+iniread,bgcolor,%RJDBINI%,THEME,GUI_background
+if ((bgcolor = "")or(bgcolor = "ERROR"))
+	{
+		bgcolor= Default
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_background
+	}
+iniread,themen,%RJDBINI%,THEME,GUI_theme_name
+if ((skthemen = "")or(skthemen = "ERROR"))
+	{
+		themen= Default
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_theme_name
+	}
+iniread,fontColor,%RJDBINI%,THEME,GUI_font_color
+if ((fontColor = "")or(fontColor = "ERROR"))
+	{
+		fontColor= Default
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_color
+	}
+iniread,fontName,%RJDBINI%,THEME,GUI_font_name
+if ((fontName = "")or(fontName = "ERROR"))
+	{
+		fontName=
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_name
+	}
+iniread,fontXlg,%RJDBINI%,THEME,GUI_font_large
+if ((fontXlg = "")or(fontXlg = "ERROR"))
+	{
+		fontXlg= s11
+		iniwrite,%fontXlg%,%RJDBINI%,THEME,GUI_font_large
+	}
+iniread,fontXmed,%RJDBINI%,THEME,GUI_font_medium
+if ((fontXmed = "")or(fontXmed = "ERROR"))
+	{
+		fontXmed= s9
+		iniwrite,%fontXmed%,%RJDBINI%,THEME,GUI_font_medium
+	}
+iniread,fontXsm,%RJDBINI%,THEME,GUI_font_small
+if ((fontXsm = "")or(fontXsm = "ERROR"))
+	{
+		fontXsm= s7
+		iniwrite,%fontXsm%,%RJDBINI%,THEME,GUI_font_small
+	}
+*/
+	
 if (Logging = 1)
 	{
 		loget= checked
@@ -406,40 +457,32 @@ if instr(1_PostT,"W<")
 	{
 		poststatus= checked
 	}
-JustAfterLaunchT=%JustAfterLaunch%
+stringsplit,jalaf,JustAfterLaunch,<	
+JustAfterLaunchT=%jalaf2%
 if instr(JustAfterLaunch,"W<")
 	{
 		jalstatus= checked
 	}
-JustBeforeExitT=%JustBeforeExit%
+stringsplit,jalaf,JustBeforeExit,<	
+JustBeforeExitT=%jalaf2%
 if instr(JustBeforeExit,"W<")
 	{
 		jbestatus= checked
 	}	
 if (JustAfterLaunch = "")
 		{
-			JustAfterLaunchT=<Run After Launch>	
+			JustAfterLaunchT= Run After Launch
 		}
 if (JustBeforeExit = "")
 		{
-			JustBeforeExitT=<Run Before Exit>
+			JustBeforeExitT= Run Before Exit
 		}
 taskbarv= checked
 if (Hide_Taskbar = 0)
 	{
 		taskbarv= 	
 	}
-Loop,files,%binhome%\*.exe,F
-  {
-	  if (A_LoopFileName = "soundVolumeView.exe")
-		{
-		  Menu,AddProgs,Add,soundVoumeView,SVV_Prog
-		}
-	  if (A_LoopFileName = "setsounddevice.exe")
-		{
-		  Menu,AddProgs,Add,setSoundDevice,SSD_Prog
-		}
-  }	
+
 if (steamdir = "")
 	{
 		steamdir=[STEAMDIRECTORY]
@@ -448,9 +491,37 @@ if (SteamUser = "")
 	{
 		SteamUser=[STEAMUSERID]
 	}
-Menu,RCLButton,Add,Reset ,ResetButs
-Menu,AddProgs,Add,Download,DownloadAddons
+Gui +hWndhMainWnd
+Gui,Color,%bgcolor%
+Gui,Font,%fontColor% %fontXmed%,%fontName%
 
+Menu,PP_RCMenu,Add,,
+
+Menu,MM_RCMenu,Add,Download,MMToolBDownload
+Menu,MM_RCMenu,Add,,
+Menu,MM_RCMenu,Add,RESET,MM_ToolBReset
+Menu,MM_RCMenu,Add,Disable,DisableButs
+
+Menu,KBM_RCMenu,Add,Download,KBMDownload
+Menu,KBM_RCMenu,Add,,
+Menu,KBM_RCMenu,Add,RESET,ResetMprs
+Menu,KBM_RCMenu,Add,Disable,Keyboard_MapBDisable
+
+Menu,JAL_RCMenu,Add,Disable,JAL_ProgBDisable
+Menu,JBE_RCMenu,Add,Disable,JBE_ProgBDisable
+
+Menu,BGM_RCMenu,Add,Download,BGM_ProgBDownload
+Menu,BGM_RCMenu,Add,,
+Menu,BGM_RCMenu,Add,Disable,BGM_ProgBDisable
+
+Menu,PL1_RCMenu,Add,Disable,PL1Disable
+Menu,PL2_RCMenu,Add,Disable,PL2Disable
+Menu,MCP_RCMenu,Add,Disable,MCPDisable
+Menu,PL1_RCMenu,Add,Reset,PL1Reset
+Menu,PL2_RCMenu,Add,Reset,PL2Reset
+Menu,MCP_RCMenu,Add,Reset,MCPReset
+
+Menu,UPDButton,Add,Update,UpdateRJLR
 
 Menu,LookupDBCHK,Add,,
 Menu,LookupDBCHK,Add,Reset the Lookup Table,RELOOKUP
@@ -500,21 +571,10 @@ Menu,PropJBE,Add,Propagate,PropJBEc
 Menu,PropPRE,Add,Propagate,PropPREc
 Menu,PropPST,Add,Propagate,PropPSTc
 
-Menu,UCLButton,Add,RESET,CfgInstMprs
-Menu,UCLButton,Add,Disable ,DisableButs
+gui,font, s16 bold
+Gui,Font,Bold
+Gui,Font, %fontXmed%
 
-Menu,JBEButton,Add,Cloud-Save,DownloadButs
-Menu,JBEButton,Add,soundVolumeView,OtherDownloads
-Menu,JBEButton,Add,RESET,CfgInstMprs
-Menu,JBEButton,Add,Disable ,DisableButs
-
-Menu,BCLButton,Add,Download,DownloadButs
-Menu,BCLButton,Add,RESET,BCfgInstMprs
-Menu,BCLButton,Add,Disable ,DisableButs
-
-Menu,DCLButton,Add,Delete ,DeleteButs
-
-Menu,UPDButton,Add,Update,UpdateRJLR
 Gui, Add, Button, x310 y8 vButtonClear gButtonClear hidden disabled, Clear List
 Gui, Add, Text, x377 y8 h12, Check
 Gui, Add, Button, x420 y8 vSELALLBUT gSELALLBUT hidden, All
@@ -541,21 +601,9 @@ Menu, MyContextMenu, Add, Open Profile, ContextOpenFile
 Menu, MyContextMenu, Add, Open Directory, ContextOpenGame
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Add CLI opts/args, AddCLI
-;Menu, MyContextMenu, Add, Toggle KBM, ContextProperties
-;Menu, MyContextMenu, Add, Assign Player1 Template, ContextProperties
-;Menu, MyContextMenu, Add, Assign Player2 Template, ContextProperties
-;Menu, MyContextMenu, Add, Toggle MMT, ContextProperties
-;Menu, MyContextMenu, Add, Assign Game-Monitor Config, ContextProperties
-;Menu, MyContextMenu, Add, Assign Desktop-Monitor Config, ContextProperties
-
-;Menu, MyContextMenu, Add, Toggle JAL, ContextProperties
-;Menu, MyContextMenu, Add, Toggle JBE, ContextProperties
-													   
-;Menu, MyContextMenu, Add, Toggle PRE, ContextProperties
-;Menu, MyContextMenu, Add, Toggle PST, ContextProperties
-;Menu, MyContextMenu, Add, Toggle BGM, ContextProperties
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
+
 
 Gui, Add, GroupBox, x16 y0 w283 h97 center,
 Gui, Add, GroupBox, x16 y91 w283 h120 center,
@@ -566,7 +614,7 @@ Gui Add, GroupBox, x16 y408 w283 h103,
 Gui Add, GroupBox, x16 y505 w283 h65,
 Gui Add, GroupBox, x16 y565 w283 h90,
 Gui Add, GroupBox, x130 y649 w169 h27,
-Gui Add, GroupBox, x105 y127 w175 h45,
+Gui Add, GroupBox, x105 y124 w175 h45,
 ;;Gui, Add, Radio, x95 y32 vEXEONLY gEXEONLY checked hidden, Exe`,Cmd`,Bat
 Gui, Font, Bold
 Gui, Add, Button, x18 y8 h18 w18 vRESET gRESET,R
@@ -606,16 +654,16 @@ Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 
-GUi, Add, Checkbox, x120 y137 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
-GUi, Add, Checkbox, x188 y137 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
-GUi, Add, Checkbox, x240 y137 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
-Gui, Add, Checkbox, x1 y139 w14 h14 vCENTRLCKB gCENTRLCKB %cntz%, 
+GUi, Add, Checkbox, x120 y134 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
+GUi, Add, Checkbox, x188 y134 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
+GUi, Add, Checkbox, x240 y134 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
+Gui, Add, Checkbox, x1 y141 w14 h14 vCENTRLCKB gCENTRLCKB %cntz%, 
 Gui, Font, Bold
 Gui, Add, Text, x20 y140 h16,:CENTRALIZE
 Gui, Font, Normal
-Gui, Add, Checkbox, x225 y157 w54 h14 vKILLCHK gKILLCHK checked,Kill-List
-GUi, Add, Checkbox, x157 y157 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admin
-GUi, Add, Checkbox, x112 y157 vGMLNK gGMLNK %lnkget% %lnkenbl%,Lnk
+Gui, Add, Checkbox, x225 y152 w52 h14 vKILLCHK gKILLCHK checked,Kill-List
+GUi, Add, Checkbox, x157 y152 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admin
+GUi, Add, Checkbox, x112 y152 h14 vGMLNK gGMLNK %lnkget% %lnkenbl%,Lnk
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y180 w36 h21 vGame_ProfB gGame_ProfB,GPD
@@ -654,16 +702,16 @@ Gui, Font, cSilver
 Gui, Add, Text,  x64 y288 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
 Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y302 w222 h14,.....Template Profile for Player 2>
+Gui, Add, Text,  x64 y302 w222 h14,.....Template for Player 2>
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y320 w36 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
 Gui, Add, Checkbox, x1 y323 w14 h14 vCenMC gCenMC %cnMC%,
 Gui, Font, cSilver
-Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_ProfileT Right,%MediaCenter_Profile_Template%
+Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
 Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y334 w222 h14,.....Template Profile for MediaCenter/Desktop>
+Gui, Add, Text,  x64 y334 w222 h14,.....Template for MediaCenter/Desktop>
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y352 w36 h21 vBGM_ProgB gBGM_ProgB,GBT
@@ -680,11 +728,6 @@ Gui, Font, Normal
 Gui, Add, Checkbox, x205 y382 w89 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
 Gui, Add, Checkbox, x45 y399 h15 vBGP_TU gBGP_TU %bgptu%,Terminate if unused
 Gui, Add, Checkbox, x166 y399 h15 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
-;Gui, Add, Text,  x64 y378 w222 h14 vMM_GBM_ConfigT Disabled Right,%MM_Game_Config%
-;Gui, Font, Normal
-;Gui, Add, Text,  x64 y398 w222 h14,.....Borderless Gaming DB>
-
-
 
 Gui, Font, Bold
 Gui, Add, Button, x17 y416 w36 h21 vMM_ToolB gMM_ToolB,MMT
@@ -743,7 +786,7 @@ Gui Add, Button, x53 y576 w10 h21 vPRE_RC gPRE_RC, v
 Gui, Font, Normal
 Gui, Add, Text, x65 y578 h12 vPRETNUM,1
 Gui, Add, DropDownList, x75 y576 w193 vPREDD gPREDD Right,%prelist%
-Gui, Add, Text, x64 y596 h14 w230 vPREDDT,<$This_Prog$><Monitor><Mapper><game.exe>
+Gui, Add, Text, x64 y597 h14 w230 vPREDDT,<$This_Prog$><Monitor><Mapper><game.exe>
 Gui, Add, Checkbox, x270 y578 w12 h14 vPreWait gPreWait %prestatus%,
 								  
 Gui, Add, Button, x283 y579 w14 h14 vDELPREAPP gDELPREAPP ,X
@@ -761,10 +804,14 @@ Gui, Add, Button, x283 y621 w14 h14 vDELPOSTAPP gDELPOSTAPP ,X
 gui,font,bold
 Gui, Add, Button, x236 y7 w55 h17 vCANCLDBUT gCANCLDBUT hidden disabled,CANCEL
 gui,font,normal
+
+/*  ;;[DEBUGOV]
 Gui, Font, Bold
-Gui, Add, Button, x18 y656 h18 w18 vOPNLOG gOPNLOG,!
+Gui, Add, Checkbox, x20 y657 h18 w18 vEnableLogging gEnableLogging right %loget%,
+Gui, Add, Button, x1 y656 h18 w18 vOPNLOG gOPNLOG,!
+;Gui,Add,DropDownList, hwndDplHndl2 x42 y655 w85 vTHEMEN gTHEMEN,%themen%||Default|Gray|White|Blue|Black
 Gui, Font, Normal
-Gui, Add, Checkbox, x35 y657 h16 vEnableLogging gEnableLogging right %loget%, Log
+*/  ;;[DEBUGOV]
 Gui, Font, Bold
 Gui, Add, Radio, x143 y659 h14 vOVERWRT gUPDTSC %ovrwrchk%, Overwrite
 Gui, Add, Radio, x225 y659 h14 vUPDTSC gOVERWRT %updtchk%, Update
@@ -780,6 +827,7 @@ Gui Show, w314 h700, [RJ_PROJ]_GUI
 SB_SetText("")
 ADDGAME_TT :="Add a game with the file browser.`nAn attempt will be made to guess the appropriate name"
 ASADMIN_TT :="sets shortcuts and programs to run as the aministrator."
+SKTHEMEN_TT :="Theme`nRequires Restart"
 BGP_Enable_TT := "Enables the Borderless Gaming Program"
 BGP_TE_TT :="Kills the windowing program upon exiting a game."
 BGP_TU_TT :="Kills the windowing program if not enabled for a game when launching."
@@ -825,7 +873,7 @@ Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
 Keyboard_MapperT_TT :="the current keyboard mapper`n(supported mappers are auto-scripted '~_!.cmd')`n     Right_Click to Edit or propagate the selected item"
 KILLCHK_TT :="ancilary and executable-subprocess are terminated upon exiting the game"
 Localize_TT :="Sets the profile folder to`n the game's installation folder`n*     (not recommended)     *`n"
-MediaCenter_ProfileT_TT :="the keymapper's configuration-template file for the Mediacenter/Frontend`n     Right_Click to Edit or propagate the selected item"
+MediaCenter_TemplateT_TT :="the keymapper's configuration-template file for the Mediacenter/Frontend`n     Right_Click to Edit or propagate the selected item"
 MMT_RC_TT :="disable or download and assign the multimonitor program"
 MM_Game_CfgB_TT :="Select the multimonitor configuration template file used for games"
 MM_MediaCenter_CfgB_TT :="Select the multimonitor configuration template file used for the MediaCenter/Frontend"
@@ -896,7 +944,7 @@ if (fileexist(GAME_ProfilesT)&&(GAME_ProfilesT <> "")&& !instr(GAME_ProfilesT,"<
 		}
 
 		GAME_Profiles= %GAME_ProfilesT%
-		iniwrite,%GAME_Profiles%,%RJDB_Config%,GENERAL,GAME_Profiles
+		iniwrite,%GAME_Profiles%,%RJDBINI%,GENERAL,GAME_Profiles
 		stringreplace,GAME_ProfilesT,GAME_ProfilesT,%A_Space%,`%,All
 		guicontrol,,GAME_ProfilesT,%GAME_ProfilesT%
 	}
@@ -926,7 +974,7 @@ if (fileexist(GAME_DirectoryT)&&(GAME_DirectoryT <> "")&& !instr(GAME_DirectoryT
 			Game_DirectoryT= %Game_Directory%
 		}
 
-		iniwrite,%GAME_Directory%,%RJDB_Config%,GENERAL,GAME_Directory
+		iniwrite,%GAME_Directory%,%RJDBINI%,GENERAL,GAME_Directory
 		stringreplace,GAME_DirectoryT,GAME_DirectoryT,%A_Space%,`%,All
 		guicontrol,,GAME_DirectoryT,%GAME_DirectoryT%
 	}
@@ -973,7 +1021,7 @@ FileSelectFolder,Source_DirectoryT,%fldflt%,3,Select Folder
 if (fileexist(Source_DirectoryT)&&(Source_DirectoryT <> "")&& !instr(Source_DirectoryT,"<"))
 	{
 		Source_DirectoryX= %Source_DirectoryT%
-		IniRead,SRCDIRS,%RJDB_CONFIG%,GENERAL,Source_Directory
+		IniRead,SRCDIRS,%RJDBINI%,GENERAL,Source_Directory
 		rnum=
 		srcdira:= SOURCE_DIRECTORYT . "|"
 		Loop,parse,SRCDIRS,|
@@ -991,7 +1039,7 @@ if (fileexist(Source_DirectoryT)&&(Source_DirectoryT <> "")&& !instr(Source_Dire
 				srcdira.= pkrs . "|"
 			}
 		SOURCE_DIRECTORY= %srcdira%
-		iniwrite,%srcdira%,%RJDB_Config%,GENERAL,Source_Directory
+		iniwrite,%srcdira%,%RJDBINI%,GENERAL,Source_Directory
 		guicontrol,,Source_DirectoryT,|%Source_DirectoryT%||%srcdira%
 	}
 return
@@ -1021,7 +1069,7 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 		return
 		AddExcl:	
 		Exclude_Directory= %Exclude_DirectoryT%
-		IniRead,EXCDIRS,%RJDB_CONFIG%,GENERAL,Exclude_Directory
+		IniRead,EXCDIRS,%RJDBINI%,GENERAL,Exclude_Directory
 		excdira=
 		Loop,parse,EXCDIRS,|
 			{
@@ -1038,13 +1086,11 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 				excdira.= pkrs . "|"
 			}
 		Exclude_Directory= %Exclude_Directory%|%excdira%
-		iniwrite,%Exclude_Directory%,%RJDB_Config%,GENERAL,Exclude_Directory
+		iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
 		guicontrol,,Exclude_DirectoryT,|%Exclude_DirectoryT%||%excdira%
 	}
 return
 
-Keyboard_MapBDownload:
-Return
 Keyboard_MapBDisable:
 Keyboard_Mapper=
 Keyboard_MapperT=
@@ -1052,15 +1098,15 @@ Player1_Template=
 Player1_TemplateT=
 Player2_Template=
 Player2_TemplateT=
-MediaCenter_Profile=
-MediaCenter_ProfileT=
-iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,Keyboard_Mapper
-iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,Player1_Template
-iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,Player2_Template
-iniwrite,%A_Space%,%RJDB_CONFIG%,JOYSTICKS,MediaCenter_Profile_Template
+MediaCenter_Template=
+MediaCenter_TemplateT=
+iniwrite,%A_Space%,%RJDBINI%,JOYSTICKS,Keyboard_Mapper
+iniwrite,%A_Space%,%RJDBINI%,JOYSTICKS,Player1_Template
+iniwrite,%A_Space%,%RJDBINI%,JOYSTICKS,Player2_Template
+iniwrite,%A_Space%,%RJDBINI%,JOYSTICKS,MediaCenter_Template
 GuiControl,,Player1_TemplateT,
-GuiControl,,Player2_TempjulateT,
-GuiControl,,MediaCenter_ProfileT,
+GuiControl,,Player2_TemplateT,
+GuiControl,,MediaCenter_TemplateT,
 GuiControl,,Keyboard_MapperT,
 return
 
@@ -1100,7 +1146,7 @@ Loop,parse,MAPCFGS,|
 							{
 								kbmdefloc= %A_LoopField%\%gnm%
 								gnmte= %kbmdefloc%\%gnm%.exe
-								iniwrite,%gnmte%,%RJDB_Config%,JOYSTICKS,%gnm%_executable
+								iniwrite,%gnmte%,%RJDBINI%,JOYSTICKS,%gnm%_executable
 							}
 					}
 			}
@@ -1129,10 +1175,10 @@ FileSelectFile,Player1_TemplateT,3,%home%,Select File
 if ((Player1_TemplateT <> "")&& !instr(Player1_TemplateT,"<"))
 	{
 		Player1_Template= %Player1_TemplateT%
-		iniwrite,%Player1_Template%,%RJDB_Config%,JOYSTICKS,Player1_Template
+		iniwrite,%Player1_Template%,%RJDBINI%,JOYSTICKS,Player1_Template
 	}
 	else {
-		guicontrol,,Player1_TemplateT,
+		guicontrol,,Player1_TemplateT,%Player1_Template%
 		return
 	}
 guicontrol, +c%PLR1ALRT%,Player1_TemplateT
@@ -1146,10 +1192,10 @@ FileSelectFile,Player2_TemplateT,3,%home%,Select File
 if ((Player2_TemplateT <> "")&& !instr(Player2_TemplateT,"<"))
 	{
 		Player2_Template= %Player2_TemplateT%
-		iniwrite,%Player2_Template%,%RJDB_Config%,JOYSTICKS,Player2_Template
+		iniwrite,%Player2_Template%,%RJDBINI%,JOYSTICKS,Player2_Template
 	}
 	else {
-		guicontrol,,Player2_TemplateT,
+		guicontrol,,Player2_TemplateT,%Player2_Template%
 		return
 	}
 guicontrol, +c%PLR2ALRT%,Player2_TemplateT
@@ -1159,21 +1205,18 @@ return
 MediaCenter_ProfB:
 gui,submit,nohide
 MCPRFALRT= Lime
-FileSelectFile,MediaCenter_ProfileT,3,%home%,Select File
-if ((MediaCenter_ProfileT <> "")&& !instr(MediaCenter_ProfileT,"<"))
+FileSelectFile,MediaCenter_TemplateT,3,%home%,Select File
+if ((MediaCenter_TemplateT <> "")&& !instr(MediaCenter_TemplateT,"<"))
 	{
-		MediaCenter_Profile_Template= %MediaCenter_ProfileT%
-		iniwrite,%MediaCenter_Profile_Template%,%RJDB_Config%,JOYSTICKS,MediaCenter_Profile_Template																		
+		MediaCenter_Template= %MediaCenter_TemplateT%
+		iniwrite,%MediaCenter_Template%,%RJDBINI%,JOYSTICKS,MediaCenter_Template																		
 	}
 	else {
-		guicontrol,,MediaCenter_ProfileT,
+		guicontrol,,MediaCenter_TemplateT,%MediaCenter_Template%
 		return
 	}
-guicontrol, +c%MCPRFALRT%,MediaCenter_ProfileT
-guicontrol,,MediaCenter_ProfileT,%MediaCenter_Profile_Template%
-return
-
-MM_ToolBDownload:
+guicontrol, +c%MCPRFALRT%,MediaCenter_TemplateT
+guicontrol,,MediaCenter_TemplateT,%MediaCenter_Template%
 return
 
 SVV_Prog:
@@ -1351,7 +1394,7 @@ Loop,7
 	}
 fileMove %home%\tst.tmp,%home%\GameMonitors.mon,1
 MM_GAME_Config= %home%\GameMonitors.mon
-iniwrite,%MM_GAME_Config%,%RJDB_Config%,CONFIG,MM_GAME_Config
+iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
 guicontrol,,MM_GAME_ConfigT,%MM_GAME_Config%
 return
 
@@ -1387,92 +1430,6 @@ SSD_Prog:
 Run, %binhome%\ssd.exe,%binhome%,,
 return
 
-OtherDownloads:
-curemote= _soundVolumeView_
-gosub, BINGETS
-gosub, DOWNLOADIT
-flflt= %binhome%
-if (butrclick = "PREAPP")
-	{
-		gosub, SVV_Prog
-	}
-if (butrclick = "POSTAPP")
-	{
-		gosub, SVV_Prog
-	}
-Menu,AddProgs,Delete
-
-Loop,files,%binhome%\*.exe,F
-  {
-	  if (A_LoopFileName = "soundVolumeView.exe")
-		{
-			Menu,AddProgs,Add,soundVoumeView,SVV_Prog
-		}
-	  if (A_LoopFileName = "setsounddevice.exe")
-		{
-			Menu,AddProgs,Add,setSoundDevice,SSD_Prog
-		}
-	}	
-Menu,AddProgs,Add,Download,DownloadAddons
-return
-
-AltDownloads:
-curemote= _SetSoundDevice_
-gosub, BINGETS
-gosub, DOWNLOADIT
-flflt= %binhome%
-if (butrclick = "PREAPP")
-	{
-		gosub, PREAPP
-	}
-if (butrclick = "POSTAPP")
-	{
-		gosub, POSTAPP
-	}
-gosub, SSD_Prog
-
-Menu,AddProgs,Delete
-
-Loop,files,%binhome%\*.exe,F
-  {
-	  if (A_LoopFileName = "soundVolumeView.exe")
-		Menu,AddProgs,Add,soundVoumeView,SVV_Prog
-	  if (A_LoopFileName = "setsounddevice.exe")
-		Menu,AddProgs,Add,setSoundDevice,SSD_Prog
-  }
-Menu,AddProgs,Add,Download,DownloadAddons	  
-SB_SetText("")
-prerc=
-bgmrc=
-mmtrc=
-postrc=
-kbmrc=
-return
-
-DownloadAddons:
-Menu,addonp,Add
-Menu,addonp,DeleteAll
-if (butrclick = "PREAPP")
-	{
-		Menu,addonp, Add,Cloud-Save,DownloadButs
-		Menu,addonp, Add,,
-		Menu,addonp, Add,soundVolumeView,OtherDownloads
-											  
-	}
-if (butrclick = "POSTAPP")
-	{
-		Menu,addonp, Add,Cloud-Save,DownloadButs
-		Menu,addonp, Add,,
-		Menu,addonp, Add,soundVolumeView,OtherDownloads
-											  
-	}
-Menu,addonp,show
-prerc=
-bgmrc=
-mmtrc=
-postrc=
-kbmrc=
-return
 
 MM_ToolBDisable:
 MultiMonitor_Tool=
@@ -1481,9 +1438,9 @@ MM_GAME_Config=
 MM_GAME_ConfigT=
 MM_MEDIACENTER_Config=
 MM_MEDIACENTER_ConfigT=
-iniwrite,%A_SPace%,%RJDB_CONFIG%,GENERAL,MultiMonitor_Tool
-iniwrite,%A_SPace%,%RJDB_CONFIG%,CONFIG,MM_GAME_Config
-iniwrite,%A_SPace%,%RJDB_CONFIG%,CONFIG,MM_Mediacenter_Config
+iniwrite,%A_SPace%,%RJDBINI%,GENERAL,MultiMonitor_Tool
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
 Guicontrol,,MultiMonitor_ToolT,
 Guicontrol,,MM_Game_ConfigT,
 Guicontrol,,MM_MediaCenter_ConfigT,
@@ -1503,7 +1460,7 @@ if fileexist(binhome . "\" "Borderless Gaming" . "\" . "borderless-gaming-portab
 	{
 		Borderless_gaming_Program= %ProgramFilesx86%\Borderless Gaming\borderless-gaming-portable.exe
 	}
-iniwrite,%Borderless_Gaming_Program%,%RJDB_Config%,GENERAL,Borderless_Gaming_Program
+iniwrite,%Borderless_Gaming_Program%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
 return
 	
 MM_AUTO:
@@ -1522,7 +1479,7 @@ if fileexist(binhome . "\Multimonitortool.exe")
 	{
 		MultiMonitor_Tool= %binhome%\Multimonitortool.exe
 	}
-iniwrite,%MultiMonitor_ToolT%,%RJDB_Config%,GENERAL,MultiMonitor_Tool
+iniwrite,%MultiMonitor_ToolT%,%RJDBINI%,GENERAL,MultiMonitor_Tool
 if fileexist(home . "\DesktopMonitors.mon")
 		{
 			MM_MediaCenter_Config= %home%\DesktopMonitors.mon
@@ -1531,16 +1488,16 @@ if fileexist(home . "\GameMonitors.mon")
 		{
 			MM_GAME_Config= %home%\GameMonitors.mon
 		}
-iniwrite,%MultiMonitor_Tool%,%RJDB_Config%,GENERAL,MultiMonitor_Tool
-iniwrite,%MM_GAME_Config%,%RJDB_Config%,CONFIG,MM_GAME_Config
-iniwrite,%MM_MediaCenter_Config%,%RJDB_Config%,CONFIG,MM_MediaCenter_Config
+iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
+iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
+iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
 guicontrol,,MultiMonitor_ToolT,%MultiMontior_Tool%
 guicontrol,,MM_Game_Config,%MM_Game_Config%
 guicontrol,,MM_MediaCenter_Config,%MM_MediaCenter_Config%
 
 if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
 	{
-		iniwrite,1,%RJDB_Config%,GENERAL,MonitorMode
+		iniwrite,1,%RJDBINI%,GENERAL,MonitorMode
 	}
 return
 
@@ -1555,15 +1512,15 @@ dchk=
 if ((MultiMonitor_ToolT <> "")&& !instr(MultiMonitor_ToolT,"<"))
 	{
 		MultiMonitor_Tool= %MultiMonitor_ToolT%
-		iniwrite,%MultiMonitor_Tool%,%RJDB_Config%,GENERAL,MultiMonitor_Tool
+		iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
 	}
 	else {
 		guicontrol,,MultiMonitor_ToolT,
-		iniwrite,0,%RJDB_Config%,GENERAL,MonitorMode
+		iniwrite,0,%RJDBINI%,GENERAL,MonitorMode
 		return
 	}
 guicontrol,,MultiMonitor_ToolT,%MultiMonitor_Tool%
-if (MM_Mediacenter_Config = "")
+if ((MM_Mediacenter_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe"))
     {
         msgbox,4100,Setup,Setup the MediaCenter Monitor Profile now?
         ifmsgbox,yes
@@ -1571,7 +1528,7 @@ if (MM_Mediacenter_Config = "")
                 gosub, MMSETUPD
             }
     }
-if (MM_GAME_Config = "")
+if ((MM_GAME_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe"))
     {
         msgbox,4100,Setup,Setup the Game Monitor Profile now?`nSelect the game-monitor in the dropdown menu
         ifmsgbox,yes
@@ -1581,7 +1538,7 @@ if (MM_GAME_Config = "")
     }
 if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
 	{
-		iniwrite,2,%RJDB_Config%,GENERAL,MonitorMode
+		iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
 		guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
 		guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
 		guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
@@ -1610,7 +1567,7 @@ if ((setupmm = "")or !fileexist(CFGDIR . "\" . "GameMonitors.mon"))
 			{
 				MM_GAME_Config= %MM_GAME_ConfigT%
 				FileCopy,%MM_GAME_Config%,%home%\GameMonitors.mon
-				iniwrite,%MM_GAME_Config%,%RJDB_Config%,CONFIG,MM_GAME_Config
+				iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
 			}
 			else {
 				guicontrol,,MM_GAME_ConfigT, 
@@ -1619,7 +1576,7 @@ if ((setupmm = "")or !fileexist(CFGDIR . "\" . "GameMonitors.mon"))
 	}
 if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
 	{
-		iniwrite,2,%RJDB_Config%,GENERAL,MonitorMode
+		iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
 		guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
 		guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
 		guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
@@ -1647,7 +1604,7 @@ if ((setupmm = "")or !fileexist(CFGDIR . "\" . "DesktopMonitors.mon"))
 			{
 				MM_MediaCenter_Config= %MM_MediaCenter_ConfigT%
 				FileCopy,%MM_MediaCenter_Config%,%home%\DesktopMonitors.mon
-				iniwrite,%MM_MediaCenter_Config%,%RJDB_Config%,CONFIG,MM_MediaCenter_Config
+				iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
 			}
 			else {
 				guicontrol,,MM_MediaCenter_ConfigT, 
@@ -1657,7 +1614,7 @@ if ((setupmm = "")or !fileexist(CFGDIR . "\" . "DesktopMonitors.mon"))
 setupmm=
 if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
 	{
-		iniwrite,2,%RJDB_Config%,GENERAL,MonitorMode
+		iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
 		guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
 		guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
 		guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
@@ -1669,26 +1626,9 @@ return
 BGM_ProgBDisable:
 Borderless_gaming_Program=
 Borderless_gaming_ProgramT=
-iniwrite,%A_Space%,%RJDB_CONFIG%,GENERAL,Borderless_Gaming_Program
+iniwrite,%A_Space%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
 Guicontrol,,Borderless_Gaming_ProgramT,
 return
-
-BGM_ProgBDownload:
-curemote= _BorderlessGaming_
-gosub, BINGETS
-gosub, DOWNLOADIT
-Borderless_Gaming_Program= %binhome%\Borderless Gaming\borderless-gaming-portable.exe
-Borderless_Gaming_ProgramT= %Borderless_Gaming_Program%
-if !fileexist(Borderless_Gaming_Program)
-	{
-		Borderless_Gaming_Program=
-		Borderless_Gaming_ProgramT=
-	}
-gosub, %butrclick%
-dchk=
-SB_SetText("")
-return
-
 
 BGM_ProgB:
 gui,submit,nohide
@@ -1707,8 +1647,8 @@ if ((Borderless_Gaming_ProgramT <> "")&& !instr(Borderless_Gaming_ProgramT,"<"))
 		tuval:= (tuval * 5)
 		BGP_State:= (tuval + BGP_Enable + teval)
 		Borderless_Gaming_Program= %Borderless_Gaming_ProgramT%
-		iniwrite,%Borderless_Gaming_Program%,%RJDB_Config%,GENERAL,Borderless_Gaming_Program
-		iniwrite,%BGP_State%,%RJDB_Config%,GENERAL,BGP_State
+		iniwrite,%Borderless_Gaming_Program%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
+		iniwrite,%BGP_State%,%RJDBINI%,GENERAL,BGP_State
 	}
 	else {
 		guicontrol,,BGP_Enable,0
@@ -1724,29 +1664,27 @@ return
 JBE_ProgB:
 gui,submit,nohide
 guicontrolget,JBEWait,,JBEWait
+predl=<
+if (JBEWait = 1)
+	{
+		predl=W<
+	}
 if (dchk = "")
 	{
 		JustBeforeExitT=
 		FileSelectFile,JustBeforeExitT,3,%home%,*.*
 	}
 dchk=
-if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "JustBeforeExit"))
+if ((JustBeforeExitT <> "")&& (JustBeforeExitT <> "Cloud_Backup"))
 	{
-		predl=<
-		if (instr(JustBeforeExitT,".cmd")or instr(JustBeforeExitT,".bat") or instr(JustBeforeExitT,".ps1")or instr(JustBeforeExitT,".psd")or instr(JustBeforeExitT,".vbe")or instr(JustBeforeExitT,".wsf")or instr(JustBeforeExitT,".wsc"))
-			{
-				predl=0W<
-				JBEWait= 1
-			}
 		JustBeforeExit= %predl%%JustBeforeExitT%
 		Guicontrol, +cLime, JustBeforeExitT
-		iniwrite,%JustBeforeExit%,%RJDB_Config%,GENERAL,JustBeforeExit
+		iniwrite,%JustBeforeExit%,%RJDBINI%,GENERAL,JustBeforeExit
 	}
 	else {
-		guicontrol,,JustBeforeExitT,JustBeforeExit
+		guicontrol,,JustBeforeExitT,Run Before Exit
 		return
 	}
-iniwrite,%JustBeforeExitT%,%RJDB_CONFIG%,GENERAL,JustBeforeExit
 guicontrol,,JustBeforeExitT,%JustBeforeExitT%
 guicontrol,,JBEWAIT,%JBEWAIT%
 return
@@ -1754,8 +1692,8 @@ return
 JBE_ProgBDisable:
 JustBeforeExit=
 JustBeforeExitT=
-iniwrite,%A_Space%,%RJDB_CONFIG%,GENERAL,JustBeforeExit
-guicontrol,,JustBeforeExitT,
+iniwrite,%A_Space%,%RJDBINI%,GENERAL,JustBeforeExit
+guicontrol,,JustBeforeExitT,Run Before Exit
 JBEWAIT=0
 guicontrol,,JBEWAIT,%JBEWAIT%
 return
@@ -1763,8 +1701,8 @@ return
 JAL_ProgBDisable:
 JustAfterLaunch=
 JustAfterLaunchT=
-iniwrite,%A_Space%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
-guicontrol,,JustAfterLaunchT,
+iniwrite,%A_Space%,%RJDBINI%,GENERAL,JustAfterLaunch
+guicontrol,,JustAfterLaunchT,Run After Launch
 JALWAIT=0
 guicontrol,,JALWAIT,%JALWAIT%
 return
@@ -1772,29 +1710,27 @@ return
 JAL_ProgB:
 gui,submit,nohide
 guicontrolget,JALWait,,JALWait
+predl=<
+if (JALWait = 1)
+	{
+		predl=W<
+	}
 if (dchk = "")
 	{
 		JustAfterLaunchT=
-		FileSelectFile,JustAfterLaunchT,3,After Launch,Select File,*.*
+		FileSelectFile,JustAfterLaunchT,3,%home%,*.*
 	}
 dchk=
-if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "JustAfterLaunch"))
+if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "Cloud_Restore"))
 	{
-		predl=<
-		if (instr(JustAfterLaunchT,".cmd")or instr(JustAfterLaunchT,".bat") or instr(JustAfterLaunchT,".ps1")or instr(JustAfterLaunchT,".psd")or instr(JustAfterLaunchT,".vbs")or instr(JustAfterLaunchT,".vbe")or instr(JustAfterLaunchT,".wsf")or instr(JustAfterLaunchT,".wsc"))
-			{
-				predl=0W<
-				JALWait= 1
-			}
 		JustAfterLaunch= %predl%%JustAfterLaunchT%
 		Guicontrol, +cLime, JustAfterLaunchT
-		iniwrite,%JustAfterLaunch%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
+		iniwrite,%JustAfterLaunch%,%RJDBINI%,GENERAL,JustAfterLaunch
 	}
 	else {
-		guicontrol,,JustAfterLaunchT,JustAfterLaunch
+		guicontrol,,JustAfterLaunchT,Run After Launch
 		return
 	}
-iniwrite,%JustAfterLaunch%,%RJDB_CONFIG%,GENERAL,JustAfterLaunch
 guicontrol,,JustAfterLaunchT,%JustAfterLaunch%
 guicontrol,,JALWAIT,%JALWAIT%
 return
@@ -1810,7 +1746,7 @@ teval:= (teval * 8)
 guicontrolget,tuval,,BGP_TU
 tuval:= (tuval * 5)
 BGP_State:= (tuval + BGP_Enable + teval)
-iniwrite,%BGP_State%,%RJDB_Config%,GENERAL,BGP_State
+iniwrite,%BGP_State%,%RJDBINI%,GENERAL,BGP_State
 return
 gui,submit,nohide
 BGP_State=
@@ -1820,12 +1756,12 @@ teval:= (teval * 8)
 guicontrolget,tuval,,BGP_TU
 tuval:= (tuval * 5)
 BGP_State:= (tuval + BGP_Enable + teval)
-iniwrite,%BGP_State%,%RJDB_Config%,GENERAL,BGP_State
+iniwrite,%BGP_State%,%RJDBINI%,GENERAL,BGP_State
 return
 BGP_Enable:
 gui,submit,nohide
 BGP_State=
-iniread,BGProg,%RJDB_CONFIG%,GENERAL,Borderless_Gaming_Program
+iniread,BGProg,%RJDBINI%,GENERAL,Borderless_Gaming_Program
 if ((BGProg = "")or(BGProg = "ERROR"))
 	{
 		guicontrol,,BGP_Enable,0
@@ -1838,7 +1774,7 @@ teval:= (teval * 8)
 guicontrolget,tuval,,BGP_TU
 tuval:= (tuval * 5)
 BGP_State:= (tuval + BGP_Enable + teval)
-iniwrite,%BGP_State%,%RJDB_Config%,GENERAL,BGP_State
+iniwrite,%BGP_State%,%RJDBINI%,GENERAL,BGP_State
 return
 
 PostAPP:
@@ -1851,11 +1787,11 @@ if (Postwait = 1)
 	{
 		Postwl= W
 	}
-if instr(POSTAPPF,"audio.cmd")
+if instr(POSTAPPF,".cmd")
 	{
 		Postwl.= "H"
 	}
-iniread,inn,%RJDB_CONFIG%,CONFIG,%fbdnum%_Post
+iniread,inn,%RJDBINI%,CONFIG,%fbdnum%_Post
 if (inn = A_SPace)
 	{
 		inn:= A_Space
@@ -1874,11 +1810,11 @@ if (PostAPPT <> "")
 		PostList= |
 		Loop,3
 			{
-				iniread,cftsv,%RJDB_Config%,CONFIG,%A_Index%_Post
+				iniread,cftsv,%RJDBINI%,CONFIG,%A_Index%_Post
 				stringsplit,cftst,cftsv,<
 				if (A_Index = fbdnum)
 					{
-						iniwrite,%fbdnum%%Postwl%<%PostAPP%,%RJDB_Config%,CONFIG,%fbdnum%_Post
+						iniwrite,%fbdnum%%Postwl%<%PostAPP%,%RJDBINI%,CONFIG,%fbdnum%_Post
 						Postlist.= fbdnum . Postwl . "<" . PostAPP . "|"
 						if (A_Index = 1)
 							{
@@ -1911,7 +1847,7 @@ if instr(PREAPPF,"audio.cmd")
 	{
 		prewl.= "H"
 	}
-iniread,inn,%RJDB_CONFIG%,CONFIG,%fbdnum%_Pre
+iniread,inn,%RJDBINI%,CONFIG,%fbdnum%_Pre
 if (inn = A_SPace)
 	{
 		inn:= A_Space
@@ -1930,11 +1866,11 @@ if (PREAPPT <> "")
 		PreList= |
 		Loop,3
 			{
-				iniread,cftsv,%RJDB_Config%,CONFIG,%A_Index%_Pre
+				iniread,cftsv,%RJDBINI%,CONFIG,%A_Index%_Pre
 				stringsplit,cftst,cftsv,<
 				if (A_Index = fbdnum)
 					{
-						iniwrite,%fbdnum%%prewl%<%PREAPP%,%RJDB_Config%,CONFIG,%fbdnum%_Pre
+						iniwrite,%fbdnum%%prewl%<%PREAPP%,%RJDBINI%,CONFIG,%fbdnum%_Pre
 						PreList.= fbdnum . prewl . "<" . PREAPP . "|"
 						if (A_Index = 1)
 							{
@@ -1956,7 +1892,7 @@ return
 REMEXCL:
 gui,submit,nohide
 guicontrolget,EXCLDIRDD,,EXCLUDE_DIRECTORYT
-iniread,excltst,%RJDB_Config%,GENERAL,Exclude_Directory
+iniread,excltst,%RJDBINI%,GENERAL,Exclude_Directory
 knum=
 Exclist=
 Loop,parse,excltst,|
@@ -1980,14 +1916,14 @@ Loop,parse,excltst,|
 		Exclist.= CURDP . "|"
     }
 EXCLUDE_DIRECTORY= %excList%
-iniwrite,%exclist%,%RJDB_Config%,GENERAL,Exclude_Directory
+iniwrite,%exclist%,%RJDBINI%,GENERAL,Exclude_Directory
 guicontrol,,EXCLUDE_DirectoryT,|%exclist%
 return
 
 REMSRC:
 gui,submit,nohide
 guicontrolget,SRCDIRDD,,SOURCE_DIRECTORYT
-iniread,cftst,%RJDB_Config%,GENERAL,Source_Directory
+iniread,cftst,%RJDBINI%,GENERAL,Source_Directory
 knum=
 Srclist=
 Loop,parse,cftst,|
@@ -2011,7 +1947,7 @@ Loop,parse,cftst,|
 		Srclist.= CURDP . "|"
     }
 SOURCE_DIRECTORY= %SrcList%
-iniwrite,%Srclist%,%RJDB_Config%,GENERAL,SOURCE_Directory
+iniwrite,%Srclist%,%RJDBINI%,GENERAL,SOURCE_Directory
 guicontrol,,SOURCE_DirectoryT,|%Srclist%
 return
 
@@ -2023,7 +1959,7 @@ return
 NAMECHK:
 gui,submit,nohide
 guicontrolget,namechk,,namechk,
-iniwrite,%namechk%,%RJDB_CONFIG%,GENERAL,Name_Check
+iniwrite,%namechk%,%RJDBINI%,GENERAL,Name_Check
 return
 
 INCLALTS:
@@ -2045,20 +1981,18 @@ return
 DELpostAPP:
 gui,submit,nohide
 guicontrolget,DELpostDD,,POSTDNUM
-iniWrite,%DELpostDD%<,%RJDB_Config%,CONFIG,%DELpostDD%_post
+iniWrite,%DELpostDD%<,%RJDBINI%,CONFIG,%DELpostDD%_post
 postList= |
 postWaitn=
 tpds=
 Loop, 3
 	{
-		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_post
+		iniread,tpds,%RJDBINI%,CONFIG,%A_Index%_post
+		plre%a_index%= %tpds%
 		postList.= tpds . "|"
-		if (A_Index = DELpostDD)
-			{
-				postList.= "|"
-			}
+		
 	}
-guicontrol,,postDD,%postList%
+guicontrol,,postDD,|%plre1%|%postList%
 guicontrol,,postWAIT,%postwaitn%
 guicontrol,,postDNUM,1
 return
@@ -2066,20 +2000,17 @@ return
 DELPREAPP:
 gui,submit,nohide
 guicontrolget,DELPreDD,,PRETNUM
-iniWrite,%DELPreDD%<,%RJDB_Config%,CONFIG,%DELPreDD%_Pre
+iniWrite,%DELPreDD%<,%RJDBINI%,CONFIG,%DELPreDD%_Pre
 PreList= |
 PreWaitn=
 tpds=
 Loop, 3
 	{
-		iniread,tpds,%RJDB_Config%,CONFIG,%A_Index%_Pre
+		iniread,tpds,%RJDBINI%,CONFIG,%A_Index%_Pre
+		plre%a_index%= %tpds%
 		PreList.= tpds . "|"
-		if (A_Index = DELPreDD)
-			{
-				PreList.= "|"
-			}
 	}
-guicontrol,,PreDD,%PreList%
+guicontrol,,PreDD,|%plre1%|%PreList%
 guicontrol,,PreWAIT,%prewaitn%
 guicontrol,,PRETNUM,1
 return
@@ -2116,11 +2047,11 @@ if ((ddn2 = A_Space) or (ddn2 = ""))
 PreList= |
 Loop,3
 	{
-		iniread,cftsv,%RJDB_Config%,CONFIG,%A_Index%_Post
+		iniread,cftsv,%RJDBINI%,CONFIG,%A_Index%_Post
 		stringsplit,cftst,cftsv,<
 		if (A_Index = fbdnum)
 			{
-				iniwrite,%fbdnum%%prewl%<%cftst2%,%RJDB_Config%,CONFIG,%fbdnum%_Post
+				iniwrite,%fbdnum%%prewl%<%cftst2%,%RJDBINI%,CONFIG,%fbdnum%_Post
 				PreList.= fbdnum . prewl . "<" . cftst2 . "||"
 				continue
 			}
@@ -2131,7 +2062,12 @@ return
 
 JALWait:
 gui,submit,nohide
-guicontrolget,JALWAIT,,JALWAIT
+guicontrolget,JALWait,,JALWait
+predl=<
+if (JALWait = 1)
+	{
+		predl=W<
+	}
 JALtmp2=
 stringsplit,JALtmp,JustAfterLaunch,<
 JustAfterLaunch= %JALtmp2%
@@ -2139,7 +2075,7 @@ jalop= %JALtmp1%
 stringreplace,jalop,jalop,W,,
 if (JALtmp2 = "")
 	{
-		jalop=
+		jalop= %predl%
 		JustAfterLaunch= %JALtmp1%
 	}
 if (JustBeforeExit = "Cloud_Restore")
@@ -2148,29 +2084,25 @@ if (JustBeforeExit = "Cloud_Restore")
 	}	
 if ((JustAfterLaunch = "")or(JustAfterLaunch = "ERROR")or !fileexist(JustAfterLaunch))
 	{
-		if (JALWait = 1)
-			{
-				JALWait= 0
-				guicontrol,,JALWAIT,%JALWAIT%
-			}
 		SB_SetText("A program must be assigned")
+		iniwrite,%A_Space%,%RJDBINI%,GENERAL,JustAfterLaunch
+		guicontrol,,JustAfterLaunchT,Run After Launch
 		return
 	}
 jalcl:
-if (JALWAIT = 1)
-	{
-		JustAfterLaunch=%jalop%W<%JustAfterLaunch%
-	}
-else {
-		JustAfterLaunch=%jalop%<%JustAfterLaunch%
-	}
-iniwrite,%JustAfterLaunch%,%RJDB_Config%,GENERAL,JustAfterLaunch
+JustAfterLaunch=%predl%%JustAfterLaunch%
+iniwrite,%JustAfterLaunch%,%RJDBINI%,GENERAL,JustAfterLaunch
 guicontrol,,JustAfterLaunchT,%justAfterLaunch%
 return
 
 JBEWait:
 gui,submit,nohide
-guicontrolget,JBEWAIT,,JBEWAIT
+guicontrolget,JBEWait,,JBEWait
+predl=<
+if (JBEWait = 1)
+	{
+		predl=W<
+	}
 jbetmp2=
 stringsplit,jbetmp,JustBeforeExit,<
 JustBeforeExit= %jbetmp2%
@@ -2178,7 +2110,7 @@ jbeop= %jbetmp1%
 stringreplace,jbeop,jbeop,W,,
 if (jbetmp2 = "")
 	{
-		jbeop= 
+		jbeop= %predl%
 		JustBeforeExit= %jbetmp1%
 	}
 if (JustBeforeExit = "Cloud_Backup")
@@ -2187,23 +2119,14 @@ if (JustBeforeExit = "Cloud_Backup")
 	}
 if ((JustBeforeExit = "")or(JustbeforeExit = "ERROR")or !fileexist(JustBeforeExit))
 	{
-		if (JBEWait = 1)
-			{
-				JBEWait= 0
-				guicontrol,,JBEWAIT,%JBEWAIT%
-			}
 		SB_SetText("A program must be assigned")
+		iniwrite,%A_Space%,%RJDBINI%,GENERAL,JustBeforeExit
+		guicontrol,,JustBeforeExitT,Run Before Exit
 		return
 	}
 jbecl:
-if (JBEWAIT = 1)
-	{
-		JustBeforeExit=%jbeop%W<%JustBeforeExit%
-	}
-else {
-		JustBeforeExit=%jbeop%<%JustBeforeExit%
-	}
-iniwrite,%JustBeforeExit%,%RJDB_Config%,GENERAL,JustBeforeExit
+JustBeforeExit=%predl%<%JustBeforeExit%
+iniwrite,%JustBeforeExit%,%RJDBINI%,GENERAL,JustBeforeExit
 guicontrol,,JustBeforeExitT,%justbeforeexit%
 return
 
@@ -2227,11 +2150,11 @@ if ((ddn2 = A_Space) or (ddn2 = ""))
 postList= |
 Loop,3
 	{
-		iniread,cftsv,%RJDB_Config%,CONFIG,%A_Index%_post
+		iniread,cftsv,%RJDBINI%,CONFIG,%A_Index%_post
 		stringsplit,cftst,cftsv,<
 		if (A_Index = fbdnum)
 			{
-				iniwrite,%fbdnum%%postwl%<%cftst2%,%RJDB_Config%,CONFIG,%fbdnum%_post
+				iniwrite,%fbdnum%%postwl%<%cftst2%,%RJDBINI%,CONFIG,%fbdnum%_post
 				postList.= fbdnum . postwl . "<" . cftst2 . "||"
 				continue
 			}
@@ -2356,7 +2279,7 @@ return
 EnableLogging:
 gui,submit,nohide
 guicontrolget,EnableLogging,,EnableLogging
-iniwrite,%EnableLogging%,%RJDB_Config%,GENERAL,Logging
+iniwrite,%EnableLogging%,%RJDBINI%,GENERAL,Logging
 return
 
 OPNLOG:
@@ -2369,6 +2292,26 @@ else {
 	SB_SetText("no log exists")
 }
 return
+
+MM_ToolBReset:
+if (MultiMonitor_Tool = "")
+	{
+		SB_SetText("Multimonitor Tool is not configured")
+		return
+	}
+MM_GAME_Config=
+MM_GAME_ConfigT=
+MM_MEDIACENTER_Config=
+MM_MEDIACENTER_ConfigT=
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
+iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
+Guicontrol,,MultiMonitor_ToolT,
+Guicontrol,,MM_Game_ConfigT,
+Guicontrol,,MM_MediaCenter_ConfigT,
+gosub,MMSETUPD
+gosub,MMPROG
+return
+
 WRITEMAPR:
 
 INITANTIMICRO:
@@ -2474,10 +2417,11 @@ if (kbmpprt <> "")
 		keyboard_Mapper= %home%\%JMAP%_!.cmd
 		Player1_Template=%home%\Player1.%mapper_extension%
 		Player2_Template=%home%\Player2.%mapper_extension%
-		MediaCenter_Profile_Template=%home%\MediaCenter.%mapper_extension%
+		MediaCenter_Template=%home%\MediaCenter.%mapper_extension%
 		FileDelete,%Player1_Template%
 		FileDelete,%Player2_Template%
-		FileDelete,%MediaCenter_Profile_Template%
+		FileDelete,%home%\%JMAP%_Blank.%mapper_extension%
+		FileDelete,%MediaCenter_Template%
 		stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 		stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
 		stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
@@ -2496,16 +2440,17 @@ if (kbmpprt <> "")
 		FileAppend,%kbmamcp%,KBMGame.%mapper_extension%,UTF-8-RAW
 		FileAppend,%amcp%,%Player1_Template%,UTF-8-RAW
 		FileAppend,%amcp%,%Player2_Template%,UTF-8-RAW
-		FileAppend,%amcd%,%MediaCenter_Profile_Template%,UTF-8-RAW
-		iniwrite,%JMAP%,%RJDB_Config%,JOYSTICKS,JMAP
-		iniwrite,%Mapper%,%RJDB_Config%,GENERAL,Mapper
-		Run,%home%\rjdb.ini
-		iniwrite,%Mapper_Extension%,%RJDB_Config%,JOYSTICKS,Mapper_Extension
-		iniwrite,%kbmpprt%,%RJDB_Config%,JOYSTICKS,%JMAP%_executable
-		iniwrite,%keyboard_Mapper%,%RJDB_Config%,JOYSTICKS,keyboard_Mapper
-		iniwrite,%Player1_Template%,%RJDB_Config%,JOYSTICKS,Player1_Template
-		iniwrite,%Player2_Template%,%RJDB_Config%,JOYSTICKS,Player2_Template
-		iniwrite,%Mediacenter_Profile_Template%,%RJDB_Config%,JOYSTICKS,Mediacenter_Profile_Template
+		FileAppend,%amcd%,%MediaCenter_Template%,UTF-8-RAW
+		iniwrite,%JMAP%,%RJDBINI%,JOYSTICKS,JMAP
+		iniwrite,%Mapper%,%RJDBINI%,GENERAL,Mapper
+		filecopy,%source%\%prf%_Blank.set,%home%\%JMAP%_Blank.%mapper_extension%
+		;Run,%home%\rjdb.ini
+		iniwrite,%Mapper_Extension%,%RJDBINI%,JOYSTICKS,Mapper_Extension
+		iniwrite,%kbmpprt%,%RJDBINI%,JOYSTICKS,%JMAP%_executable
+		iniwrite,%keyboard_Mapper%,%RJDBINI%,JOYSTICKS,keyboard_Mapper
+		iniwrite,%Player1_Template%,%RJDBINI%,JOYSTICKS,Player1_Template
+		iniwrite,%Player2_Template%,%RJDBINI%,JOYSTICKS,Player2_Template
+		iniwrite,%MediaCenter_Template%,%RJDBINI%,JOYSTICKS,MediaCenter_Template
 
 		if (ASADMIN = 1)
 			{
@@ -2527,18 +2472,18 @@ if (kbmpprt <> "")
 			{
 				PLR2TALRT= Red
 			}
-		if !fileExist(MediaCenter_Profile)
+		if !fileExist(MediaCenter_Template)
 			{
 				MCPRFALRT= Red
 			}
 		guicontrol, +c%KBMAPALRT%,Keyboard_MapperT
 		guicontrol, +c%PLR1ALRT%,Player1_TemplateT
 		guicontrol, +c%PLR2ALRT%,Player2_TemplateT
-		guicontrol, +c%MCPRFALRT%,MediaCenter_ProfileT
+		guicontrol, +c%MCPRFALRT%,MediaCenter_TemplateT
 		guicontrol,,Keyboard_MapperT,%keyboard_Mapper%
 		guicontrol,,Player1_TemplateT,%Player1_Template%
 		guicontrol,,Player2_TemplateT,%Player2_Template%
-		guicontrol,,MediaCenter_ProfileT,%MediaCenter_Profile_Template%
+		guicontrol,,MediaCenter_TemplateT,%MediaCenter_Template%
 		
 	}
 kbmpprt=
@@ -2682,13 +2627,13 @@ Loop,parse,dralbet,|
 if (ACONCAT_ROOT <> "")
 	{
 		IncludeDD=0
-		iniwrite,0,%RJDB_CONFIG%,GENERAL,IncludeDD
+		iniwrite,0,%RJDBINI%,GENERAL,IncludeDD
 	}
 STEAM_ROOT=
 RegRead, steamdir, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam,InstallPath
 if fileExist(steamdir)
 	{
-			iniwrite,%steamdir%,%RJDB_CONFIG%,GENERAL,Steam_Directory
+			iniwrite,%steamdir%,%RJDBINI%,GENERAL,Steam_Directory
 			Loop,files,%steamdir%\*.vdf,R
 				{	
 					if (A_Loopfilename = "libraryfolders.vdf")
@@ -3060,7 +3005,7 @@ if (ACONCAT_ROOT <> "")
 					}
 				sourcepop.= A_LoopField . "|"
 			}
-		iniwrite,%Source_directory%,%RJDB_Config%,GENERAL,SOURCE_DIRECTORY
+		iniwrite,%Source_directory%,%RJDBINI%,GENERAL,SOURCE_DIRECTORY
 	}
 else {
 	sourcepop=
@@ -3077,22 +3022,22 @@ else {
 				}
 			sourcepop.= A_LoopField . "|"
 		}
-	iniwrite,%CONCAT_ROOT%,%RJDB_CONFIG%,GENERAL,SOURCE_DIRECTORY
-	iniwrite,%CONCAT_ROOT%,%RJDB_CONFIG%,GENERAL,DIST_DIRECTORY
+	iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,SOURCE_DIRECTORY
+	iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,DIST_DIRECTORY
 	return
 }
-iniwrite,%CONCAT_ROOT%,%RJDB_CONFIG%,GENERAL,DIST_DIRECTORY
+iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,DIST_DIRECTORY
 return
 
 popgui:
-FileRead,rjdb,%RJDB_Config%
+FileRead,rjdb,%RJDBINI%
 Prelist=
 PreStatus=
 postlist=
 PostStatus=
 PREDDT=
 POSTDDT=
-iniread,RJDBSECTS,%RJDB_Config%
+iniread,RJDBSECTS,%RJDBINI%
 Loop,parse,RJDBSECTS,`r`n
 	{
 		if (A_LoopField = "")
@@ -3154,7 +3099,7 @@ if (resetting = 1)
 	}
 
 Srcdeflt= %home%\Shortcuts
-Iniread,Source_Directory,%RJDB_Config%,GENERAL,Source_Directory
+Iniread,Source_Directory,%RJDBINI%,GENERAL,Source_Directory
 if ((Source_Directory = "")or (resetting = 1) or (initz = 1))
 	{
 		gosub, INITQUERY
@@ -3256,7 +3201,7 @@ guicontrol,,CenJBE,%CENUM%
 guicontrol,,CenPRE,%CENUM%
 guicontrol,,CenPST,%CENUM%
 CENTRLZ=%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenKBM:
 gui,submit,nohide
@@ -3279,8 +3224,8 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+CENTRALIZE= %CENTRLZ%
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPL1:
 gui,submit,nohide
@@ -3303,8 +3248,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPL2:
 gui,submit,nohide
@@ -3327,8 +3273,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenMC:
 gui,submit,nohide
@@ -3352,7 +3299,8 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+CENTRALIZE= %CENTRLZ%
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenGM:
 gui,submit,nohide
@@ -3376,8 +3324,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 
 CenMM:
@@ -3401,8 +3350,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenJAL:
 gui,submit,nohide
@@ -3426,7 +3376,8 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+CENTRALIZE= %CENTRLZ%
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenJBE:
 gui,submit,nohide
@@ -3449,8 +3400,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPRE:
 gui,submit,nohide
@@ -3473,8 +3425,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPST:
 gui,submit,nohide
@@ -3498,8 +3451,9 @@ if instr(CENTRALIZE,0)
 	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+CENTRALIZE= %CENTRLZ%
 
-iniwrite,%CENTRLZ%,%RJDB_CONFIG%,GENERAL,CENTRALIZE
+iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 
 
@@ -3519,7 +3473,7 @@ ifmsgbox,OK
         ifexist,%CFGDIR%\DesktopMonitors.mon
             {
 				MM_MEDIACENTER_Config= %CFGDIR%\DesktopMonitors.mon
-				iniwrite,%CFGDIR%\DesktopMonitors.mon,%RJDB_Config%,CONFIG,MM_MEDIACENTER_Config
+				iniwrite,%CFGDIR%\DesktopMonitors.mon,%RJDBINI%,CONFIG,MM_MEDIACENTER_Config
             }
            else {
             Msgbox,,Failure,The current monitor configuration could not be saved
@@ -3538,7 +3492,7 @@ return
 
 
 DDPOPS:
-iniread,cftst,%RJDB_Config%,CONFIG
+iniread,cftst,%RJDBINI%,CONFIG
 knum=
 snum=
 Loop,parse,cftst,`n`r
@@ -3596,11 +3550,19 @@ FileSelectFile,Gametoadd,35,,Select a Game,*.exe;*.lnk
 nFileName:= GameToAdd
 splitpath,nFileName,FileNM,FilePath,FileExt,filtn
 INFN= 1
-if (!instr(SOURCE_DIRECTORY,filepath)&& !instr(Extra_Source,filepath))
+Loop,parse,SOURCE_DIRECTORY,|
+	{
+		if instr(filepath,A_LoopField)
+			{
+				goto, gadded
+			}
+	}
+if !instr(Extra_Source,filepath)
 	{ 
 		Extra_Source.= filepath . "|"
-		iniwrite,%filepath%,%RJDB_CONFIG%,GENERAL,Extra_Source
+		iniwrite,%filepath%,%RJDBINI%,GENERAL,Extra_Source
 	}
+gadded:	
 lvachk= +Check
 NSPLIT= %filepath%
 NSOURCEDLIST= 
@@ -3640,32 +3602,32 @@ if (CREFLD = 0)
 		guicontrol,,GMLNK,0
 		guicontrol,disable,GMCONF
 		guicontrol,,GMCONF,0
-		iniwrite,%CREFLD%,%RJDB_CONFIG%,CONFIG,GMJOY
-		iniwrite,%CREFLD%,%RJDB_CONFIG%,CONFIG,GMLNK
-		iniwrite,%CREFLD%,%RJDB_CONFIG%,CONFIG,GMCONF
+		iniwrite,%CREFLD%,%RJDBINI%,CONFIG,GMJOY
+		iniwrite,%CREFLD%,%RJDBINI%,CONFIG,GMLNK
+		iniwrite,%CREFLD%,%RJDBINI%,CONFIG,GMCONF
 	}
-iniwrite,%CREFLD%,%RJDB_CONFIG%,CONFIG,CREFLD
+iniwrite,%CREFLD%,%RJDBINI%,CONFIG,CREFLD
 return
 
 GMCONF:
 gui,submit,nohide
-iniwrite,%GMCONF%,%RJDB_CONFIG%,CONFIG,GMCONF
+iniwrite,%GMCONF%,%RJDBINI%,CONFIG,GMCONF
 return
 
 GMJOY:
 gui,submit,nohide
-iniwrite,%GMJOY%,%RJDB_CONFIG%,CONFIG,GMJOY
+iniwrite,%GMJOY%,%RJDBINI%,CONFIG,GMJOY
 return
 
 
 ASADMIN:
 gui,submit,nohide
-iniwrite,%ASADMIN%,%RJDB_CONFIG%,CONFIG,ASADMIN
+iniwrite,%ASADMIN%,%RJDBINI%,CONFIG,ASADMIN
 return
 
 GMLNK:
 gui,submit,nohide
-iniwrite,%GMLNK%,%RJDB_CONFIG%,CONFIG,GMLNK
+iniwrite,%GMLNK%,%RJDBINI%,CONFIG,GMLNK
 return
 
 ;;##########################################################################
@@ -4280,8 +4242,9 @@ if !fileexist(LKUP_DB)
 							{
 								guicontrol,disable,%A_LoopField%
 							}
-						gosub,getsivk
 						SB_SetText("..  ... Generating Lookup Table....")
+						gosub,getsivk
+						SB_SetText("Lookup Table ''lookup.db'' Generated")
 						Loop,parse,GUIVARS,|
 							{
 								guicontrol,enable,%A_LoopField%
@@ -4289,13 +4252,12 @@ if !fileexist(LKUP_DB)
 					}
 			}
 	}
-if fileexist(LKUP_DB)
+if (fileexist(LKUP_DB)&& (NetChk = 1))
 	{
-		SB_SetText("Lookup Table ''lookup.db'' Generated")
-		iniwrite,1,%RJDB_CONFIG%,GENERAL,Net_Check
+		iniwrite,1,%RJDBINI%,GENERAL,Net_Check
 	}
 	else {
-		iniwrite,0,%RJDB_CONFIG%,GENERAL,Net_Check
+		iniwrite,0,%RJDBINI%,GENERAL,Net_Check
 		SB_SetText("Right-click to delete the lookup table database.")
 	}
 return
@@ -4888,11 +4850,11 @@ Loop, %fullstn0%
 			cfgcopied=
 			if (!FileExist(gamecfg)or(OVERWRT = 1))
 				{
-					Filecopy,%RJDB_Config%,%gamecfg%
+					Filecopy,%RJDBINI%,%gamecfg%
 					cfgcopied= 1
 					klist=
 				}
-			fileread,grg,%RJDB_CONFIG%
+			fileread,grg,%RJDBINI%
 			Loop,parse,grg,`n`r
 				{
 					if (A_LoopField = "")
@@ -5093,8 +5055,8 @@ Loop, %fullstn0%
 						}
 					if (GMCONF = 1)
 						{
-							SplitPath,MediaCenter_Profile_Template,MediaCenter_ProfileName	
-							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_ProfileName%	
+							SplitPath,MediaCenter_Template,MediaCenter_TemplateName	
+							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_TemplateName%	
 							Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
 							Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
 							if ((pl1ovr <> "<")&&(pl1ovr <> "")&&fileexist(pl1ovr))
@@ -5109,7 +5071,7 @@ Loop, %fullstn0%
 								}
 							if ((mcpovr <> "<")&&(mcpovr <> "")&&fileExist(mcpovr))
 								{
-									MediaCenter_Profile_Template= %mcpovr%
+									MediaCenter_Template= %mcpovr%
 								}
 							if (CENPL1 = 1)
 								{
@@ -5121,7 +5083,7 @@ Loop, %fullstn0%
 								}
 							if (CENMC = 1)
 								{
-									MediaCenter_ProfileX= %MediaCenter_Profile_Template%
+									MediaCenter_ProfileX= %MediaCenter_Template%
 								}	
 							if ((G_SaveData = "") or (G_SaveData = "ERROR"))
 								{
@@ -5273,11 +5235,11 @@ Loop, %fullstn0%
 						}
 					if (CENMC <> 1)
 						{
-							if (MediaCenter_Profile_Template <> MediaCenter_ProfileX)
+							if (MediaCenter_Template <> MediaCenter_ProfileX)
 								{
-									Filecopy,%MediaCenter_Profile_Template%,%MediaCenter_ProfileX%,%OVERWRT%
+									Filecopy,%MediaCenter_Template%,%MediaCenter_ProfileX%,%OVERWRT%
 								}
-							if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX))
+							if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX)or(MediaCenter_ProfileX = "DISABLED"))
 								{
 									if (OVERWRT = 1)
 										{
@@ -5294,7 +5256,7 @@ Loop, %fullstn0%
 					else {
 						if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = "")or(OVERWRT = 1))
 							{
-								iniwrite,%MediaCenter_Profile_Template%,%gamecfg%,JOYSTICKS,MediaCenter_Profile
+								iniwrite,%MediaCenter_Template%,%gamecfg%,JOYSTICKS,MediaCenter_Profile
 							}
 					}	
 				}
@@ -5596,7 +5558,7 @@ return
 
 IncludeDD:
 gui,submit,nohide
-iniwrite,%IncludeDD%,%RJDB_CONFIG%,GENERAL,IncludeDD
+iniwrite,%IncludeDD%,%RJDBINI%,GENERAL,IncludeDD
 return
 
 GETGOODNAME:
@@ -5718,9 +5680,13 @@ Loop,parse,rlspfx,|
 			{
 				continue
 			}
-		delim= %A_LoopField%
+		delim:= A_LoopField
 		stringsplit,vm,njName,%delim%
-		vmind= %delim%
+		if (vm2 = "")
+			{
+				continue
+			}
+		vmind:= delim
 		vmc= 
 		Loop,%vm0%
 			{
@@ -5740,25 +5706,21 @@ Loop,parse,rlspfx,|
 								break
 							}
 						stringreplace,njnx,njnx,%pkr%%delim%,,
-						if (errorlevel =1 )
+						if (errorlevel = 1)
 							{
 								break
 							}
 					}
-				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",tmp)
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
 				if (ap = 1)
 					{
-						stringreplace,njname,njname,%vmind%%tmp%,,
-						break
-					}													
-				if (ap = 1)
-					{
-						break
+						stringreplace,njnameg,njname,%vmind%%trmp%,,
+						if (njnameg <> njname)
+							{
+								njname= %njnameg%
+								break
+							}
 					}
-			}
-		if (ap = 1)
-			{
-				break
 			}
 	}
 jexenj=
@@ -6026,7 +5988,7 @@ return
 
 Hide_Taskbar:
 gui,submit,nohide
-iniwrite,%Hide_Taskbar%,%RJDB_CONFIG%,GENERAL,Hide_Taskbar
+iniwrite,%Hide_Taskbar%,%RJDBINI%,GENERAL,Hide_Taskbar
 return
 ResetButs:
 gui,submit,nohide
@@ -6037,6 +5999,216 @@ goto,%butrclick%Disable
 return
 DeleteButs:
 goto,%butrclick%Delete
+return
+
+PPDownload:
+Menu,addonp,Add
+Menu,addonp,DeleteAll
+if (butrclick = "PREAPP")
+	{
+		Menu,addonp, Add,soundVolumeView,SNDVOLVIEWDOWNLOAD
+	}
+if (butrclick = "POSTAPP")
+	{
+		Menu,addonp, Add,soundVolumeView,SNDVOLVIEWDOWNLOAD											  
+	}
+Menu,addonp,show
+return
+
+MMDownload:
+curemote= _MultiMonitorTool_
+gosub, BINGETS
+gosub, DOWNLOADIT
+MultiMonitor_ToolT= %binhome%\multimonitortool.exe
+gosub, MM_ToolB
+dchk=
+SB_SetText("")
+return
+
+BGM_ProgBDownload:
+curemote= _BorderlessGaming_
+gosub, BINGETS
+gosub, DOWNLOADIT
+Borderless_Gaming_Program= %binhome%\Borderless Gaming\borderless-gaming-portable.exe
+Borderless_Gaming_ProgramT= %Borderless_Gaming_Program%
+if !fileexist(Borderless_Gaming_Program)
+	{
+		Borderless_Gaming_Program=
+		Borderless_Gaming_ProgramT=
+	}
+gosub, BGM_ProgB
+dchk=
+SB_SetText("")
+return
+
+SNDVOLVIEWDOWNLOAD:
+curemote= _SoundVolumeView_
+gosub, BINGETS
+gosub, DOWNLOADIT
+flflt= %binhome%
+if (butrclick = "PREAPP")
+	{
+		gosub, PREAPP
+	}
+if (butrclick = "POSTAPP")
+	{
+		gosub, POSTAPP
+	}
+dchk=
+SB_SetText("")
+prerc=
+bgmrc=
+mmtrc=
+postrc=
+kbmrc=
+return
+
+PreCloud:
+KXM=PREDD
+guicontrolget,PWait,,PreWait
+guicontrolget,PPNUM,,PRETNUM
+PPRY=Pre
+ebe=%PPNUM%>
+if (PWait = 1)
+	{
+		ebe=%PPNUM%W>
+	}
+goto, CloudAquire
+
+PostCloud:
+KXM=POSTDD
+guicontrolget,PWait,,PostWait
+guicontrolget,PPNUM,,POSTDNUM
+PPRY=Post
+ebe=%PPNUM%>
+if (PWait = 1)
+	{
+		ebe=%PPNUM%W>
+	}
+goto, CloudAquire
+
+CloudAquire:
+
+CLDBCKT=
+FileSelectFolder,CLDBCKT,Cloud Directory,3,Select Cloud-Backup-Folder
+if ((CLDBCKT = "")or !fileexist(CLDBCKT))
+	{
+		SB_SetText("No Cloud-Backup-Folder Selected")
+		return
+	}
+CLDBCK= %CLDBCKT%	
+KMT= %KXM%T
+iniwrite,%CLDBCKT%,%RJDBINI%,GENERAL,Cloud_Save
+iniwrite,%ebe%CLOUD,%RJDBINI%,CONFIG,%PPNUM%_%PPRY%
+dchk=
+return
+
+
+
+KBMDownload:
+Menu,dwnlbmn,Add
+Menu,dwnlbmn,DeleteAll
+Loop,parse,MAPCFGS,|
+	{
+		Menu,dwnlbmn,Add,%A_LoopField%,keymapdownload
+	}
+Menu,dwnlbmn,show
+return
+
+MMToolBDownload:
+Menu,dwnlbmn,Add
+Menu,dwnlbmn,DeleteAll
+Menu,dwnlbmn,Add,MultiMonitorTool,MMdownload
+Menu,dwnlbmn,show
+return
+
+
+BGMDownload:
+Menu,dwnlbmn,Add
+Menu,dwnlbmn,DeleteAll
+Menu,dwnlbmn,Add,BorderlessGaming,BGM_ProgBDownload
+Menu,dwnlbmn,show
+return
+
+
+keymapdownload:
+curemote= _%A_ThisMenuItem%_
+gosub, BINGETS
+gosub, DOWNLOADIT
+gosub, INIT%A_ThisMenuItem%
+SB_SetText("")
+dchk=
+return
+
+
+THEMEN:
+gui,submit,nohide
+guicontrolget,themen,,THEMEN
+if (themen = "Default")
+	{
+		iniwrite,Default,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,Default,%RJDBINI%,THEME,GUI_background
+		iniwrite,Default,%RJDBINI%,THEME,GUI_foreground
+		iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
+		iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
+		iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
+		iniwrite,Default,%RJDBINI%,THEME,GUI_font_color
+		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_name
+		SB_SetText("Theme change requires restart")
+		return
+	}
+if (themen = "Gray")
+	{
+		iniwrite,Dark,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,Gray,%RJDBINI%,THEME,GUI_background
+		iniwrite,White,%RJDBINI%,THEME,GUI_foreground
+		iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
+		iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
+		iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
+		iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
+		;;iniwrite,Segoe UI,%RJDBINI%,THEME,GUI_font_name
+		SB_SetText("Theme change requires restart")
+		return
+	}
+if (themen = "Black")
+	{
+		iniwrite,Dark,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,Black,%RJDBINI%,THEME,GUI_background
+		iniwrite,White,%RJDBINI%,THEME,GUI_foreground
+		iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
+		iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
+		iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
+		iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
+		;;iniwrite,Segoe UI,%RJDBINI%,THEME,GUI_font_name
+		SB_SetText("Theme change requires restart")
+		return
+	}
+if (themen = "White")
+	{
+		iniwrite,White,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,White,%RJDBINI%,THEME,GUI_background
+		iniwrite,Black,%RJDBINI%,THEME,GUI_foreground
+		iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
+		iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
+		iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
+		iniwrite,cBlack,%RJDBINI%,THEME,GUI_font_color
+		;;iniwrite,Palatino Linotype,%RJDBINI%,THEME,GUI_font_name
+		SB_SetText("Theme change requires restart")
+		return
+	}
+if (themen = "Blue")
+	{
+		iniwrite,Blue,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,0000FF,%RJDBINI%,THEME,GUI_background
+		iniwrite,FFFFFF,%RJDBINI%,THEME,GUI_foreground
+		iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
+		iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
+		iniwrite,s7,%RJDBINI%,THEME,GUI_font_smallf
+		iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
+		;;iniwrite,MS Serif,%RJDBINI%,THEME,GUI_font_name
+		SB_SetText("Theme change requires restart")
+		return
+	}
 return
 
 
@@ -6064,60 +6236,72 @@ return
 JAL_RC:
 jalrc=1
 butrclick=JAL_ProgB
-curemote= Cloud_Restore
-Menu,JBEButton,Show,x53 y512
+Menu,JAL_RCMenu,Show,x53 y512
 return
 
 JBE_RC:
 jberc=1
 butrclick=JBE_ProgB
-curemote= Cloud_Backup
-Menu,JBEButton,Show,x53 y512
+Menu,JBE_RCMenu,Show,x53 y512
 return
 
 BGM_RC:
 bgmrc=1
 butrclick=BGM_ProgB
-Menu,BCLButton,Show,x53 y448
+Menu,BGM_RCMenu,Show,x53 y448
 return
 
 MMT_RC:
 butrclick=MM_ToolB
 mmtrc=1
-Menu,UCLButton,Show,x53 y416
+Menu,MM_RCMenu,Show,x53 y416
 return
 
 PRE_RC:
 butrclick=PREAPP
 prerc=1
-Menu,AddProgs,Show,x52 y576
+guicontrolget,PPNUM,,PREDNUM
+vikb:= % (%PPNUM%_Pre)
+Menu,PP_RCMenu,Delete
+Menu,PP_RCMenu,Add,Download,PPDownload
+Menu,PP_RCMenu,Add,,
+Menu,PP_RCMenu,Add,Cloud_Backup,PreCloud
+Menu,PP_RCMenu,Add,,
+if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
+	{
+		Menu,PP_RCMenu,Add,SoundVolumeView,SVV_Prog
+	}
+Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
+return
+
+Menu,PP_RCMenu,Show,x52 y576
 return
 
 POST_RC:
 butrclick=POSTAPP
 postrc=1
-Menu,AddProgs,Show,x52 y614
+guicontrolget,PPNUM,,POSTDNUM
+vikb:= % (%PPNUM%_Post)
+Menu,PP_RCMenu,Delete
+Menu,PP_RCMenu,Add,Download,PPDownload
+Menu,PP_RCMenu,Add,,
+Menu,PP_RCMenu,Add,Cloud_Backup,PostCloud
+Menu,PP_RCMenu,Add,,
+if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
+	{
+		Menu,PP_RCMenu,Add,SoundVolumeView,SVV_Prog
+	}
+Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
 return
+
 
 KBM_RC:
 butrclick=Keyboard_MapB
 kbmrc=1
-Menu,UCLBUtton,Show, x52 y224
+Menu,KBM_RCMenu,Show, x52 y224
 return
 
-CfgInstMprs:
-Loop,parse,MAPCFGS,|
-	{
-		abb:= % %A_LoopField%_executable
-		if fileexist(abb)
-			{
-				menu,keycfgm,Add,%A_LoopField%,INIT%A_LOOPFIELD%
-			}
-	}
-menu,keycfgm,Show
-return
-
-BCfgInstMprs:
+ResetMprs:
 Loop,parse,MAPCFGS,|
 	{
 		abb:= % %A_LoopField%_executable
@@ -6130,21 +6314,7 @@ menu,keycfgm,Show
 return
 
 
-DownloadButs:
-Menu,keymapd,Add
-Menu,keymapd,DeleteAll
-if ((butrclick = "Keyboard_MapB")or(kbmrc = 1))
-	{
-		Loop,parse,MAPCFGS,|
-			{
-				Menu,keymapd,Add,%A_LoopField%,keymapdownload
-			}
-	}
-if ((butrclick = "MM_ToolB")or(mmtrc = 1))
-	{
-		Menu,keymapd,Add,MultiMonitorTool,MMdownload
-	}
-Menu,keymapd,show
+Menu,dwnlbmn,show
 prerc=
 jalrc=
 jberc=
@@ -6152,82 +6322,9 @@ bgmrc=
 mmtrc=
 postrc=
 kbmrc=
-goto,%butrclick%Download
+;goto,%butrclick%Download
 return
 
-MMDownload:
-curemote= _MultiMonitorTool_
-gosub, BINGETS
-gosub, DOWNLOADIT
-MultiMonitor_ToolT= %binhome%\multimonitortool.exe
-gosub, MM_ToolB
-dchk=
-SB_SetText("")
-return
-
-CloudSaveSetup:
-goto,%butrclick%Download
-
-
-JAL_ProgBDownload:
-JWait=JALWait
-JALPfx=
-KXM=JustAfterLaunch
-guicontrolget,JALWait,,JALWait
-if (JALWait = 1)
-	{
-		JALPfx=>
-	}
-goto, CloudAquire
-
-
-JBE_ProgBDownload:
-JWait=JBEWait
-JBEPfx=
-KXM=JustBeforeExit
-guicontrolget,JBEWait,,JBEWait
-if (JBEWait = 1)
-	{
-		JBEPfx=>
-	}
-
-
-CloudAquire:
-ebe=
-GuiControlget,ebe,,%JWAIT%
-if (ebe = 1)
-	{
-		ebe=W<
-	}
-CLDBCKT=
-if ((curemote = "Cloud_Backup")or(curemote = "Cloud_Restore"))
-	{
-		FileSelectFolder,CLDBCKT,Cloud Directory,3,Select Cloud-Backup-Folder
-		if ((CLDBCKT = "")or !fileexist(CLDBCKT))
-			{
-				SB_SetText("No Cloud-Backup-Folder Selected")
-				guicontrol,,%KXM%T,,
-				return
-			}
-		CLDBCK= %CLDBCKT%	
-		KMT= %KXM%T
-		iniwrite,%CLDBCKT%,%RJDB_CONFIG%,CONFIG,%curemote%
-		iniwrite,%ebe%%curemote%,%RJDB_CONFIG%,GENERAL,%KXM%
-		GuiControl,,%KMT%,%curemote%
-	}
-return
-
-SSDDownload:
-
-
-keymapdownload:
-curemote= _%A_ThisMenuItem%_
-gosub, BINGETS
-gosub, DOWNLOADIT
-gosub, INIT%A_ThisMenuItem%
-SB_SetText("")
-dchk=
-return
 
 ButtonClear:
 if (srcntot > 25)
@@ -6260,6 +6357,7 @@ vavn=
 Blockinput, on
 if ((!FocusedRowNumber)&& instr(A_GuiEvent,"ColClick"))
 	{
+		Critical 
 		RowNumber = 0 ; This causes the first loop iteration to start the search at the top of the list.
 		SOURCEDLIST=
 		Loop
@@ -6767,26 +6865,84 @@ If A_GuiControlEvent RightClick
 			Menu, UPDButton, Show, %MENU_X% %MENU_Y%
 			return
 		}
+	if A_GuiControl = Player1_TempB
+		{
+			Menu, Pl1_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
+	if A_GuiControl = Player2_TempB
+		{
+			Menu, Pl2_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
+	if A_GuiControl = MediaCenter_ProfB
+		{
+			Menu, MCP_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
 	if A_GuiControl = MM_ToolB
 		{
-			Menu, UCLButton, Show, %MENU_X% %MENU_Y%
+			Menu, MM_RCMenu, Show, %MENU_X% %MENU_Y%
+			return
+		}
+	if A_GuiControl = BGM_ProgB
+		{
+			Menu, GBM_RCMenu, Show, %MENU_X% %MENU_Y%
 			return
 		}
 	if A_GuiControl = Keyboard_MapB
 		{
-			Menu, UCLButton, Show, %MENU_X% %MENU_Y%
+			Menu, KBM_RCMenu, Show, %MENU_X% %MENU_Y%
 			return
 		}
 	if A_GuiControl = POSTAPP
 		{
-			Menu,AddProgs,Show,%MENU_X% %MENU_Y%
+			butrclick=POSTAPP
+			postrc=1
+			guicontrolget,PPNUM,,POSTDNUM
+			vikb:= % (%PPNUM%_Post)
+			Menu,PP_RCMenu,Delete
+			Menu,PP_RCMenu,Add,Download,PPDownload
+			Menu,PP_RCMenu,Add,,
+			Menu,PP_RCMenu,Add,Cloud_Backup,PostCloud
+			Menu,PP_RCMenu,Add,,
+			if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
+				{
+					Menu,PP_RCMenu,Add,SoundVolumeView,SNDVOLVIEWDOWNLOAD
+				}
+			Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
 			return
 		}
 	if A_GuiControl = PREAPP
 		{
-			Menu,AddProgs,Show,%MENU_X% %MENU_Y%
+			butrclick=PREAPP
+			prerc=1
+			guicontrolget,PPNUM,,PREDNUM
+			vikb:= % (%PPNUM%_Pre)
+			Menu,PP_RCMenu,Delete
+			Menu,PP_RCMenu,Add,Download,PPDownload
+			Menu,PP_RCMenu,Add,,
+			Menu,PP_RCMenu,Add,Cloud_Backup,PreCloud
+			Menu,PP_RCMenu,Add,,
+			if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
+				{
+					Menu,PP_RCMenu,Add,SoundVolumeView,SNDVOLVIEWDOWNLOAD
+				}
+			Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
 			return
 		}
+	if A_GuiControl = JBE_ProgB
+		{
+			Menu,JBE_RCMenu,Show,%MENU_X% %MENU_Y%
+			return
+		}
+	if A_GuiControl = JAL_ProgB
+		{
+			Menu,JAL_RCMenu,Show,%MENU_X% %MENU_Y%
+			return
+		}
+		
+		
 	if A_GuiControl = GAME_DirectoryT
 			{
 				Menu, PropLNC, Show, %MENU_X% %MENU_Y%
@@ -6799,7 +6955,7 @@ If A_GuiControlEvent RightClick
 			}
 	if A_GuiControl = BGM_ProgB
 			{
-				Menu, UCLButton, Show, %MENU_X% %MENU_Y%
+				Menu, MM_RCMenu, Show, %MENU_X% %MENU_Y%
 				return
 			}
 	if A_GuiControl = NetChk
@@ -6822,7 +6978,7 @@ If A_GuiControlEvent RightClick
 				Menu, PROPPl2, Show, %MENU_X% %MENU_Y%
 				return
 			}							  
-	if A_GuiControl = vMediaCenter_ProfileT
+	if A_GuiControl = MediaCenter_TemplateT
 			{
 				Menu, PROPMC, Show, %MENU_X% %MENU_Y%
 				return
@@ -7057,16 +7213,16 @@ EDITPV:
 PREPSTALRT= Lime
 prtxb= 
 epvsec= GENERAL
-iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
 if (inrptst = "ERROR")
 	{
 		epvsec= JOYSTICKS
-		iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
 	}
 if (inrptst = "ERROR")
 	{
 		epvsec= CONFIG
-		iniread,inrptst,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		iniread,inrptst,%RJDBINI%,%epvsec%,%InterpXpnd%
 	}
 ExtrpExpnd= %inrptst%
 if !fileExist(ExtrpExpnd)
@@ -7076,7 +7232,7 @@ if !fileExist(ExtrpExpnd)
 if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
 	{
 		epvsec= CONFIG
-		iniread,JUSTtmpx,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		iniread,JUSTtmpx,%RJDBINI%,%epvsec%,%InterpXpnd%
 		stringsplit,ah,JUSTtmpx,<
 		ExtrpExpnd= %ah2%
 		prtxb= %ah1%
@@ -7092,7 +7248,7 @@ if ((InterpXpnd = "POSTDD")or(InterpXpnd = "PREDD"))
 				guicontrolget,pnum,,PREDNUM
 				InterpXpnd= %pnum%_%InterpCCn%
 			}
-		iniread,PPRS,%RJDB_CONFIG%,%epvsec%,%InterpXpnd%
+		iniread,PPRS,%RJDBINI%,%epvsec%,%InterpXpnd%
 		stringsplit,ah,PPRS,<
 		ExtrpExpnd= %ah2%
 		prtxb= %ah1%
@@ -7117,12 +7273,115 @@ if (TRNSFERVAR <> "")
 				stringtrimright,InterpXpnd,InterpXpnd,1
 			}
 		Guicontrol,,%InterpXpnd%T,%TRNSFERVAR%
-		iniwrite,%prtxb%%TRNSFERVAR%,%RJDB_Config%,%epvsec%,%InterpXpnd%
-		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+		iniwrite,%prtxb%%TRNSFERVAR%,%RJDBINI%,%epvsec%,%InterpXpnd%
 		guicontrol, +c%PREPSTALRT%, %InterpXpnd%
+		guicontrol,,%InterpXpnd%,%prtxb%%ExtrpExpnd%
+	}
+if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "terminate")or (TRNSFERVAR = "frontend")or (TRNSFERVAR = "nothing")or(TRNSFERVAR = "none"))
+	{
+		if ((InterpXpnd = Player1_Template)or (InterpXpnd = Player2_Template)or (InterpXpnd = MediaCenter_Profile))
+			{
+				iniwrite,Disabled,%RJDBINI%,JOYSTICKS,%InterpXpnd%
+				guicontrol, +cLime, %InterpXpnd%
+				guicontrol,,%InterpXpnd%,DISABLED
+			}			
 	}
 return
 
+Pl1Reset:
+InterpXpnd= Player1_Template
+ExtrpExpnd=%home%\Player1.%mapper_extension%
+Player1_Template=%home%\Player1.%mapper_extension%
+FileDelete,%Player1_Template%
+FileDelete,%home%\KBMGame.%mapper_extension%
+goto, RESETPROFILES
+Pl2Reset:
+InterpXpnd= Player2_Template
+ExtrpExpnd=%home%\Player2.%mapper_extension%
+Player2_Template=%home%\Player2.%mapper_extension%
+FileDelete,%Player2_Template%
+goto, RESETPROFILES
+MCPReset:
+InterpXpnd= MediaCenter_Template
+ExtrpExpnd=%home%\MediaCenter.%mapper_extension%
+MediaCenter_Template=%home%\MediaCenter.%mapper_extension%
+FileDelete,%MediaCenter_Template%
+goto, RESETPROFILES
+
+RESETPROFILES:
+iniread,kbmpprt,%RJDBINI%,JOYSTICKS,Keyboard_Mapper
+iniread,JMAP,%RJDBINI%,JOYSTICKS,JMAP
+if (JMAP = "antimicro")
+	{
+		prf= am
+	}
+if (JMAP = "antimicrox")
+	{
+		prf= ax
+	}
+if (JMAP = "JoyXoff")
+	{
+		prf= ax
+	}
+if (JMAP = "Xpadder")
+	{
+		prf= xp
+	}
+if (JMAP = "Joy2Key")
+	{
+		prf= jk
+	}
+fileread,amcp,%source%\%prf%_GameTemplate.set
+fileread,kbmamcp,%source%\%prf%_KBMGameTemplate.set
+fileread,amcd,%source%\%prf%_DeskTemplate.set
+stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
+stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
+stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
+stringreplace,amcb,amcb,[AMICRX],%kbmpprt%,All
+stringreplace,amcb,amcb,[AMICRO],%kbmpprt%,All
+stringreplace,kbmamcp,kbmamcp,[NEWOSK],%osklok%,All
+stringreplace,kbmamcp,kbmamcp,[AMICRX],%antimicrox_executable%,All
+stringreplace,kbmamcp,kbmamcp,[AMICRO],%antimicro_executable%,All
+stringreplace,amcp,amcp,[NEWOSK],%osklok%,All
+stringreplace,amcp,amcp,[AMICRX],%antimicrox_executable%,All
+stringreplace,amcp,amcp,[AMICRO],%antimicro_executable%,All
+stringreplace,amcd,amcd,[NEWOSK],%osklok%,All
+stringreplace,amcd,amcd,[AMICRX],%antimicrox_executable%,All
+stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
+if (InterpXpnd = MediaCenter_Profile)
+	{
+		FileAppend,%amcd%,%MediaCenter_Template%,UTF-8-RAW
+	}
+if (InterpXpnd = Player1_Template)
+	{
+		FileAppend,%amcp%,%Player1_Template%,UTF-8-RAW
+		FileAppend,%kbmamcp%,KBMGame.%mapper_extension%,UTF-8-RAW
+	}
+if (InterpXpnd = Player2_Template)
+	{
+		FileAppend,%amcp%,%Player2_Template%,UTF-8-RAW
+	}
+iniwrite,%ExtrpExpnd%,%RJDBINI%,JOYSTICKS,%InterpXpnd%
+guicontrol, +cLime, %InterpXpnd%T
+guicontrol,,%InterpXpnd%T,%ExtrpExpnd%
+return
+
+
+Pl1Disable:
+InterpXpnd= Player1_Template
+goto, DISABLEPROFILE
+Pl2Disable:
+InterpXpnd= Player1_Template
+goto, DISABLEPROFILE
+MCPDisable:
+InterpXpnd= MediaCenter_Template
+goto, DISABLEPROFILE
+
+DISABLEPROFILE:
+iniwrite,Disabled,%RJDBINI%,JOYSTICKS,%InterpXpnd%
+guicontrol, +cLime, %InterpXpnd%T
+guicontrol,,%InterpXpnd%T,DISABLED
+return
 
 DelLaunch:
 gui,submit,nohide
@@ -7201,7 +7460,7 @@ ifmsgbox, ok
 		SB_SetText("...Propagating...")
 		Loop,files,%Game_Profiles%\*,D
 			{
-				Filecopy,%MediaCenter_Profile_Template%,%A_LoopFileFullPath%,1
+				Filecopy,%MediaCenter_Template%,%A_LoopFileFullPath%,1
 			}
 		SB_SetText("Propagation Complete")
 	}
@@ -7252,7 +7511,7 @@ ifmsgbox, ok
 				SB_SetText("Propagation not supported for centralized items or localized profile folders")
 				return
 			}
-		iniread,prln,%RJDB_CONFIG%,CONFIG,JustBeforeExit
+		iniread,prln,%RJDBINI%,CONFIG,JustBeforeExit
 		stringsplit,prlx,prln,>
 		splitpath,prlx2,,,prxtn
 		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
@@ -7275,7 +7534,7 @@ ifmsgbox, ok
 				SB_SetText("Propagation not supported for centralized items or localized profile folders")
 				return
 			}
-		iniread,prln,%RJDB_CONFIG%,CONFIG,JustAfterLaunch	
+		iniread,prln,%RJDBINI%,CONFIG,JustAfterLaunch	
 		stringsplit,prlx,prln,>
 		splitpath,prlx2,,,prxtn
 		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
@@ -7298,7 +7557,7 @@ ifmsgbox, ok
 				SB_SetText("Propagation not supported for centralized items or localized profile folders")
 				return
 			}		
-		iniread,prln,%RJDB_CONFIG%,CONFIG,%PRETNUM%_Pre			
+		iniread,prln,%RJDBINI%,CONFIG,%PRETNUM%_Pre			
 		stringsplit,prlx,prln,>
 		splitpath,prlx2,,,prxtn
 		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
@@ -7321,7 +7580,7 @@ ifmsgbox, ok
 				SB_SetText("Propagation not supported for centralized items or localized profile folders")
 				return
 			}
-		iniread,prln,%RJDB_CONFIG%,CONFIG,%POSTDNUM%_Post
+		iniread,prln,%RJDBINI%,CONFIG,%POSTDNUM%_Post
 		stringsplit,prlx,prln,>
 		splitpath,prlx2,,,prxtn
 		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))

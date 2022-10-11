@@ -283,7 +283,7 @@ SplitPath,MediaCenter_Profile2,MCP2file,MCP2pth,MCP2ext,MCP2fnm
 
 SplitPath,Player1_Template,Pt1file,pt1pth,pt1ext,pt1fnm
 SplitPath,Player2_Template,Pt2file,pt2pth,pt2ext,pt2fnm
-SplitPath,MediaCenter_Profile_Template,MCTfile,MCTpth,MCText,MCTfnm
+SplitPath,MediaCenter_Template,MCTfile,MCTpth,MCText,MCTfnm
 MediaCenter_Profile1=%MediaCenter_Profile%
 if ((Player1 = "")or !fileExist(Player1))
 	{
@@ -1286,6 +1286,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				splitpath,xpadder_executable,mapperxn,mapperp
 				gosub,killmapper
 			}
+		if (JMap = "antimicrox")
+			{
+				splitpath,antimicrox_executable,mapperxn,mapperp
+				gosub,killmapper
+			}
 		if (JMap = "antimicro")
 			{
 				splitpath,antimicro_executable,mapperxn,mapperp
@@ -1616,7 +1621,7 @@ loop, 16
 			}
 		joycount+= 1
 		templt= %Player2_Template%
-		templm= %MediaCenter_Profile_Template%
+		templm= %MediaCenter_Template%
 		pinum:= % Player%A_Index%
 		minum:= % MediaCenter_Profile%A_Index%
 		if (A_Index = 1)
@@ -1626,7 +1631,7 @@ loop, 16
 		playerVX:= % player%JoyCount%VX
 		MediaCenter_ProfileVX:= % MediaCenter_Profile_%JoyCount%VX
 		cpyplyrs:
-		if !fileExist(pinum)
+		if (!fileExist(pinum)or(pinum = "disabled"))
 			{
 				if (pinum = "")
 					{
@@ -1655,7 +1660,7 @@ loop, 16
 					{
 						minum= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
 					}
-				fileCopy,%MediaCenter_Profile_Template%, %minum%,1
+				fileCopy,%MediaCenter_Template%, %minum%,1
 				if ((errorlevel <> 0)&&(MediaCenter_ProfileVX <> minum))
 					{
 						minum= %MediaCenter_ProfileVX%
