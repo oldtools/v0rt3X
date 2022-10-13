@@ -634,7 +634,7 @@ if (prestk2 <> "")
 			}
 		if (prestk2 = "CLOUD")
 			{
-				gosub, PRECLOUD
+				;gosub, PRECLOUD
 			}
 	}
 return
@@ -821,7 +821,7 @@ if (prestk2 <> "")
 			}
 		if (prestk2 = "CLOUD")
 			{
-				gosub, PRECLOUD
+				;gosub, PRECLOUD
 			}
 	}
 return
