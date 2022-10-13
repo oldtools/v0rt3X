@@ -6,7 +6,7 @@ SetWorkingDir %A_ScriptDir%
 #Persistent
 FileEncoding UTF-8
 RJPRJCT= v0rt3X
-RELEASE= 2022-10-11 8:25 AM
+RELEASE= 2022-10-13 2:12 PM
 VERSION= [CURV]
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -2118,10 +2118,6 @@ if (JALtmp2 = "")
 		jalop= %predl%
 		JustAfterLaunch= %JALtmp1%
 	}
-if (JustBeforeExit = "Cloud_Restore")
-	{
-		goto, jalcl
-	}	
 if ((JustAfterLaunch = "")or(JustAfterLaunch = "ERROR")or !fileexist(JustAfterLaunch))
 	{
 		SB_SetText("A program must be assigned")
@@ -2152,10 +2148,6 @@ if (jbetmp2 = "")
 	{
 		jbeop= %predl%
 		JustBeforeExit= %jbetmp1%
-	}
-if (JustBeforeExit = "Cloud_Backup")
-	{
-		goto, jbecl
 	}
 if ((JustBeforeExit = "")or(JustbeforeExit = "ERROR")or !fileexist(JustBeforeExit))
 	{
@@ -2460,15 +2452,19 @@ if (kbmpprt <> "")
 		FileDelete,%home%\%JMAP%_!.cmd
 		fileread,amcb,%source%\%prf%_Trigger.set
 		fileread,amcp,%source%\%prf%_GameTemplate.set
-		fileread,kbmamcp,%source%\%prf%_KBMGameTemplate.set
+		fileread,kbmamcp,%source%\%prf%_KBM_Template.set
 		fileread,amcd,%source%\%prf%_DeskTemplate.set
+		fileread,blcd,%source%\%prf%_Blank_Template.set
 		keyboard_Mapper= %home%\%JMAP%_!.cmd
 		Player1_Template=%home%\Player1.%mapper_extension%
 		Player2_Template=%home%\Player2.%mapper_extension%
+		KBM_Template=%home%\KBM.%mapper_extension%
+		Blank_Template=%home%\Blank.%mapper_extension%
 		MediaCenter_Template=%home%\MediaCenter.%mapper_extension%
 		FileDelete,%Player1_Template%
 		FileDelete,%Player2_Template%
-		FileDelete,%home%\%JMAP%_Blank.%mapper_extension%
+		FileDelete,%KBM_Template%
+		FileDelete,%Blank_Template%
 		FileDelete,%MediaCenter_Template%
 		stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 		stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
@@ -2485,13 +2481,14 @@ if (kbmpprt <> "")
 		stringreplace,amcd,amcd,[AMICRX],%antimicrox_executable%,All
 		stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
 		FileAppend,%amcb%,%home%\%JMAP%_!.cmd,UTF-8-RAW
-		FileAppend,%kbmamcp%,KBMGame.%mapper_extension%,UTF-8-RAW
+		FileAppend,%blcd%,%Blank_Template%,UTF-8-RAW
+		FileAppend,%kbmamcp%,%KBM_Template%,UTF-8-RAW
 		FileAppend,%amcp%,%Player1_Template%,UTF-8-RAW
 		FileAppend,%amcp%,%Player2_Template%,UTF-8-RAW
 		FileAppend,%amcd%,%MediaCenter_Template%,UTF-8-RAW
 		iniwrite,%JMAP%,%RJDBINI%,JOYSTICKS,JMAP
 		iniwrite,%Mapper%,%RJDBINI%,GENERAL,Mapper
-		filecopy,%source%\%prf%_Blank.set,%home%\%JMAP%_Blank.%mapper_extension%
+		filecopy,%source%\%prf%_Blank.set,%home%\Blank.%mapper_extension%
 		;Run,%home%\rjdb.ini
 		iniwrite,%Mapper_Extension%,%RJDBINI%,JOYSTICKS,Mapper_Extension
 		iniwrite,%kbmpprt%,%RJDBINI%,JOYSTICKS,%JMAP%_executable
@@ -2499,7 +2496,6 @@ if (kbmpprt <> "")
 		iniwrite,%Player1_Template%,%RJDBINI%,JOYSTICKS,Player1_Template
 		iniwrite,%Player2_Template%,%RJDBINI%,JOYSTICKS,Player2_Template
 		iniwrite,%MediaCenter_Template%,%RJDBINI%,JOYSTICKS,MediaCenter_Template
-
 		if (ASADMIN = 1)
 			{
 				RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %kbmpprt%, ~ RUNASADMIN
@@ -5104,24 +5100,40 @@ Loop, %fullstn0%
 						}
 					if (GMCONF = 1)
 						{
-							SplitPath,MediaCenter_Template,MediaCenter_TemplateName	
-							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_TemplateName%	
 							Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
 							Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
+							
+							
+							stringreplace,pl1ovr,pl1ovr,<,,All
+							stringreplace,pl1ovr,pl1ovr,>,,All
+							stringreplace,pl1ovr,pl1ovr,/,\,All
+							stringreplace,pl1ovr,pl1ovr,",,All   ;"
+							msgbox,,,pl1ovr=%pl1ovr%
 							if ((pl1ovr <> "<")&&(pl1ovr <> "")&&fileexist(pl1ovr))
 								{
 									Player1_Template= %pl1ovr%
 									splitpath,pl1ovr,pl1flnm
 								}
+							stringreplace,pl2ovr,pl2ovr,<,,All
+							stringreplace,pl2ovr,pl2ovr,>,,All
+							stringreplace,pl2ovr,pl2ovr,/,\,All
+							stringreplace,pl2ovr,pl2ovr,",,All   ;"
 							if ((pl2ovr <> "<")&&(pl2ovr <> "")&&fileexist(pl2ovr))
 								{
 									Player2_Template= %pl1ovr%
 									splitpath,pl2ovr,pl2flnm
 								}
+							stringreplace,mcpovr,mcpovr,<,,All
+							stringreplace,mcpovr,mcpovr,>,,All
+							stringreplace,mcpovr,mcpovr,/,\,All
+							stringreplace,mcpovr,mcpovr,",,All   ;"
 							if ((mcpovr <> "<")&&(mcpovr <> "")&&fileExist(mcpovr))
 								{
 									MediaCenter_Template= %mcpovr%
 								}
+								
+							SplitPath,MediaCenter_Template,MediaCenter_TemplateName	
+							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_TemplateName%	
 							if (CENPL1 = 1)
 								{
 									Player1x= %Player1_Template%
@@ -5154,11 +5166,24 @@ Loop, %fullstn0%
 									iniwrite, %GameData%,%gamecfg%,CONFIG,GameData
 									iniwrite, %SaveData%,%gamecfg%,CONFIG,SaveData
 								}
+							if ((dmovr <> "")&& fileExist(dmovr))
+								{
+									SplitPath,dmovr,DMon
+								}
 							DeskMon= %sidn%\%subfldrep%%DMon%
+							if ((gmovr <> "")&& fileExist(gmovr))
+								{
+									SplitPath,gmovr,GMon
+								}
 							GameMon= %sidn%\%subfldrep%%GMon%
 							if (CENMM = 1)
 								{
 									DeskMon= %R_MM_MediaCenter_Config%
+									if ((dmovr <> "")&& fileExist(dmovr))
+										{
+											SplitPath,dmovr,DMon
+											DeskMon= %dmovr%
+										}
 								}
 							if (MM_MediaCenter_Config = "DISABLED")
 								{
@@ -5167,6 +5192,10 @@ Loop, %fullstn0%
 							if (CENGM = 1)
 								{
 									GameMon= %R_MM_Game_Config%
+									if ((gmovr <> "")&& fileExist(gmovr))
+										{
+											GameMon= %gmovr%
+										}
 								}
 							if (MM_Game_Config = "DISABLED")
 								{
@@ -5237,7 +5266,7 @@ Loop, %fullstn0%
 			if ((GMJOY = 1) && (subfldrep = ""))
 				{
 					IF ((CENPL1 <> 1)or(Player1_Template = "DISABLED"))
-						{
+						{							
 							if (Player1_Template <> player1X)
 								{
 									Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
@@ -5318,6 +5347,30 @@ Loop, %fullstn0%
 							}
 					}	
 				}
+			JUSTB= %JustBeforeExit%	
+			JUSTA= %JustAfterLaunch%	
+			stringreplace,jlovr,jlovr,<,,All
+			stringreplace,jlovr,jlovr,>,,All
+			stringreplace,jlovr,jlovr,/,\,All
+			stringreplace,jlovr,jlovr,?,,All
+			stringreplace,jlovr,jlovr,*,,All
+			if ((jbovr <> "<")&& fileexist(jbovr))
+				{
+					stringsplit,prexx,JustAfterLaunch,<
+					JUSTA=%prexx1%<%jbovr%
+					iniwrite,%JUSTA%,%gamecfg%,GENERAL,JustAfterLaunch
+				}
+			stringreplace,jbovr,jbovr,<,,All
+			stringreplace,jbovr,jbovr,>,,All
+			stringreplace,jbovr,jbovr,/,\,All
+			stringreplace,jbovr,jbovr,?,,All
+			stringreplace,jbovr,jbovr,*,,All
+			if ((jbovr <> "<")&& fileexist(jbovr))
+				{
+					stringsplit,prexx,JustBeforeExit,<
+					JUSTB=%prexx1%<%jbovr%
+					iniwrite,%JUSTB%,%gamecfg%,GENERAL,JustBeforeExit
+				}
 			if (GMLNK = 1)
 				{
 					newcmd= %linkproxz%
@@ -5361,7 +5414,7 @@ Loop, %fullstn0%
 										}
 								}
 							prea2=
-							stringsplit,prea,JustBeforeExit,<
+							stringsplit,prea,JUSTB,<
 							JBEW=call
 							if (prea2 <> "")
 								{
@@ -5369,18 +5422,18 @@ Loop, %fullstn0%
 										{
 											JBEW= start /Wait ""
 										}
-									JustBeforeExit= %prea2%
+									JUSTB= %prea2%
 								}
 							prea2=
 							JALW=call
-							stringsplit,prea,JustAfterLaunch,<
+							stringsplit,prea,JUSTA,<
 							if (prea2 <> "")
 								{
 									if instr(prea1,"W")
 										{
 											JALW= start /Wait ""
 										}
-									JustAfterLaunch= %prea2%
+									JUSTA= %prea2%
 								}
 							stringreplace,cmdtmp,cmdtmp,[1_Post],%1_Post%
 							stringreplace,cmdtmp,cmdtmp,[1_PostW],%1_PostW%
@@ -5394,9 +5447,9 @@ Loop, %fullstn0%
 							stringreplace,cmdtmp,cmdtmp,[2_PostW],%2_PostW%
 							stringreplace,cmdtmp,cmdtmp,[1_Post],%1_Post%
 							stringreplace,cmdtmp,cmdtmp,[1_PostW],%1_PostW%
-							stringreplace,cmdtmp,cmdtmp,[JustBeforeExit],%JustBeforeExit%
+							stringreplace,cmdtmp,cmdtmp,[JustBeforeExit],%JUSTB%
 							stringreplace,cmdtmp,cmdtmp,[JBEW],%JBEW%
-							stringreplace,cmdtmp,cmdtmp,[JustAfterLaunch],%JustAfterLaunch%
+							stringreplace,cmdtmp,cmdtmp,[JustAfterLaunch],%JUSTA%
 							stringreplace,cmdtmp,cmdtmp,[JALW],%JALW%
 							stringreplace,cmdtmp,cmdtmp,[exelist],%klist%
 							stringreplace,cmdtmp,cmdtmp,[MultiMonitor_tool],%MultiMonitor_Tool%
@@ -6156,7 +6209,7 @@ if ((CLDBCKT = "")or !fileexist(CLDBCKT))
 	}
 CLDBCK= %CLDBCKT%	
 KMT= %KXM%T
-iniwrite,%CLDBCKT%,%RJDBINI%,GENERAL,Cloud_Save
+iniwrite,%CLDBCKT%,%RJDBINI%,GENERAL,Cloud_Drive
 iniwrite,%ebe%CLOUD,%RJDBINI%,CONFIG,%PPNUM%_%PPRY%
 dchk=
 return
@@ -6551,7 +6604,12 @@ If (A_GuiEvent == "F") {
 				return
 			}
 	}
-  if ((OnCol = 3)or(OnCol = 4)or(OnCol = 4)or(OnCol = 7)or(OnCol = 8)or(OnCol = 9)or(OnCol = 11)or(OnCol = 13)or(OnCol = 14)or(OnCol = 12))
+  if ((OnCol = 3)or(OnCol = 4)or(OnCol = 7)or(OnCol = 8)or(OnCol = 9)or(OnCol = 11)or(OnCol = 13)or(OnCol = 14)or(OnCol = 12))
+	{
+		SB_SetText("input commands, paths, anything")
+		goto, RECONT
+	}
+  if (OnCol = 5)
 	{
 		WinStrip= %OnTxt%
 		gosub, WinStrip
@@ -6635,7 +6693,7 @@ URLFILE:= STEAMIDB . steamquery
 jsave= %sidn%\%steamquery%.json
 save= %jsave%
 dwnovwr=True
-if !fileexist(jsave)
+if (!fileexist(jsave)&& (Net_Check = 1))
 	{
 		gosub, DWNCONFIRM
 	}
@@ -6726,14 +6784,13 @@ if fileexist(jsave)
 						URLFILE:= PCGWURL . pcgws 
 						hsave= %sidn%\%nvarz%.html
 						save= %hsave%
-						if (PCGWTRY < 4)
+						if ((PCGWTRY < 4)&&(Net_Check = 1))
 							{
 								dwnovwr=True
 								if !fileexist(hsave)
 									{
 										gosub, DWNCONFIRM
 										
-										gosub, READPCGW
 									}
 								if !fileExist(hsave)
 									{
@@ -6741,6 +6798,10 @@ if fileexist(jsave)
 										sleep,2000
 										goto, GETPCGW
 									}
+							}
+						if fileExist(hsave)
+							{
+								gosub, READPCGW
 							}
 						if !fileExist(hsave)
 							{
@@ -7379,20 +7440,20 @@ if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "termin
 return
 
 Pl1Reset:
-InterpXpnd= Player1_Template
+InterpXpnd= %Player1_Template%
 ExtrpExpnd=%home%\Player1.%mapper_extension%
 Player1_Template=%home%\Player1.%mapper_extension%
 FileDelete,%Player1_Template%
-FileDelete,%home%\KBMGame.%mapper_extension%
+FileDelete,%home%\KBM.%mapper_extension%
 goto, RESETPROFILES
 Pl2Reset:
-InterpXpnd= Player2_Template
+InterpXpnd= %Player2_Template%
 ExtrpExpnd=%home%\Player2.%mapper_extension%
 Player2_Template=%home%\Player2.%mapper_extension%
 FileDelete,%Player2_Template%
 goto, RESETPROFILES
 MCPReset:
-InterpXpnd= MediaCenter_Template
+InterpXpnd= %MediaCenter_Template%
 ExtrpExpnd=%home%\MediaCenter.%mapper_extension%
 MediaCenter_Template=%home%\MediaCenter.%mapper_extension%
 FileDelete,%MediaCenter_Template%
@@ -7422,7 +7483,7 @@ if (JMAP = "Joy2Key")
 		prf= jk
 	}
 fileread,amcp,%source%\%prf%_GameTemplate.set
-fileread,kbmamcp,%source%\%prf%_KBMGameTemplate.set
+fileread,kbmamcp,%source%\%prf%_KBM_Template.set
 fileread,amcd,%source%\%prf%_DeskTemplate.set
 stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
@@ -7445,7 +7506,7 @@ if (InterpXpnd = MediaCenter_Profile)
 if (InterpXpnd = Player1_Template)
 	{
 		FileAppend,%amcp%,%Player1_Template%,UTF-8-RAW
-		FileAppend,%kbmamcp%,KBMGame.%mapper_extension%,UTF-8-RAW
+		FileAppend,%kbmamcp%,KBM.%mapper_extension%,UTF-8-RAW
 	}
 if (InterpXpnd = Player2_Template)
 	{

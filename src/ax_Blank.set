@@ -3,7 +3,7 @@
     <!--The SDL name for a joystick is included for informational purposes only.-->
     <sdlname>XInput Controller</sdlname>
     <!--The GUID for a joystick is included for informational purposes only.-->
-    <guid>78696e70757401000000000000000000</guid>
+    <guid></guid>
     <names/>
     <sets/>
 </gamecontroller>

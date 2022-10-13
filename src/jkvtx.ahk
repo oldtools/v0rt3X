@@ -365,8 +365,12 @@ if (prestk2 <> "")
 					else {
 						Run,%prearun%%wscrop%,%A_ScriptDir%,,preapid	
 					}
+				iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
 			}
-		iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
+		if (prestk2 = "CLOUD")
+			{
+				gosub, PRECLOUD
+			}
 	}
 return	
 
@@ -628,6 +632,10 @@ if (prestk2 <> "")
 				Run,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
 				iniwrite,%prebpid%,%curpidf%,2_Pre,pid
 			}
+		if (prestk2 = "CLOUD")
+			{
+				gosub, PRECLOUD
+			}
 	}
 return
 
@@ -748,9 +756,13 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				Process,Exist,%mapperp%
 				if ((errorlevel <> 0)&&(errorlevel = kbmp))
 					{
+						Tooltip,"`n...   ...Keyboard Mapper program loaded...   ...`n"
 						enfd= %errorlevel%
 						break
 					}
+				else {
+					Tooltip,"`n...   ...Keyboard Mapper program not found...   ...`n"
+				}				
 				Sleep,500
 			}
 		iniwrite,%JoyCount%,%curpidf%,Mapper,connected
@@ -806,6 +818,10 @@ if (prestk2 <> "")
 					}
 				Run,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
 				iniwrite,%precpid%,%curpidf%,3_Pre,pid
+			}
+		if (prestk2 = "CLOUD")
+			{
+				gosub, PRECLOUD
 			}
 	}
 return
@@ -1089,127 +1105,8 @@ if (jbeprog <> "")
 				Run,%jbeprog%%wscrop%,%A_ScriptDir%,%runhow%,jbepid	
 				iniwrite,%jbepid%%wscrop%,%curpidf%,JustBeforeExit,pid
 			}
-		if instr(jbeprog,">")	
-			{
-				gosub, JBECall
-			}
 	}
 return
-
-JBECall:
-if instr(JustBeforeExit,"Cloud_Backup")
-	{
-		jbeprogs= %jbeprog%\%gmname%\SAVDATA
-		jbeprogd= %jbeprog%\%gmname%\CFGDATA
-		stringreplace,jbeprogs,jbeprogs,\\,\,All
-		stringreplace,jbeprogd,jbeprogd,\\,\,All
-		filecreatedir,%jbeprogd%
-		filecreatedir,%jbeprogs%
-		if (SaveData <> "")
-			{
-				Loop,parse,SaveData,|
-					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						Loop,files,%A_LoopField%,R
-							{
-								if fileexist(A_LoopFileFullPath)
-									{
-										sdatb.= A_LoopFileFullPath . "|"
-										Filecopy,%A_LoopFileFullPath%,%jbeprogd%,1
-									}
-							}
-					}
-			}
-		if (GameData <> "")
-			{
-				Loop,parse,GameData,|
-					{
-						if (A_LoopField = "")
-							{
-								continue
-							}
-						stringright,baV,A_LoopField,1
-						splitpath,A_LoopField,ALPFN,ALPTH
-						if ((fileexist(A_LoopField . "\"))   or ((baV = "\") && fileexist(A_LoopField))  or (instr(ALPFN,"*")&& fileexist(ALPTH)))
-							{
-								dcir= %A_LoopField%
-								if instr(ALPFN,"*")
-									{
-										dcir= %ALPTH%							
-									}
-								else {
-									ALPFN= *
-								}	
-								gdatb.= A_LoopFileFullPath . "|"
-								if (presa = "W")
-									{
-										Loop,files,%dcir%\%ALPFN%,R
-											{
-												splitpath,A_LoopFileFullPath,jbeprogd,jbeprgp
-												rootiteratex= %rootiterate%|%Install_Directory%
-												Loop,parse,rootiteratex,|
-													{
-														if instr(A_LoopFileLongPath,A_LoopField)
-															{
-																stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
-																if (errorlevel <> 0)
-																	{
-																		stringreplace,bab,bab,%A_LoopField%,,
-																	}
-																if (errorlevel = 0)
-																	{
-																		jbeprogdx= %jbeprogd%\%bab%
-																		goto copybk
-																	}
-															}
-													}
-												splitpath,jbeprgp,jbeprx
-												jbeprogdx= %jbeprogd%\%jbeprx%												
-												copybk:	
-												FilecreateDir,%Jbeprogdx%
-												Filecopy,%A_LoopFileFullPath%,%jbeprogdx%,1
-											}
-									}
-								else {
-									Run, %comspec% /c robocopy "%dcir%" "%jbeprogd%" /E,,hide
-								}	
-							}
-						else {
-							splitpath,ALPTH,ALPTHN
-							jbeprogdx= %jbeprogd%\%ALPFN%
-							rootiteratex= %rootiterate%|%Install_Directory%
-							Loop,parse,rootiteratex,|
-								{
-									if instr(A_LoopFileLongPath,A_LoopField)
-											{
-												stringreplace,bab,A_LoopFileLongPath,%A_LoopField%\%gmname%\,,
-												if (errorlevel <> 0)
-													{
-														stringreplace,bab,bab,%A_LoopField%,,
-													}
-												if (errorlevel = 0)
-													{
-														jbeprogdx= %jbeprogd%\%bab%
-														goto copybkf
-													}
-											}
-								}
-							copybkf:	
-							if (presa = "W")
-								{
-									FileCopy,%A_LoopField%,%jbeprogdx%,1
-								}
-							else {
-								Run, %comspec% /c copy /y "%A_LoopField%" "%jbeprogdx%",,hide
-							}	
-						}
-					}
-			}
-	}
-return	
 
 
 POST_1:
@@ -1260,6 +1157,10 @@ if (prestk2 <> "")
 						return
 					}
 				Run,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
+			}
+		if (prestk2 = "CLOUD")
+			{
+				gosub, POSTCLOUD
 			}
 	}
 return
@@ -1395,6 +1296,10 @@ if (prestk2 <> "")
 					}
 				Run,%prestk2%%wscrop%,%A_ScriptDir%,%runhow%,postbpid
 			}
+		if (prestk2 = "CLOUD")
+			{
+				gosub, POSTCLOUD
+			}
 	}
 return
 
@@ -1501,9 +1406,90 @@ if (prestk2 <> "")
 					}
 				Run,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
 			}
+		if (prestk2 = "CLOUD")
+			{
+				gosub, POSTCLOUD
+			}
 	}
 return
 
+POSTCLOUD:
+filecreatedir,%Cloud_Drive%
+if (GameData <> "")
+	{
+		CLOUD_Typ:= GameData
+		Cloud_SRC= %Cloud_Drive%\%gmname%\CFG		
+		gosub,SVTCLOUD
+	}
+if (SaveData <> "")
+	{
+		CLOUD_Typ:= SaveData
+		Cloud_SRC= %Cloud_Drive%\%gmname%\SAVE
+		gosub,SVTCLOUD
+	}
+return
+
+SVTCLOUD:
+Cloud_Local= %Cloud_SRC%
+Loop,parse,CLOUD_Typ,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		stringright,baV,A_LoopField,1
+		CLDPath= %A_LoopField%
+		dcir= %A_LoopField%
+		splitpath,A_LoopField,ALPFN,ALPTH
+		if instr(ALPFN,"*")
+			{
+				dcir= %ALPTH%							
+			}
+		else {
+			ALPFN= *
+		}
+		if ((ALPTH = A_LoopField) or (bav = "\"))
+			{
+				CLDPath= %ALPTH%
+			}
+		rootiteratex= %rootiterate%|%Install_Directory%
+		Loop,parse,rootiteratex,|
+			{
+				if instr(CLDPath,A_LoopField)
+						{
+							stringreplace,CLPTR,CLDPath,%A_LoopField%,,
+							Cloud_Local= %Cloud_SRC%\%CLPTR%
+							break
+						}
+			}
+		if (LocalLink = 1)
+			{
+				if !fileExist(Cloud_Local)
+					{
+						RunWait, %comspec% /c "" mklink /J "%Cloud_Local%" "%CLDPath%",,hide
+					}
+			}
+		else {
+				if !fileExist(Cloud_Local)
+					{
+						FilecreateDir,%Cloud_Local%
+					}
+		}	
+		if fileExist(ALPTH)
+			{
+				if instr(prestk1,"W")
+					{
+						Loop, files, %CLDPath%\%ALPFN%,FR
+							{
+								RunWait, %comspec% /c robocopy "%CLDPath%" "%Cloud_Local%" /E /XO,,hide
+							}
+					}
+				else {
+					Run, %comspec% /c robocopy "%CLDPath%" "%Cloud_Local%" /E /XO,,hide
+				}	
+			}
+	}
+return	
 
 LOGOUT:	
 process,close, %erahkpid%
@@ -1636,7 +1622,11 @@ loop, 16
 				if (pinum = "")
 					{
 						pinum= %scpath%\%gmnamex%_%A_Index%.%mapper_extension%
-					}	
+					}
+				if (pinum = "disabled")	
+					{
+						pinum= %scpath%\%gmnamex%_%A_Index%.%mapper_extension%
+					}
 				if (A_Index = 1)
 					{
 						pinum= %scpath%\%gmnamex%.%mapper_extension%
