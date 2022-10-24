@@ -5,9 +5,11 @@ SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
 FileEncoding UTF-8
+
 RJPRJCT := "v0rt3X"
-RELEASE := "2022-10-23 9:00 PM"
+RELEASE := "2022-10-24 10:20 AM"
 VERSION := "[CURV]"
+
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
 EnvGet,SYSTMRT,SYSTEMROOT
@@ -126,7 +128,7 @@ pcgwbr= 400 Bad Request
 pcgwbt= Bad title
 patsup= Support us on Patreon
 nopcgw= There is currently no text in this page.
-STEAMIDB=https://store.steampowered.com/api/appdetails?appids:= ""
+STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
 PCGWURL=https://www.pcgamingwiki.com/wiki/
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
@@ -162,8 +164,8 @@ Loop,parse,chariterate,|
 	{
 		uv_%A_Index%:= A_LoopField
 	}
-RJDBSRC:= home . "\RJDB.ini"	
-if !fileExist(RJDBSRC)
+RJDBORIJ:= home . "\RJDB.ini"	
+if !fileExist(RJDBORIJ)
 	{
 		ASADMIN:= 1
 		gosub,INITALL
@@ -192,6 +194,7 @@ Loop,parse, MAPCFGS,|
 			}
 	}	
 gosub, popgui
+
 /*
 iniread,forecolor,%RJDBINI%,THEME,GUI_foreground
 if ((forecolor = "")or(forecolor = "ERROR"))
@@ -678,7 +681,7 @@ Gui, Font, cBlack
 Gui, Font, Normal
 Gui, Add, Text, x84 y114 h14,<Shortcut Output Directory>
 
-GUi, Add, Checkbox, x120 y134 h14 vCREFLD gCREFLD %fldrget% %fldrenbl%, Folders
+GUi, Add, Checkbox, x120 y134 h14 vCREFLD gCREFLD %fldrget%, Folders
 GUi, Add, Checkbox, x188 y134 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Cfg
 GUi, Add, Checkbox, x240 y134 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joy
 Gui, Add, Checkbox, x1 y141 w14 h14 vCENTRLCKB gCENTRLCKB %cntz%, 
@@ -2264,10 +2267,10 @@ Loop,parse,STDVARS,|
         %A_LoopField%:= ""
     }
 initz= 1
-stringreplace,RJTMP,RJTM,[LOCV],%home%,All
+stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
 FileDelete,%home%\RJDB.ini
-fileappend,`n,%home%\RJDB.ini,UTF-16
-FileAppend,%RJTMP%,%home%\RJDB.ini,UTF-16
+fileappend,`n,%home%\RJDB.ini,UTF-8-RAW
+FileAppend,%RJTMP%,%home%\RJDB.ini,UTF-8-RAW
 return
 
 RESET:
@@ -3095,9 +3098,9 @@ Loop,parse,RJDBSECTS,`r`n
 					{
 						continue
 					}
-				stringsplit,kval,A_LoopField,:= ""
+				stringsplit,kval,A_LoopField,=
 				val= %kval1%
-				stringreplace,trval,A_LoopField,%kval1%:= ""
+				stringreplace,trval,A_LoopField,%kval1%=
 				if (trval = "")
 					{
 						;trval= %kval1%
@@ -3256,16 +3259,13 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 2)
 			{
 				cen%A_Index%= %CenKBM%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
@@ -3280,20 +3280,16 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 3)
 			{
 				cen%A_Index%= %CenPL1%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
-
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPL2:
@@ -3305,20 +3301,16 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 4)
 			{
 				cen%A_Index%= %CenPL2%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
-
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenMC:
@@ -3330,17 +3322,13 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 5)
 			{
 				cen%A_Index%= %CenMC%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
-
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
@@ -3359,17 +3347,12 @@ Loop,parse,CENTRLZ,|
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
-
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
-
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 
@@ -3382,16 +3365,13 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 7)
 			{
 				cen%A_Index%= %CenMM%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
@@ -3407,17 +3387,13 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 8)
 			{
 				cen%A_Index%= %CenJAL%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
-
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
@@ -3432,16 +3408,13 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 9)
 			{
 				cen%A_Index%= %CenJBE%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
@@ -3457,20 +3430,16 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 10)
 			{
 				cen%A_Index%= %CenPRE%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
-
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 CenPST:
@@ -3482,21 +3451,16 @@ Loop,parse,CENTRLZ,|
 		if (A_Index = 11)
 			{
 				cen%A_Index%= %CenPST%
-				CENTRALIZE.= (cen%A_Index%) . "|"
 				continue
 			}
 		cen%A_Index%:= A_LoopField
-		CENTRALIZE.= A_LoopField . "|"
-
 	}
 if instr(CENTRALIZE,0)
    {
       Cen1= 0
-	  guicontrol,,CENTRLCKB,0
    }
 CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
 CENTRALIZE= %CENTRLZ%
-
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
 
@@ -3542,7 +3506,7 @@ knum:= ""
 snum:= ""
 Loop,parse,cftst,`n`r
     {
-        stringsplit,dkd,A_LoopField,:= ""
+        stringsplit,dkd,A_LoopField,=
         ifinstring,dkd1,_Post
             {
                 stringreplace,dkv,A_LoopField,%dkd1%=,,
@@ -3896,7 +3860,7 @@ Loop,parse,NSPLIT,|
 											{
 												continue
 											}
-										trukpath:= A_LoopField
+										trukpath= %A_loopField%
 									}
 							}
 						stringsplit,smjk,simpath,\	
@@ -4072,8 +4036,7 @@ Loop,parse,simpnk,`r`n
 					{
 						continue
 					}
-;@ahk-neko-ignore 1 line; at 10/23/2022, 4:30:37 PM ; https://github.com/CoffeeChaton/vscode-autohotkey-NekoHelp/tree/master/note#diag107
-				srcdtmp= %A_LoopField%\
+				srcdtmp:= A_LoopField . "\"
 				stringreplace,fen,fendir,%srcdtmp%,,UseErrorLevel
 				if (errorlevel <> 0)
 					{
@@ -4371,13 +4334,13 @@ guicontrolget,KILLCHK,,KILLCHK
 guicontrolget,Hide_Taskbar,,Hide_Taskbar
 guicontrolget,EnableLogging,,EnableLogging
 complist:= LVGetCheckedItems("SysListView321","v0rt3X_GUI")
-fullist= %complist%
+fullist:= complist
 stringsplit,fullstn,fullist,`n
-gmnames= |
-gmnameds= |
+gmnames:= "|"
+gmnameds:= "|"
 gmnamed:= ""
-exlist=|
-stmdbfnd=|
+exlist:= "|"
+stmdbfnd:= "|"SS
 fullstx= %fullstn%
 if !fileexist(GAME_Directory)
 	{
@@ -5038,7 +5001,7 @@ Loop, %fullstn0%
 					OutDescription:= gmnamex
 					IconNumber:= 0
 					prvv:= sidn . "\" . subfldrep . gmnamex . ".lnk"
-					linktar= %GAME_Directory%\%gmnamex%
+					linktar:= GAME_Directory . "\" . gmnamex
 					linktarget:= linktar . ".lnk"
 					linktargez:= linktar . ".cmd"
 					linkprox:= sidn . "\" . subfldrep . gmnamex
@@ -5711,7 +5674,7 @@ Loop,parse,exep,\
 				continue
 			}
 		din:= A_LoopField
-		invar= %din%
+		invar:= din
 		gosub, StripVar
 		xin= %invarx%
 		brk= |%din%|	
@@ -6039,7 +6002,7 @@ if (snov = "")
 	{
 		invar:= filtn
 		gosub, stripvar
-		nbv:= invarx
+		nbv= %invarx%
 		if (instr(Nsivk,xenjx)&&(exedp <> "")&&(exelen > 2))
 			{
 				Loop,parse,Nsivk,`n`r
