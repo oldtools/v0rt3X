@@ -45,9 +45,13 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 ¦
 +-- src
 ¦   +-- absol.set
+¦   +-- am_Blank.set
 ¦   +-- am_GameTemplate.set
+¦   +-- am_KBM_Template.set
 ¦   +-- am_DesktopTemplate.set
 ¦   +-- am_Trigger.set
+¦   +-- ax_Blank.set
+¦   +-- ax_KBM_Template.set
 ¦   +-- ax_GameTemplate.set
 ¦   +-- ax_DesktopTemplate.set
 ¦   +-- ax_Trigger.set
@@ -79,7 +83,7 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 ¦   +-- Setup.ico
 ¦   +-- Setup.ahk
 ¦   +-- Source_Builder.ico
-¦   +-- Steamlkp.set
+¦   +-- steam.json
 ¦   +-- unlike.set
 ¦   +-- unsel.set
 ¦   +-- Update.ahk

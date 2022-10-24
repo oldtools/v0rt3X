@@ -685,6 +685,7 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				sleep,600
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
+		JOYMESSAGE= Joysticks: %JOYCOUNT%
 		ToolTip, %JoyCount% Joysticks found
 		JoyAsk:
 		if ((JoyCount = 0)or if (JoyCount = ""))
@@ -756,12 +757,12 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				Process,Exist,%mapperp%
 				if ((errorlevel <> 0)&&(errorlevel = kbmp))
 					{
-						Tooltip,"`n...   ...Keyboard Mapper program loaded...   ...`n"
+						Tooltip,"`n...   ...loading keyboard mapper...   ...`n"
 						enfd= %errorlevel%
 						break
 					}
 				else {
-					Tooltip,"`n...   ...Keyboard Mapper program not found...   ...`n"
+					Tooltip,"`n...   ...loading keyboard mapper...   ...`n"
 				}				
 				Sleep,500
 			}
@@ -827,23 +828,23 @@ if (prestk2 <> "")
 return
 
 begin:
-ToolTip,Loading %gmnamex%
+ToolTip,Loading %gmnamex%`n%JOYMESSAGE%
 if (nrx > 2)
 	{
 		Tooltip,reload exceeded marker`nBe sure you have the launched executable in the exe_list for this game.
 		goto, givup
 	}
 Blockinput, Off	
-ToolTip,
+ToolTip
 tvi= %plfp%%linkoptions%%plarg%
 gosub,TransformVarInput
 Run, %tvo%,%pldr%,max UseErrorLevel,dcls
 nerlv= %errorlevel%
-Tooltip,
+Tooltip,%JOYMESSAGE%
 Process, Exist, %bgmexe%
 
 bgl:	
-Tooltip, :::getting ancilary exes:::
+Tooltip, :::getting ancilary exes:::`n%JOYMESSAGE%
 apchkn=
 appcheck:
 sleep, 1000
@@ -866,14 +867,14 @@ Loop,parse,exe_list,|
 				goto,appcheck
 			}
 	}
-Tooltip,
+Tooltip,%JOYMESSAGE%
 WinActivate
 if (Hide_Taskbar <> 0)
 	{
 		WinHide, ahk_class Shell_TrayWnd
 		WinHide, ahk_class Shell_SecondaryTrayWnd
 	}
-Tooltip
+Tooltip,%JOYMESSAGE%
 if (JustAfterLaunch <> "")
 	{
 		gosub, PRE_JAL
@@ -887,6 +888,7 @@ if (instr(prestk1,"borderlessgaming")or instr(prestk2,"borderlessgaming")or inst
 			}
 	}
 BlockInput,Off
+Tooltip,
 iniwrite,%erahkpid%,%curpidf%,Current_Game,pid
 process,WaitClose, %erahkpid%	
 AppClosed:

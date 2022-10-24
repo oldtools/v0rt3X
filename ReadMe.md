@@ -10,9 +10,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.77.089
+This Version:0.99.77.095
 
-This Build: 2022-10-13 2:34 PM
+This Build: 2022-10-23 9:00 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -45,9 +45,13 @@ v0rt3X
 ¦
 +-- src
 ¦   +-- absol.set
+¦   +-- am_Blank.set
 ¦   +-- am_GameTemplate.set
+¦   +-- am_KBM_Template.set
 ¦   +-- am_DesktopTemplate.set
 ¦   +-- am_Trigger.set
+¦   +-- ax_Blank.set
+¦   +-- ax_KBM_Template.set
 ¦   +-- ax_GameTemplate.set
 ¦   +-- ax_DesktopTemplate.set
 ¦   +-- ax_Trigger.set
@@ -79,7 +83,7 @@ v0rt3X
 ¦   +-- Setup.ico
 ¦   +-- Setup.ahk
 ¦   +-- Source_Builder.ico
-¦   +-- Steamlkp.set
+¦   +-- steam.json
 ¦   +-- unlike.set
 ¦   +-- unsel.set
 ¦   +-- Update.ahk

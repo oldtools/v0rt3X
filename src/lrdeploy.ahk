@@ -539,6 +539,7 @@ if !FileExist(GITD)
 		FileCreateDir,%GITD%\site\img
 		FileCopy,%SKELD%\src\repos.set,%GITD%\bin,1
 		FileCopy,%SKELD%\src\*.ahk,%GITD%\src,1
+		FileCopy,%SKELD%\src\steam.json,%GITD%\src,1
 		FileCopy,%SKELD%\src\*.set,%GITD%\src,1
 		FileCopy,%SKELD%\site\img\*,%GITD%\site\img,1
 		FileCopy,%SKELD%\site\*,%GITD%\site,1
@@ -2308,7 +2309,7 @@ if (PortVer = 1)
 			}
 		FileDelete, %DEPL%\portable.zip
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.set src\*.ico site\*.svg site\*.png site\*.html	site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
+		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
 		inclexe= bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\jkvtx.exe|bin\lrdeploy.exe
 		Loop,parse,inclexe,|
 			{
@@ -2394,6 +2395,7 @@ if (GitPush = 1)
 		FileAppend, copy /y "site\index.html" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "src\*.ahk" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "src\*.set" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, copy /y "src\steam.json" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "src\*.ico" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "ReadMe.md" "%GITD%"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "site\ReadMe.md" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
