@@ -5637,6 +5637,7 @@ return
 
 GETGOODNAME:
 stringreplace,exep,exep,%TOPSCR%,,
+nfn=
 scrtst:= ""
 if (exep = "")
 	{
@@ -5655,11 +5656,13 @@ if instr(Extra_Source,TOPSCR . "\" . exep)
 	}
 exepN= %exep%
 jpiter:= ""
+repscr:= SRCLOOP
 jpd:
 stringreplace,exep,exep,\\,\,All
 if (scrtst = "")
 	{
-		tlevel= %SRCLOOP%\%exep%
+		;tlevel= %SRCLOOP%\%exep%
+		tlevel= %SRCLOOP%
 	}
 stringreplace,tlevel,tlevel,\\,\,All
 stringright,te,tlevel,1
@@ -5667,6 +5670,7 @@ if (te = "\")
 	{
 		stringtrimright,tlevel,tlevel,1
 	}
+;msgbox,,,%exep%
 Loop,parse,exep,\
 	{
 		if (A_LoopField = "")
@@ -5679,23 +5683,33 @@ Loop,parse,exep,\
 		xin= %invarx%
 		brk= |%din%|	
 		xrk= |%xin%|
-		if (instr(brk,exclfls) or instr(xrk,exclfls))
+		;msgbox,,,%exep%`n%brk%`n%xrk%`n%scrtst%`n%tlevel%`n%nfn%
+		if (instr(exclfls,brk) or instr(exclfls,xrk))
 			{
 				njname:= ""
-				stringreplace,vv,A_LoopField,%xrk%,,All
-				stringreplace,vv,vv,%brk%,,All
+				stringreplace,vv,A_LoopField,%xin%,,All
+				stringreplace,vv,vv,%din%,,All
 				stringreplace,exep,exep,%vv%,,
 				if (scrtst = 1)
 					{
 						if (exep = "")
 							{
-								splitpath,SRCLOOP,nfn,scrrp
-								tlevel= %SRCLOOP%
+								splitpath,repscr,nfn,scrrp
+								tlevel= %scrrp%
 								exep= %nfn%
 							}
 						else {
 							tlevel= %SRCLOOP%\%exep%
 						}	
+					}
+				else {
+			;		if (exep = "")
+			;			{
+							splitpath,repscr,,scrrp
+							splitpath,scrrp,nfn,repscr
+							tlevel= %scrrp%
+							exep= %nfn%
+			;			}
 					}
 				goto,jpd
 			}
@@ -5785,7 +5799,7 @@ Loop,parse,rlspfx,|
 								break
 							}
 					}
-				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^Updt.*^v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^fin.*v.?[0-9].*|^Updt.*v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
 				if (ap = 1)
 					{
 						stringreplace,njnameg,njname,%vmind%%trmp%,,

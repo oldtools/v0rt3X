@@ -48,7 +48,26 @@ if ((tstidir = "src")or(tstidir = "bin")or(tstidir = "binaries"))
 source= %home%\src
 binhome= %home%\bin
 curpidf= %home%\rjpids.ini
-filedelete,%curpidf%
+if fileexist(curpidf)
+	{
+		iniread,crgpd,%curpidf%,Current_Game,pid
+		iniread,mmtpd,%curpidf%,MultiMonitor_Tool,pid
+		iniread,mappd,%curpidf%,Mapper,pid
+		if process,exist,%crgpd%
+			{
+				process,close,%crgpd%
+			}
+		if process,exist,%mmtpd%
+			{
+				process,close,%mmtpd%
+			}
+		if process,exist,%mappd%
+			{
+				process,close,%mappd%
+			}
+		filedelete,%curpidf%
+	}
+
 Tooltip,Keyboad/Mouse Disabled`n::Please Be Patient::`n
 Blockinput, on
 if (GetKeyState("Alt")&&(scextn = "exe"))
@@ -1044,7 +1063,11 @@ if (Hide_Taskbar <> 0)
 if (instr(prestk1,"borderlessgaming")or instr(prestk2,"borderlessgaming")or instr(prrestk3,"borderlessgaming"))
 	{
 		process,close,borderlessgaming.exe
-	}	
+	}
+if fileexist(curpidf)
+	{
+		filedelete,%curpidf%
+	}
 ExitApp
 
 POST_JBE:
