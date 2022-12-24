@@ -2217,12 +2217,14 @@ FileCopy, %SKELD%\src\working.ahk, %SKELD%\src\Setup.tmp,1
 sktmp= 
 sktmc= 
 sktmv= 
+STEAMJS= http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json
 exrtc= |Update.exe|lrdeploy.exe?aria2c.exe?jkvtx.exe?Setup.exe?Build_Source.exe?NewOsk.exe?7za.exe|\..\|
 iniwrite,https://github.com/%GITUSER%/%RJPRJCT%/releases/download/portable/portable.zip%exrtc%,%source%\repos.set,BINARIES,originalBinary
 iniwrite,https://github.com/%GITUSER%/%RJPRJCT%,%source%\repos.set,GLOBAL,SOURCEHOST
-iniwrite,%date% %TimeString%,%source%\repos.set,GOBAL,Version
-iniwrite,%UPDTFILE%,%source%\repos.set,GOBAL,UPDATEFILE
-iniwrite,%REPOURL%,%source%\repos.set,GOBAL,HOSTINGURL
+iniwrite,%date% %TimeString%,%source%\repos.set,GLOBAL,Version
+iniwrite,%UPDTFILE%,%source%\repos.set,GLOBAL,UPDATEFILE
+iniwrite,%REPOURL%,%source%\repos.set,GLOBAL,HOSTINGURL
+iniwrite,%STEAMJS%,%source%\repos.set,GLOBAL,STEAMJSON
 FileRead, sktmp,%SKELD%\src\Setup.tmp
 StringReplace,sktmc,sktmp,[VERSION],%date% %TimeString%,All
 StringReplace,sktmv,sktmc,[CURV],%vernum%,All

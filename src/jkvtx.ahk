@@ -713,6 +713,7 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 					{
 						if (joyrtry > 1)
 							{
+								Blockinput, off
 								Msgbox,4610,CONTROLLERS,Polling the Joysticks again in %joyrtry% seconds,%joyrtry%
 								ifmsgbox, Abort
 									{
@@ -722,6 +723,7 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 									}
 								ifmsgbox,Retry
 									{
+										Blockinput, on
 										bretrt:
 										if (joyrtry > 40)
 											{
@@ -743,7 +745,8 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 									}
 							}
 					}
-				PopCont:	
+				PopCont:
+				BlockInput, off
 				Msgbox,4610,CONTROLLERS,CLick "Abort" to Disable Joysticks or "Ignore" to dismiss this prompt,3
 				ifmsgbox, Abort
 					{

@@ -23,11 +23,10 @@ _hidhide_=https://github.com/ViGEm/HidHide/releases/download/v1.2.98.0/HidHide_1
 _fakerinput_=https://github.com/Ryochan7/FakerInput/releases/download/v0.1.0/FakerInput_0.1.0_x64.msi
 [GLOBAL]
 CLOUDLOC=
-HOSTINGURL=https://github.com
+HOSTINGURL=
 SOURCEHOST=https://github.com/oldtools/v0rt3X
-UPDATEFILE=https://github.com/oldtools/Vortex/releases/download/portable/portable.zip
-Version=https://raw.githubusercontent.com/oldtools/Vortex/master/site/version.txt
-[GOBAL]
+UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
+Version=2022-12-24 3:49 PM
 Version=2022-12-06 2:57 AM
 UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
-HOSTINGURL=
+STEAMJSON=http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json

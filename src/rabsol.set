@@ -6,6 +6,7 @@ authenticate
 Contig
 cports
 database
+dependencies
 deploy
 download
 du64

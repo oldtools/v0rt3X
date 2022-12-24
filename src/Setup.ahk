@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%
 FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
-RELEASE := "2022-12-06 2:57 AM"
+RELEASE := "2022-12-24 3:49 PM"
 VERSION := "[CURV]"
 
 EnvGet,LADTA,LOCALAPPDATA
@@ -116,13 +116,16 @@ prioraa= |win64|x64|64bit|64bits|64|x8664|bin64|bin64bit|windowsx64|windows64|bi
 priorbb= |win32|32bit|32bits|x8632|x86|x8632bit|32|windows32|windows32|bin32|windowsx86|bin32bit|binx86|bin32|exex86|exe32|binariesx86|binaries32|binariesx86|
 ProgramFilesX86 := A_ProgramFiles . (A_PtrSize=8 ? " (x86)" : "")
 progdirs:= A_ProgramFiles . "|" . ProgramW6432 . "|" . ProgramFilesX86 . "|" . A_MyDocuments . "|"
-remProgdirs= Program Files|Program Files (x86)|ProgramData|C:\users\%A_username%
+remProgdirs= Program Files|Program Files (x86)|ProgramData|users\%A_username%\AppData\Local|users\%A_username%\AppData\Roaming|
 steamhome= Steam\SteamApps\common
 dralbet= c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
+AmzQuery= Amazon Games
+OriQuery= Origin\LocalContent
 GogQuery= GOG|G.O.G|GOG Games
+ItchQuery= itch\app*|Itch*Downloads|Itch.io
 GenQuery= Games|Gaymes|My Games|juegos|spellen|Spiele|Jeux|Giochi|PC_Games|PC Games|PCGAMES|Windows Games|WinGames|Windows_Games|Win_Games|Games_for_Windows|Games for Windows|GamesForWindows|CHRONOS Releases
 AllQuery:= GogQuery . | . "Origin" . "|" . "Epic Games" . "|" . steamhome
-undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|
+undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|%LADTA%|
 undirs= %undira%
 pcgwbr= 400 Bad Request
 pcgwbt= Bad title
@@ -130,6 +133,7 @@ patsup= Support us on Patreon
 nopcgw= There is currently no text in this page.
 STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
 PCGWURL=https://www.pcgamingwiki.com/wiki/
+CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
@@ -251,6 +255,7 @@ if (Logging = 1)
 		loget:= "checked"
 		enablelogging:= 1
 	}
+STM_DB:= source . "\steam.json"	
 LKUP_DB:= home . "\lookup.db"	
 if (Net_Check = 1)
 	{
@@ -308,123 +313,20 @@ if (Name_Check = 1)
 	{
 		nmchkst:= "checked"
 	}
-cntz:= ""
-CENTRLZ:= ""
+cnckb:= 	
 Loop,parse,CENTRALIZE,|
 	{
-		if (A_Index = 1)
+		if (A_LoopField = "")
 			{
-				if (A_LoopField = 1)
-					{
-						cntz:= "checked"
-						centz:= A_LoopField	
-					}
-			   CENTRLZ:= A_LoopField
+				continue
 			}
-		if (A_Index = 2)
-			{
-				if (A_LoopField = 1)
-					{
-						cnKBM:= "checked"
-						cenKBM:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 3)
-			{
-				if (A_LoopField = 1)
-					{
-						cnPL1:= "checked"
-						cenPL1:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 4)
-			{
-				if (A_LoopField = 1)
-					{
-						cnPl2:= "checked"
-						cenPl2:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 5)
-			{
-				if (A_LoopField = 1)
-					{
-						cnMC:= "checked"
-						cenMC:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 6)
-			{
-				if (A_LoopField = 1)
-					{
-						cnGM:= "checked"
-						cenGM:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 7)
-			{
-				if (A_LoopField = 1)
-					{
-						cnMM:= "checked"
-						cenMM:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 8)
-			{
-				if (A_LoopField = 1)
-					{
-						cnJAL:= "checked"
-						cenJAL:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 9)
-			{
-				if (A_LoopField = 1)
-					{
-						cnJBE:= "checked"
-						cenJBE:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 10)
-			{
-				if (A_LoopField = 1)
-					{
-						cnpre:= "checked"
-						cenpre:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-
-			}
-		if (A_Index = 11)
-			{
-				if (A_LoopField = 1)
-					{
-						cnpst:= "checked"
-						cenpst:= A_LoopField
-					}
-			   CENTRLZ.= A_LoopField
-			}
+		stringreplace,cnitm,A_LoopField,Cen,cn
+		%cnitm%:= "checked"
+		cnitnum+= 1
 	}
-CENTRLCKB:= 0	
-if (cntz = "checked")
+if (cnitnum = 10)
 	{
-		CENTRLCKB:= 1
+		cnckb:= "checked"
 	}
 netnchk= 
 cfgenbl:= "disabled"
@@ -552,6 +454,7 @@ Menu,UPDButton,Add,Update,UpdateRJLR
 
 Menu,LookupDBCHK,Add,,
 Menu,LookupDBCHK,Add,Reset the Lookup Table,RELOOKUP
+Menu,LookupDBCHK,Add,Download a new steam list,RESTEAM
 
 Menu,DelPerg,Add,,
 Menu,DelPerg,Add,,
@@ -2636,7 +2539,7 @@ if !instr(steamdb,steamdba)
 	{
 		fileappend,%steamidx%|%clnname%|%stinsd%|%steamins%`n,%home%\steam.db,UTF-8
 		steamdb.= steamdba . "`n"
-		}
+	}
 return	
 
 INITQUERY:
@@ -2645,9 +2548,17 @@ CONCAT_ROOT:= ""
 GENERIC_ROOT:= ""
 Loop,parse,dralbet,|
 	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
 		srchdrl:= A_LoopField .  ":"
 		Loop,parse,GenQuery,|
 			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
 				GNCHK:= srchdrl . "\" . A_LoopField
 				if fileexist(GNCHK)
 					{
@@ -2655,6 +2566,10 @@ Loop,parse,dralbet,|
 							{
 								Loop,parse,AllQuery,|
 									{
+										if (A_LoopField = "")
+											{
+												continue
+											}
 										ALLCHK:= A_LoopFileFullPath . "\" . A_LoopField
 									}
 								if (fileexist(ALLCHK)&& !instr(CONCAT_ROOT,ALLCHK))
@@ -2727,8 +2642,12 @@ if fileExist(steamdir)
 	
 	}
 
-Loop,parse,dralbet
+Loop,parse,dralbet,|
 	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
 		srclocd:= A_LoopField
 		Loop,Files,%srclocd%,D
 			{
@@ -2762,7 +2681,13 @@ Loop,parse,dralbet
 										Loop,files,%A_LoopFileFullPath%,D
 											{
 												if (A_LoopFilename = "common")
-													{
+													{	
+														iniread,steamadd,%RJDBINI%,GENERAL,Steam_Directory
+														if ((steamadd < >"") && (steamadd <> "ERROR") && !instr(steamadd,A_LoopFileFullPath)&& !instr(A_LoopFileFullPath,steamadd))
+															{
+																steamadd.= A_loopfilefullpath . "|"
+															}
+														iniwrite,%steamadd%,%RJDBINI%,GENERAL,Steam_Directory
 														CONCAT_ROOT.= A_LoopFileFullPath . "|"
 														STEAM_ROOT.= A_LoopFileFullPath . "|"
 														break
@@ -2773,268 +2698,166 @@ Loop,parse,dralbet
 					}
 			}
 	}
-Loop,parse,dralbet,|
-	{
-		srclocd:= A_LoopField . ":"
-		if instr(A_LoopFileName,"Steam")
-					{
-						Loop,files,%A_LoopFileFullPath%,D
-							{
-								if instr(A_LoopFileName,"apps")
-									{
-										Loop,files,%A_LoopFileFullPath%,D
-											{
-												if ((A_LoopFilename = "common")&& !instr(STEAM_ROOT,A_LoopField))
-													{
-														CONCAT_ROOT.= A_LoopFileFullPath . "|"
-														STEAM_ROOT.= A_LoopFileFullPath . "|"
-														break
-													}
-											}
-									}
-							}
-					}
-	}
 STMEND:
-
-
-GOGROOT:= ""
+GOG_ROOT:= ""
 ;HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games
 Loop, Reg, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games, K
 	{
-		if (A_LoopRegType = "key")
-			value := ""
-		else
-		{
-			RegRead, value
-			if ((A_LoopRegType = "KEY") && A_LoopRegName is digit)
-				{
-					RegRead, gogname, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, GameName
-					RegRead, gogPth, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, Path
-					RegRead, gogExe, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, exe
-					CONCAT_ROOT.= gogPth . "|"
-					GOG_ROOT.= gogPth . "|"
-				}
-				
-				
-		}
-	}	
-Loop,parse,progdirs
-	{
-		srclocd:= A_LoopField
-		Loop,Files,%srclocd%,D
+		if ((A_LoopRegType = "KEY") && A_LoopRegName is digit)
 			{
-				gogchkd:= A_LoopFileFullPath
-				Loop,parse,gogquery,|
+				RegRead, gogname, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, GameName
+				RegRead, gogPth, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, Path
+				RegRead, gogExe, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\%A_LoopRegName%, exe
+				CONCAT_ROOT.= gogPth . "|"
+				GOG_ROOT.= gogPth . "|"
+				iniread,gogadd,%RJDBINI%,GENERAL,GOG_Directory
+				if (gogadd = "ERROR")
 					{
-						gogchkh:= gogchkd . "\" . A_LoopField
-						if (fileexist(gogchkh)&& !instr(CONCAT_ROOT,gogchkh))
-							{
-								CONCAT_ROOT.= gogchkh . "|"
-								GOG_ROOT.= gogchkh . "|"
-								break
-							}
+						gogadd:= ""
 					}
-			}
+				if ((gogPth <> "") && !instr(gogadd,gogPth))
+					{
+						gogadd.= gogPth . "|"
+					}
+				iniwrite,%gogadd%,%RJDBINI%,GENERAL,GOG_Directory
+				;break
+			}	
 	}
+AMZ_ROOT:= ""
 Loop,parse,dralbet,|
 	{
-		srchdrl:= A_LoopField . ":"
-		Loop,parse,remProgdirs,|
+		if (A_LoopField = "")
 			{
-				Loop,files,%srchdrl%\%A_LoopField%,D
-					{
-						gogchkd:= A_LoopFileFullPath
-						Loop,parse,gogquery,|
-							{
-								gogchkh= %gogchkd%\%A_LoopField%
-								if (fileexist(gogchkh)&& !instr(CONCAT_ROOT,gogchkh))
-									{
-										CONCAT_ROOT.= gogchkh . "|"
-										GOG_ROOT.= gogchkh . "|"
-										break
-									}
-							}
-					}
-
+				continue
 			}
-	}
-ITCHROOT:= ""
-
-Loop,parse,progdirs
-	{
-		srclocd:= A_LoopField
-		Loop,Files,%srclocd%,D
+		srclocd:= A_LoopField . ":"
+		Loop,parse,AMZQuery,|
 			{
-				Loop,files,%A_LoopFileFullPath%,D
+				if (A_LoopField = "")
 					{
-						StringLeft,itchtst,A_LoopFilename,5
-						if (instr(A_LoopFileName,"Itch.io") or (itchtst = "Itch ") or (A_LoopFileName = "Itch") && !instr(CONCAT_ROOT,A_LoopFileFullPath))
-							{
-								CONCAT_ROOT.= ITCHchkd . "|"
-								ITCH_ROOT.= ITCHchkd . "|"
-							}
+						continue
+					}
+				amzitm= %srclocd%\%A_LoopField%
+				if (fileexist(amzitem) && !instr(AMZ_ROOT,amzitem))
+					{
+						AMZ_ROOT.= amzitem . "|"
+						CONCAT_ROOT.= amzitem . "|"
+						iniwrite,%AMZ_ROOT%,%RJDBINI%,GENERAL,AMAZON_Directory
 					}
 			}
+		Loop,parse,remProgdirs
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				amzdir= %A_LoopField%	
+				Loop,parse,AMZQuery,|
+					{
+						if (A_LoopField = "")
+							{
+								continue
+							}
+						amzitm= %srclocd%\%amzdir%\%A_LoopField%
+						if (fileexist(amzitem) && !instr(AMZ_ROOT,amzitem))
+							{
+								AMZ_ROOT.= amzitem . "|"
+								CONCAT_ROOT.= amzitem . "|"
+								iniwrite,%AMZ_ROOT%,%RJDBINI%,GENERAL,AMAZON_Directory
+							}
+					}
+			}
 	}
+ORIGIN_ROOT:= ""
 Loop,parse,dralbet,|
 	{
-		srchdrl:= A_LoopField . ":"
-		Loop,parse,remProgdirs,|
+		if (A_LoopField = "")
 			{
-				Loop,files,%srchdrl%\%A_LoopField%,D
-					{
-						ITCHchkd:= A_LoopFileFullPath
-						StringLeft,itchtst,A_LoopFilename,5
-						if (instr(A_LoopFileName,"Itch.io") or (itchtst = "Itch ") or (A_LoopFileName = "Itch"))
-							{
-								AnItch= %A_LoopFileFullPath%\Itch.exe
-								if (fileexist(AnItch)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
-									{
-										CONCAT_ROOT.= ITCHchkd . "|"
-										ITCH_ROOT.= ITCHchkd . "|"
-									}
-							}
-					}
-
+				continue
 			}
-	}
-EPICROOT:= ""
-
-Loop,parse,progdirs
-	{
-		srclocd:= A_LoopField
-		Loop,Files,%srclocd%,D
+		srclocd:= A_LoopField . ":"
+		Loop,parse,ORIQuery,|
 			{
-				Loop,files,%A_LoopFileFullPath%,D
+				if (A_LoopField = "")
 					{
-						StringLeft,epictst,A_LoopFilename,5
-						if (instr(A_LoopFileName,"Epic Games") or (epictst = "Epic ") or (A_LoopFileName = "Epic") && !instr(CONCAT_ROOT,A_LoopFileFullPath))
-							{
-								CONCAT_ROOT.= EPICchkd . "|"
-								EPIC_ROOT.= EPICchkd . "|"
-							}
+						continue
+					}
+				orgnitm= %srclocd%\%A_LoopField%
+				if (fileexist(orgnitm) && !instr(ORIGIN_ROOT,orgnitm))
+					{
+						ORIGIN_ROOT.= orgnitm . "|"
+						CONCAT_ROOT.= orgnitm . "|"
+						iniwrite,%ORIGIN_ROOT%,%RJDBINI%,GENERAL,ORIGIN_Directory
 					}
 			}
-	}
-Loop,parse,dralbet,|
-	{
-		srchdrl:= A_LoopField . ":"
-		Loop,parse,remProgdirs,|
+		Loop,parse,remProgdirs
 			{
-				Loop,files,%srchdrl%\%A_LoopField%,D
+				if (A_LoopField = "")
 					{
-						EPICchkd:= A_LoopFileFullPath
-						StringLeft,epictst,A_LoopFilename,5
-						if (instr(A_LoopFileName,"Epic Games") or (epictst = "Epic ") or (A_LoopFileName = "Epic"))
+						continue
+					}
+				orgndir= %A_LoopField%	
+				Loop,parse,ORIQuery,|
+					{
+						if (A_LoopField = "")
 							{
-								AnEpic:= A_LoopFileFullPath . "\Epic.exe"
-								if (fileexist(AnEpic)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
-									{
-										CONCAT_ROOT.= EPICchkd . "|"
-										EPIC_ROOT.= EPICchkd . "|"
-									}
+								continue
+							}
+						orgnitm= %srclocd%\%orgndir%\%A_LoopField%
+						if (fileexist(orgnitm) && !instr(ORIGIN_ROOT,orgnitm))
+							{
+								ORIGIN_ROOT.= orgnitm . "|"
+								CONCAT_ROOT.= orgnitm . "|"
+								iniwrite,%ORIGIN_ROOT%,%RJDBINI%,GENERAL,ORIGIN_Directory
 							}
 					}
-
 			}
 	}	
-AMAZONROOT:= ""
-
-Loop,parse,progdirs
-	{
-		srclocd:= A_LoopField
-		Loop,Files,%srclocd%,D
-			{
-				Loop,files,%A_LoopFileFullPath%,D
-					{
-						StringLeft,amazontst,A_LoopFilename,8
-						if (instr(A_LoopFileName,"Amazon Games") or (amazontst = "Amazon ") or (A_LoopFileName = "Amazon") && !instr(CONCAT_ROOT,A_LoopFileFullPath))
-							{
-								CONCAT_ROOT.= AMAZONchkd . "|"
-								AMAZON_ROOT.= AMAZONchkd . "|"
-							}
-					}
-			}
-	}
+ITCH_ROOT:= ""
 Loop,parse,dralbet,|
 	{
-		srchdrl:= A_LoopField . ":"
-		Loop,parse,remProgdirs,|
+		if (A_LoopField = "")
 			{
-				Loop,files,%srchdrl%\%A_LoopField%,D
+				continue
+			}
+		srclocd:= A_LoopField . ":"
+		Loop,parse,ITCHQuery,|
+			{
+				if (A_LoopField = "")
 					{
-						AMAZONchkd:= A_LoopFileFullPath
-						StringLeft,amazontst,A_LoopFilename,8
-						if (instr(A_LoopFileName,"Amazon Games") or (amazontst = "Amazon ") or (A_LoopFileName = "Amazon"))
+						continue
+					}
+				itchitm= %srclocd%\%A_LoopField%
+				if (fileexist(itchitm) && !instr(ITCH_ROOT,itchitm))
+					{
+						ITCH_ROOT.= itchitm . "|"
+						CONCAT_ROOT.= itchitm . "|"
+						iniwrite,%ITCH_ROOT%,%RJDBINI%,GENERAL,ITCH_Directory
+					}
+			}
+		Loop,parse,remProgdirs
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				itchdir= %A_LoopField%	
+				Loop,parse,ITCHQuery,|
+					{
+						if (A_LoopField = "")
 							{
-								AnAmazon:= A_LoopFileFullPath . "\" . "Amazon.exe"
-								if (fileexist(AnAmazon)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
-									{
-										CONCAT_ROOT.= AMAZONchkd . "|"
-										AMAZON_ROOT.= AMAZONchkd . "|"
-									}
+								continue
+							}
+						itchitm= %srclocd%\%itchdir%\%A_LoopField%
+						if (fileexist(itchitm) && !instr(ITCH_ROOT,itchitm))
+							{
+								ITCH_ROOT.= itchitm . "|"
+								CONCAT_ROOT.= itchitm . "|"
+								iniwrite,%ITCH_ROOT%,%RJDBINI%,GENERAL,ITCH_Directory
 							}
 					}
-
 			}
 	}	
-ORIGINROOT:= ""
-OriginPGD:= A_ProgramData . "\Origin\LocalContent\"
-if fileExist(OriginPGD)
-	{
-		Loop,Files,%OriginPGD%*,D
-			{
-				Loop,files,%A_LoopFileLongPath%\*.mfst
-					{
-						fileread,mfst,%A_LoopFileLongPath%
-						trnsl:= % uriDecode(mfst)
-						pthxtra:= % RegExReplace(trnsl, "^(.*installpath=)([A-Z]\:)" "", "$2")
-						mfstpth:= % RegExReplace(pthxtra,"" "&download" "(.*)", "")
-						if fileexist(mfstpth)
-							{
-								CONCAT_ROOT.= mfstpth . "|"
-								ORIGIN_ROOT.= mfstpth . "|"
-							}
-					}
-			}
-	}
-Loop,parse,progdirs
-	{
-		srclocd:= A_LoopField
-		Loop,Files,%srclocd%,D
-			{
-				Loop,files,%A_LoopFileFullPath%,D
-					{
-						if (instr(A_LoopFileName,"Origin")&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
-							{
-								CONCAT_ROOT.= A_LoopFileFullPath . "|"
-								ORIGIN_ROOT.= A_LoopFileFullPath . "|"
-							}
-					}
-			}
-	}
-Loop,parse,dralbet,|
-	{
-		srchdrl= %A_LoopField%:
-		Loop,parse,remProgdirs,|
-			{
-				Loop,files,%srchdrl%\%A_LoopField%,D
-					{
-						ORIGINchkd= %A_LoopFileFullPath%
-						if instr(A_LoopFileName,"Origin")
-							{
-								Anorigin= %A_LoopFileFullPath%\Origin.exe
-								if (fileexist(Anorigin)&& !instr(CONCAT_ROOT,A_LoopFileFullPath))
-									{
-										CONCAT_ROOT.= ORIGINchkd . "|"
-										ORIGIN_ROOT.= ORIGINchkd . "|"
-									}
-							}
-					}
-
-			}
-	}
 if (ACONCAT_ROOT <> "")
 	{
 		SOURCE_Directory= %ACONCAT_ROOT%
@@ -3236,232 +3059,224 @@ return
 
 CENTRLCKB:
 gui,submit,nohide
-guicontrolget,CENUM,,CENTRLCKB
-guicontrol,,CenKBM,%CENUM%
-guicontrol,,CenPL1,%CENUM%
-guicontrol,,CenPL2,%CENUM%
-guicontrol,,CenMC,%CENUM%
-guicontrol,,CenGM,%CENUM%
-guicontrol,,CenMM,%CENUM%
-guicontrol,,CenJAL,%CENUM%
-guicontrol,,CenJBE,%CENUM%
-guicontrol,,CenPRE,%CENUM%
-guicontrol,,CenPST,%CENUM%
-CENTRLZ=%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%|%CENUM%
+guicontrolget,CENTRLCKB,,CENTRLCKB
+Loop,parse,CENITEMS,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		guicontrol,,%A_LoopField%,%CENTRLCKB%	
+		%A_LoopField%= %CENTRLCKB%
+	}
+CENTRLZ= %CENITEMS%	
+if (CENCKB = 1)
+	{
+		CENTRLZ:= A_Space
+	}
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
 return
+
+
 CenKBM:
 gui,submit,nohide
 guicontrolget,CenKBM,,CenKBM
-CENTRALIZE= 
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenKBM = 0)
 	{
-		if (A_Index = 2)
-			{
-				cen%A_Index%= %CenKBM%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenKBM|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenKBM|")
+		{
+			CENTRLZ.= "CenKBM|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenKBM = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenPL1:
 gui,submit,nohide
 guicontrolget,CenPL1,,CenPL1
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPL1 = 0)
 	{
-		if (A_Index = 3)
-			{
-				cen%A_Index%= %CenPL1%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenPL1|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenPL1|")
+		{
+			CENTRLZ.= "CenPL1|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPL1 = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenPL2:
 gui,submit,nohide
 guicontrolget,CenPL2,,CenPL2
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPL2 = 0)
 	{
-		if (A_Index = 4)
-			{
-				cen%A_Index%= %CenPL2%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenPL2|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenPL2|")
+		{
+			CENTRLZ.= "CenPL2|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPL2 = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenMC:
 gui,submit,nohide
 guicontrolget,CenMC,,CenMC
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenMC = 0)
 	{
-		if (A_Index = 5)
-			{
-				cen%A_Index%= %CenMC%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenMC|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenMC|")
+		{
+			CENTRLZ.= "CenMC|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenMC = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenGM:
 gui,submit,nohide
 guicontrolget,CenGM,,CenGM
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenGM = 0)
 	{
-		if (A_Index = 6)
-			{
-				cen%A_Index%= %CenGM%
-				CENTRALIZE.= (cen%A_Index%) . "|"
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenGM|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
+else {
+	if !instr(CENTRLZ,"CenGM|")
+		{
+			CENTRLZ.= "CenGM|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenGM = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
-
 CenMM:
 gui,submit,nohide
 guicontrolget,CenMM,,CenMM
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenMM = 0)
 	{
-		if (A_Index = 7)
-			{
-				cen%A_Index%= %CenMM%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenMM|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
-
+else {
+	if !instr(CENTRLZ,"CenMM|")
+		{
+			CENTRLZ.= "CenMM|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenMM = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenJAL:
 gui,submit,nohide
 guicontrolget,CenJAL,,CenJAL
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenJAL = 0)
 	{
-		if (A_Index = 8)
-			{
-				cen%A_Index%= %CenJAL%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenJAL|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenJAL|")
+		{
+			CENTRLZ.= "CenJAL|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenJAL = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenJBE:
 gui,submit,nohide
 guicontrolget,CenJBE,,CenJBE
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenJBE = 0)
 	{
-		if (A_Index = 9)
-			{
-				cen%A_Index%= %CenJBE%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenJBE|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
-
+else {
+	if !instr(CENTRLZ,"CenJBE|")
+		{
+			CENTRLZ.= "CenJBE|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenJBE = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenPRE:
 gui,submit,nohide
 guicontrolget,CenPRE,,CenPRE
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPRE = 0)
 	{
-		if (A_Index = 10)
-			{
-				cen%A_Index%= %CenPRE%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenPRE|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenPRE|")
+		{
+			CENTRLZ.= "CenPRE|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPRE = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 CenPST:
 gui,submit,nohide
 guicontrolget,CenPST,,CenPST
-CENTRALIZE:= ""
-Loop,parse,CENTRLZ,|
+iniread,CENTRLZ,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPST = 0)
 	{
-		if (A_Index = 11)
-			{
-				cen%A_Index%= %CenPST%
-				continue
-			}
-		cen%A_Index%:= A_LoopField
+		stringreplace,CENTRLZ,CENTRLZ,CenPST|,,All
 	}
-if instr(CENTRALIZE,0)
-   {
-      Cen1= 0
-   }
-CENTRLZ=%Cen1%|%cen2%|%cen3%|%cen4%|%cen5%|%cen6%|%cen7%|%cen8%|%cen9%|%cen10%|%cen11%
-CENTRALIZE= %CENTRLZ%
+else {
+	if !instr(CENTRLZ,"CenPST|")
+		{
+			CENTRLZ.= "CenPST|"
+		}
+}	
 iniwrite,%CENTRLZ%,%RJDBINI%,GENERAL,CENTRALIZE
+if (CenPST = 0)
+	{
+		guicontrol,,CENTRLCKB,0
+	}
 return
 
 
@@ -3578,7 +3393,7 @@ NSOURCEDLIST=
 ;Nsivk= 
 gosub, ADD_ITER
 fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
-srcntot = "")
+srcntot = ""
 vavn:= ""
 Fileread,SOURCEDLIST,%SRCFILE%
 Loop,parse,SOURCEDLIST,`n`r
@@ -3751,7 +3566,7 @@ Loop,parse,NSPLIT,|
 			{
 				break
 			}
-		SRCLOOP:= A_LoopField
+		SRCLOOP= %A_LoopField%
 		if (!fileexist(SRCLOOP)or(A_LoopField = ""))
 			{
 				continue
@@ -3770,7 +3585,7 @@ Loop,parse,NSPLIT,|
 					{
 						continue
 					}
-				fsext:= A_LoopField
+				fsext= %A_LoopField%
 				sfi_size := A_PtrSize + 8 + (A_IsUnicode ? 680 : 340)
 				VarSetCapacity(sfi, sfi_size)
 				Loop,files,%SRCLOOP%\*,D
@@ -3796,7 +3611,7 @@ Loop,parse,NSPLIT,|
 									}
 								if instr(A_LoopFileLongPath,A_LoopField)
 									{
-										TOPSTM:= A_LoopField
+										TOPSTM= %A_LoopField%
 										stmexcl= 1
 										break
 									}
@@ -3845,7 +3660,6 @@ Loop,parse,NSPLIT,|
 						FilePPUT=%FilePath%
 						splitpath,FilePath,filpn,filpdir,,filpjn
 						TOPSCR= %SRCLOOP%
-						splitpath,TOPSCR,tippy
 						if ((stmexcl = 1)&&(IncludeDD = 1))
 							{
 								TOPSCR= %TOPSTM%
@@ -3869,12 +3683,8 @@ Loop,parse,NSPLIT,|
 							{
 								rootn= %smjk2%
 							}
-						if (tippy = "")
-							{
-								tippy= %rootn%
-							}
-						splitpath,simpath,simpn,simpdir
-						splitpath,trukpath,truknm,farpth
+						splitpath,FilePath,simpn,simpdir
+						splitpath,filpdir,truknm,farpth
 						splitpath,farpth,farnm,
 						simploc= %simpath%
 						SB_SetText("adding " filenm "")
@@ -3891,7 +3701,6 @@ Loop,parse,NSPLIT,|
 									{
 										omitd.= filenm . "|" . simploc . "|"  . "`n"
 										excl= 1
-										
 										break
 									}
 							}
@@ -3912,7 +3721,6 @@ Loop,parse,NSPLIT,|
 									{
 										omitd.= filenm . "|" . simploc . "`n"
 										excl= 1
-										
 										break
 									}
 							}
@@ -3934,15 +3742,14 @@ Loop,parse,NSPLIT,|
 								stringright,rt,rootn,%hh%
 								stringright,an,chkstrip,%hh%
 								stringLeft,az,chkstrip,%hh%
-								if ( ((lt <> az) && (rt <> an) && (lt <> A_LoopField)&& (rt <> A_LoopField)&&(hh > 3) && ((an = A_LoopField) or (az = A_LoopField))) or (chkstrip = A_LoopField))
+								if ( ((lt <> az) && (rt <> an) && (lt <> A_LoopField)&& (rt <> A_LoopField) && (hh > 3) && ((an = A_LoopField) or (az = A_LoopField))) or (chkstrip = A_LoopField))
 									{
 										smf+=1
 										lvachk:= ""
-										
 										break
 									}
 							}
-						kir=	
+						kir=
 						Loop,parse,simpath,\
 							{
 								if (A_LoopField = "")
@@ -3963,31 +3770,26 @@ Loop,parse,NSPLIT,|
 										smf+=1
 										if (smf = 2)
 											{
-										
 												break									
 											}
 									}
-								if (kdir = prbn)
+								if (kir = prbn)
 									{
 										smf+= 1
 										if (smf = 2)
 											{
-												
 												break									
 											}
-										
 									}
 							}
 						if (smf = 2)
 							{
-								
 								continue
 							}
 						if (smf = 1)
 							{
 								lvachk:= ""
 								simpnk.= FileName . "`n"
-								
 							}
 						if (lvachk <> "")
 							{
@@ -3997,7 +3799,7 @@ Loop,parse,NSPLIT,|
 						njName:= ""
 						SPZ= 0
 						SPZa= |0|
-					if ((namechk = 1)&&(lvachk <> ""))
+						if ((namechk = 1)&&(lvachk <> ""))
 							{
 								splitpath,filename,exnm,exep,exet,exechk
 								gosub, GETGOODNAME
@@ -4028,7 +3830,7 @@ Loop,parse,simpnk,`r`n
 			{
 				continue
 			}
-		fenx:= A_LoopField
+		fenx= %A_LoopField%
 		splitpath,fenx,fenf,fendir,fenxtn,fenol
 		Loop,NSPLIT,|
 			{
@@ -4036,7 +3838,7 @@ Loop,parse,simpnk,`r`n
 					{
 						continue
 					}
-				srcdtmp:= A_LoopField . "\"
+				srcdtmp= %A_LoopField%\
 				stringreplace,fen,fendir,%srcdtmp%,,UseErrorLevel
 				if (errorlevel <> 0)
 					{
@@ -4074,7 +3876,7 @@ Loop,parse,NSOURCEDLIST,`n`r
 				continue
 			}
 		vavn+=1
-		%vavn%SDL:= A_LoopField
+		%vavn%SDL= %A_LoopField%
 	}
 subtrfm:= (srcntot	- vavn)
 krnf:= vavn
@@ -4125,11 +3927,34 @@ popui:= ""
 SOURCEDLIST= %NSOURCEDLIST%
 Return
 
+RESTEAM:
+dwnrej:= ""
+iniread,URLFILE,%source%\repos.set,BINARIES,STEAMJSON
+save= %STM_DB%
+Filemove,%save%,%save%.bak,R
+DownloadFile(URLFILE,save,dwnovwr,True)
+dwnovwr=False
+if !fileExist(save)
+	{
+		Msgbox,258,,Json Download Failed,Steam Database was not downloaded.`n     Try again?
+		ifmsgbox,Abort
+			{	
+				Filemove,%save%.bak,%save%,R
+				return
+			}
+		if Msgbox,Retry
+			{
+				goto, RESTEAM
+			}
+SB_SetText(" " save " ""downloaded")
+}
+goto, RELOOKUP
+
 getsivk:
 if fileexist(LKUP_DB)
 	{
 		filegetsize,nsvksize,%LKUP_DB%
-		filegetsize,stmdbsrc,%source%\steam.json
+		filegetsize,stmdbsrc,%STM_DB%
 		if (stmdbsrc > nsvksize)
 			{
 				goto, RELOOKUP
@@ -4139,16 +3964,16 @@ if fileexist(LKUP_DB)
 	}
 RELOOKUP:
 filedelete,%LKUP_DB%
-sivk:= ""
-Nsivk= %sivk%
-RENMD:= ""
-fileread,stfn,%source%\steam.json
+sivk=
+Nsivk=
+RENMD=
+fileread, stfn, %STM_DB%
 stringreplace,json,stfn,",,All		;"
 stringreplace,json,json,|,-,All
 stringreplace,json,json,}`,,`n,All
 stringreplace,json,json,{,,All
 stringreplace,json,json,appid:,,All
-stringreplace,json,json,`,name:,|,All	
+stringreplace,json,json,`,name:,|,All
 stringreplace,json,json,applist:apps:[,,All	
 stringreplace,json,json,}]}},,All	
 stringreplace,json,json,<,,All
@@ -4159,6 +3984,9 @@ stringreplace,json,json,?,-,All
 stringreplace,json,json,*,-,All
 stringreplace,json,json,:,-,All
 stringreplace,json,json,--,-,All
+stringreplace,json,json,&amp`;amp`;,&&,All
+stringreplace,json,json,&amp`;,&,All
+stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
 stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
 Loop,parse,json,`n`r
 	{
@@ -4239,19 +4067,25 @@ return
 NetCHK:
 guicontrolget,NetChk,,NetChk
 NET_Check= %netchk%
+if (NetChk = 0)
+	{
+		iniwrite,0,%RJDBINI%,GENERAL,Net_Check
+		SB_SetText("Right-click to delete the lookup table database.")
+		return
+	}
 if !fileexist(LKUP_DB)
 	{
 		SB_SetText("Net-Check requires an internet connection.")
 		if ((nsivk = "")or !fileexist(LKUP_DB))
 			{
-				Msgbox,8449,Confirm,NetworkLookup,###   WARNING   ###`nThis option may add addtional processing time`n       Generate the Lookup Table?,7
+				Msgbox,8449,Confirm NetworkLookup,###   WARNING   ###`nThis option may add addtional processing time`n       Generate the Lookup Table?,7
 				ifmsgbox,Ok
 					{
 						Loop,parse,GUIVARS,|
 							{
 								guicontrol,disable,%A_LoopField%
 							}
-						SB_SetText("..  ... Generating Lookup Table....")
+						SB_SetText(".. Please be patient ... Generating Lookup Table....")
 						gosub,getsivk
 						SB_SetText("Lookup Table ''lookup.db'' Generated")
 						Loop,parse,GUIVARS,|
@@ -4653,7 +4487,7 @@ Loop, %fullstn0%
 							break
 						}
 				}
-			Loop,parse,unselect,`r`n
+			Loop,parse,rabsol,`r`n
 				{
 					if (A_LoopField = "")
 						{
@@ -5657,61 +5491,61 @@ if instr(Extra_Source,TOPSCR . "\" . exep)
 exepN= %exep%
 jpiter:= ""
 repscr:= SRCLOOP
+stringsplit,exepar,exep,\
+exepJ=
+nsl=
+exeJ: 
+stringleft,a,exep,1
+if (a = "\")
+	{
+		stringtrimleft,exep,exep,1
+	}
+stringsplit,exer,exep,\
+chkag= 
+Loop,%exer0%
+	{
+		ns:= exer%A_Index%
+		if (ns = "")
+			continue
+		if (chkag = "")
+			{
+				chkag= %ns%
+			}
+		stringlen,e,ns
+	}
+e+=1
+stringtrimright,exep,exep,%e%
+exepj.= ns . "\"
+if ((exep = "\")or(exep = ""))
+	{
+		goto, jpd
+	}
+goto, exej
 jpd:
-stringreplace,exep,exep,\\,\,All
 if (scrtst = "")
 	{
 		;tlevel= %SRCLOOP%\%exep%
-		tlevel= %SRCLOOP%
+		tlevel= %repscr%
 	}
-stringreplace,tlevel,tlevel,\\,\,All
-stringright,te,tlevel,1
-if (te = "\")
-	{
-		stringtrimright,tlevel,tlevel,1
-	}
-;msgbox,,,%exep%
-Loop,parse,exep,\
+;msgbox,,,p=%exep%`nj=%exepj%	
+Loop,parse,exepJ,\
 	{
 		if (A_LoopField = "")
 			{
 				continue
 			}
-		din:= A_LoopField
-		invar:= din
+		ac= 	
+		din= %A_LoopField%
+		njName= %din%
+		invar= %din%
 		gosub, StripVar
 		xin= %invarx%
 		brk= |%din%|	
 		xrk= |%xin%|
-		;msgbox,,,%exep%`n%brk%`n%xrk%`n%scrtst%`n%tlevel%`n%nfn%
 		if (instr(exclfls,brk) or instr(exclfls,xrk))
 			{
 				njname:= ""
-				stringreplace,vv,A_LoopField,%xin%,,All
-				stringreplace,vv,vv,%din%,,All
-				stringreplace,exep,exep,%vv%,,
-				if (scrtst = 1)
-					{
-						if (exep = "")
-							{
-								splitpath,repscr,nfn,scrrp
-								tlevel= %scrrp%
-								exep= %nfn%
-							}
-						else {
-							tlevel= %SRCLOOP%\%exep%
-						}	
-					}
-				else {
-			;		if (exep = "")
-			;			{
-							splitpath,repscr,,scrrp
-							splitpath,scrrp,nfn,repscr
-							tlevel= %scrrp%
-							exep= %nfn%
-			;			}
-					}
-				goto,jpd
+				ac= 1
 			}
 		Loop,parse,rabsol,`n`r
 			{
@@ -5722,8 +5556,8 @@ Loop,parse,exep,\
 				if instr(din,A_LoopField)
 					{
 						njname:= ""
-						stringreplace,exep,exep,%A_LoopField%,,
-						goto, jpd
+						ac= 1
+						break
 					}
 			}
 		Loop,parse,absol,`r`n
@@ -5735,28 +5569,19 @@ Loop,parse,exep,\
 				if instr(din,A_LoopField)
 					{
 						njname:= ""
-						stringreplace,exep,exep,%A_LoopField%,,
-						goto, jpd
+						ac= 1
+						break
 					}
 			}
-		stringreplace,ack,din,%A_Space%,,
-		stringreplace,ack,ack,_,,
-		stringreplace,ack,ack,.,,
-		stringreplace,execk,exep,.,,
-		stringreplace,execk,execk,_,,
-		stringreplace,execk,execk,%A_SPace%,,
-		if instr(ack,execk)
+		if (ac = 1)
 			{
-				njName= %din%
-				exenj= %din%
-				break
+				continue
 			}
-		if (njname = "")
-			{
-				njName= %din%
-			}	
-	}		
-
+	}
+if ((instr(exechk,chkag) or instr(chkag,exechk) && !instr(njname,chkag) && !instr(chkag,njname)) or ((chkag = exechk)))
+	{
+		njname= %chkag%
+	}
 redux:
 nexenj:= ""
 mf=	
@@ -5799,7 +5624,7 @@ Loop,parse,rlspfx,|
 								break
 							}
 					}
-				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^fin.*v.?[0-9].*|^Updt.*v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^final.?v.?[0-9].*|^fin.?v.?[0-9].*|^Updt.*v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
 				if (ap = 1)
 					{
 						stringreplace,njnameg,njname,%vmind%%trmp%,,
@@ -6039,7 +5864,8 @@ if (snov = "")
 										if ((b2>47) and (b2<58)) or ((b2>64) and (b2<91)) or ((b2>96) and (b2<123)) or (instr(ptyx,bf))
 											 {
 												continue
-											 }else {
+											 }
+											 else {
 												spechar:= 1
 												break
 											 }
