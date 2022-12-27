@@ -1,0 +1,4 @@
+
+set pro1=%1%
+start "" "[KEYSTX]" %pro1%
+exit /b

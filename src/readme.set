@@ -65,6 +65,10 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 ¦   +-- jk_GameTemplate.set
 ¦   +-- jk_DestktopTemplate.set
 ¦   +-- jk_Trigger.set
+¦   +-- ks_Blank.set
+¦   +-- ks_GameTemplate.set
+¦   +-- ks_DesktopTemplate.set
+¦   +-- ks_Trigger.set
 ¦   +-- Joystick.ico
 ¦   +-- jkvtx.ahk
 ¦   +-- lrDeploy.ahk
@@ -131,4 +135,4 @@ Cloud-Backup of Game-Saves and Game-Configuration files
 
 The lrdeploy.exe file will compile and deploy [RJ_PROJ] project source files and website to github.
 
-Included with the binary installer or portable version are 7za.exe and aria2c.exe, both of which are required for [RJ_PROJ] to operate properly.
+Included with the binary installer and portable versions are 7za.exe and aria2c.exe, both of which are required for [RJ_PROJ] to operate properly.

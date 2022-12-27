@@ -682,6 +682,11 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				splitpath,joytokey_executable,mapperxn,mapperp
 				gosub,killmapper
 			}
+		if (JMap = "keysticks")
+			{
+				splitpath,keysticks_executable,mapperxn,mapperp
+				gosub,killmapper
+			}
 		if (JMap = "xpadder")
 			{
 				splitpath,xpadder_executable,mapperxn,mapperp
@@ -1210,6 +1215,11 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				splitpath,joytokey_executable,mapperxn,mapperp
 				gosub,killmapper
 			}
+		if (JMap = "Keysticks")
+			{
+				splitpath,keysticks_executable,mapperxn,mapperp
+				gosub,killmapper
+			}
 		if (JMap = "xpadder")
 			{
 				splitpath,xpadder_executable,mapperxn,mapperp
@@ -1644,6 +1654,7 @@ loop, 16
 			}
 		playerVX:= % player%JoyCount%VX
 		MediaCenter_ProfileVX:= % MediaCenter_Profile_%JoyCount%VX
+		ernum=
 		cpyplyrs:
 		if (!fileExist(pinum)or(pinum = "disabled"))
 			{
@@ -1663,14 +1674,19 @@ loop, 16
 				fileCopy,%templt%,%pinum%,1
 				if ((errorlevel <> 0)&&(PlayerVX <> pinum))
 					{
+						ernum+=1
 						pinum= %PlayerVX%
 						Player%A_Index%= %playerVX%
-						goto, cpyplyrs
+						ir (ernum < 3)
+							{
+								goto, cpyplyrs
+							}
 					}
 			}
 			else {
 				Player%joycount%= %pinum%
 				}
+		ernum=	
 		cpymcntrs:
 		if !fileExist(minum)
 			{
@@ -1681,9 +1697,13 @@ loop, 16
 				fileCopy,%MediaCenter_Template%, %minum%,1
 				if ((errorlevel <> 0)&&(MediaCenter_ProfileVX <> minum))
 					{
+						ernum+= 1
 						minum= %MediaCenter_ProfileVX%
 						MediaCenter_Profile%A_Index%= %MediaCenter_ProfileVX%
-						goto, cpymcntrs
+						if (ernum < 3)
+							{
+								goto, cpymcntrs
+							}
 					}
 			}
 			else {

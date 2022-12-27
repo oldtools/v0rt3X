@@ -10,9 +10,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.78.020
+This Version:0.99.78.027
 
-This Build: 2022-12-24 3:49 PM
+This Build: 2022-12-27 8:04 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -65,6 +65,10 @@ v0rt3X
 ¦   +-- jk_GameTemplate.set
 ¦   +-- jk_DestktopTemplate.set
 ¦   +-- jk_Trigger.set
+¦   +-- ks_Blank.set
+¦   +-- ks_GameTemplate.set
+¦   +-- ks_DesktopTemplate.set
+¦   +-- ks_Trigger.set
 ¦   +-- Joystick.ico
 ¦   +-- jkvtx.ahk
 ¦   +-- lrDeploy.ahk
@@ -131,4 +135,4 @@ Cloud-Backup of Game-Saves and Game-Configuration files
 
 The lrdeploy.exe file will compile and deploy v0rt3X project source files and website to github.
 
-Included with the binary installer or portable version are 7za.exe and aria2c.exe, both of which are required for v0rt3X to operate properly.
+Included with the binary installer and portable versions are 7za.exe and aria2c.exe, both of which are required for v0rt3X to operate properly.

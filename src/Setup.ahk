@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%
 FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
-RELEASE := "2022-12-24 3:49 PM"
+RELEASE := "2022-12-27 8:04 AM"
 VERSION := "[CURV]"
 
 EnvGet,LADTA,LOCALAPPDATA
@@ -104,8 +104,8 @@ SPCFIX= .|-|%A_Space%|_
 RLSPFX= .|-|(|[|%A_Space%|_|
 BGMPROGS= WindowManager|SpecialK|SpecialKtest|MultiMonitorFullscreenHelper|Magpie|SKIF|borderstripper|ShaderGlass|Magpie|Fullscreenizer|SRWE|borderlessgamingportable|BorderlessGaming|sizer|BorderlessGamingTool|WindowedBorderlessGaming|MultiMonitorFullscreenHelper|ShiftWindow|BorderlessWindowUtility|BetterFullscreen
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
-MAPCFGS= JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
-remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff__MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
+MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
+remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
@@ -140,6 +140,7 @@ DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
 ascinumerate=!|#|$|@|`%|&|(|)|[|]|{|}|'|;
+fringe:= "-_([{^`,`;"
 alphanumiterate=a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
 chariterate=%ascinumerate%|%alphanumiterate%
 nosuc= {"success":false}
@@ -2187,6 +2188,7 @@ ifMsgbox,Yes
         filedelete,%home%\xpadder_!.cmd
         filedelete,%home%\joyXoff_!.cmd
         filedelete,%home%\joytokey_!.cmd
+        filedelete,%home%\keysticks_!.cmd
         filedelete,%home%\lookup.db
         filedelete,%home%\MediaCenter.xpadderprofile
         filedelete,%home%\MediaCenter2.xpadderprofile
@@ -2196,6 +2198,10 @@ ifMsgbox,Yes
         filedelete,%home%\MediaCenter2.gamecontroller.amgp
         filedelete,%home%\Player1.gamecontroller.amgp
         filedelete,%home%\Player2.gamecontroller.amgp
+		filedelete,%home%\MediaCenter.keyx
+        filedelete,%home%\MediaCenter2.keyx
+        filedelete,%home%\Player1.keyx
+        filedelete,%home%\Player2.keyx
 		filedelete,%home%\MediaCenter.cfg
         filedelete,%home%\MediaCenter2.cfg
         filedelete,%home%\Player1.cfg
@@ -2318,6 +2324,15 @@ iniwrite,@Size(650 580),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowSize
 iniwrite,@Point(0 0),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowPosition
 return
 
+INITKEYSTICKS:
+Mapper= 6
+prf= ks
+JMAP= Keysticks
+%JMAP%_executable=%kbmpprt%
+mapper_extension= xpadderprofile
+goto,KEYMAPSET
+return
+
 KEYMAPSET:
 if (kbmpprt = "")
 	{
@@ -2356,6 +2371,7 @@ if (kbmpprt <> "")
 		stringreplace,osklok,oskloc,\,/,All
 		fileread,jtktmp,%source%\%prf%_Trigger.set
 		FileDelete,%home%\%JMAP%_!.cmd
+		fileread,amks,%source%\%prf%_Trigger.set
 		fileread,amcb,%source%\%prf%_Trigger.set
 		fileread,amcp,%source%\%prf%_GameTemplate.set
 		fileread,kbmamcp,%source%\%prf%_KBM_Template.set
@@ -2372,6 +2388,7 @@ if (kbmpprt <> "")
 		FileDelete,%KBM_Template%
 		FileDelete,%Blank_Template%
 		FileDelete,%MediaCenter_Template%
+		stringreplace,amks,amks,[KEYSTX],%kbmpprt%,All
 		stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 		stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
 		stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
@@ -3635,6 +3652,11 @@ Loop,parse,NSPLIT,|
 							}
 						filez:= A_LoopFileSizeKB
 						splitpath,FileName,FileNM,FilePath,FileExt,filtn
+						FilePPUT=%FilePath%
+						filpn= %FileNM%
+						exep= %FilePath%
+						exechk= %filtn%
+						
 						if (instr(FileName,"Installer")or instr(FileName,"Uninstal"))
 							{
 								continue
@@ -3656,19 +3678,16 @@ Loop,parse,NSPLIT,|
 							{
 								continue
 							}
-						exechk= %filtn%
-						FilePPUT=%FilePath%
-						splitpath,FilePath,filpn,filpdir,,filpjn
 						TOPSCR= %SRCLOOP%
 						if ((stmexcl = 1)&&(IncludeDD = 1))
 							{
 								TOPSCR= %TOPSTM%
 							}
 						stringreplace,simpath,FilePath,%TOPSCR%,,
-						stringreplace,trukpath,filpdir,%TOPSCR%,,
-						if ((trukpath = "")or(trukpath = filpdir))
+						trukpath= %simpath%
+						if ((trukpath = "")or(trukpath = FilePath))
 							{
-								Loop,parse,filpdir,\
+								Loop,parse,FilePath,\
 									{
 										if (A_LoopField = "")
 											{
@@ -3682,11 +3701,11 @@ Loop,parse,NSPLIT,|
 						if (rootn = "")
 							{
 								rootn= %smjk2%
+								if (rootn = "")
+									{
+										rootn= %trukpath%
+									}
 							}
-						splitpath,FilePath,simpn,simpdir
-						splitpath,filpdir,truknm,farpth
-						splitpath,farpth,farnm,
-						simploc= %simpath%
 						SB_SetText("adding " filenm "")
 						invar= %filtn%
 						gosub, StripVar
@@ -3699,7 +3718,7 @@ Loop,parse,NSPLIT,|
 									}
 								if instr(chkstrip,A_LoopField)
 									{
-										omitd.= filenm . "|" . simploc . "|"  . "`n"
+										omitd.= filenm . "|" . simpath . "|"  . "`n"
 										excl= 1
 										break
 									}
@@ -3719,7 +3738,7 @@ Loop,parse,NSPLIT,|
 								stringLeft,az,chkstrip,%hh%
 								if ((an = A_LoopField) or (az = A_LoopField) or (chkstrip = A_LoopField) && !instr(rootn,A_LoopField))
 									{
-										omitd.= filenm . "|" . simploc . "`n"
+										omitd.= filenm . "|" . simpath . "`n"
 										excl= 1
 										break
 									}
@@ -3750,7 +3769,7 @@ Loop,parse,NSPLIT,|
 									}
 							}
 						kir=
-						Loop,parse,simpath,\
+						Loop,parse,FilePath,\
 							{
 								if (A_LoopField = "")
 									{
@@ -3801,14 +3820,13 @@ Loop,parse,NSPLIT,|
 						SPZa= |0|
 						if ((namechk = 1)&&(lvachk <> ""))
 							{
-								splitpath,filename,exnm,exep,exet,exechk
 								gosub, GETGOODNAME
-								FilePPUT= %FilePath%
 							}
 						if (lvachk = "")
 							{
 								SPZa.= "?"
 							}
+							
 						AddCPL:	
 						FileOpts:= <
 						FileArgs:= <
@@ -3854,7 +3872,6 @@ Loop,parse,simpnk,`r`n
 						stringreplace,jtst,fltsmp,%rplt%,,UseErrorLevel
 						if (errorlevel = 0)
 							{
-								
 								LV_Add(lvachk,fenf, fendir, , , A_Space,"y","<","<","<","y","<","<","<","<","y","y","<",SPZ)
 								NSOURCEDLIST.= fenf . "|" . fendir . "|" . vd . "|" . vd . "|" . A_Space . "|y|<|<|<|y|<|<|<|<|y|y|<" . SPZa . "`n"
 								fullist.= fenx . "|"
@@ -4035,9 +4052,9 @@ loop,parse,invarp,`
 								{
 									RENMD.= A_LoopField
 								}
-							else {
-								continue
-							}	
+								else {
+									continue
+								}	
 						}
 					break	
 				 }
@@ -4315,6 +4332,8 @@ Loop, %fullstn0%
 			fnd32:= ""
 			getaplist:= ""
 			splitpath,prn,prnmx,OutDir,prnxtn,gmnamex
+			exep= %OutDir%
+			tlevel= %OutDir%
 			exechk= %gmnamex%
 			sx= 0
 			exclu= 
@@ -4354,8 +4373,6 @@ Loop, %fullstn0%
 			CONTINUE
 			
 			SCRLOOPFND:
-			exep= %OutDir%
-			tlevel= %OutDir%
 			Stringreplace,gfnamecx,outdir,%TOPSCR%\,,All
 			Loop,parse,gfnamecx,\
 				{
@@ -5028,13 +5045,16 @@ Loop, %fullstn0%
 							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Directory
 							iniwrite,%prnmx%,%gamecfg%,CONFIG,Exe_File
 							killist:
+							fileappend,tlevel=%tlevel%`n0-klist=%klist%`nkillchk=%killchk%`nprnmx=%prnmx%`n,%home%\log.txt,UTF-8
 							if ((KILLCHK = 1)&&(klist = ""))
 								{										   
-									klist:= prnmx . "|"
+									fileappend,ok...tlevel=%tlevel%`n0-klist=%klist%`nkillchk=%killchk%`nprnmx=%prnmx%`n,%home%\log.txt,UTF-8
+									klist= |%prnmx%|
 									Loop,files,%tlevel%\*.exe,R
 										{
 											splitpath,A_LoopFileFullPath,tmpfn,tmpfd,,tmpfo
-											abson:= ""
+											abson=
+											abexe=|%tmpfn%|
 											Loop,parse,absol,`r`n
 												{
 													if (A_LoopField = "")
@@ -5045,18 +5065,20 @@ Loop, %fullstn0%
 														{
 															abson= 1
 															continue
-														}
+														}		
 												}
-											if (!instr(klist,A_LoopFileName)&&(abson = ""))
+											if (!instr(klist,abexe) && (abson = ""))
 												{
-													klist.= A_LoopFileName . "|"
+													klist.= tmpfn . "|"
 												}
 										}
+									fileappend,1-%klist%`n,%home%\log.txt,UTF-8
 									iniread,nklist,%gamecfg%,CONFIG,exe_list
 									if ((nklist = "")or(nklist = "ERROR")or(OVERWRT = 1))
 										{
 											iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
 										}
+									fileappend,2-%klist%`n,%home%\log.txt,UTF-8
 								}
 						}
 				}
@@ -5463,6 +5485,38 @@ stringreplace,invarx,invarp,%A_SPace%,,All
 stringreplace,invarp,invarp,.,,All
 return
 
+senclean:
+stringright,gta,vartu,2
+stringright,gtn,vartu,3
+stringright,gth,vartu,4
+sr= %vartu%
+if (gth = " The")
+	stringtrimright,kn,sr,4
+if (gta = " A")
+	stringtrimright,kn,sr,2
+if (gtn = " An")
+	stringtrimright,kn,sr,3
+if (kn <> "")
+	{
+		sr= %kn%
+	}
+stringleft,gta,sr,2
+stringleft,gtn,sr,3
+stringleft,gth,sr,4
+if (gth = "The ")
+	stringtrimleft,kn,sr,4
+if (gta = "A ")
+	stringtrimleft,kn,sr,2
+if (gtn = "An ")
+	stringtrimleft,kn,sr,3
+if (kn <> "")
+	{
+		tuvar= %kn%
+	}
+	else {
+		tuvar= %sr%
+	}
+return	
 
 IncludeDD:
 gui,submit,nohide
@@ -5470,10 +5524,10 @@ iniwrite,%IncludeDD%,%RJDBINI%,GENERAL,IncludeDD
 return
 
 GETGOODNAME:
-stringreplace,exep,exep,%TOPSCR%,,
+stringreplace,exepo,exep,%TOPSCR%,,
 nfn=
 scrtst:= ""
-if (exep = "")
+if (exepo = "")
 	{
 		Loop,parse,srcloop,\
 			{
@@ -5481,26 +5535,26 @@ if (exep = "")
 					{
 						continue
 					}
-				exep:= A_LoopField
+				exepo:= A_LoopField
 			}
 	}	
-if instr(Extra_Source,TOPSCR . "\" . exep)
+if instr(Extra_Source,TOPSCR . "\" . exepo)
 	{
 		scrtst= 1
 	}
-exepN= %exep%
+exepN= %exepo%
 jpiter:= ""
 repscr:= SRCLOOP
-stringsplit,exepar,exep,\
+stringsplit,exepar,exepo,\
 exepJ=
 nsl=
 exeJ: 
-stringleft,a,exep,1
+stringleft,a,exepo,1
 if (a = "\")
 	{
-		stringtrimleft,exep,exep,1
+		stringtrimleft,exepo,exepo,1
 	}
-stringsplit,exer,exep,\
+stringsplit,exer,exepo,\
 chkag= 
 Loop,%exer0%
 	{
@@ -5514,20 +5568,14 @@ Loop,%exer0%
 		stringlen,e,ns
 	}
 e+=1
-stringtrimright,exep,exep,%e%
+stringtrimright,exepo,exepo,%e%
 exepj.= ns . "\"
-if ((exep = "\")or(exep = ""))
+if ((exepo = "\")or(exepo = ""))
 	{
 		goto, jpd
 	}
 goto, exej
 jpd:
-if (scrtst = "")
-	{
-		;tlevel= %SRCLOOP%\%exep%
-		tlevel= %repscr%
-	}
-;msgbox,,,p=%exep%`nj=%exepj%	
 Loop,parse,exepJ,\
 	{
 		if (A_LoopField = "")
@@ -5547,6 +5595,10 @@ Loop,parse,exepJ,\
 				njname:= ""
 				ac= 1
 			}
+		if (ac = 1)
+			{
+				continue
+			}
 		Loop,parse,rabsol,`n`r
 			{
 				if (A_LoopField = "")
@@ -5559,6 +5611,10 @@ Loop,parse,exepJ,\
 						ac= 1
 						break
 					}
+			}
+		if (ac = 1)
+			{
+				continue
 			}
 		Loop,parse,absol,`r`n
 			{
@@ -5707,7 +5763,6 @@ if (nameOverride <> "")
 			{
 				njname:= njnameX				
 			}
-			
 	}
 	else {
 		r:= "" . njnamex . ""
@@ -5719,6 +5774,13 @@ if (nameOverride <> "")
 			}		
 		stringlen,njabrl,njabrv	
 	}
+stringright,frng,njns,1
+if instr(fringe,frng)
+	{
+		stringtrimright,njns,njns,1
+		njns= %njns%
+	}
+
 str= %njname%
 StrReplace(str, A_Space,, scnt)
 str= %njname%
@@ -5755,7 +5817,6 @@ if ((rlschkn = "windows")or (rlschkn = "release")or (dplychkn = "deploy")or(dply
 				njname= %excn%
 			}
 		exepN= %jik%
-		
 		goto, redux
 	}
 stringsplit,njtest,njname,(
@@ -5770,7 +5831,8 @@ if (njtest2 <> "")
 	}
 invar= %njname%
 gosub, stripvar
-exedp= %invarx%	
+exedp= %invarx%
+stringtrimright,frng,njame,1
 stringreplace,exedp,njname,.,,All
 stringreplace,exedp,exedp,%A_SPace%,,All
 stringreplace,exedp,exedp,(,,All
@@ -5810,7 +5872,7 @@ if (instr(Nsivk,bexp) or instr(Nsivk,xenjx))
 						continue
 					}
 				stringsplit,bei,A_LoopField,|
-				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj)or instr(bei3,njns)) && instr(A_LoopField,bexp))
+				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj) or ((bei3 = exedp)&&(exelen >= 7)) && instr(A_LoopField,bexp)))
 					{
 						njName:= bei2
 						snov:= A_LoopField
@@ -5885,8 +5947,7 @@ Loop,parse,RLSPFX,|
 			{
 				stringtrimright,njname,njname,1
 			}
-	}	
-
+	}
 return
 
 Localize:
@@ -7281,6 +7342,10 @@ if (JMAP = "Xpadder")
 	{
 		prf= xp
 	}
+if (JMAP = "Keysticks")
+	{
+		prf= ks
+	}
 if (JMAP = "Joy2Key")
 	{
 		prf= jk
@@ -7288,6 +7353,7 @@ if (JMAP = "Joy2Key")
 fileread,amcp,%source%\%prf%_GameTemplate.set
 fileread,kbmamcp,%source%\%prf%_KBM_Template.set
 fileread,amcd,%source%\%prf%_DeskTemplate.set
+stringreplace,amks,amks,[KEYSTX],%kbmpprt%,All
 stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
 stringreplace,amcb,amcb,[XPADR],%kbmpprt%,All
@@ -7377,12 +7443,12 @@ gui,submit,nohide
 Msgbox,8449,Confirm Delete,Are you sure you want to delete launchers?
 ifmsgbox,ok
 	{
-				SB_SetText("Deleting Launchers")
+		SB_SetText("Deleting Launchers")
 		Loop,files,%Game_Directory%\*.lnk,R
 			{
 				FileDelete,%A_LoopFIleFUllPath%
 			}
-				SB_SetText("Launchers Deleted")
+		SB_SetText("Launchers Deleted")
 	}
 return
 
