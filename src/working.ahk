@@ -4240,79 +4240,79 @@ Loop, %fullstn0%
 			{			
 				if (A_Index = 1)
 					{
-						exfnm:= A_LoopField
+						exfnm= %A_LoopField%
 					}
 				if (A_Index = 2)
 					{
-						expth:= A_LoopField
+						expth= %A_LoopField%
 					}
 				if (A_Index = 3)
 					{
-						gmopts:= A_LoopField
+						gmopts= %A_LoopField%
 					}
 				if (A_Index = 4)
 					{
-						gmargs:= A_LoopField
+						gmargs= %A_LoopField%
 					}
 				if (A_Index = 5)
 					{
-						nameOverride:= A_LoopField
+						nameOverride= %A_LoopField%
 					}
 				if (A_Index = 6)
 					{
-						kbmovr:= A_LoopField
+						kbmovr= %A_LoopField%
 					}
 				if (A_Index = 7)
 					{
-						pl1ovr:= A_LoopField
+						pl1ovr= %A_LoopField%
 					}
 				if (A_Index = 8)
 					{
-						pl2ovr:= A_LoopField
+						pl2ovr= %A_LoopField%
 					}
 				if (A_Index = 9)
 					{
-						mcpovr:= A_LoopField
+						mcpovr= %A_LoopField%
 					}
 				if (A_Index = 10)
 					{
-						mmovr:= A_LoopField
+						mmovr= %A_LoopField%
 					}
 				if (A_Index = 11)
 					{
-						gmovr:= A_LoopField
+						gmovr= %A_LoopField%
 					}
 				if (A_Index = 12)
 					{
-						dmovr:= A_LoopField
+						dmovr= %A_LoopField%
 					}
 				if (A_Index = 13)
 					{
-						jlovr:= A_LoopField
+						jlovr= %A_LoopField%
 					}
 				if (A_Index = 14)
 					{
-						jbovr:= A_LoopField
+						jbovr= %A_LoopField%
 					}
 				if (A_Index = 15)
 					{
-						preovr:= A_LoopField
+						preovr= %A_LoopField%
 					}
 				if (A_Index = 16)
 					{
-						pstovr:= A_LoopField
+						pstovr= %A_LoopField%
 					}
 				if (A_Index = 17)
 					{
-						bgmovr:= A_LoopField
+						bgmovr= %A_LoopField%
 					}
 				if (A_Index = 18)
 					{
-						steamquery:= A_LoopField
+						steamquery= %A_LoopField%
 					}
 				if (A_Index = 18)
 					{
-						ChkMode:= A_LoopField
+						ChkMode= %A_LoopField%
 					}
 			}
 			if (!instr(stmdbfnd,steamquery)or(STEAMQUERY = 0))
@@ -5045,10 +5045,8 @@ Loop, %fullstn0%
 							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Directory
 							iniwrite,%prnmx%,%gamecfg%,CONFIG,Exe_File
 							killist:
-							fileappend,tlevel=%tlevel%`n0-klist=%klist%`nkillchk=%killchk%`nprnmx=%prnmx%`n,%home%\log.txt,UTF-8
 							if ((KILLCHK = 1)&&(klist = ""))
 								{										   
-									fileappend,ok...tlevel=%tlevel%`n0-klist=%klist%`nkillchk=%killchk%`nprnmx=%prnmx%`n,%home%\log.txt,UTF-8
 									klist= |%prnmx%|
 									Loop,files,%tlevel%\*.exe,R
 										{
@@ -5072,13 +5070,11 @@ Loop, %fullstn0%
 													klist.= tmpfn . "|"
 												}
 										}
-									fileappend,1-%klist%`n,%home%\log.txt,UTF-8
 									iniread,nklist,%gamecfg%,CONFIG,exe_list
 									if ((nklist = "")or(nklist = "ERROR")or(OVERWRT = 1))
 										{
 											iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
 										}
-									fileappend,2-%klist%`n,%home%\log.txt,UTF-8
 								}
 						}
 				}
@@ -5576,6 +5572,7 @@ if ((exepo = "\")or(exepo = ""))
 	}
 goto, exej
 jpd:
+lastn=
 Loop,parse,exepJ,\
 	{
 		if (A_LoopField = "")
@@ -5595,6 +5592,7 @@ Loop,parse,exepJ,\
 				njname:= ""
 				ac= 1
 			}
+		lastn= %A_LoopField%	
 		if (ac = 1)
 			{
 				continue
@@ -5633,6 +5631,10 @@ Loop,parse,exepJ,\
 			{
 				continue
 			}
+	}
+if (njname = "")
+	{
+		njname= %lastn%
 	}
 if ((instr(exechk,chkag) or instr(chkag,exechk) && !instr(njname,chkag) && !instr(chkag,njname)) or ((chkag = exechk)))
 	{
@@ -5872,6 +5874,10 @@ if (instr(Nsivk,bexp) or instr(Nsivk,xenjx))
 						continue
 					}
 				stringsplit,bei,A_LoopField,|
+				if (bei5 = "")
+					{
+						break
+					}
 				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj) or ((bei3 = exedp)&&(exelen >= 7)) && instr(A_LoopField,bexp)))
 					{
 						njName:= bei2
@@ -5913,6 +5919,10 @@ if (snov = "")
 								continue
 							}
 						stringsplit,bei,A_LoopField,|
+						if (bei5 = "")
+							{
+								break
+							}
 						if ((bei2 = exedp) or (bei3 = exedp) or (bei5 = njname) or (bei2 = njname) && instr(A_LoopField,nbv))
 							{
 								njName:= bei2

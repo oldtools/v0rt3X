@@ -341,6 +341,9 @@
 |chain|
 |changements|
 |changer|
+|chd|
+|chds|
+|chdman|
 |char|
 |character|
 |chaîne|
@@ -1113,6 +1116,12 @@
 |maillage|
 |Makro|
 |malla|
+|mame|
+|mameui|
+|mame64|
+|mame32|
+|mameui32|
+|mameui64|
 |Manager|
 |Managed|
 |manufacturer|
