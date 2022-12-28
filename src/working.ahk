@@ -2626,33 +2626,6 @@ if fileExist(steamdir)
 							splitpath,A_LoopFileFullPath,fn,fp,
 							stringreplace,steamguid,fp,%steamdir%\userdata\,,
 							stringreplace,steamuser,steamguid,config\localconfig.vdf,,
-							
-							/*
-							fileread,logonu,%A_LoopFileLongPath%
-							fndnum:= ""
-							Loop,parse,logonu,`r`n
-								{
-									stringreplace,lnm,A_LoopField,",,
-									;"
-									if (lnm = "users")
-										{
-											fndnum=1
-											continue
-										}
-									stringlen,stuid,A_LoopField	
-									if ((fndnum = 1)&&(stuid = 17))
-										{
-											SteamUser:= A_LoopField
-											break
-										}
-									if instr(A_LoopField,"<STEAMID64>")
-										{
-											stringsplit,dstb,A_LoopField,<>
-											SteamUser= %dstb3%
-											break
-										}
-								}
-							*/	
 						}
 						
 				}
@@ -3393,6 +3366,10 @@ splitpath,nFileName,FileNM,FilePath,FileExt,filtn
 INFN= 1
 Loop,parse,SOURCE_DIRECTORY,|
 	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
 		if instr(filepath,A_LoopField)
 			{
 				goto, gadded
@@ -4310,7 +4287,7 @@ Loop, %fullstn0%
 					{
 						steamquery= %A_LoopField%
 					}
-				if (A_Index = 18)
+				if (A_Index = 19)
 					{
 						ChkMode= %A_LoopField%
 					}
@@ -4388,7 +4365,7 @@ Loop, %fullstn0%
 			exABR= %abbrv%
 			stringreplace,exCAPs,exCAP,%A_Space%,,All
 			njName= 	
-			if ((nameOverride <> "")&& (nameOverride <> gmnamex) && !instr(bsvl,nameOverride))
+			if (((nameOverride <> "")&& (steamquery <> 0) && (steamquery <> "")) or ((nameOverride <> "") && (nameOverride <> gmnamex) && !instr(bsvl,nameOverride)))
 				{
 					gmnamed= %nameOverride%
 					sexjnj= %nameOverride%

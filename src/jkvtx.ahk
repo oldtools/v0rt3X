@@ -193,16 +193,6 @@ Loop,parse,rjtgl,`n`r
 					}
 			}
 	}
-/*	
-if (Run_Options = "")
-	{
-		Run_Options:= A_Space
-	}
-if (Run_Arguments = "")
-	{
-		Run_Arguments:= A_Space
-	}
-*/
 Loop,10
 	{
 		kvl:= A_Index + 1
@@ -238,27 +228,11 @@ if (scextn = "lnk")
 		if (plarg <> "")
 			{
 				plarg:= A_Space . plarg
-				/*
-				if (Run_Options <> A_Space)
-					{
-						LinkOptions.= Run_Options . A_Space
-					}
-				if (Run_Arguments <> A_Space)
-					{
-						plarg.= A_Space . Run_Arguments
-					}
-				*/	
 			}
 	}
 	else {
 		plfp= %plink%
 		splitpath,plfp,,pldr,,plfname
-		/*
-		if (Run_Arguments <> A_Space)
-			{
-				plarg:= A_Space . Run_Arguments
-			}
-		*/	
 	}
 splitpath,plfp,pfilef,pfdir,plxtn,plnkn
 tempn= %gmname%	
@@ -289,12 +263,12 @@ if (fileexist(Game_Profile)&&(gbar <> 1))
 		goto, readini
 	}
 else {
-	if !fileexist(Game_Profile)
-		{			
-			gosub, NameTuning
-			gosub, SetupINIT
-		}
-}
+		if !fileexist(Game_Profile)
+			{			
+				gosub, NameTuning
+				gosub, SetupINIT
+			}
+	}
 SplitPath,Player1,Pl1file,pl1pth,pl1ext,pl1fnm
 SplitPath,Player2,Pl2file,pl2pth,pl2ext,pl2fnm
 SplitPath,MediaCenter_Profile,MCP1file,MCP1pth,MCP1ext,MCP1fnm
@@ -326,9 +300,6 @@ Loop, 16
 			}
 	}
 PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|PRE_BGP|BEGIN
-/*	
-PRERUNORDERPROC:
-*/
 acwchk=
 Loop,parse,PRERUNORDER,|
 	{
@@ -444,7 +415,6 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 				process,close,%bgpid%
 			}
 	}
-	
 return
 
 
@@ -598,7 +568,6 @@ if (jalprog <> "")
 					{
 						RunWait,%jalprog%%wscrop%,%A_ScriptDir%,%runhow%,jalpid
 						return
-						;goto, premapper
 					}
 				Run,%jalprog%%wscrop%,%A_ScriptDir%,%runhow%,jalpid
 				iniwrite,%jalpid%,%curpidf%,JustAfterLaunch,pid
@@ -645,7 +614,6 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
-						;goto,postmapper
 						return
 					}
 				Run,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
@@ -841,7 +809,6 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
-						;goto,postmapper
 						return
 					}
 				Run,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
@@ -1011,7 +978,6 @@ if (CWIN = 1)
 						WinGet, vWinExStyle, ExStyle, % "ahk_id " hWnd
 						vWinStyle := Format("0x{:08X}", vWinStyle)
 						vWinExStyle := Format("0x{:08X}", vWinExStyle)
-						;vOutput .= vWinTitle "|" vWinStyle "|" vWinExStyle "`r`n"
 					}
 				blockinput,off
 				ToolTip,
@@ -1051,9 +1017,6 @@ Quitout:
 Blockinput,On
 
 POSTRUNORDER=POST_BGP|POST_MON|POST_JBE|LOGOUT|POST_1|POST_MAP|POST_2|POST_3
-/*	
-POSTRUNORDERPROC:
-*/
 acwchk=
 Loop,parse,POSTRUNORDER,|
 	{
@@ -1132,8 +1095,6 @@ if (jbeprog <> "")
 				if instr(presA,"W")
 					{
 						ToolTip,
-						;goto,LOGOUT
-						;return
 					}
 				Run,%jbeprog%%wscrop%,%A_ScriptDir%,%runhow%,jbepid	
 				iniwrite,%jbepid%%wscrop%,%curpidf%,JustBeforeExit,pid
@@ -1186,7 +1147,6 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
-						;goto,postmapper
 						return
 					}
 				Run,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
@@ -1329,7 +1289,6 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%pstbrun%%wscrop%,%A_ScriptDir%,%runhow%,postBpid
-						;goto,postmapper
 						return
 					}
 				Run,%prestk2%%wscrop%,%A_ScriptDir%,%runhow%,postbpid
@@ -1439,7 +1398,6 @@ if (prestk2 <> "")
 				if instr(prestk1,"W")
 					{
 						RunWait,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
-						;goto,postmapper
 						return
 					}
 				Run,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
@@ -1767,7 +1725,6 @@ if (instr(nogmnx,absgmx)or instr(nogmne,absgme))
 							{
 								gmnamex= %tempn%
 								gosub, nonmres
-								;goto,PRE_MON
 								return
 							}
 						splitpath,npfdir,,,,tempn
