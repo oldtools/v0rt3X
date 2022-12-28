@@ -122,7 +122,7 @@ dralbet= c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
 AmzQuery= Amazon Games
 OriQuery= Origin\LocalContent
 GogQuery= GOG|G.O.G|GOG Games
-ItchQuery= itch\app*|Itch*Downloads|Itch.io
+ItchQuery= itch\app*|Itch*games|Itch.io
 GenQuery= Games|Gaymes|My Games|juegos|spellen|Spiele|Jeux|Giochi|PC_Games|PC Games|PCGAMES|Windows Games|WinGames|Windows_Games|Win_Games|Games_for_Windows|Games for Windows|GamesForWindows|CHRONOS Releases
 AllQuery:= GogQuery . | . "Origin" . "|" . "Epic Games" . "|" . steamhome
 undira= |%A_WinDir%|%A_Programfiles%|%A_Programs%|%A_AppDataCommon%|%A_AppData%|%A_Desktop%|%A_DesktopCommon%|%A_StartMenu%|%A_StartMenuCommon%|%A_Startup%|%A_StartupCommon%|%A_Temp%|%LADTA%|
@@ -3628,7 +3628,7 @@ Loop,parse,NSPLIT,|
 								INFN+=1
 							}
 						filez:= A_LoopFileSizeKB
-						splitpath,FileName,FileNM,FilePath,FileExt,filtn
+						splitpath,FileName,FileNM,FilePath,FileExt,filtn,filtdrv
 						FilePPUT=%FilePath%
 						filpn= %FileNM%
 						exep= %FilePath%
@@ -3954,7 +3954,8 @@ if fileexist(LKUP_DB)
 				goto, RELOOKUP
 			}
 		fileread,Nsivk,%LKUP_DB%
-		goto JSONPARSED
+		
+		goto, JSONPARSED
 	}
 RELOOKUP:
 filedelete,%LKUP_DB%
@@ -5499,7 +5500,6 @@ return
 GETGOODNAME:
 stringreplace,exepo,exep,%TOPSCR%,,
 nfn=
-scrtst:= ""
 if (exepo = "")
 	{
 		Loop,parse,srcloop,\
@@ -5511,13 +5511,67 @@ if (exepo = "")
 				exepo:= A_LoopField
 			}
 	}	
-if instr(Extra_Source,TOPSCR . "\" . exepo)
+if instr(Extra_Source,FilePath)
 	{
-		scrtst= 1
+		exepo= 
+		exqu:= genquery . "|" . GogQuery . "|" . ItchQuery . "|" . AmzQuery . "|" . OriQuery . "|" . steamhome
+		Loop,parse,undira,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				cugpth=%A_LoopField%
+				stringreplace,exepot,filepath,%A_LoopField%\,,
+				if (ERRORLEVEL = 0)
+					{
+						TOPSCR= %A_LoopField%
+						EXEVS= %exepot%
+						Loop,parse,EXQU,|
+							{
+								if (A_LoopField = "")
+									{
+										continue
+									}
+								stringreplace,exepov,filepath,%cugpth%\%A_LoopField%,,
+								if (ERRORLEVEL = 0)
+									{
+										TOPSCR= %cugpth%\%A_LoopField%
+										exepo= %exepov%									
+										goto, EXEPO
+									}
+							}
+						break	
+					}
+			}
+		if (exepot <> filepath)
+			{	
+				goto, EXEPO
+			}
+		Loop,parse,EXQU,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				GNCHK= %filtdrv%\%A_LoopField%
+				stringreplace,exepo,filepath,%GNCHK%,,
+				if (errorlevel = 0)
+					{
+						TOPSCR= %GNCHK%
+						goto, EXEPO
+					}
+			}
+		if (exepo <> filepath)
+			{
+				goto, EXEPO
+			}
+		stringreplace,exepo,filepath,%filtdrv%\,,
+		TOPSCR= %filtdrv%
 	}
+EXEPO:	
 exepN= %exepo%
 jpiter:= ""
-repscr:= SRCLOOP
 stringsplit,exepar,exepo,\
 exepJ=
 nsl=
@@ -5851,12 +5905,12 @@ if (instr(Nsivk,bexp) or instr(Nsivk,xenjx))
 						continue
 					}
 				stringsplit,bei,A_LoopField,|
-				if (bei5 = "")
+				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj) && instr(A_LoopField,bexp)) or ((bei3 = exedp)&&(exelen >= 7)))
 					{
-						break
-					}
-				if ((instr(A_LoopField,xenjx) or instr(A_LoopField,njx)or instr(A_LoopField,njj) or ((bei3 = exedp)&&(exelen >= 7)) && instr(A_LoopField,bexp)))
-					{
+						if (bei5 = "")
+							{
+								break
+							}
 						njName:= bei2
 						snov:= A_LoopField
 						SPZa:= "|" . bei4 . "|"
@@ -5896,12 +5950,12 @@ if (snov = "")
 								continue
 							}
 						stringsplit,bei,A_LoopField,|
-						if (bei5 = "")
-							{
-								break
-							}
 						if ((bei2 = exedp) or (bei3 = exedp) or (bei5 = njname) or (bei2 = njname) && instr(A_LoopField,nbv))
 							{
+								if (bei5 = "")
+									{
+										break
+									}
 								njName:= bei2
 								snov:= A_LoopField
 								SPZa:= "|" . bei4 . "|"
