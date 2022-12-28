@@ -131,8 +131,10 @@ pcgwbr= 400 Bad Request
 pcgwbt= Bad title
 patsup= Support us on Patreon
 nopcgw= There is currently no text in this page.
+nopcga= would you like to create it?
 STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
 PCGWURL=https://www.pcgamingwiki.com/wiki/
+PCGWAPI=https://www.pcgamingwiki.com/wiki/
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
@@ -6666,7 +6668,7 @@ if fileexist(jsave)
 				stringsplit,nvar,tlop,:
 				if (nvar1 = "name")
 					{
-						GETPCGW:
+						APIPCGW:
 						stringreplace,nvar2,nvar2,",,All	;"
 						stringreplace,nvar2,nvar2,;,,All
 						stringreplace,nvar2,nvar2,/,,All
@@ -6685,8 +6687,9 @@ if fileexist(jsave)
 						stringreplace,pcgws,pcgws,=,`%3D,All
 						stringreplace,pcgws,pcgws,&,`%26,All
 						stringreplace,pcgws,pcgws,`%,`%25,All
-						;cvturl:= uriEncode(nvar2)
-						URLFILE:= PCGWURL . pcgws 
+						;cvturl:= uriEncode(nvar2)						
+						URLFILE= PCGWAPI . steamquery
+						GETPCGW:
 						hsave= %sidn%\%nvarz%.html
 						save= %hsave%
 						if ((PCGWTRY < 4)&&(Net_Check = 1))
@@ -6701,7 +6704,12 @@ if fileexist(jsave)
 									{
 										PCGWTRY+=1
 										sleep,2000
-										goto, GETPCGW
+										if (PCGWTRY > 2)
+											{
+												URLFILE:= PCGWURL . pcgws
+												goto, GETPCGW
+											}
+										goto, APIPCGW
 									}
 							}
 						if fileExist(hsave)
@@ -6715,7 +6723,6 @@ if fileexist(jsave)
 						if (PCGWTRY > 3)
 							{
 								GLBTRY+=1
-								
 								return
 							}
 						break
@@ -7781,7 +7788,7 @@ DATV:= ""
 pcgwin= 
 GameData:= ""
 SaveData:= ""
-if (instr(pcgw,nopcgw)or instr(pcgw,pcgwbt)or instr(pcgw,pcgwbr) or instr(pcgw,patsup))
+if (instr(pcgw,nopcga)or instr(pcgw,nopcgw)or instr(pcgw,pcgwbt)or instr(pcgw,pcgwbr) or instr(pcgw,patsup))
 	{
 		filedelete,%hsave%
 		
