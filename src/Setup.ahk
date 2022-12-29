@@ -5,9 +5,9 @@ SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
 FileEncoding UTF-8
-
+CURPID= %ERRORLEVEL%
 RJPRJCT := "v0rt3X"
-RELEASE := "2022-12-27 10:14 PM"
+RELEASE := "2022-12-28 11:22 PM"
 VERSION := "[CURV]"
 
 EnvGet,LADTA,LOCALAPPDATA
@@ -61,6 +61,8 @@ if (scextn = "lnk")
 	}
 binhome := home . "\bin"
 THELOG := home . "\log.txt"
+ARIA:= binhome . "\aria2c.exe"
+cacheloc:= home . "\downloaded"
 if ((plink = "") or !fileExist(plink) or (scextn = ""))
 	{
 		;filedelete,%THELOG%
@@ -108,6 +110,8 @@ MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
 remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
+stmdbeb= <td><code>
+stmdbee= </code></td>
 ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
 reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|script|nocd|Tool|trainer|
 priora= |Launcher64|Launcherx64|Launcherx8664|Launcher64bit|Launcher64|Launchx64|Launch64|Launchx8664|
@@ -132,12 +136,15 @@ pcgwbt= Bad title
 patsup= Support us on Patreon
 nopcgw= There is currently no text in this page.
 nopcga= would you like to create it?
+nostmdbi= No app was found matching this AppID.
 STEAMIDB=https://store.steampowered.com/api/appdetails?appids=
 PCGWURL=https://www.pcgamingwiki.com/wiki/
-PCGWAPI=https://www.pcgamingwiki.com/wiki/
+PCGWAPI=https://www.pcgamingwiki.com/api/appid.php?appid=
+STEAMDBI=https://steamdb.info/app/
+DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
-STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|DIST_DIRECTORY|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
+STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
@@ -159,6 +166,7 @@ SupData=</span><sup id="cite_ref-gamedir_
 ;"
 trig3=<span class="mw-headline" id="Save_game_cloud_syncing">
 DBINF=(mounted in <a href="/wiki/DOSBox" title="DOSBox">DOSBox</a>)</i>
+STINQ=abbr title="replace with My Documents for Windows XP"
 STINF=<a href="/wiki/Glossary:Game_data#Steam_client" title="Glossary:Game data"><abbr title="The base Steam installation folder">&lt;Steam-folder&gt;</abbr></a>
 PRINF=<a href="/wiki/Glossary:Game_data#User_profile" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%USERPROFILE`%</abbr></a>
 UAINF=<a href="/wiki/Glossary:Game_data#User_application_data" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%LOCALAPPDATA`%</abbr></a>
@@ -407,7 +415,11 @@ if (Hide_Taskbar = 0)
 	{
 		taskbarv:= ""	
 	}
-
+stmddchk:= ""
+if instr(IncludeDD,"Steam")
+	{
+		stmddchk:= "checked"
+	}
 if (steamdir = "")
 	{
 		steamdir:= "[STEAMDIRECTORY]"
@@ -554,7 +566,8 @@ Gui, Add, Button, x18 y8 h18 w18 vRESET gRESET,R
 Gui, Font, Normal
 Gui, Add, Checkbox, x65 y10 h14 vNameChk gNameChk right %nmchkst%,Name-Check
 Gui, Add, Checkbox, x155 y10 h14 vNetChk gNetChk right %netnchk%,Net-Check
-GUi, Add, Checkbox, x100 y30 h14 vIncludeDD gIncludeDD %InclDD%,Incl Steam/GOG etc...
+GUi, Add, Checkbox, x100 y30 h14 vIncludeDD gIncludeDD Right %stmddchk%,Include
+Gui, Add, DropDownList, x160 y27 w80 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 Gui, Add, Button, x241 y8 w45 h15 vREINDEX gREINDEX %repopbut%,re-index
 Gui, Font, Bold
 Gui, Add, Button, x241 y24 w45 h25 vPOPULATE gPOPULATE,GO>
@@ -991,7 +1004,70 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 						goto, AddExcl
 					}
 			}
-		Loop,parse,DIST_DIRECTORY,|
+		Loop,parse,ORIGIN_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,Steam_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,GOG_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,ITCH_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,AMAZON_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,XCLOUD_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,XBox_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,Battle_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,EPIC_Directory,|
+			{
+				if instr(Exclude_DirectoryT,A_LoopField)
+					{
+						goto, AddExcl
+					}
+			}
+		Loop,parse,EA_Directory,|
 			{
 				if instr(Exclude_DirectoryT,A_LoopField)
 					{
@@ -2173,6 +2249,10 @@ Loop,parse,STDVARS,|
         %A_LoopField%:= ""
     }
 initz= 1
+if !fileexist(cacheloc)
+	{
+		filecreatedir,%cacheloc%
+	}
 stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
 FileDelete,%home%\RJDB.ini
 fileappend,`n,%home%\RJDB.ini,UTF-8-RAW
@@ -2608,7 +2688,7 @@ Loop,parse,dralbet,|
 if (ACONCAT_ROOT <> "")
 	{
 		IncludeDD=0
-		iniwrite,0,%RJDBINI%,GENERAL,IncludeDD
+		;iniwrite,0,%RJDBINI%,GENERAL,IncludeDD
 	}
 STEAM_ROOT:= ""
 RegRead, steamdir, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam,InstallPath
@@ -2885,10 +2965,8 @@ else {
 			sourcepop.= A_LoopField . "|"
 		}
 	iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,SOURCE_DIRECTORY
-	iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,DIST_DIRECTORY
 	return
 }
-iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,DIST_DIRECTORY
 return
 
 popgui:
@@ -3337,7 +3415,7 @@ Loop,parse,cftst,`n`r
                     {
                         continue
                     }
-                snum+=1
+                snum+=1z
                 %snum%_Pre= dkv
                 if (snum = 1)
                     {
@@ -3354,6 +3432,7 @@ Return
 CANCLDBUT:
 CANCLD= 1
 guicontrol,disable,CANCLDBUT
+Process,close,%$exeg_pid%
 Return
 
 ADDGAME:
@@ -3599,20 +3678,33 @@ Loop,parse,NSPLIT,|
 								break
 							}
 						stmexcl= 
-						Loop,parse,DIST_DIRECTORY,|
+						Loop,parse,DDPRVD,|
 							{
 								if (A_LoopField = "")
 									{
 										continue
 									}
-								if instr(A_LoopFileLongPath,A_LoopField)
+								DDLp= %A_LoopField%	
+								iniread,IncludeDD,%RJDBINI%,GENERAL,IncludeDD
+								if (instr(IncludeDD,DDLp) or (IncludeDD = "") or (IncludeDD = "ERROR"))
 									{
-										TOPSTM= %A_LoopField%
-										stmexcl= 1
-										break
+										continue
+									}
+								iniread,IncludeRG,%RJDBINI%,GENERAL,%DDLp%_Directory
+								if ((IncludeRG = "")or(IncludeRG = "ERROR"))
+									{
+										continue
+									}
+								Loop,parse,IncludeRG,|
+									{
+										if instr(A_LoopFileLongPath,A_LoopField)
+											{
+												stmexcl= 1
+												break
+											}											
 									}
 							}
-						if ((stmexcl = 1)&& (IncludeDD <> 1))
+						if (stmexcl = 1)
 							{
 								continue
 							}
@@ -3927,8 +4019,10 @@ RESTEAM:
 dwnrej:= ""
 iniread,URLFILE,%source%\repos.set,BINARIES,STEAMJSON
 save= %STM_DB%
+splitpath,save,svaf,svap
 Filemove,%save%,%save%.bak,R
 DownloadFile(URLFILE,save,dwnovwr,True)
+;exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
 dwnovwr=False
 if !fileExist(save)
 	{
@@ -3956,7 +4050,6 @@ if fileexist(LKUP_DB)
 				goto, RELOOKUP
 			}
 		fileread,Nsivk,%LKUP_DB%
-		
 		goto, JSONPARSED
 	}
 RELOOKUP:
@@ -4002,10 +4095,7 @@ Loop,parse,json,`n`r
 			}
 		Nsivk.= "|" . jspi2 . "|" . RENNOS . "|" . jspi1 . "|" . RENMD . "|" .  "`n"
 	}
-if !fileexist(LKUP_DB)
-	{
-		fileappend,%NSIVK%,%LKUP_DB%,UTF-8
-	}	
+fileappend,%NSIVK%,%LKUP_DB%,UTF-8
 JSONPARSED:
 return
 
@@ -4185,7 +4275,7 @@ bsvl=|
 GLBTRY:= 0
 if (NETCHK <> 1)
 	{
-		GLBTRY:= 4
+		GLBTRY:= 8
 	}
 ;Gui,Listview,MyListView	
 ;LV_Modify(0, "-Select")
@@ -5325,7 +5415,7 @@ Loop, %fullstn0%
 				{
 					iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
 				}
-			if ((GLBTRY >= 3)or(Net_Check = 0))
+			if ((GLBTRY >= 7)or(Net_Check = 0))
 				{
 					goto, PROFILECOMPLETE
 				}
@@ -5494,9 +5584,37 @@ if (kn <> "")
 	}
 return	
 
+DDINCLD:
+gui,submit,nohide
+guicontrolget,DDINCLD,,DDINCLD
+guicontrolget,IncludeDD,,IncludeDD
+iniread,IncDD,%RJDBINI%,GENERAL,IncludeDD
+if instr(IncDD,DDINCLD)
+	{
+		guicontrol,,IncludeDD,1
+		return
+	}
+guicontrol,,IncludeDD,0
+return	
+
 IncludeDD:
 gui,submit,nohide
-iniwrite,%IncludeDD%,%RJDBINI%,GENERAL,IncludeDD
+guicontrolget,IncludeDD,,IncludeDD
+guicontrolget,DDInc,,DDIncld
+iniread,IncDD,%RJDBINI%,GENERAL,IncludeDD
+if (IncludeDD = 0)
+	{
+		stringreplace,IncDD,IncDD,%DDinc%|,,
+		iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+		return
+	}
+if (IncludeDD = 1)
+	{
+		stringreplace,IncDD,IncDD,%DDinc%|,,
+		IncDD.= DDInc . "|"
+		iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+		return
+	}
 return
 
 GETGOODNAME:
@@ -6599,18 +6717,19 @@ steamappinfo:
 URLFILE:= STEAMIDB . steamquery
 jsave:= sidn . "\" . steamquery . ".json"
 save:= jsave
+splitpath,save,svaf,svap
 dwnovwr:= "True"
 if (!fileexist(jsave)&& (Net_Check = 1))
 	{
 		gosub, DWNCONFIRM
 	}
-if (!fileexist(jsave)&&(STMTRY < 4)&&(GLBTRY < 4))
+if (!fileexist(jsave)&&(STMTRY < 4)&&(GLBTRY < 8))
 	{
 		STMTRY+=1
 		goto, steamappinfo
 	}
 else {
-	if ((STMTRY > 3)or(GLBTRY > 3))
+	if ((STMTRY > 3)or(GLBTRY > 7))
 		{
 			SB_SetText("SteamPowered Data not found for " njName "")
 			GLBTRY+=1
@@ -6639,9 +6758,29 @@ if (STMTRY > 3)
 		return
 	}		
 STEAMDBINFO:
-if (PCGWTRY > 3)
+
+/*
+URLFILE=%STEAMDBI%/%steamquery%/config
+dsave= %sidn%\steamdb.info.html
+save= %dsave%
+dwnovwr=True
+if !fileexist(dsave)
 	{
-		GLBTRY+=1
+		gosub, DWNCONFIRM
+	}
+if !fileExist(dsave)
+	{
+		SB_SetText("SteamDBInfo html not downloaded")
+	}
+*/	
+
+if fileExist(hsave)
+	{
+		gosub, READSTBINFO
+	}
+if (PCGWTRY = 4)
+	{
+		CNCLPCW= 1
 		return
 	}
 if fileexist(jsave)
@@ -6669,6 +6808,7 @@ if fileexist(jsave)
 				if (nvar1 = "name")
 					{
 						APIPCGW:
+						GETPCGW:
 						stringreplace,nvar2,nvar2,",,All	;"
 						stringreplace,nvar2,nvar2,;,,All
 						stringreplace,nvar2,nvar2,/,,All
@@ -6688,40 +6828,36 @@ if fileexist(jsave)
 						stringreplace,pcgws,pcgws,&,`%26,All
 						stringreplace,pcgws,pcgws,`%,`%25,All
 						;cvturl:= uriEncode(nvar2)						
-						URLFILE= PCGWAPI . steamquery
-						GETPCGW:
+						URLFILE:= PCGWAPI . steamquery
 						hsave= %sidn%\%nvarz%.html
 						save= %hsave%
+						splitpath,save,svaf,svap
 						if ((PCGWTRY < 4)&&(Net_Check = 1))
 							{
 								dwnovwr=True
 								if !fileexist(hsave)
 									{
-										gosub, DWNCONFIRM
-										
+										gosub, DWNCONFIRM				
 									}
 								if !fileExist(hsave)
 									{
 										PCGWTRY+=1
 										sleep,2000
-										if (PCGWTRY > 2)
+										if (PCGWTRY > 4)
 											{
 												URLFILE:= PCGWURL . pcgws
 												goto, GETPCGW
 											}
-										goto, APIPCGW
+										;goto, APIPCGW
 									}
 							}
 						if fileExist(hsave)
 							{
 								gosub, READPCGW
 							}
-						if !fileExist(hsave)
+						if (!fileExist(hsave)&&(CNCLPCW <> 1))
 							{
 								PCGWTRY:= 4
-							}
-						if (PCGWTRY > 3)
-							{
 								GLBTRY+=1
 								return
 							}
@@ -6744,6 +6880,8 @@ extractlocf= "%extractloc%"
 filecreateDir,%home%\downloaded
 save:= home . "\downloaded\" . binarcf
 splitpath,save,savefile,savepath,savextn
+svaf= %savefile%
+svap=%savepath%
 savef= "%save%"
 compltdwn:= % curemote
 if (fileexist(save)&& (compltdwn = 1))
@@ -6770,6 +6908,7 @@ Loop,parse,GUIVARS,|
 DWNCONFIRM:
 dwnrej:= ""
 DownloadFile(URLFILE,save,dwnovwr,True)
+;exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
 dwnovwr=False
 SB_SetText(" " binarcf " ""downloaded")
 if (UPDATING = 1)
@@ -7781,6 +7920,68 @@ filedelete,%SRCFILE%
 fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 Return
 
+
+READSTBINFO:
+fileread,stbih,%dsave%
+datve:= ""
+DATV:= ""
+pcgwin= 
+GameData:= ""
+SaveData:= ""
+if (instr(stbih,nostmdbi)or instr(stbih,pcgwbr))
+	{
+		filedelete,%dsave%
+		return
+	}
+stmdbwin:= ""
+EXELAP=|
+ak=
+Loop,parse,stbih,`n`r
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if instr(A_LoopField,cb)
+			{
+				ak= 1
+				continue
+			}
+		if (ak = 1)&& instr(A_LoopField,stmdbeb)&& instr(A_LoopField,stmdbee)
+			{
+				stringreplace,exenm,A_LoopField,%eb%,,
+				stringreplace,exenm,exenm,%ee%,,
+				if !instr(EXELAP,exenm . "|")
+					{
+						EXELAP.= exenm . "|"					
+					}
+				ak=
+				continue
+			}	
+	}
+if (EXELAP <> "|")
+	{
+		iniread,STMGX,%gamecfg%,CONFIG,EXE_LIST
+		if (STMGX = "ERROR")
+			{
+				STMGX=
+			}
+		Loop,parse,STMGX,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if instr(EXELAP,"|" . A_LoopField . "|")
+					{
+						stringreplace,EXELAP,EXELAP,%A_LoopField%|,,
+					}	
+			}
+		STMGX.= EXELAP
+		iniwrite,%STMGX%,%gamecfg%,CONFIG,EXE_LIST
+	}
+return
+
 READPCGW:
 fileread,pcgw,%hsave%
 datve:= ""
@@ -7870,6 +8071,7 @@ Loop,parse,pcgw,`r`n
 						infolinx:= % RegExReplace(infolin,"" SupData "(.*)", "")
 						stringreplace,infolin,infolinx,%REGIF%,,All
 						stringreplace,infolin,infolin,%DBINF%,,All
+						stringreplace,infolin,infolin,%STINQ%,,All
 						stringreplace,infolin,infolin,%STINF%,%steamdir%,All
 						stringreplace,infolin,infolin,%PRINF%,%USRPRF%,All
 						stringreplace,infolin,infolin,%UAINF%,%LADTA%,All
@@ -8001,7 +8203,7 @@ LVGetCheckedItems(cN,wN) {
 }
 
 DownloadFile(UrlToFile, _SaveFileAs, Overwrite := True, UseProgressBar := True) {
-	FinalSize:= ""
+	FinalSize=
 
   If (!Overwrite && FileExist(_SaveFileAs))
 	  {
@@ -8023,20 +8225,7 @@ DownloadFile(UrlToFile, _SaveFileAs, Overwrite := True, UseProgressBar := True) 
 		try WebRequest.Send()
 		catch {
 		}
-		if (FinalSize <> "")
-			{
-				prevsize:= finalsize
-			}
-			else {
-				if (finalsize <= prevsize)
-					{
-						if (attmp > 3)
-							{
-								return
-							}
-						attmp+=1
-					}	
-				}
+
 		try FinalSize := WebRequest.GetResponseHeader("Content-Length")
 		catch {
 			FinalSize := 1
@@ -8046,6 +8235,7 @@ DownloadFile(UrlToFile, _SaveFileAs, Overwrite := True, UseProgressBar := True) 
 			{
 				return
 			}
+
 
   }
   UrlDownloadToFile, %UrlToFile%, %_SaveFileAs%
@@ -8062,7 +8252,7 @@ If (UseProgressBar) {
       try CurrentSizeTick := A_TickCount
     catch {
 			}
-	kto:= A_TickCount
+
       try Speed := Round((CurrentSize/1024-LastSize/1024)/((CurrentSizeTick-LastSizeTick)/1000)) . " Kb/s"
 	  catch {
 			}
@@ -8072,21 +8262,10 @@ If (UseProgressBar) {
     catch {
 			}
 
-	ktov:= A_TickCount
       try PercentDone := Round(CurrentSize/FinalSize*100)
     catch {
 			}
-	if (LastSizeTick < CurrentSizeTick)
-		{
-			prctl:= percentDone
-		}
-	else {
-		if (attmp > 3)
-			{
-				return
-			}
-		attmp+=1
-	}	
+
 	if (CANCLD = 1)
 		{
 			return
@@ -8094,7 +8273,7 @@ If (UseProgressBar) {
 	 if (PercentDone > 100)
 		{
 			ToolTip,
-			PercentDone:= ""
+			PercentDone=
 		}
 		
 	 SB_SetText(" " Speed " at " PercentDone "`% " CurrentSize " bytes completed")
@@ -8638,3 +8817,61 @@ StrPutVar(Str, ByRef Var, Enc = "")
 	VarSetCapacity(Var, Len, 0)
 	Return, StrPut(Str, &Var, Enc)
 }
+
+exe_get($ARIA = "", $URL = "", $TARGET = "", $FNM = "", $SAG = "", $CACHESTAT = "")
+	{
+		Global $exeg_pid
+		StringReplace, $URL, $URL, "&", "^&", All
+		$CMD = "%$ARIA%" -x16 -s16 -j16 -k1M --always-resume=true --enable-http-pipelining=true --retry-wait=3 --http-no-cache=false --http-accept-gzip=true --allow-overwrite=true --stop-with-process=%$SAG% --truncate-console-readout=false --check-certificate=false --dir="%$TARGET%" --out="%$FNM%" "%$URL%" 1>"%$CACHESTAT%\%$FNM%.status" 2>&1
+		Run, %comspec% /c "%$CMD%",,hide,$exeg_pid
+		Process, Exist, %$exeg_pid%
+		$lastline = 
+		while ErrorLevel != 0
+			{
+				Loop Read, %$CACHESTAT%\%$FNM%.status
+					{
+						L = %A_LoopReadLine%
+						if ( InStr(L, `%) != 0 )
+							{
+								StringSplit, DownloadInfo, L, (`%,
+								StringLeft, L1, DownloadInfo2, 3
+								stringsplit,tosb,DownloadInfo1,/%A_Space%
+								stringsplit,spr,DownloadInfo3,%A_Space%:,]
+								SB_SetText("" spr5 "ps " tosb2 "/" tosb3 " [" spr7 "]")
+								if ( L1 = "100" )
+									{
+										Break
+									}
+							}
+						if ( InStr(L, `%) = 0 )
+							{	
+								L = 0
+							}
+					}
+				if ( L1 is digit )
+						Process, Exist, %$exeg_pid%
+				Sleep, 50
+			}
+		sleep 200
+		FileGetSize, d_size, %$TARGET%\%$FNM%
+		if d_size > 0
+			{
+				FileDelete, %$CACHESTAT%\%$FNM%.status
+				Return true
+			}
+		else
+			{
+				SB_SetText(" " FNM ".status being deleted")
+				if ((batchdl = 1)or(LOGGING = 1))
+					{
+						FileRead,statdel,%$CACHESTAT%\%$FNM%.status
+						;;fileappend,%statdel%,%$CACHESTAT%\%$FNM%.log
+						fileappend,%statdel%,%$FNM%.log
+						statdel= 					
+					}
+					else {
+						FileDelete, %$CACHESTAT%\%$FNM%.status
+					}
+				Return false
+			}
+	}
