@@ -144,7 +144,7 @@ STEAMDBI=https://steamdb.info/app/
 DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
-STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Directory|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_ID|Exe_File|Steam_UserID|exe_list
+STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
@@ -420,13 +420,13 @@ if instr(IncludeDD,"Steam")
 	{
 		stmddchk:= "checked"
 	}
-if (steamdir = "")
+if (Steam_Directory = "")
 	{
-		steamdir:= "[STEAMDIRECTORY]"
+		Steam_Directory:= "[STEAMDIRECTORY]"
 	}
-if (SteamUser = "")
+if (Steam_UserID = "")
 	{
-		SteamUser:= "[STEAMUSERID]"
+		Steam_UserID:= "[STEAMUSERID]"
 	}
 Gui +hWndhMainWnd
 Gui,Color,%bgcolor%
@@ -792,6 +792,7 @@ CenPRE_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTR
 CenPST_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTRALIZE:"
 CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
 CREFLD_TT :="Creates the profile folder"
+DDINCLD_TT :="Digital Distribution System"
 DELPOSTAPP_TT :="removes the currently selected post-program"
 DELPREAPP_TT :="removes the currently selected pre-program"
 EnableLogging_TT :="enables logging"
@@ -805,7 +806,7 @@ GMJOY_TT :="creates the joystick profiles"
 GMLNK_TT :="creates the shortcuts"
 Hide_TaskBar_TT :="Hides the windows taskbar while active"
 INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
-IncludeDD_TT :="Include Steam/GOG/Origin/Epic etc... games."
+IncludeDD_TT :="Include games from digital distributor to include"
 JALWAIT_TT :="waits for the program to exit"
 JAL_ProgB_TT :="Assign a program to run after the game is launched`n*    (good for trainers or executable-aware programs.)"
 JAL_RC_TT :="disable or download and assign a program after launch"
@@ -1077,9 +1078,9 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 		SB_SetText("The selected directory is not a subdirectory of an existing source dir")
 		return
 		AddExcl:	
-		Exclude_Directory= %Exclude_DirectoryT%
+		Exclude_Fldr= %Exclude_DirectoryT%
 		IniRead,EXCDIRS,%RJDBINI%,GENERAL,Exclude_Directory
-		excdira:= ""
+		Exclude_Directory:= ""
 		Loop,parse,EXCDIRS,|
 			{
 				if (A_LoopField = "")
@@ -1092,11 +1093,11 @@ if (fileExist(Exclude_DirectoryT) && (Exclude_DirectoryT <> "")&& !instr(Exclude
 						SB_SetText("The selected directory is a subdirectory of an existing excluded dir")
 						return
 					}
-				excdira.= pkrs . "|"
+				Exclude_Directory.= pkrs . "|"
 			}
-		Exclude_Directory:= Exclude_Directory . "|" . excdira
+		Exclude_Directory:= Exclude_Directory . "|" . Exclude_Directory
 		iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
-		guicontrol,,Exclude_DirectoryT,|%Exclude_DirectoryT%||%excdira%
+		guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
 	}
 return
 
@@ -2494,7 +2495,6 @@ if (kbmpprt <> "")
 		iniwrite,%JMAP%,%RJDBINI%,JOYSTICKS,JMAP
 		iniwrite,%Mapper%,%RJDBINI%,GENERAL,Mapper
 		filecopy,%source%\%prf%_Blank.set,%home%\Blank.%mapper_extension%
-		;Run,%home%\rjdb.ini
 		iniwrite,%Mapper_Extension%,%RJDBINI%,JOYSTICKS,Mapper_Extension
 		iniwrite,%kbmpprt%,%RJDBINI%,JOYSTICKS,%JMAP%_executable
 		iniwrite,%keyboard_Mapper%,%RJDBINI%,JOYSTICKS,keyboard_Mapper
@@ -2525,17 +2525,94 @@ if (kbmpprt <> "")
 			{
 				MCPRFALRT:= "Red"
 			}
-		guicontrol, +c%KBMAPALRT%,Keyboard_MapperT
-		guicontrol, +c%PLR1TALRT%,Player1_TemplateT
-		guicontrol, +c%PLR2TALRT%,Player2_TemplateT
-		guicontrol, +c%MCPRFALRT%,MediaCenter_TemplateT
+		guicontrol,+c%KBMAPALRT%,Keyboard_MapperT
+		guicontrol,+c%PLR1TALRT%,Player1_TemplateT
+		guicontrol,+c%PLR2TALRT%,Player2_TemplateT
+		guicontrol,+c%MCPRFALRT%,MediaCenter_TemplateT
 		guicontrol,,Keyboard_MapperT,%keyboard_Mapper%
 		guicontrol,,Player1_TemplateT,%Player1_Template%
 		guicontrol,,Player2_TemplateT,%Player2_Template%
 		guicontrol,,MediaCenter_TemplateT,%MediaCenter_Template%
-		
 	}
 kbmpprt:= ""
+return
+
+ReadLBL:
+acnt= 
+Steam_TID=
+Steam_UserID=
+Steam_UserTmp=
+Steam_ClientID=
+fileread,stmocs,%vdfile%
+Loop,parse,stmocs,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		jnm= %A_LoopField%	
+		stringreplace,jnm,jnm,",,All ;"
+		if (jnm = "friends")
+			{
+				acnt= 1
+				continue
+			}
+		if (acnt <> 1)
+			{
+				continue
+			}
+		if ((jnm <> "}") && (Steam_UserID <> ""))
+			{
+				Steam_TID= %jnm%
+			}
+		stringsplit,jnsp,jnm,%A_Space%," ;"
+		if ((jnsp1 = "PersonaName")&&(Steam_UserName = "")&&(Steam_UserTmp = 1))
+			{
+				Steam_UserID= %Steam_TID%
+				stringreplace,jnm,jnm,PersonaName,,
+				Steam_UserName= %jnm%
+				Steam_UserTmp= 0
+				continue
+			}
+		if ((jnsp1 = "0")&&(Steam_UserTmp = ""))
+			{
+				Steam_UserTmp= 1
+				continue
+			}
+		if (jnm = "GetEquippedProfileItemsForUser")
+			{
+					stringreplace,jnm,jnm,"GetEquippedProfileItemsForUser",,All
+					Steam_ClientID= %jnm%
+					break
+			}
+	}
+return
+
+ReadLBC:
+acnt= 
+fileread,stmocs,%vdfile%
+Loop,parse,stmocs,`r`n
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		jnm= %A_LoopField%	
+		stringreplace,jnm,jnm,",,All ;"
+		if (jnm = "Accounts")
+			{
+				acnt= 1
+				continue
+			}
+		if (acnt - 1)
+			{
+				if ((jnm <> "}") && (Steam_ClientID <> ""))
+					{
+						Steam_ClientID= %jnm%
+						break
+					}
+			}
+	}
 return
 
 ReadLBF:
@@ -2562,8 +2639,7 @@ Loop,parse,stmocs,`r`n
 												STMORG.= ALLCHK . "|"
 											}
 										break
-									}
-						
+								}
 						}
 				}
 	}
@@ -2642,6 +2718,7 @@ if !instr(steamdb,steamdba)
 return	
 
 INITQUERY:
+DDSwitch=
 FileDelete,%home%\steam.db
 CONCAT_ROOT:= ""
 GENERIC_ROOT:= ""
@@ -2690,37 +2767,60 @@ if (ACONCAT_ROOT <> "")
 		IncludeDD=0
 		;iniwrite,0,%RJDBINI%,GENERAL,IncludeDD
 	}
+STEAM_Q:	
 STEAM_ROOT:= ""
-RegRead, steamdir, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam,InstallPath
-if fileExist(steamdir)
+RegRead, Steam_ROOT, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam,InstallPath
+if (fileExist(Steam_ROOT)&& !instr(Steam_directory,Steam_ROOT))
 	{
-			iniwrite,%steamdir%,%RJDBINI%,GENERAL,Steam_Directory
-			Loop,files,%steamdir%\*.vdf,R
-				{	
-					if (A_Loopfilename = "libraryfolders.vdf")
+			Steam_Directory.= Steam_ROOT . "|"
+			iniwrite,%Steam_Directory%,%RJDBINI%,GENERAL,Steam_Directory
+			Loop,parse,Steam_Directory,|
+				{
+					if (A_LoopField = "")
 						{
-							vdfile:= A_LoopFileFullPath
-							gosub, ReadLBF
-							;break
+							continue
 						}
-					if (A_LoopFilename = "localconfig.vdf")
-						{
-							splitpath,A_LoopFileFullPath,fn,fp,
-							stringreplace,steamguid,fp,%steamdir%\userdata\,,
-							stringreplace,steamuser,steamguid,config\localconfig.vdf,,
+					Loop,files,%A_LoopField%\*.vdf,R
+						{	
+							if (A_Loopfilename = "")
+								{
+									continue
+								}
+							if (A_Loopfilename = "libraryfolders.vdf")
+								{
+									vdfile:= A_LoopFileFullPath
+									gosub, ReadLBF
+									;break
+								}
+							if (A_LoopFilename = "localconfig.vdf")
+								{
+									vdfile:= A_LoopFileFullPath
+									splitpath,A_LoopFileFullPath,fn,fp,
+									stringreplace,steamguid,fp,%Steam_Directory%\userdata\,,
+									stringreplace,steamuser,steamguid,config\localconfig.vdf,,
+									gosub, ReadLBL
+								}
+							/*	
+							if (A_LoopFilename = "config.vdf")
+								{
+									vdfile:= A_LoopFileFullPath
+									splitpath,A_LoopFileFullPath,fn,fp,
+									stringreplace,steamguid,fp,%Steam_Directory%\userdata\,,
+									stringreplace,steamuser,steamguid,config\config.vdf,,
+									gosub, ReadLBC
+								}
+							*/	
 						}
-						
 				}
-	
 	}
-
+STMLKUP=
 Loop,parse,dralbet,|
 	{
 		if (A_LoopField = "")
 			{
 				continue
 			}
-		srclocd:= A_LoopField
+		srclocd= %A_LoopField%:\
 		Loop,Files,%srclocd%,D
 			{
 				if instr(A_LoopFileName,"Steam")
@@ -2754,12 +2854,12 @@ Loop,parse,dralbet,|
 											{
 												if (A_LoopFilename = "common")
 													{	
-														iniread,steamadd,%RJDBINI%,GENERAL,Steam_Directory
-														if ((steamadd < >"") && (steamadd <> "ERROR") && !instr(steamadd,A_LoopFileFullPath)&& !instr(A_LoopFileFullPath,steamadd))
+														iniread,_Steam_Directory,%RJDBINI%,GENERAL,Steam_Directory
+														if ((_Steam_Directory < >"") && (_Steam_Directory <> "ERROR") && !instr(_Steam_Directory,A_LoopFileFullPath)&& !instr(A_LoopFileFullPath,_Steam_Directory))
 															{
-																steamadd.= A_loopfilefullpath . "|"
+																Steam_Directory.= A_loopfilefullpath . "|"
 															}
-														iniwrite,%steamadd%,%RJDBINI%,GENERAL,Steam_Directory
+														iniwrite,%Steam_Directory%,%RJDBINI%,GENERAL,Steam_Directory
 														CONCAT_ROOT.= A_LoopFileFullPath . "|"
 														STEAM_ROOT.= A_LoopFileFullPath . "|"
 														break
@@ -2770,7 +2870,13 @@ Loop,parse,dralbet,|
 					}
 			}
 	}
+
 STMEND:
+if (DDSwitch <> "")
+	{
+		return
+	}
+GOG_Q:
 GOG_ROOT:= ""
 ;HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games
 Loop, Reg, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games, K
@@ -2795,6 +2901,11 @@ Loop, Reg, HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games, K
 				;break
 			}	
 	}
+if (DDSwitch <> "")
+	{
+		return
+	}
+AMAZON_Q:	
 AMZ_ROOT:= ""
 Loop,parse,dralbet,|
 	{
@@ -2840,6 +2951,12 @@ Loop,parse,dralbet,|
 					}
 			}
 	}
+
+if (DDSwitch <> "")
+	{
+		return
+	}
+ORIGIN_Q:
 ORIGIN_ROOT:= ""
 Loop,parse,dralbet,|
 	{
@@ -2885,6 +3002,7 @@ Loop,parse,dralbet,|
 					}
 			}
 	}	
+ITCH_Q:
 ITCH_ROOT:= ""
 Loop,parse,dralbet,|
 	{
@@ -2930,6 +3048,12 @@ Loop,parse,dralbet,|
 					}
 			}
 	}	
+
+if (DDSwitch <> "")
+	{
+		return
+	}
+iniwrite,%ITCH_ROOT%%STEAM_ROOT%%AMZ_ROOT%%ORIGIN_ROOT%%GOG_ROOT%,%RJDBINI%,GENERAL,Exclude_Directory
 if (ACONCAT_ROOT <> "")
 	{
 		SOURCE_Directory= %ACONCAT_ROOT%
@@ -2967,6 +3091,13 @@ else {
 	iniwrite,%CONCAT_ROOT%,%RJDBINI%,GENERAL,SOURCE_DIRECTORY
 	return
 }
+return
+EA_Q:
+Epic_Q:
+XBox_Q:
+XCloud_Q:
+Battle_Q:
+SB_SetText("coming soon!...maybe")
 return
 
 popgui:
@@ -5112,7 +5243,7 @@ Loop, %fullstn0%
 							GameProfs:= sidn
 							iniwrite,%GameMon%,%gamecfg%,CONFIG,MM_Game_Config
 							iniwrite,%DeskMon%,%gamecfg%,CONFIG,MM_MediaCenter_Config
-							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Directory
+							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Folder
 							iniwrite,%prnmx%,%gamecfg%,CONFIG,Exe_File
 							killist:
 							if ((KILLCHK = 1)&&(klist = ""))
@@ -5411,33 +5542,45 @@ Loop, %fullstn0%
 				{
 					iniwrite,%A_Space%,%GAMECFG%,CONFIG,3_Post
 				}
-			if ((G_Steam_ID = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
+			if ((G_Steam_AppID = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
 				{
-					iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
+					iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_AppID
+				}
+			if ((G_Steam_ClientID = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
+				{
+					iniwrite,%steam_clientID%,%GAMECFG%,CONFIG,Steam_ClientID
+				}
+			if ((G_Steam_UserID = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
+				{
+					iniwrite,%steam_UserID%,%GAMECFG%,CONFIG,Steam_UserID
+				}
+			if ((G_Steam_Name = "")&&(STEAMQUERY <> 0))or((OVERWRT = 1)&&(steamquery <> 0))
+				{
+					iniwrite,%steam_name%,%GAMECFG%,CONFIG,Steam_Name
 				}
 			if ((GLBTRY >= 7)or(Net_Check = 0))
 				{
 					goto, PROFILECOMPLETE
 				}
-			if (((steamquery = 0)&&(G_Steam_ID <> "")&& !fileExist(sidn . "\" G_Steam_ID . ".json"))or (!instr(stmdbfnd,steamquery)&&(steamquery <> 0)))
+			if (((steamquery = 0)&&(G_Steam_AppID <> "")&& !fileExist(sidn . "\" G_Steam_AppID . ".json"))or (!instr(stmdbfnd,steamquery)&&(steamquery <> 0)))
 				{
 					if (steamquery = 0)
 						{
-							steamquery= %G_Steam_ID%
-							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
+							steamquery= %G_Steam_AppID%
+							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_AppID
 						}
 					if !instr(stmdbfnd,steamquery)
 						{
 							GameData:= ""
 							SaveData:= ""
 							SB_SetText("Querying intenet-databases")
-							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_ID
+							iniwrite,%steamquery%,%GAMECFG%,CONFIG,Steam_AppID
 							stmdbfnd.= steamquery . "|"
 							gosub, steamappinfo
 						}
 				}
 				else {
-					if ((steamquery = 0)&&(G_Steam_ID = 0)or(G_Steam_ID = ""))
+					if ((steamquery = 0)&&(G_Steam_AppID = 0)or(G_Steam_AppID = ""))
 						{
 							GameData:= ""
 							SaveData:= ""
@@ -5602,17 +5745,108 @@ gui,submit,nohide
 guicontrolget,IncludeDD,,IncludeDD
 guicontrolget,DDInc,,DDIncld
 iniread,IncDD,%RJDBINI%,GENERAL,IncludeDD
+guicontrolget,Exclude_Fldr,,EXCLUDE_DirectoryT 
 if (IncludeDD = 0)
 	{
+		if ((INcDD = "ERROR")or(IncDD = ""))
+			{
+				INcDD=
+				return
+			}
+		_Exd= %DDinc%_Directory
+		iniread,selddlir,%RJDBINI%,GENERAL,%_Exd%
+		acnt=
+		if ((selddlir <> "")&&(selddlir <> "ERROR"))
+			{
+				Loop, parse,selddlir,|
+					{
+						if (A_LoopField = "")
+							{
+								continue
+							}
+						if !instr(Exclude_Directory,A_LoopField)
+							{
+								acnt+=1
+								if (acnt = 1)
+									{
+										Exclude_Fldr= %A_LoopField%
+										acnt+=1
+										continue
+									}
+								Exclude_Directory.= A_LoopField . "|"
+							}
+							else {
+								stringreplace,Exclude_Directory,Exclude_Directory,%A_LoopField%|,,All
+							}
+					}
+			}
 		stringreplace,IncDD,IncDD,%DDinc%|,,
 		iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+		iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
+		guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
 		return
 	}
+
 if (IncludeDD = 1)
 	{
+		if ((INcDD = "ERROR")or(IncDD = ""))
+			{
+				INcDD=
+			}
+		gotrt=	
+		gotr= 
+		seldlir= %DDinc%_Directory
+		iniread,selddlir,%RJDBINI%,GENERAL,%seldlir%
+		if ((selddlir <> "")&&(selddlir <> "ERROR"))
+			{
+				DDSwitch= %DDinc%
+				gosub, %DDSwitch%_Q
+				gotr= %IncDD%_ROOT
+				gotrt:= % gotr
+				DDswtch=
+			}
+		if (gotrt <> "")
+			{
+				acnt=
+				_Exclude_Directory:= Exclude_Directory
+				Loop,parse,selddlir,|
+					{
+						if (A_LoopField = "")
+							{
+								continue
+							}
+						nwxcl= %A_LoopField%
+						if instr(_Exclude_Directory,nwxcl)
+							{
+								Loop,parse,_Exclude_Directory,|
+									{
+										Cxclf= %A_LoopField%
+										if instr(A_LoopField,nwxcl)
+											{
+												stringreplace,_Exclude_Directory,_Exclude_Directory,%A_LoopField%|,,All
+												if (ERRORLEVEL = 0)
+													{
+														break
+													}
+											}
+									}
+							}
+						else {
+							acnt+=1
+							if (acnt = 1)
+								{
+									Exclude_Fldr= %Cxclf%
+									acnt+=1
+								}
+						}	
+					}
+				Exclude_Directory:= _Exclude_Directory
+			}
 		stringreplace,IncDD,IncDD,%DDinc%|,,
 		IncDD.= DDInc . "|"
 		iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+		iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
+		guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
 		return
 	}
 return
@@ -5833,7 +6067,7 @@ Loop,parse,rlspfx,|
 								break
 							}
 					}
-				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^final.?v.?[0-9].*|^fin.?v.?[0-9].*|^Updt.*v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
+				ap:= regexmatch(njnx,"i)^Pre.?Rel.*|^Pre.?Alpha.*|^Early.?Access.*|^Early.?B.*l.*d.*|Early.?Rel.*|^Rls.?[0-9].*|^Rls.v.*[0-9].*|^Demo.?v.[0-9]*|^Demo.?B.*ld.*|^Alpha.?B.*ld.*|^Alpha.R.?l.*s.*|^devel.*b.*l.*d.*|^Devel.?R.*l.*s.*|^R.?l.*s.?+[0-9].*|^Rel.v.?[0-9].*|^Build.v.?[0-9].*|^FIXED.*|^Build.[0-9].*|^Debug.?[0-9].*|^Debug.v.*[0-9].*|^UPDATE.*|^final.?v.?[0-9].*|^fin.?v.?[0-9].*|^Updt.*v.?[0-9].*|^v.?[0-9].*|^ver.?[0-9].*|^Developer.*",trmp)
 				if (ap = 1)
 					{
 						stringreplace,njnameg,njname,%vmind%%trmp%,,
@@ -8072,7 +8306,7 @@ Loop,parse,pcgw,`r`n
 						stringreplace,infolin,infolinx,%REGIF%,,All
 						stringreplace,infolin,infolin,%DBINF%,,All
 						stringreplace,infolin,infolin,%STINQ%,,All
-						stringreplace,infolin,infolin,%STINF%,%steamdir%,All
+						stringreplace,infolin,infolin,%STINF%,%Steam_Directory%,All
 						stringreplace,infolin,infolin,%PRINF%,%USRPRF%,All
 						stringreplace,infolin,infolin,%UAINF%,%LADTA%,All
 						stringreplace,infolin,infolin,%BSINF%,%outdir%,All
