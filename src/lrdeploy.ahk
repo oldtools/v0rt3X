@@ -357,6 +357,7 @@ SKELD= %skeltmp%
 GITUTST= 
 GITPASS=
 RJPRJCT= v0rt3X
+RJEXFN= v0rt3X
 iniwrite,%RJPRJCT%,%home%\skopt.cfg,GLOBAL,Project_Name
 iniread,UPDTFILE,%home%\src\repos.set,BINARIES,original_bnary
 if ((UPDTFILE = "ERROR")or(UPDTFILE = ""))
@@ -437,6 +438,7 @@ return
 IReset:
 gui,submit,nohide
 RJPRJCT= v0rt3X
+RJEXFN= v0rt3X
 gosub,CLNGSR
 guicontrol,,txtGIT,(not set) git.exe
 guicontrol,,ilogin,%GITUSER%
@@ -773,10 +775,13 @@ if (RJPRJCT = "")
 	{
 		SB_SetText("Set The Name of your Project")
 		RJPRJCT= v0rt3X
+		RJEXFN= v0rt3X
 		guicontrol,,RJPRJCT,%RJPRJCT%
+		guicontrol,,RJPRJNM,%RJPRJCT%
 		return
 	}
 iniwrite,%RJPRJCT%,%home%\skopt.cfg,GLOBAL,Project_Name	
+iniwrite,%RJEXFN%,%home%\skopt.cfg,GLOBAL,Exe_Name	
 iniread,UPDTFILE,%home%\src\repos.set,BINARIES,original_bnary
 if ((UPDTFILE = "ERROR")or(UPDTFILE = ""))
 	{
@@ -1740,6 +1745,7 @@ if (bldexists = 1)
 		StringReplace, nsiv, nsiv,[INSTYP],-installer,All
 		StringReplace, nsiv, nsiv,[BUILD],%BUILDIR%,All
 		StringReplace, nsiv, nsiv,[DBP],%DEPL%,All
+		StringReplace, nsiv, nsiv,[RJ_EXE],%RJEXFN%,All
 		StringReplace, nsiv, nsiv,[RJ_PROJ],%RJPRJCT%,All
 		StringReplace, nsiv, nsiv,[GIT_USER],%GITUSER%,All
 		StringReplace, nsiv, nsiv,[CURV],%vernum%,All
@@ -2127,6 +2133,13 @@ Loop, Read, %home%\skopt.cfg
 							RJPRJCT= %curlz%
 						}
 				}
+		if (curvl1 = "Exe_Name")
+				{
+					if ((curlz <> "")&&(curlz <> "ERROR"))
+						{
+							RJEXFN= %curlz%
+						}
+				}
 		if (curvl1 = "git_email")
 				{
 					if ((curlz <> "")&&(curlz <> "ERROR"))
@@ -2218,7 +2231,7 @@ sktmp=
 sktmc= 
 sktmv= 
 STEAMJS= http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json
-exrtc= |Update.exe|lrdeploy.exe?aria2c.exe?jkvtx.exe?Setup.exe?Build_Source.exe?NewOsk.exe?7za.exe|\..\|
+exrtc= |Update.exe|lrdeploy.exe?aria2c.exe?%RJEXFN%.exe?Setup.exe?Build_Source.exe?NewOsk.exe?7za.exe|\..\|
 iniwrite,https://github.com/%GITUSER%/%RJPRJCT%/releases/download/portable/portable.zip%exrtc%,%source%\repos.set,BINARIES,originalBinary
 iniwrite,https://github.com/%GITUSER%/%RJPRJCT%,%source%\repos.set,GLOBAL,SOURCEHOST
 iniwrite,%date% %TimeString%,%source%\repos.set,GLOBAL,Version
@@ -2226,14 +2239,22 @@ iniwrite,%UPDTFILE%,%source%\repos.set,GLOBAL,UPDATEFILE
 iniwrite,%REPOURL%,%source%\repos.set,GLOBAL,HOSTINGURL
 iniwrite,%STEAMJS%,%source%\repos.set,GLOBAL,STEAMJSON
 FileRead, sktmp,%SKELD%\src\Setup.tmp
-StringReplace,sktmc,sktmp,[VERSION],%date% %TimeString%,All
-StringReplace,sktmv,sktmc,[CURV],%vernum%,All
-StringReplace,sktmv,sktmc,[RJ_PROJ],%RJPRJCT%,All
+StringReplace,sktmv,sktmp,[VERSION],%date% %TimeString%,All
+StringReplace,sktmv,sktmv,[CURV],%vernum%,All
+StringReplace,sktmv,sktmv,[RJ_PROJ],%RJPRJCT%,All
+StringReplace,sktmv,sktmv,[RJ_EXE],%RJ_PROJ%,All
 stringreplace,sktmv,sktmv,`/`*  `;`;[DEBUGOV],,All
 stringreplace,sktmv,sktmv,`*`/  `;`;[DEBUGOV],,All
 FileAppend,%sktmv%,%SKELD%\src\Setup.ahk
 FileDelete,%SKELD%\src\Setup.tmp
 
+FileDelete, itmv,%SKELD%\src\%RJEXFN%.ahk
+FileRead, itmv,%SKELD%\src\jkvtx.ahk
+StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
+StringReplace,itmv,itmv,[CURV],%vernum%,All
+StringReplace,itmv,itmv,[RJ_PROJ],%RJPRJCT%,All
+StringReplace,itmv,itmv,[RJ_EXE],%RJEXFN%,All
+FileAppend, %itmv%,%SKELD%\src\%RJEXFN%.ahk
 if (BCANC = 1)
 	{
 		SB_SetText(" Cancelling Compile ")
@@ -2284,9 +2305,9 @@ if (OvrStable = 1)
 				runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\lrdeploy.ahk" /out "%SKELD%\bin\lrdeploy.exe" /icon "%SKELD%\src\Deploy.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%	
 			}	
 		RunWait, %comspec% /c echo.##################  COMPILE %RJPRJCT%  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\jkvtx.ahk" /out "%SKELD%\bin\jkvtx.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\%RJEXFN%.ahk" /out "%SKELD%\bin\%RJEXFN%.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
-		FileCopy, %SKELD%\jkvtx.exe,%DEPL%,1
+		FileCopy, %SKELD%\%RJEXFN%.exe,%DEPL%,1
 	}
 
 guicontrol,,progb,15
@@ -2312,7 +2333,7 @@ if (PortVer = 1)
 		FileDelete, %DEPL%\portable.zip
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
 		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
-		inclexe= bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\jkvtx.exe|bin\lrdeploy.exe
+		inclexe= bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
 		Loop,parse,inclexe,|
 			{
 				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
@@ -2402,7 +2423,7 @@ if (GitPush = 1)
 		FileAppend, copy /y "ReadMe.md" "%GITD%"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "site\ReadMe.md" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "site\version.txt" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
-		FileAppend, del /q "%GITD%\jkvtx.exe"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, del /q "%GITD%\%RJEXFN%.exe"`n,%DEPL%\!gitupdate.cmd
 		FileSetAttrib, +h, %DEPL%\!gitupdate.cmd
 		guicontrol,,progb,65
 	}
@@ -2636,6 +2657,7 @@ ifexist, %DEPL%\lrdeploy.nsi
 FileRead, nsiv,%BUILDIR%\src\lrdeploy.set
 StringReplace, nsiv, nsiv,[GIT_USER],%GITUSER%,All
 StringReplace, nsiv, nsiv,[RJ_PROJ],%RJPRJCT%,All
+StringReplace, nsiv, nsiv,[RJ_EXE],%RJEXFN%,All
 StringReplace, nsiv, nsiv,[INSTYP],-installer,All
 StringReplace, nsiv, nsiv,[SOURCE],%SKELD%,All
 StringReplace, nsiv, nsiv,[BUILD],%BUILDIR%,All
@@ -2742,7 +2764,7 @@ ifmsgbox,Yes
 return
 
 canclbld:
-filemove,%SKELD%\jkvtx.exe, %SKELD%\jkvtx.del,1
+filemove,%SKELD%\%RJEXFN%.exe, %SKELD%\%RJEXFN%.del,1
 return
 
 esc::

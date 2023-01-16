@@ -19,7 +19,6 @@ CPP
 cprocess
 CPUSTRES
 crackintro
-crackintro
 crashhand
 crashreport
 crashsend
@@ -63,7 +62,6 @@ LAVFilter
 lesskey
 licensing
 linux
-linux
 logoff
 logonsession
 lzma
@@ -97,7 +95,6 @@ redist
 reshade
 Scraper
 screenshot
-screenshot
 ScriptHelper
 scripts
 ScrollLock
@@ -115,7 +112,6 @@ sha5
 SndRpt
 sqlite
 SteamHelper
-SteamClient
 Steamless
 StoreApp
 SubProcess

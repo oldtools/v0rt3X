@@ -23,6 +23,7 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 ¦   +-- lrDeploy.exe
 ¦   +-- NewOSK.exe
 ¦   +-- jkvtx.exe
+¦   +-- [RJ_EXE].exe
 ¦   +-- Setup.exe
 ¦   +-- Source_Builder.exe
 ¦   +-- Update.exe

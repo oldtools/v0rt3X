@@ -1,14 +1,7 @@
-addin
-addon
-artw
 assets
 authenticate
-Contig
 cports
-database
 dependencies
-deploy
-download
 du64
 dumper
 eula
@@ -22,7 +15,6 @@ helper
 iecv
 iehv
 iepv
-inkey
 interface
 json
 keyex
@@ -36,9 +28,6 @@ microsoft
 mpeg
 netlog
 packager
-palette
-patcher
-pics
 prefs
 qemu
 Qsel

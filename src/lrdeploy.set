@@ -78,7 +78,7 @@ SectionEnd
   SectionEnd
   Section "" 
   SetOutPath $INSTDIR\bin
-  File "[SOURCE]\bin\jkvtx.exe"
+  File "[SOURCE]\bin\[RJ_EXE].exe"
   File "[SOURCE]\bin\source_builder.exe"
   File "[SOURCE]\bin\lrdeploy.exe"
   File "[SOURCE]\bin\Setup.exe"

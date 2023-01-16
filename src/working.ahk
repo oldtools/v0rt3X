@@ -5,8 +5,9 @@ SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
 FileEncoding UTF-8
-CURPID= %ERRORLEVEL%
+
 RJPRJCT := "[RJ_PROJ]"
+RJEXFN := "[RJ_EXE]"
 RELEASE := "[VERSION]"
 VERSION := "[CURV]"
 
@@ -41,13 +42,15 @@ Loop %0%
 				LinkOptions.= GivenPath . a_SpACE
 			}
 	}
+Process,Exist
+CURPID= %ERRORLEVEL%	
 splitpath,plink,scname,scpath,scextn,gmname,gmd
 CFGDIR := SCPATH
 RJDBINI := home . "\RJDB.ini"
 if (scextn = "lnk")
 	{
 		FileGetShortcut,%plink%,inscname,inscpth,chkargl
-		if instr(inscname,"jkvtx")
+		if (instr(inscname,"jkvtx")or instr(inscname,RJEXFN))
 			{
 				splitpath,chkargl,chkargxe,chkargpth
 				CFGDIR := CHKARGPTH
@@ -113,9 +116,9 @@ MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 stmdbeb= <td><code>
 stmdbee= </code></td>
 ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
-reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|script|nocd|Tool|trainer|
-priora= |Launcher64|Launcherx64|Launcherx8664|Launcher64bit|Launcher64|Launchx64|Launch64|Launchx8664|
-priorb= |Launcher32|Launcherx86|Launcher32bit|Launcher32|Launchx86|Launch32|
+reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|steamclient|script|nocd|Tool|trainer|
+priora= |loader64|Launcher64|Launcherx64|Launcherx8664|Launcher64bit|Launcher64|Launchx64|Launch64|Launchx8664|
+priorb= |loader32|Launcher32|Launcherx86|Launcher32bit|Launcher32|Launchx86|Launch32|
 prioraa= |win64|x64|64bit|64bits|64|x8664|bin64|bin64bit|windowsx64|windows64|binx64|exex64|exe64|binariesx64|binaries64|binariesx8664|
 priorbb= |win32|32bit|32bits|x8632|x86|x8632bit|32|windows32|windows32|bin32|windowsx86|bin32bit|binx86|bin32|exex86|exe32|binariesx86|binaries32|binariesx86|
 ProgramFilesX86 := A_ProgramFiles . (A_PtrSize=8 ? " (x86)" : "")
@@ -3597,6 +3600,23 @@ lvachk= +Check
 NSPLIT= %filepath%
 NSOURCEDLIST= 
 ;Nsivk= 
+ab=
+Loop,parse,SOURCE_DIRECTORY,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		if instr(filepath . "\",A_Loopfield . "\")
+			{
+				stringlen,nb,A_LoopField
+				if ((nb < ab)or(ab = ""))
+					{
+						TOPSCRV= %A_LoopField%
+						ab= %nb%
+					}
+			}
+	}
 gosub, ADD_ITER
 fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
 srcntot = ""
@@ -3758,7 +3778,7 @@ if (SOURCEDLIST <> "")
 	}
 SOURCEDLIST:= ""
 NSOURCEDLIST= %SOURCEDLIST%
-
+nb=
 NSPLIT= %SPLIT_SRC%
 ADD_ITER:
 CANCLD:= ""
@@ -3881,9 +3901,9 @@ Loop,parse,NSPLIT,|
 								continue
 							}
 						TOPSCR= %SRCLOOP%
-						if ((stmexcl = 1)&&(IncludeDD = 1))
+						if (nb <> "")
 							{
-								TOPSCR= %TOPSTM%
+								TOPSCR= %TOPSCRV%
 							}
 						stringreplace,simpath,FilePath,%TOPSCR%,,
 						trukpath= %simpath%
@@ -5070,7 +5090,7 @@ Loop, %fullstn0%
 							if (!fileexist(linktarget)or(renum = 1))
 								{
 									FileDelete,%linktarget%
-									FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+									FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 								}
 						}
 					if (prnxtn = "exe")
@@ -5103,11 +5123,11 @@ Loop, %fullstn0%
 								}
 							if ((rn = "")or(renum = 1))
 								{
-									FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+									FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 								}
 							if (!fileexist(linktarget)&&(renum = "")&&(SETALTSALL = 1))
 								{
-									FileCreateShortcut, %RJDB_LOCATION%\bin\jkvtx.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+									FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 								}
 						}
 					if (ASADMIN = 1)
@@ -5592,7 +5612,7 @@ Loop, %fullstn0%
 SB_SetText("Shortcuts Created")
 if (ASADMIN = 1)
 	{
-		RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %binhome%\jkvtx.exe, ~ RUNASADMIN
+		RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %binhome%\%RJEXFN%.exe, ~ RUNASADMIN
 	}
 Loop,parse,GUIVARS,|
 	{
@@ -6599,7 +6619,7 @@ gosub, DOWNLOADIT
 UPDATING:= ""
 ifexist,%save%
 	{
-		Process, close, jkvtx.exe
+		Process, close, %RJEXFN%.exe
 		Process, close, Update.exe
 		Process, close, Source_Builder.exe
 		Process, close, NewOSK.exe

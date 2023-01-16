@@ -20,6 +20,7 @@ BorderLess_Gaming_Program=
 BGP_State=13
 Mapper=
 CENTRALIZE=
+Multi_Instance=
 Logging=
 
 [JOYSTICKS]

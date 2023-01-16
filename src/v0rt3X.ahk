@@ -1,5 +1,5 @@
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;################################### [RJ_PROJ] VERSION=[VERSION] [RELEASE] ##############################;;;;;;;
+;;;;################################### v0rt3X VERSION=2023-01-15 4:23 PM [RELEASE] ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -79,7 +79,7 @@ if fileexist(curpidf)
 					{
 						nprocn:= % proc.Name
 						nprocid:= % proc.ProcessID
-						if (((nprocn = "[RJ_EXE].exe") or (nprocn = "jkvtx.exe")) && (CURPID <> nprocid))
+						if (((nprocn = "v0rt3X.exe") or (nprocn = "jkvtx.exe")) && (CURPID <> nprocid))
 							{
 								process,Close,%nprocid%
 							}	
@@ -103,7 +103,7 @@ for proc in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
 	{
 		nprocn:= % proc.Name
 		nprocid:= % proc.ProcessID
-		if ((multi_Instance <> 1) && ((nprocn = "[RJ_EXE].exe") or (nprocn = "jkvtx.exe")) && (CURPID <> nprocid))
+		if ((multi_Instance <> 1) && ((nprocn = "v0rt3X.exe") or (nprocn = "jkvtx.exe")) && (CURPID <> nprocid))
 			{
 				Msgbox,4356,INSTANCE FOUND,Would you like to terminate the running instance of %nprocn%?,10
 				if Msgbox,Yes
@@ -161,7 +161,7 @@ if fileexist(Install_Directory . "\" . Exe_file)
 if (gamepath = "")
 	{
 		FileGetShortcut,%plink%,gamepath,,,gamealtpth
-		if (instr(gamepath,"jkvtx.exe")or instr(gamepath,"[RJ_EXE].exe"))
+		if (instr(gamepath,"jkvtx.exe")or instr(gamepath,"v0rt3X.exe"))
 			{
 				gamepvm=%gamealtpath%
 				if instr(gamepvm,A_Space . "")
