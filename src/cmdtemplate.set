@@ -77,6 +77,12 @@ for /f "tokens=2 delims= " %%a in ('tasklist ^|find /i "%EXENAME%"') do (
 				)
 	)
 :RUNDONE
+for /f "tokens=* delims=|" %%a in ("%exelist%") do (
+for /f "tokens=2 delims= " %%s in ('tasklist ^|find /i "%%~a"') do if "%%~a" == "%%~s" (
+	set "EXENAME=%%~s"
+	goto, LOOP
+	)
+)
 popd
 
 :POST3

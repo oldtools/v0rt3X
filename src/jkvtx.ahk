@@ -1,5 +1,5 @@
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;################################### [RJ_PROJ] VERSION=[VERSION] [RELEASE] ##############################;;;;;;;
+;;;;###################### [RJ_PROJ] VERSION=[VERSION] [CURV] ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -37,8 +37,9 @@ splitpath,plink,scname,scpath,scextn,gmname,gmd
 ExtID := FileExt
 IconNumber:= 0				
 if ((plink = "") or !fileExist(plink) or (scextn = ""))
-	{
-		Tooltip, No Item Detected
+	{		
+		GUIMSG:= "No Item Detected"
+		gosub, TTIPS
 		Sleep, 3000
 		exitapp
 	}
@@ -51,12 +52,13 @@ if ((tstidir = "src")or(tstidir = "bin")or(tstidir = "binaries"))
 source= %home%\src
 binhome= %home%\bin
 curpidf= %home%\rjpids.ini
+#Include %A_ScriptDir%\..\src\BTT.ahk
 Process,Exist
 CURPID= %ERRORLEVEL%
 if fileexist(curpidf)
 	{
 		iniread,irgpd,%curpidf%,Instance,pid
-		iniread,multi_instance,%curpidf%,Instance,multi
+		iniread,multi_instance,%curpidf%,Instance,Running_Instance
 		iniread,crgpd,%curpidf%,Current_Game,pid
 		iniread,jalpd,%curpidf%,JustAfterLaunch,pid
 		iniread,jbepd,%curpidf%,JustBeforeExit,pid
@@ -116,7 +118,8 @@ for proc in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process")
 			}	
 	}
 selfchk:
-Tooltip,Keyboad/Mouse Disabled`n::Please Be Patient::`n
+GUIMSG:= "Keyboad/Mouse Disabled`n::Please Be Patient::`n"
+gosub, TTIPS
 Blockinput, on
 if (GetKeyState("Alt")&&(scextn = "exe"))
 	{
@@ -307,7 +310,8 @@ if (fileexist(Game_Profile)&&(gbar <> 1))
 	{
 		gbar = 1
 		inif= %Game_Profile%
-		Tooltip,::Please Be Patient::`nReading Configuration
+		GUIMSG:= "::Please Be Patient::`nReading Configuration"
+		gosub,TTIPS
 		goto, readini
 	}
 else {
@@ -414,7 +418,8 @@ return
 
 PRE_BGP:
 GMGDBCHK= %gmnamex%	
-Tooltip, Configuration Created`n:::running %gmnamx% preferences:::
+GUIMSG:= "Configuration Created" . "`n" . ":::running " . gmnamx . " preferences:::"
+gosub, TTIPS
 if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BGP_State <> 0)&&(BGP_State <> ""))
 	{
 		splitpath,Borderless_Gaming_Program,bgpexe,bgpdir
@@ -543,7 +548,8 @@ if (MonitorMode > 0)
 					}
 				abn+=1	
 			}	
-		Tooltip,
+		GUIMSG:= 
+		gosub, TTIPS
 		WinGet, WindowList, List
 		Loop, %WindowList%
 			{
@@ -684,7 +690,8 @@ premapper:
 Mapper_Extension:= % Mapper_Extension
 if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 	{
-		ToolTip,Running %gmnamx% preferences`n:::Loading Joystick Configurations:::
+		GUIMSG:= "Running " . gmnamx . " preferences" . "`n" . ":::Loading Joystick Configurations:::"
+		gosub, TTIPS
 		Loop, 16
 			{
 				player%A_Index%n=
@@ -726,7 +733,8 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
 		JOYMESSAGE= Joysticks: %JOYCOUNT%
-		ToolTip, %JoyCount% Joysticks found
+		GUIMSG:= JoyCount . " Joysticks found"
+		gosub, TTIPS
 		JoyAsk:
 		if ((JoyCount = 0)or if (JoyCount = ""))
 			{
@@ -800,12 +808,14 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 				Process,Exist,%mapperp%
 				if ((errorlevel <> 0)&&(errorlevel = kbmp))
 					{
-						Tooltip,"`n...   ...loading keyboard mapper...   ...`n"
+						GUIMSG:= "`n" . "...   ...loading keyboard mapper...   ..." . "`n"
+						gosub, TTIPS
 						enfd= %errorlevel%
 						break
 					}
 				else {
-					Tooltip,"`n...   ...loading keyboard mapper...   ...`n"
+						GUIMSG:= "`n" . "...   ...loading keyboard mapper...   ..." . "`n"
+						gosub, TTIPS
 				}				
 				Sleep,500
 			}
@@ -870,23 +880,28 @@ if (prestk2 <> "")
 return
 
 begin:
-ToolTip,Loading %gmnamex%`n%JOYMESSAGE%
+GUIMSG:= "Loading " .  gmnamex . "`n" . JOYMESSAGE 
+gosub, TTIPS
 if (nrx > 2)
 	{
-		Tooltip,reload exceeded marker`nBe sure you have the launched executable in the exe_list for this game.
+		GUIMSG:= "reload exceeded marker`nBe sure you have the launched executable in the exe_list for this game."
+		gosub, TTIPS
 		goto, givup
 	}
 Blockinput, Off	
-ToolTip
+GUIMSG:=
+gosub, TTIPS
 tvi= %plfp%%linkoptions%%plarg%
 gosub,TransformVarInput
 Run, %tvo%,%pldr%,max UseErrorLevel,dcls
 nerlv= %errorlevel%
-Tooltip,%JOYMESSAGE%
+GUIMSG:= JOYMESSAGE
+gosub, TTIPS
 Process, Exist, %bgmexe%
 
 bgl:	
-Tooltip, :::getting ancilary exes:::`n%JOYMESSAGE%
+GUIMSG:= ":::getting ancilary exes:::" . "`n" . JOYMESSAGE
+gosub, TTIPS
 apchkn=
 appcheck:
 sleep, 1000
@@ -905,18 +920,19 @@ Loop,parse,exe_list,|
 			}
 		if (apchkn > 10)
 			{
-				Tooltip,
+				GUIMSG:= 
+				gosub, TTIPS
 				goto,appcheck
 			}
 	}
-Tooltip,%JOYMESSAGE%
+GUIMSG:= JOYMESSAGE
 WinActivate
 if (Hide_Taskbar <> 0)
 	{
 		WinHide, ahk_class Shell_TrayWnd
 		WinHide, ahk_class Shell_SecondaryTrayWnd
 	}
-Tooltip,%JOYMESSAGE%
+GUIMSG:= JOYMESSAGE
 if (JustAfterLaunch <> "")
 	{
 		gosub, PRE_JAL
@@ -930,9 +946,10 @@ if (instr(prestk1,"borderlessgaming")or instr(prestk2,"borderlessgaming")or inst
 			}
 	}
 BlockInput,Off
-Tooltip,
-iniwrite,%CURPID%,%curpidf%,Running_Instance,pid
-iniwrite,%CURPID%,%curpidf%,multi,%multi_instance%
+GUIMSG:= 
+gosub, TTIPS
+iniwrite,%CURPID%,%curpidf%,Instance,pid
+iniwrite,%multi_instance%,%curpidf%,Instance,multi_instance
 iniwrite,%erahkpid%,%curpidf%,Current_Game,pid
 process,WaitClose, %erahkpid%	
 AppClosed:
@@ -940,14 +957,16 @@ if ((nerlv = 1234)or(gii = 1))
 	{
 		goto, givup
 	}
-ToolTip, Disabling Keyboard`n:::Please be patient:::
+GUIMSG:= "Disabling Keyboard`n:::Please be patient:::"
+gosub, TTIPS
 BlockInput, On
 nrx+=1
 goto, begin
 return
 Ctrl & f2::
 process,close,%dcls%
-ToolTip,Closing
+GUIMSG:= "closing"
+gosub, TTIPS
 process, close, %pfilef%
 if (exe_list <> "")
 	{
@@ -955,7 +974,8 @@ if (exe_list <> "")
 			{
 				process,close,%A_LoopField%
 			}
-		Tooltip,
+		GUIMSG:= ""
+		Gosub, TTIPS
 	}
 dcls= 
 nrx=
@@ -1030,7 +1050,8 @@ if (CWIN = 1)
 						vWinExStyle := Format("0x{:08X}", vWinExStyle)
 					}
 				blockinput,off
-				ToolTip,
+				GUIMSG:= ""
+				gosub, TTIPS
 				if !DllCall("user32\IsWindowVisible", Ptr,hWnd)
 					{
 						PostMessage, 0x8065, 0, 0x203,, ahk_class %vWinClass%
@@ -1073,10 +1094,12 @@ if (CWIN = 0)
 goto,givup
 Ctrl & f12::
 nosave= 
-Tooltip,Keyboard / Mouse are disabled`n:::Please be patient:::
+GUIMSG:= "Keyboard / Mouse are disabled`n:::Please be patient:::"
+gosub, TTIPS
 givup:
 filedelete,%curpidf%
-Tooltip,...Quitting...
+GUIMSG:= "...Quitting..."
+gosub, TTIPS
 gii= 1
 Quitout:
 Blockinput,On
@@ -1109,10 +1132,12 @@ ExitApp
 POST_JBE:
 if (nosave = 1)
 	{
-		Tooltip,shutting down game`n:::Aborting Settings
+		GUIMSG:= "shutting down game`n:::Aborting Settings"
+		gosub, TTIPS
 		return
 	}
-Tooltip,shutting down game`n:::Writing Settings
+GUIMSG:= "shutting down game`n:::Writing Settings"
+gosub, TTIPS
 stringsplit,prestk,JustBeforeExit,<
 PRESA= %prestk1%
 jbeprog= 
@@ -1159,7 +1184,8 @@ if (jbeprog <> "")
 					}
 				if instr(presA,"W")
 					{
-						ToolTip,
+						GUIMSG:= ""
+						gosub,TTIPS
 					}
 				Run,%jbeprog%%wscrop%,%A_ScriptDir%,%runhow%,jbepid	
 				iniwrite,%jbepid%%wscrop%,%curpidf%,JustBeforeExit,pid
@@ -1171,7 +1197,8 @@ return
 POST_1:
 if (nosave = 1)
 	{
-		Tooltip,shutting down game`n:::Aborting Settings
+		GUIMSG:= "shutting down game`n:::Aborting Settings"
+		gosub, TTIPS
 		return
 	}
 stringsplit,prestk,1_Post,<
@@ -1226,10 +1253,12 @@ return
 POST_MAP:	
 if ((Mapper > 0)&&(Mapper <> ""))
 	{
-		ToolTip,Please Be Patient`n:::Reloading Mediacenter/Desktop Profiles:::
+		GUIMSG:= "Please Be Patient`n:::Reloading Mediacenter/Desktop Profiles:::"
+		gosub,TTIPS
 		if (nosave = 1)
 			{
-				tooltip,''page_up'' detected`n.Saving aborted.
+				GUIMSG:= "''page_up'' detected`n.Saving aborted."
+				gosub, TTIPS
 				gosub, joytest
 			}
 		joycount= 	
@@ -1272,7 +1301,8 @@ if ((Mapper > 0)&&(Mapper <> ""))
 				sleep,600
 				Run,%joyxpth%\JoyxSvc.exe,%mapperp%,hide 
 			}
-		ToolTip, %joycount% Joysticks found
+		GUIMSG:= joycount . " Joysticks found"
+		gosub, TTIPS
 		savemap:
 		if (fileexist(keyboard_Mapper)&& fileexist(mediacenter_profile))
 			{
@@ -1306,14 +1336,16 @@ iniwrite,%KeyBoard_Mapper%,%inif%,JOYSTICKS,KeyBoard_Mapper
 iniwrite,%Jmap%,%inif%,JOYSTICKS,Jmap
 iniwrite,%Mapper_Extension%,%inif%,JOYSTICKS,Mapper_Extension
 iniwrite,%MAPPER%,%inif%,GENERAL,Mapper
-Tooltip,Reloading Profiles`n:::shutting down game:::
+GUIMSG:= "Reloading Profiles`n:::shutting down game:::"
+gosub, TTIPS
 return
 
 
 POST_2:
 if (nosave = 1)
 	{
-		Tooltip,shutting down game`n:::Aborting Settings
+		GUIMSG:= "shutting down game`n:::Aborting Settings"
+		gosub, TTIPS
 		return
 	}
 stringsplit,prestk,2_Post,<
@@ -1422,7 +1454,8 @@ return
 POST_3:
 if (nosave = 1)
 	{
-		Tooltip,shutting down game`n:::Aborting Settings
+		GUIMSG:= "shutting down game`n:::Aborting Settings"
+		gosub, TTIPS
 		return
 	}
 stringsplit,prestk,3_Post,<
@@ -1615,7 +1648,8 @@ return
 
 ;;#####################################################################
 AltKey:
-Tooltip,!! AltKey Detected !!`nKeyboad/Mouse Disabled`n::Please Be Patient::`n
+GUIMSG:= "!! AltKey Detected !!`nKeyboad/Mouse Disabled`n::Please Be Patient::`n"
+gosub, TTIPS
 SetupINIT:
 nogmnx= WIN32|WIN64|Game|Win|My Documents|My Games|Windows Games|Shortcuts
 nogmne= Launch|Launcher|bat|cmd|exe|Program Files|Program Files (x86)|Windows|Roaming|Local|AppData|Documents|Desktop|%A_Username%|\|/|:|
@@ -1629,7 +1663,8 @@ ifnotexist,%GAME_PROFILES%\game.ini
 		filecopy,%RJDB_Config%,%GAME_PROFILES%\game.ini
 	}
 FileCreateDir,%Game_Profiles%
-ToolTip, Creating Configurations
+GUIMSG:= "Creating Configurations"
+gosub, TTIPS
 FileCreateDir,%Game_Profiles%
 Game_Profile= %Game_Profiles%\Game.ini
 This_Profile= %Game_Profiles%
@@ -1660,7 +1695,8 @@ loop, 16
 		joypart%A_Index%:= joypartX
 		if (joypartX = "failed")
 			{
-				Tooltip,"Failed to get joystick info"
+				GUIMSG:= "Failed to get joystick info"
+				gosub, TTIPS
 				PlayerVX= 
 				player%A_Index%n=
 				player%A_Index%t=
@@ -1806,6 +1842,38 @@ if (instr(nogmnx,absgmx)or instr(nogmne,absgme))
 		goto, NameTuning
 	}
 return
+
+TTIPS:
+CurrControl:= GUIMSG
+If (CurrControl <> PrevControl)
+	{
+		SetTimer, DisplayToolTip, -300
+		PrevControl:= CurrControl
+	}
+return
+
+DisplayToolTip:
+try
+		;ToolTip % %CurrControl%_TT
+		for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+			{
+				btt(GUIMSG,,,,"Style2",{Transparent:v})
+				Sleep, 30
+			}
+catch
+;ToolTip
+SetTimer, RemoveToolTip, -2000
+return
+
+RemoveToolTip:
+for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	}
+;ToolTip
+return
+
 
 CmdRet(sCmd, callBackFuncObj := "", encoding := "")
 	{

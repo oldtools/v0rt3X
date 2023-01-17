@@ -22,6 +22,7 @@ if ((srcfn = "src")or(srcfn = "bin")or(srcfn = "binaries"))
 	{
 		home= %srcpth%
 	}	
+#Include %A_ScriptDir%\..\src\BTT.ahk
 binhome= %home%\bin
 source= %home%\src
 SetWorkingDir, %home%
@@ -95,6 +96,7 @@ IURL_TT :="The Website url which reports the internet ip address"
 IREPO_TT :="The URL for all emulators and assets"
 SelDXB_TT :="Detect your environment and download needed programs"
 IContinue_TT :="Sets the current environment."
+RJEXFN_TT :="This program should have a unique name"
 SelDIR_TT :="Selects the location of the currently selected item"
 PushNotes_TT :="The commit message uploaded to github as well as the changelog"
 VerNum_TT :="The new version of the project"
@@ -130,9 +132,12 @@ Gui Add, Text, x18 y45 w29 h14 , pass:
 Gui Add, Edit, x51 y41 w138 h21 vIPass gIPass password,***************
 Gui Add, Text, x190 y45 w29 h14 , email:
 Gui Add, Edit, x221 y41 w155 h21 vIEmail gIEmail,%GITMAIL%
-Gui Add, Text, x50 y68 h15,Project Name:
+Gui,Font,Bold
+Gui Add, Text, x36 y68 h15,Project Name:
+Gui,Font,normal
 Gui Add, Edit, x140 y66 w150 h21 center vRJPRJCT gRJPRJCT,%RJPRJCT%
 Gui Add, Button,x292 y66 h21 w34 vRJPRJCTSET gRJPRJCTSET,SET
+Gui Add, Button,x322 y358 h21 w34 vRJEXFNSET gRJEXFNSET,SET
 ;Gui Add, Text, x18 y68 w29 h14 , token:
 ;Gui Add, Edit, x51 y64 w295 h21 vIToken gIToken, %_GITPAT%
 ;Gui Add, Link, x351 y66 w10 h19, <a href="https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line#creating-a-token">?</a>
@@ -178,6 +183,7 @@ Gui Add, Edit, x123 y310 w235 h21 vUVER gUVER, %UPDTURL%
 Gui Add, Edit, x123 y333 w235 h21 vUFLU gUFLU, %UPDTFILE%
 Gui Font,Bold
 Gui Font,Normal
+Gui Add, Edit, x210 y358 w80 h21 right RJEXFN gRJEXFN,%RJEXFN%
 ;Gui Add, Edit, x30 y357 w326 h21 vIURL gIURL, %_GETIPADR%
 Gui Add, Button, x10 y432 w51 h19 vIReset gIReset, reset_all
 Gui Add, Button, x331 y432 w51 h19 vSelDXB gSelDXB, quick
@@ -195,7 +201,9 @@ Gui Add, Text, x36 y266 w76 h14, Build Dir
 Gui Add, Text, x36 y290 w75 h14, Source Dir
 Gui Add, Text, x36 y313 w75 h14, Version.txt
 Gui Add, Text, x36 y335 w75 h14, Portable Exe
+Gui Add, Text, x36 y361 w160 h14, Launcher Executable Name
 Gui Font,Normal
+Gui Add, Text, x290 y361 w25 h12,.exe
 Gui Add, StatusBar,, Status Bar
 OnMessage(0x200, "WM_MOUSEMOVE")
 Gui, Show, w391 h482, _DEV_GUI_
@@ -733,13 +741,115 @@ if (IEMAIL = "")
 iniwrite,%IEMAIL%,%home%\skopt.cfg,GLOBAL,git_email
 return
 
+RJEXFN:
+gui,submit,nohide
+guicontrolget,RJEXFN,,RJEXFN
+if (RJEXFN <> "v0rt3X" )
+	{
+		if (RJEXFN = "")
+			{	
+				RJEXFN=v0rt3X
+			}
+	}
+return
+
+RJEXFNSET:
+gui,submit,nohide
+guicontrolget,RJEXFN,,RJEXFN
+stringreplace,RJEXFN,RJEXFN,%A_Space%,_,All
+stringreplace,RJEXFN,RJEXFN,:,_,All
+stringreplace,RJEXFN,RJEXFN,;,,All
+stringreplace,RJEXFN,RJEXFN,-,,All
+stringreplace,RJEXFN,RJEXFN,.,,All
+stringreplace,RJEXFN,RJEXFN,|,,All
+stringreplace,RJEXFN,RJEXFN,{,,All
+stringreplace,RJEXFN,RJEXFN,},,All
+stringreplace,RJEXFN,RJEXFN,(,,All
+stringreplace,RJEXFN,RJEXFN,),,All
+stringreplace,RJEXFN,RJEXFN,[,,All
+stringreplace,RJEXFN,RJEXFN,],,All
+stringreplace,RJEXFN,RJEXFN,=,,All
+stringreplace,RJEXFN,RJEXFN,*,,All
+stringreplace,RJEXFN,RJEXFN,^,,All
+stringreplace,RJEXFN,RJEXFN,`,,,All
+stringreplace,RJEXFN,RJEXFN,`%,,All
+stringreplace,RJEXFN,RJEXFN,+,,All
+stringreplace,RJEXFN,RJEXFN,>,,All
+stringreplace,RJEXFN,RJEXFN,<,,All
+stringreplace,RJEXFN,RJEXFN,&,,All
+stringreplace,RJEXFN,RJEXFN,$,,All
+stringreplace,RJEXFN,RJEXFN,#,,All
+stringreplace,RJEXFN,RJEXFN,~,,All
+stringreplace,RJEXFN,RJEXFN,!,,All
+stringreplace,RJEXFN,RJEXFN,/,,All
+stringreplace,RJEXFN,RJEXFN,\,,All
+stringreplace,RJEXFN,RJEXFN,?,,All
+stringreplace,RJEXFN,RJEXFN,@,,All
+if ((RJEXFN = "")or(RJEXFN = "v0rt3X"))
+	{
+		SB_SetText("Set The Name of your Launcher")
+		guicontrolget,RJPRJCT,,RJPRJCT
+		RJEXFN= v0rt3X
+		if (RJPRJCT <> "v0rt3X")
+			{
+				RJEXFN= %RJPRJCT%
+			}
+		guicontrol,,RJEXFN,
+		guicontrol,,RJEXFN,%RJEXFN%
+		gui,submit,nohide
+		return
+	}
+guicontrol,,RJEXFN,
+guicontrol,,RJEXFN,%RJEXFN%
+gui,submit,nohide
+iniwrite,%RJEXFN%,%home%\skopt.cfg,GLOBAL,Exe_Name	
+Return
 
 RJPRJCT:
 gui,submit,nohide
+sleep,200
 guicontrolget,RJPRJCT,,RJPRJCT
+guicontrolget,RJEXFNt,,RJEXFN
+if (RJPRJCT <> "v0rt3X" )
+	{
+		if (RJEXFNt = "v0rt3X")
+			{
+				RJEXFN= %RJPRJCT%
+			}
+		if (instr(RJPRJCT,RJEXFNt)&& (RJPRJCT <> RJEXFNt))
+			{
+				RJEXFN= %RJPRJCT%
+				guicontrol,,RJEXFN,%RJEXFN%
+			}
+	}
+RJEXFp=	
+midxng:
+if (RJEXFp <> RJEXFNx)
+	{
+		sleep,300
+		guicontrolget,RJPRJCT,,RJPRJCT
+		guicontrolget,RJEXFNx,,RJEXFN
+		if (RJEXFNx = "v0rt3X")
+			{
+				RJEXFN= %RJPRJCT%
+				guicontrol,,RJEXFN,	
+				guicontrol,,RJEXFN,%RJEXFNx%	
+				RJEXFp= %RJEXFNx%
+			}
+		if (instr(RJPRJCT,RJEXFNt)&& (RJPRJCT <> RJEXFNx) && (RJEXFNt <> RJEXFNx))
+			{
+				guicontrol,,RJEXFN,	
+				guicontrol,,RJEXFN,%RJEXFNx%
+				RJEXFp= %RJEXFNx%
+				goto midxng		
+			}
+	}
+gui,submit,nohide	
 return
 
 RJPRJCTSET:
+gui,submit,nohide
+guicontrolget,RJEXFN,,RJEXFN
 guicontrolget,RJPRJCT,,RJPRJCT
 stringreplace,RJPRJCT,RJPRJCT,%A_Space%,_,All
 stringreplace,RJPRJCT,RJPRJCT,:,,All
@@ -775,10 +885,19 @@ if (RJPRJCT = "")
 	{
 		SB_SetText("Set The Name of your Project")
 		RJPRJCT= v0rt3X
-		RJEXFN= v0rt3X
+		guicontrol,,RJPRJCT,
 		guicontrol,,RJPRJCT,%RJPRJCT%
-		guicontrol,,RJPRJNM,%RJPRJCT%
-		return
+		RJEXFN= v0rt3X
+		guicontrol,,RJEXFN,
+		guicontrol,,RJEXFN,%RJEXFN%
+		gui,submit,nohide
+	}
+if (RJEXFN = "")
+	{
+		RJEXFN= %RJPRJCT%
+		guicontrol,,RJEXFN,
+		guicontrol,,RJEXFN,%RJEXFN%
+		gui,submit,nohide
 	}
 iniwrite,%RJPRJCT%,%home%\skopt.cfg,GLOBAL,Project_Name	
 iniwrite,%RJEXFN%,%home%\skopt.cfg,GLOBAL,Exe_Name	
@@ -2218,6 +2337,7 @@ FileRead,readme,%SKELD%\src\ReadMe.set
 StringReplace,readme,readme,[RJ_PROJ],%RJPRJCT%,All
 StringReplace,readme,readme,[GIT_USER],%GITUSER%,All
 StringReplace,readme,readme,[CURV],%vernum%,All
+StringReplace, readme, readme,[RJ_EXE],%RJEXFN%,All
 StringReplace,readme,readme,[VERSION],%date% %timestring%,All
 FileAppend,%readme%,%SKELD%\ReadMe.md
 FileCopy,%SKELD%\ReadMe.md,%GITD%,1
@@ -2247,6 +2367,7 @@ stringreplace,sktmv,sktmv,`/`*  `;`;[DEBUGOV],,All
 stringreplace,sktmv,sktmv,`*`/  `;`;[DEBUGOV],,All
 FileAppend,%sktmv%,%SKELD%\src\Setup.ahk
 FileDelete,%SKELD%\src\Setup.tmp
+FileDelete,%SKELD%\bin\jkvtx.exe
 
 FileDelete, itmv,%SKELD%\src\%RJEXFN%.ahk
 FileRead, itmv,%SKELD%\src\jkvtx.ahk
@@ -2307,7 +2428,7 @@ if (OvrStable = 1)
 		RunWait, %comspec% /c echo.##################  COMPILE %RJPRJCT%  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\%RJEXFN%.ahk" /out "%SKELD%\bin\%RJEXFN%.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
-		FileCopy, %SKELD%\%RJEXFN%.exe,%DEPL%,1
+		FileCopy, %SKELD%\%RJPRJCT%.exe,%DEPL%,1
 	}
 
 guicontrol,,progb,15
@@ -2423,7 +2544,7 @@ if (GitPush = 1)
 		FileAppend, copy /y "ReadMe.md" "%GITD%"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "site\ReadMe.md" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, copy /y "site\version.txt" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
-		FileAppend, del /q "%GITD%\%RJEXFN%.exe"`n,%DEPL%\!gitupdate.cmd
+		FileAppend, del /q "%GITD%\%RJPRJCT%.exe"`n,%DEPL%\!gitupdate.cmd
 		FileSetAttrib, +h, %DEPL%\!gitupdate.cmd
 		guicontrol,,progb,65
 	}
@@ -3005,13 +3126,24 @@ WM_MOUSEMOVE(){
 
 	DisplayToolTip:
 	try
-			ToolTip % %CurrControl%_TT
+			;ToolTip % %CurrControl%_TT
+			for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+				{
+					CurTTC:= % %CurrControl%_TT
+					btt(CurTTC,,,,"Style2",{Transparent:v})
+					Sleep, 30
+				}
 	catch
-			ToolTip
+	;ToolTip
 	SetTimer, RemoveToolTip, -2000
 	return
 
 	RemoveToolTip:
+	for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
+		{
+			btt(CurTTC,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		}
 	ToolTip
 	return
 }

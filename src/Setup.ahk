@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-01-15 4:23 PM"
-VERSION := "0.99.83.05"
+RELEASE := "2023-01-17 7:04 AM"
+VERSION := "0.99.83.07"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -44,13 +44,14 @@ Loop %0%
 	}
 Process,Exist
 CURPID= %ERRORLEVEL%	
+#Include %A_ScriptDir%\..\src\BTT.ahk
 splitpath,plink,scname,scpath,scextn,gmname,gmd
 CFGDIR := SCPATH
 RJDBINI := home . "\RJDB.ini"
 if (scextn = "lnk")
 	{
 		FileGetShortcut,%plink%,inscname,inscpth,chkargl
-		if (instr(inscname,"jkvtx")or instr(inscname,RJEXFN))
+		if (instr(inscname,"jkvtx.exe")or instr(inscname,RJEXFN . ".exe"))
 			{
 				splitpath,chkargl,chkargxe,chkargpth
 				CFGDIR := CHKARGPTH
@@ -550,6 +551,8 @@ Menu, MyContextMenu, Add, Open Directory, ContextOpenGame
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Add CLI opts/args, AddCLI
 Menu, MyContextMenu, Add,,
+Menu, MyContextMenu, Add, Download Meta-Data, GetMetaData
+Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
 
 
@@ -779,6 +782,7 @@ ASADMIN_TT :="sets shortcuts and programs to run as the aministrator."
 SKTHEMEN_TT :="Theme`nRequires Restart"
 BGP_Enable_TT := "Enables the Borderless Gaming Program"
 BGP_TE_TT :="Kills the windowing program upon exiting a game."
+BGM_ProgB_TT :="     ''B''orderless''G''aming''P''rogram`nFile-Seletion dialog box for a borderless windowing program"
 BGP_TU_TT :="Kills the windowing program if not enabled for a game when launching."
 Borderless_Gaming_ProgramT_TT :="The program used to manage and control the display of games as borderless windowed programs`n     Right_Click to Edit or propagate the selected item"
 ButtonClear_TT :="clears the current queued it"
@@ -796,38 +800,40 @@ CenPST_TT := ":CENTRALIZE:`n`nAll Games will refer to this item's path`n`n:CENTR
 CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
 CREFLD_TT :="Creates the profile folder"
 DDINCLD_TT :="Digital Distribution System"
+REMEXCL_TT :="Removes the currently visable path in the dropdown"
 DELPOSTAPP_TT :="removes the currently selected post-program"
 DELPREAPP_TT :="removes the currently selected pre-program"
 EnableLogging_TT :="enables logging"
 EXCLUDE_DirectoryT_TT :="Excluded Directory`n     Right_Click to Edit or propagate the selected item"
-Game_DirB_TT :="The location where shortcuts will be created"
+Game_DirB_TT :="     OUTPUT`nThe location where shortcuts will be created"
 GAME_DirectoryT_TT :="the current shortcut directory"
-Game_ProfB_TT :="Sets the directory where profiles will be created"
+Game_ProfB_TT :="     ''G''ame ''P''rofiles ''D''irectory`nSets the directory where profiles will be created"
 GAME_ProfilesT_TT :="the profiles directory`n     Right_Click to Edit or propagate the selected item"
 GMCONF_TT :="Creates the configuration files"
 GMJOY_TT :="creates the joystick profiles"
 GMLNK_TT :="creates the shortcuts"
-Hide_TaskBar_TT :="Hides the windows taskbar while active"
+Hide_TaskBar_TT :="Hides the windows taskbar while game is running"
 INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
 IncludeDD_TT :="Include games from digital distributor to include"
 JALWAIT_TT :="waits for the program to exit"
-JAL_ProgB_TT :="Assign a program to run after the game is launched`n*    (good for trainers or executable-aware programs.)"
+JAL_ProgB_TT :="     ''J''ust ''A''fter ''L''aunch`nAssign a program to run after the game is launched`n*    (good for trainers or executable-aware programs.)"
 JAL_RC_TT :="disable or download and assign a program after launch"
 JBEWAIT_TT :="waits for the program to exit"
-JBE_ProgB_TT :="Assign a program to run prior to executable termination"
+JBE_ProgB_TT :="     ''J''ust ''B''efore ''E''xit`n Assign a program to run prior to executable termination"
 JBE_RC_TT :="disable or download and assign an executable  prior to termination "
 JustAfterLaunchT_TT :="a program after launch`n     Right_Click to Edit or propagate the selected item"
 JustBeforeExitT_TT :="program to run prior to executable termination`n     Right_Click to Edit or propagate the selected item"
 KBM_RC_TT :="disable or download and assign a supported keymapper`n(antimicro/JoyXoff/xpadder/...)"
-Keyboard_MapB_TT :="Assigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
+Keyboard_MapB_TT :="     ''K''ey''B''oard ''M''apper`nAssigns the keymapper`n(antimicro/JoyXoff/xpadder/...)"
 Keyboard_MapperT_TT :="the current keyboard mapper`n(supported mappers are auto-scripted '~_!.cmd')`n     Right_Click to Edit or propagate the selected item"
 KILLCHK_TT :="ancilary and executable-subprocess are terminated upon exiting the game"
 Localize_TT :="Sets the profile folder to`n the game's installation folder`n*     (not recommended)     *`n"
 MediaCenter_TemplateT_TT :="the keymapper's configuration-template file for the Mediacenter/Frontend`n     Right_Click to Edit or propagate the selected item"
+MediaCenter_ProfB_TT :="     ''M''edia''C''enter ''P''rofile`nMediaCenter Template File Selection"
 MMT_RC_TT :="disable or download and assign the multimonitor program"
-MM_Game_CfgB_TT :="Select the multimonitor configuration template file used for games"
-MM_MediaCenter_CfgB_TT :="Select the multimonitor configuration template file used for the MediaCenter/Frontend"
-MM_ToolB_TT :="Assigns the multimonitor executable"
+MM_Game_CfgB_TT :="     ''G''ame ''M''onitor ''C''onfig`nSelect the multimonitor configuration template file used for games"
+MM_MediaCenter_CfgB_TT :="     ''D''esktop  ''M''onitor ''C''onfig`nSelect the multimonitor configuration template file used for the MediaCenter/Frontend"
+MM_ToolB_TT :="     ''M''ulti''M''onitor''T''ool`nAssigns the multimonitor executable"
 MM_Game_ConfigT_TT :="the multimonitor game-configuration template file`n     Right_Click to Edit or propagate the selected item"
 MM_MediaCenter_ConfigT_TT :="the MediaCenter/Frontend configuration template file`n     Right_Click to Edit or propagate the selected item"
 MultiMonitor_ToolT_TT :="the multimonitor program`n     Right_Click to Edit or propagate the selected item"
@@ -837,8 +843,8 @@ NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki dat
 Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
 OPNLOG_TT :="opens the log file for this program"
 OVERWRT_TT :="overwrite and recreate settings`nExisting configuration files *WILL* be overwritten"
-Player1_TempB_TT :="sets the keymapper's configuration-template file for Player 1"
-Player2_TempB_TT :="sets the keymapper's configuration-template file for Player 2"
+Player1_TempB_TT :="     ''P''''L''ayer ''1''`nsets the keymapper's configuration-template file for Player 1"
+Player2_TempB_TT :="     ''P''''L''ayer ''2''`nsets the keymapper's configuration-template file for Player 2"
 Player1_TemplateT_TT :="the keymapper's configuration-template  for Player 1`n     Right_Click to Edit or propagate the selected item"
 Player2_TemplateT_TT :="the keymapper's configuration-template file for Player 2`n     Right_Click to Edit or propagate the selected item"
 POPULATE_TT :="Searches for games or loads the last queue"
@@ -847,6 +853,7 @@ PostWait_TT :="Waits for the currently selected post-program to exit"
 POST_RC_TT :="disable or download and Assign a program to run after the game has exited"
 PREAPP_TT :="Assign a program to run before the game is launched"
 POSTDDT_TT :="Order of execution."
+EXCL_DirB_TT :="     ''EXC''lude`nAdds directory to exclude from the search"
 PostDD_TT :="the currently selected post-program`n*  ( ><ThisProg>< )`n     Right_Click to Edit or propagate the selected item"
 PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )  *`n     Right_Click to Edit or propagate the selected item"
 PREDD_TT :="the currently selected pre-program`n*  ( ><ThisProg>< )"
@@ -860,7 +867,7 @@ RESET_TT :="resets the application to default settings"
 RJStatus_TT :="feedback display for the program"
 SELALLBUT_TT :="Selects all items in the current queue"
 SELNONEBUT_TT :="clears the selection of all items in the current queue"
-SOURCE_DirB_TT :="Add a directory containing the root of game-installation/s."
+SOURCE_DirB_TT :="     ''S''ou''R''''C''e`nAdd a directory containing the root of game-installation/s."
 SOURCE_DirectoryT_TT :="the current source directory`n     Right_Click to Edit or propagate the selected item"
 UPDTSC_TT :="creates new profile/configurations and updates profiles with any blank/unset values`nExisting configuration files will *NOT* be overwritten"
 Return
@@ -1192,7 +1199,12 @@ if !fileExist(Keyboard_Mapper)
 	}
 guicontrol, +c%KBMAPALRT%,keyboard_MapperT,
 guicontrol,,keyboard_MapperT,%keyboard_Mapper%
-tooltip,
+	GUIMSG:= ""
+	for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+		{
+			btt(GUIMSG,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		} 
 return
 
 Player1_TempB:
@@ -1739,10 +1751,10 @@ return
 JAL_ProgB:
 gui,submit,nohide
 guicontrolget,JALWait,,JALWait
-predl:="<"
+predl=<
 if (JALWait = 1)
 	{
-		predl:= "W<"
+		predl=W<
 	}
 if (dchk = "")
 	{
@@ -1752,7 +1764,7 @@ if (dchk = "")
 dchk:= ""
 if ((JustAfterLaunchT <> "")&& (JustAfterLaunchT <> "Cloud_Restore"))
 	{
-		JustAfterLaunch:= predl . JustAfterLaunchT
+		JustAfterLaunch= %predl%%JustAfterLaunchT%
 		Guicontrol, +cLime, JustAfterLaunchT
 		iniwrite,%JustAfterLaunch%,%RJDBINI%,GENERAL,JustAfterLaunch
 	}
@@ -4954,7 +4966,7 @@ Loop, %fullstn0%
 					stringright,pptx,an2,1
 					gexprv:= % (%an1%)
 					gexpr:= % (G_%an1%)
-					if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")) or ((an3 = "") && (an1 = "JustBeforeExit") or (an1 = "JustAfterLaunch")))
+					if (((pptx is digit)&&(an3 = "")) && (instr(an1,"Pre")or instr(an1,"Post")) or ((an3 = "") && ((an1 = "JustBeforeExit") or (an1 = "JustAfterLaunch"))))
 						{
 							vb:= ""
 						}
@@ -4963,13 +4975,13 @@ Loop, %fullstn0%
 							krs:= % an1
 							Loop,parse,SPLIT_SRC,|
 								{
-									if ((an1 = A_LoopField) or (an1 = "Game_Profiles")or(an1 = "Game_Directory"))
+									if ((an1 = A_LoopField) or (an1 = "Game_Profiles") or (an1 = "Game_Directory"))
 										{
 											Continue
 										}
 								}
 							R_%an1%:= vb	
-							if (instr(vb,".cmd")or instr(vb,".bat")or instr(vb,".vbs")or instr(vb,".ps1")or instr(vb,".vbe")or instr(vb,".wsc")or instr(vb,".wsf")or instr(vb,".psd"))
+							if (instr(vb,".cmd") or instr(vb,".bat") or instr(vb,".vbs") or instr(vb,".ps1") or instr(vb,".vbe")or instr(vb,".wsc")or instr(vb,".wsf")or instr(vb,".psd"))
 								  {
 										eb2:= ""
 										stringsplit,eb,vb,<
@@ -4990,26 +5002,26 @@ Loop, %fullstn0%
 											{
 											    G_%an1%:= eb1 . sidn "\" . vb
 												filecopy,%eb1%%vbp%,%sidn%,%OVERWRT%
-												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,GENERAL,%an1%
 											}
 											else {
 												if ((CENJBE = 1)&& instr(an1,"Before") && (OVERWRT = 1))
 													{
 														G_%an1%:= eb1 . vbp	
-														iniwrite,%eb1%%vbp%,%GAMECFG%,CONFIG,%an1%
+														iniwrite,%eb1%%vbp%,%GAMECFG%,GENERAL,%an1%
 													}
 											}
 										if ((OVERWRT = 1)&& instr(an1,"After") && (CENJAL <> 1))																					
 											{
 											    G_%an1%:= eb1 . sidn . "\" . vb
-												filecopy,%vbp%,%sidn%,%OVERWRT%
-												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,CONFIG,%an1%
+												filecopy,%eb1%%vbp%,%sidn%,%OVERWRT%
+												iniwrite,%eb1%%sidn%\%vb%,%gamecfg%,GENERAL,%an1%
 											}
 											else {
 												if ((CENJAL = 1)&& instr(an1,"After") && (OVERWRT = 1))										  
 													{
 														G_%an1%:= eb1 . vbp	
-														iniwrite,%eb1%%vbp%,%GAMECFG%,CONFIG,%an1%
+														iniwrite,%eb1%%vbp%,%GAMECFG%,GENERAL,%an1%
 													}
 											}
 										if ((OVERWRT = 1)&& instr(an1,"Pre") && (CENPRE <> 1))
@@ -5390,10 +5402,10 @@ Loop, %fullstn0%
 			stringreplace,jlovr,jlovr,/,\,All
 			stringreplace,jlovr,jlovr,?,,All
 			stringreplace,jlovr,jlovr,*,,All
-			if ((jbovr <> "<")&& fileexist(jbovr))
+			if ((jlovr <> "<")&& fileexist(jlovr))
 				{
 					stringsplit,prexx,JustAfterLaunch,<
-					JUSTA:= prexx1 . "<" . jbovr
+					JUSTA:= prexx1 . "<" . jlovr
 					iniwrite,%JUSTA%,%gamecfg%,GENERAL,JustAfterLaunch
 				}
 			stringreplace,jbovr,jbovr,<,,All
@@ -7181,11 +7193,21 @@ if ((STEAMQUERY <> "")&&(STEAMQUERY <> 0))
 		return 
 	}
 EXTRACTING:
-ToolTip,
+GUIMSG:=
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	}
 Sleep, 500
 if (fileexist(save)&& !fileexist(exetfnd))
 	{
-		ToolTip, Extracting...
+		GUIMSG:= "Extracting..."
+		for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+			{
+				btt(GUIMSG,,,,"Style2",{Transparent:v})
+				Sleep, 30
+			}
 		if !fileexist(extractloc . "\")
 			{
 				FileCreateDir,%extractloc%
@@ -7214,7 +7236,12 @@ if (fileexist(save)&& !fileexist(exetfnd))
 						}
 				}
 			}
-		Tooltip,Extracted.
+		GUIMSG:= "Extracted."
+		for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+			{
+				btt(GUIMSG,,,,"Style2",{Transparent:v})
+				Sleep, 30
+			}
 		dchk= 1
 		if (rento <> "")
 			{
@@ -7232,7 +7259,12 @@ Loop,parse,GUIVARS,|
 	}
 	
 Sleep, 500
-ToolTip,
+GUIMSG:= ""
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	}
 ifnotexist,%save%
 	{
 		msgbox,258,Download Failed,%binarcf% did not download.`nYou may select the location of support files later`n`nContinue?
@@ -7687,7 +7719,7 @@ if !fileExist(ExtrpExpnd)
 	}
 if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
 	{
-		epvsec= CONFIG
+		epvsec= GENERAL
 		iniread,JUSTtmpx,%RJDBINI%,%epvsec%,%InterpXpnd%
 		stringsplit,ah,JUSTtmpx,<
 		ExtrpExpnd= %ah2%
@@ -7719,7 +7751,12 @@ if (ExtrpExpnd = "ERROR")
 		ExtrpExpnd= 
 	}
 Gui +LastFound +OwnDialogs +AlwaysOnTop
-tooltip, !!!!!Incorrect Values may lead to program malfunction!!!!! 
+GUIMSG:= "!!!!!Incorrect Values may lead to program malfunction!!!!!"
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	} 
 InputBox, TRNSFERVAR, Invalid Paths will cause errors.,Enter the path for %InterpXpnd%,,520,300,,,Locale,,%ExtrpExpnd%
 if (TRNSFERVAR <> "")
 	{
@@ -8081,7 +8118,7 @@ ifmsgbox, ok
 		splitpath,prlx2,,,prxtn
 		if ((prxtn = "cmd")or (prxtn = "bat")or (prxtn = "ps1")or (prxtn = "ps1")or (prxtn = "vbs")or (prxtn = "vbe") && (CenPRE <> 1))
 			{
-						SB_SetText("...Propagating...")
+				SB_SetText("...Propagating...")
 				Loop,files,%Game_profiles%\*,D
 					{
 						FileCopy,%prln%,%A_LoopFIleFUllPath%,%OVERWRT%
@@ -8092,7 +8129,38 @@ ifmsgbox, ok
 	}
 return	
 
+GetMetaData:
 
+RowNumber := 0
+clth:= ""
+Loop
+	{
+	RowNumber := LV_GetNext(RowNumber)
+	if not RowNumber
+		{
+		continue
+		}
+		else {
+			LV_GetText(cg_exe, RowNumber, 2)
+			LV_GetText(cg_path, RowNumber, 3)
+			LV_GetText(steamquery, RowNumber, 18)
+			LV_GetText(njName, RowNumber, 5)
+			if ((njName <> "")&&(steamquery <> "0")&&(steamquery <> ""))
+				{
+					sidn= %Game_Profiles%\%njName%
+					if (LOCALIZE = 1)
+						{
+							sidn= %cg_path%
+						}
+					gosub, steamappinfo
+				}
+		}
+	if (GLBTRY > 7)
+		{
+			break
+		}	
+}
+return
 
 AddCLI:
 RowNumber := 0
@@ -8116,7 +8184,12 @@ Loop
 return
 ADCLIFUNC:
 Gui +LastFound +OwnDialogs +AlwaysOnTop
-tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{ProfileDir}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
+GUIMSG:= "Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{ProfileDir}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore..."
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	} 
 InputBox, CLIADDED, add opts and args,replace [variables] with options and arguments,,520,,,,,,[options] "{TARGET}" [arguments]
 stringreplace,CLIADDED,CLIADDED,|,#!#,All
 stringreplace,CLIADDED,CLIADDED,"{TARGET}",|,All
@@ -8388,7 +8461,12 @@ Loop,parse,pcgw,`r`n
 	}
 return	
 MakeMeTop:
-tooltip,Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{Profile}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore...
+GUIMSG:= "Respected Expanded Variables`n{GameDir}: game's path`n{GameExe}: Game's Execuatable`n{Profile}: Game's Jacket Dir`n`%programfiles`%:program files`n`%username`%`n`%username`%: user name`n`%temp`%: temp folder`nmore..."
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+	{
+		btt(GUIMSG,,,,"Style2",{Transparent:v})
+		Sleep, 30
+	} 
 WinSet, AlwaysOnTop, On, add opts/args
 Return
 
@@ -8493,8 +8571,13 @@ DownloadFile(UrlToFile, _SaveFileAs, Overwrite := True, UseProgressBar := True) 
 
   }
   UrlDownloadToFile, %UrlToFile%, %_SaveFileAs%
-If (UseProgressBar) {
-	ToolTip,
+If (UseProgressBar) {	
+	GUIMSG:= ""
+	for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+		{
+			btt(GUIMSG,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		} 
   }
 
       DownloadFileFunction_UpdateProgressBar:
@@ -8526,7 +8609,12 @@ If (UseProgressBar) {
 		}
 	 if (PercentDone > 100)
 		{
-			ToolTip,
+			GUIMSG:= ""
+			for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+				{
+					btt(GUIMSG,,,,"Style2",{Transparent:v})
+					Sleep, 30
+				} 
 			PercentDone=
 		}
 		
@@ -8610,8 +8698,7 @@ joyGetName(ID) {
 		return "failed"
 	return StrGet(&caps+4, "UTF-16")
 }	
-WM_MOUSEMOVE() {
-	
+WM_MOUSEMOVE(){
 	static CurrControl, PrevControl, _TT
 	CurrControl := A_GuiControl
 	If (CurrControl <> PrevControl)
@@ -8623,13 +8710,24 @@ WM_MOUSEMOVE() {
 
 	DisplayToolTip:
 	try
-			ToolTip % %CurrControl%_TT
+			;ToolTip % %CurrControl%_TT
+			for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+				{
+					CurTTC:= % %CurrControl%_TT
+					btt(CurTTC,,,,"Style2",{Transparent:v})
+					Sleep, 30
+				}
 	catch
-			ToolTip
-	SetTimer, RemoveToolTip, -6000
+	;ToolTip
+	SetTimer, RemoveToolTip, -2000
 	return
 
 	RemoveToolTip:
+	for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
+		{
+			btt(CurTTC,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		}
 	ToolTip
 	return
 }

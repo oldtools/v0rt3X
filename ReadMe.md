@@ -10,9 +10,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.83.05
+This Version:0.99.83.07
 
-This Build: 2023-01-15 4:23 PM
+This Build: 2023-01-17 7:04 AM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -22,8 +22,7 @@ v0rt3X
 ¦   +-- 7za.exe
 ¦   +-- lrDeploy.exe
 ¦   +-- NewOSK.exe
-¦   +-- jkvtx.exe
-¦   +-- [RJ_EXE].exe
+¦   +-- v0rt3X.exe
 ¦   +-- Setup.exe
 ¦   +-- Source_Builder.exe
 ¦   +-- Update.exe
@@ -56,12 +55,14 @@ v0rt3X
 ¦   +-- ax_GameTemplate.set
 ¦   +-- ax_DesktopTemplate.set
 ¦   +-- ax_Trigger.set
+¦   +-- BTT.ahk
 ¦   +-- build.ahk
 ¦   +-- Buildtools.set
 ¦   +-- cmdtemplate.set
 ¦   +-- Deploy.ico
 ¦   +-- exclfnms.set
 ¦   +-- exez.set
+¦   +-- Gdip_All.ahk
 ¦   +-- Install.ico
 ¦   +-- jk_GameTemplate.set
 ¦   +-- jk_DestktopTemplate.set
@@ -76,6 +77,7 @@ v0rt3X
 ¦   +-- lrDeploy.set
 ¦   +-- newosk.ahk
 ¦   +-- NewOSK.ico
+¦   +-- NonNull.ahk
 ¦   +-- ox_DesktopTemplate.set
 ¦   +-- ox_GameTemplate.set
 ¦   +-- ox_Trigger.set
