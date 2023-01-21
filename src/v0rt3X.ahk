@@ -1,5 +1,5 @@
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-01-17 7:04 AM 0.99.83.07 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2023-01-20 6:19 PM 0.99.84.12 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -58,7 +58,7 @@ CURPID= %ERRORLEVEL%
 if fileexist(curpidf)
 	{
 		iniread,irgpd,%curpidf%,Instance,pid
-		iniread,multi_instance,%curpidf%,Instance,Running_Instance
+		iniread,multi_instance,%curpidf%,Instance,multi_Instance
 		iniread,crgpd,%curpidf%,Current_Game,pid
 		iniread,jalpd,%curpidf%,JustAfterLaunch,pid
 		iniread,jbepd,%curpidf%,JustBeforeExit,pid
@@ -438,7 +438,8 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 						sleep, 1200
 						if instr(Borderless_Gaming_Program,"portable")
 							{
-								SB_SetText("Enabling Borderless-Gaming")
+								GUIMSG:= "Enabling Borderless-Gaming"
+								gosub, TTIPS
 								process, wait, "BorderlessGaming.exe", 5
 								bgpidx= %errorlevel%
 							}
@@ -1844,6 +1845,10 @@ if (instr(nogmnx,absgmx)or instr(nogmne,absgme))
 return
 
 TTIPS:
+if (ToolTips <> 1)
+	{
+		return
+	}
 CurrControl:= GUIMSG
 If (CurrControl <> PrevControl)
 	{

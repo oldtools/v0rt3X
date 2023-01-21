@@ -1,3 +1,7 @@
+## Why???
+
+Steam has no gaemz.
+
 ## Use Case
 
 Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as keyboad-mapping and monitor layout.
@@ -10,9 +14,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.83.07
+This Version:0.99.84.12
 
-This Build: 2023-01-17 7:04 AM
+This Build: 2023-01-20 6:19 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh

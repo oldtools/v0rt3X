@@ -2369,7 +2369,7 @@ FileAppend,%sktmv%,%SKELD%\src\Setup.ahk
 FileDelete,%SKELD%\src\Setup.tmp
 FileDelete,%SKELD%\bin\jkvtx.exe
 
-FileDelete, itmv,%SKELD%\src\%RJEXFN%.ahk
+FileDelete,%SKELD%\src\%RJEXFN%.ahk
 FileRead, itmv,%SKELD%\src\jkvtx.ahk
 StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
 StringReplace,itmv,itmv,[CURV],%vernum%,All
