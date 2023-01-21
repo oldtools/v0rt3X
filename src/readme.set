@@ -122,10 +122,13 @@ The "GPD" button will set the location where profile folders for each game will 
 
 Right-Click on the buttons in the setup tool to download supported executables.
 
-![AsAdmin](https://[GIT_USER].github.io/[RJ_PROJ]/img/Setup.png)
+![Setup](https://[GIT_USER].github.io/[RJ_PROJ]/img/Setup.png)
+
+
+
+![Config](https://[GIT_USER].github.io/[RJ_PROJ]/img/Config.png)
 
 ## Launching Games
-
 It is not necessary, but recommended to enable the RunAsAdmin option.
 Ideally, [RJ_PROJ] can run entirely in userspace, however many games require administrator access and manipulating hardware at the user-level is often unreliable.
 

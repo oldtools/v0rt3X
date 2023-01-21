@@ -14,9 +14,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.84.12
+This Version:0.99.84.20
 
-This Build: 2023-01-20 6:19 PM
+This Build: 2023-01-21 1:17 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -122,10 +122,13 @@ The "GPD" button will set the location where profile folders for each game will 
 
 Right-Click on the buttons in the setup tool to download supported executables.
 
-![AsAdmin](https://oldtools.github.io/v0rt3X/img/Setup.png)
+![Setup](https://oldtools.github.io/v0rt3X/img/Setup.png)
+
+
+
+![Config](https://oldtools.github.io/v0rt3X/img/Config.png)
 
 ## Launching Games
-
 It is not necessary, but recommended to enable the RunAsAdmin option.
 Ideally, v0rt3X can run entirely in userspace, however many games require administrator access and manipulating hardware at the user-level is often unreliable.
 

@@ -565,8 +565,7 @@ GUI Add,TAB2, x2 y0 w297 h676 vTABMENU, Setup||Config
 Gui, Add, StatusBar, x0 y675 w314 h28 vRJStatus, Status Bar
 Gui,Tab, 1
 Gui Tab, Setup
-Gui, Add, GroupBox, x18 y22 w277 h186 center,
-Gui Add, GroupBox, x18 y203 w277 h452,
+Gui, Add, GroupBox, x18 y18 w277 h638
 
 GUi, Add, Checkbox, x100 y80 h14 vIncludeDD gIncludeDD Right %stmddchk%,<Include>
 Gui, Add, DropDownList, x174 y77 w80 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
@@ -576,9 +575,9 @@ Gui, Font, Bold
 Gui, Add, Button, x24 y50 w35 h21 vSOURCE_DirB gSOURCE_DirB,SRC
 
 Gui, Font, Normal
+Gui, Add, Text, x24 y35 h14 vCURDP Right,<Game Fldrs>
 Gui, Add, DropDownList, x64 y50 w200 vSOURCE_DirectoryT gSOURCE_DirectoryDD,%sourcepop%
 Gui, Add, Button, x269 y52 w15 h15 vREMSRC gREMSRC,X
-Gui, Add, Text, x24 y35 h14 vCURDP Right,<Game Fldrs>
 
 Gui, Font, Bold
 Gui, Add, Button, x24 y104 w35 h19 vEXCL_DirB gEXCL_DirB,EXC
@@ -587,117 +586,119 @@ Gui, Add, Text, x28 y85 h14,<Exclude>
 Gui, Add, DropDownList, x64 y104 w200 vEXCLUDE_DirectoryT gEXCLUDE_DirectoryDD,%exclpop%
 Gui, Add, Button, x268 y107 w15 h15 vREMEXCL gREMEXCL,X
 
+Gui, Font, Normal
+Gui, Add, Text, x24 y128 h14,<Shortcut Output Directory>
 Gui, Font, Bold
-Gui, Add, Button, x21 y150 w35 h21 vGame_DirB gGame_DirB,OUT
+Gui, Add, Button, x21 y144 w35 h21 vGame_DirB gGame_DirB,OUT
 Gui, Font, cSilver
-Gui, Add, Text, x64 y150 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
+Gui, Add, Text, x64 y148 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
+Gui, Font, cBlack
+
+Gui, Font, Normal
+Gui, Add, Text,  x24 y168 w122 h14 vGame_ProfilesR,<Game Profiles Directory>
+Gui, Font, Bold
+Gui, Add, Button, x21 y184 w35 h21 vGame_ProfB gGame_ProfB,GPD
+Gui, Font, cSilver
+Gui, Add, Text, x64 y186 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
 Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text, x84 y164 h14,<Shortcut Output Directory>
 
-Gui, Font, Bold
-Gui, Add, Button, x21 y180 w35 h21 vGame_ProfB gGame_ProfB,GPD
-Gui, Font, cSilver
-Gui, Add, Text, x64 y175 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
-Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y189 w122 h14 vGame_ProfilesR,<Game Profiles Directory>
-Gui, Font, Normal
-
+Gui, Add, Text,  x24 y206 w206 h14,<Keyboard Mapper Program>
 Gui, Font, Bold
-Gui, Add, Button, x21 y224 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
-Gui Add, Button, x4 y224 w14 h17 vKBM_RC gKBM_RC, v
+Gui, Add, Button, x21 y222 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
+Gui Add, Button, x4 y222 w14 h17 vKBM_RC gKBM_RC, v
 Gui, Font, cSilver
 Gui, Add, Text,  x67 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
 Gui, Font, cBlack
-Gui, Font, Normal
-Gui, Add, Text,  x64 y238 w222 h14,<Keyboard Mapper Program>
 
-Gui, Font, Bold
-Gui, Add, Button, x25 y256 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
-Gui, Font, cSilver
-Gui, Add, Text,  x64 y256 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
-Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y270 w222 h14,.....Template Profile for Player 1>
+Gui, Add, Text,  x24 y248 w222 h14,<Template Profile for Player 1>
 Gui, Font, Bold
+Gui, Font, cBlack
+Gui, Add, Button, x25 y266 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
+Gui, Font, Normal
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y268 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
 
-Gui, Add, Button, x25 y288 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
-Gui, Font, cSilver
-Gui, Add, Text,  x64 y288 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
 Gui, Font, cBlack
-Gui, Font, Normal
-Gui, Add, Text,  x64 y302 w222 h14,.....Template for Player 2>
-
+Gui, Add, Text,  x24 y285 w222 h14,<Template for Player 2>
 Gui, Font, Bold
-Gui, Add, Button, x25 y320 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
+Gui, Add, Button, x25 y303 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
 Gui, Font, cSilver
-Gui, Add, Text,  x64 y320 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
+Gui, Add, Text,  x64 y305 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
 Gui, Font, cBlack
-Gui, Font, Normal
-Gui, Add, Text,  x64 y334 w222 h14,.....Template for MediaCenter/Desktop>
 
-Gui, Font, Bold
-Gui, Add, Button, x21 y372 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
-Gui Add, Button, x4 y372 w14 h17 vBGM_RC gBGM_RC, v
-Gui, Font, cSilver
-Gui, Add, Text,  x67 y374 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
-Gui, Font, cBlack
-Gui, Font, Normal
-Gui, Add, Text,  x64 y391 w110 h14,<Borderless_Program>
 
-Gui, Font, Bold
-Gui, Add, Button, x21 y406 w35 h21 vMM_ToolB gMM_ToolB,MMT
-Gui Add, Button, x4 y406 w14 h17 vMMT_RC gMMT_RC, v
-Gui, Font, cSilver
-Gui, Add, Text,  x70 y408 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
-Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y425 w222 h14,<Multimonitor Program>
+Gui, Add, Text,  x24 y324 w222 h14,<Template for MediaCenter/Desktop>
+Gui, Font, Bold
+Gui, Add, Button, x25 y339 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y341 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
+Gui, Font, cBlack
 
-Gui, Font, Bold
-Gui, Font, cSilver
-Gui, Add, Button, x25 y448 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
-Gui, Add, Text,  x64 y448 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
-Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y462 w222 h14,.....Gaming Configuration File>
+Gui, Add, Text,  x24 y361 w110 h14,<Borderless_Program>
+Gui, Font, Bold
+Gui, Add, Button, x21 y376 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
+Gui Add, Button, x4 y376 w14 h17 vBGM_RC gBGM_RC, v
+Gui, Font, cSilver
+Gui, Add, Text,  x67 y378 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
+Gui, Font, cBlack
 
-Gui, Font, Bold
-Gui, Add, Button, x25 y482 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
-Gui, Font, cSilver
-Gui, Add, Text,  x64 y480 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
-Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Text,  x64 y494 w214 h14,.....MediaCenter/Desktop Configuration File>
+Gui, Add, Text,  x24 y399 w222 h14,<Multimonitor Program>
+Gui, Font, Bold
+Gui, Add, Button, x21 y415 w35 h21 vMM_ToolB gMM_ToolB,MMT
+Gui Add, Button, x4 y415 w14 h17 vMMT_RC gMMT_RC, v
+Gui, Font, cSilver
+Gui, Add, Text,  x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+Gui, Font, cBlack
+
+Gui, Font, Normal
+Gui, Add, Text,  x24 y440 w222 h14,<Gaming Configuration File>
+Gui, Font, Bold
+Gui, Font, cSilver
+Gui, Add, Button, x25 y456 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
+Gui, Add, Text,  x64 y458 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
+Gui, Font, cBlack
+
+Gui, Font, Normal
+Gui, Add, Text,  x24 y478 w214 h14,<MediaCenter/Desktop Configuration File>
+Gui, Font, Bold
+Gui, Add, Button, x25 y495 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
+Gui, Font, cSilver
+Gui, Add, Text,  x64 y497 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
+Gui, Font, cBlack
   
 Gui, Font, Bold
-Gui, Add, Button, x21 y512 w35 h21 vJAL_ProgB gJAL_ProgB,JAL
-Gui Add, Button, x4 y512 w14 h17 vJAL_RC gJAL_RC, v
+Gui, Add, Button, x21 y522 w35 h21 vJAL_ProgB gJAL_ProgB,JAL
+Gui Add, Button, x4 y522 w14 h17 vJAL_RC gJAL_RC, v
 Gui, Font, cSilver
-Gui, Add, Text, x71 y515 w198 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
+Gui, Add, Text, x71 y525 w198 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
 Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Checkbox, x273 y514 w12 h14 vJALWait gJALWait %jalstatus%
+Gui, Add, Checkbox, x273 y524 w12 h14 vJALWait gJALWait %jalstatus%
 ;Gui, Add, Text,  x64 y526 w198 h14,<Run After Launch>
 
 
 Gui, Font, Bold
-Gui, Add, Button, x21 y544 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
-Gui Add, Button, x4 y544 w14 h17 vJBE_RC gJBE_RC, v
+Gui, Add, Button, x21 y550 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
+Gui Add, Button, x4 y550 w14 h17 vJBE_RC gJBE_RC, v
 Gui, Font, cSilver
-Gui, Add, Text, x67 y544 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
+Gui, Add, Text, x67 y550 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
 Gui, Font, cBlack
 Gui, Font, Normal
-Gui, Add, Checkbox, x273 y546 w12 h14 vJBEWait gJBEWait %jbestatus%
+Gui, Add, Checkbox, x273 y552 w12 h14 vJBEWait gJBEWait %jbestatus%
 ;Gui, Add, Text, x64 y548 w198 h14,<Run Before Exit>	   
 
 Gui, Font, Bold
 Gui, Add, Button, x21 y576 w36 h21 vPREAPP gPREAPP ,PRE
 Gui Add, Button, x4 y576 w14 h17 vPRE_RC gPRE_RC, v
 Gui, Font, Normal
-Gui, Add, Text, x67 y578 h12 vPRETNUM,1
-Gui, Add, DropDownList, x78 y576 w193 vPREDD gPREDD Right,%prelist%
+Gui, Add, Text, x63 y578 h12 vPRETNUM,1
+Gui, Add, DropDownList, x72 y576 w193 vPREDD gPREDD Right,%prelist%
 Gui, Add, Text, x40 y597 h14 w230 vPREDDT,<$This_Prog$><Monitor><Mapper><game.exe>
 Gui, Add, Checkbox, x273 y578 w12 h14 vPreWait gPreWait %prestatus%,
 								  
@@ -707,8 +708,8 @@ Gui, Add, Button, x21 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
 Gui Add, Button, x4 y614 w14 h17 vPOST_RC gPOST_RC, v
 Gui, Font, Normal
 
-Gui, Add, Text, x67 y616 h12 vPOSTDNUM,1
-Gui, Add, DropDownList, x75 y616 w193 vPostDD gPostDD Right,%postlist%
+Gui, Add, Text, x63 y616 h12 vPOSTDNUM,1
+Gui, Add, DropDownList, x72 y616 w193 vPostDD gPostDD Right,%postlist%
 Gui, Add, Text, x34 y638 h14 w230 vPOSTDDT,<game.exe><$This_Prog$><Mapper><Monitor>
 Gui, Add, Checkbox, x273 y619 w12 h14 vPostWait gPostWait %poststatus%
 Gui, Add, Button, x273 y636 w14 h14 vDELPOSTAPP gDELPOSTAPP ,X
@@ -726,6 +727,7 @@ Gui, Font, Normal
 Gui, Tab, 2
 Gui, Tab, Config
 
+Gui, Add, GroupBox, x14 y18 w277 h638
 Gui, Font, Bold
 Gui, Add, Radio, x30 y38 h14 vOVERWRT gUPDTSC %ovrwrchk%, Overwrite
 Gui, Add, Radio, x110 y38 h14 vUPDTSC gOVERWRT %updtchk%, Update
@@ -740,7 +742,7 @@ Gui, Add, Checkbox, x130 y64 w85 h14 vLocalize gLocalize,LOCALIZE:
 Gui, Add, Checkbox, x38 y300 w105 h14 vCENTRLCKB gCENTRLCKB %cntz%,CENTRALIZE
 
 Gui, Font, Bold
-Gui, Add, Button, x241 y24 w45 h25 vPOPULATE gPOPULATE,GO>
+Gui, Add, Button, x241 y26 w45 h25 vPOPULATE gPOPULATE,GO>
 Gui, Font, Normal
 GUi, Add, Checkbox, x30 y64 h14 vCREFLD gCREFLD %fldrget%, Profile Folders
 GUi, Add, Checkbox, x50 y82 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Config File
