@@ -27,6 +27,6 @@ CLOUDLOC=
 HOSTINGURL=
 SOURCEHOST=https://github.com/oldtools/v0rt3X
 UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
-Version=2023-01-21 1:17 PM
+Version=2023-01-21 4:33 PM
 UPDATEFILE=https://github.com/oldtools/v0rt3X/releases/download/portable/portable.zip
 STEAMJSON=http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json

@@ -2577,7 +2577,6 @@ if (BCANC = 1)
 		compiling= 
 		return
 	}
-
 if (ServerPush = 0)
 	{
 		buildnum= 
@@ -2596,153 +2595,94 @@ if (ServerPush = 0)
 				buildnum= -%olnan5%
 			}
 	}
+RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
+SB_SetText(" committing changes to git ")
+RunWait, %comspec% /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+FileAppend, "%PushNotes%`n",%DEPL%\changelog.txt
+SB_SetText(" Source changes committed.  Files Copied to git.")
+StringReplace,PushNotes,PushNotes,",,All
+;"
+FileDelete, %DEPL%\sitecommit.cmd
+FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\*.otf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+FileAppend,copy /y "%BUILDIR%\site\version.txt" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+
+RunWait, %comspec% /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 
 if (ServerPush = 1)
 	{
-		if (SiteUpdate = 1)
+		RunWait, %comspec% /c " "%DEPL%\sitecommit.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+		SB_SetText(" Uploading to server ")
+	}
+RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
+FileDelete, %DEPL%\gpush.cmd
+FileAppend,set PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%`n,%DEPL%\gpush.cmd		
+fileappend,cd "%GITROOT%"`n,%DEPL%\gpush.cmd
+if (GitPush = 1)
+	{
+		FileDelete,%GITD%\ReadMe.md
+		FileAppend,%readme%,%GITD%\ReadMe.md
+		FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
+		fileappend,if not exist ".git\" cd ..\ && git -C "%GITD%" init && cd "%GITD%"`n,%DEPL%\gpush.cmd
+		FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
+		fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
+		fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd
+		fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd
+		fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd
+		FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd
+		FileAppend,gh repo create %RJPRJCT% --public --source="%GITD%"`n,%DEPL%\gpush.cmd
+		fileappend,git add .`n,%DEPL%\gpush.cmd
+		fileappend,git remote add %RJPRJCT% %GITSWEB%/%GITUSER%/%RJPRJCT%`n,%DEPL%\gpush.cmd
+		FileAppend,git commit -a -m "%PushNotes%"`n,%DEPL%\gpush.cmd
+		FileAppend,git push -f --all %RJPRJCT%`n,%DEPL%\gpush.cmd
+		fileappend,popd`n,%DEPL%\gpush.cmd
+	}
+if (SiteUpdate = 1)
+	{
+		FileDelete,%SITEDIR%\ReadMe.md
+		FileAppend,%readme%,%SITEDIR%\ReadMe.md
+		FileAppend,pushd "%SITEDIR%\..\"`n,%DEPL%\gpush.cmd
+		fileappend,if not exist "%SITEDIR%\.git\" git -C "%SITEDIR%\..\" init`n,%DEPL%\gpush.cmd
+		if (GitPush <> 1)
 			{
-				SB_SetText(" Updating the website ")
-				RDATE= %date% %timestring%
-				FileRead,skelhtml,%BUILDIR%\site\index.html
-				FileDelete, %DEPL%\site\index.html
-				StringReplace,skelhtml,skelhtml,[CURV],%vernum%,All
-				Fileappend,%vernum%=[CURV]`n,%DEPL%\deploy.log
-				StringReplace,skelhtml,skelhtml,[TAGLINE],%tagline%,All
-				FileDelete,%BUILDIR%\insts.sha1
-				if (OvrStable = 1)
-					{
-						ifExist, %DEPL%\%RJPRJCT%-installer.exe
-							{
-								CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
-								gosub, SHA1GET
-							}
-						ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
-							{
-								FileGetSize,dvlsize,%DEPL%\%RJPRJCT%-%date%%buildnum%.zip, K
-								dvps:= dvlsize / 1000
-								StringLeft,dvms,dvps,4
-							}
-					}
-				guicontrol,,progb,90
-				StringReplace,skelhtml,skelhtml,[RSHA1],%ApndSHA%,All
-				StringReplace,skelhtml,skelhtml,[WEBURL],https://%GITUSER%.github.io,All
-				StringReplace,skelhtml,skelhtml,[PAYPAL],%donation%
-				StringReplace,skelhtml,skelhtml,[GIT_USER],%GITUSER%,All
-				StringReplace,skelhtml,skelhtml,[GITSRC],%GITSRC%,All
-				StringReplace,skelhtml,skelhtml,[REVISION],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/Installer/%RJPRJCT%.zip,All
-				StringReplace,skelhtml,skelhtml,[PORTABLE],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/portable/portable.zip,All
-				
-				StringReplace,skelhtml,skelhtml,[RJ_PROJ],%RJPRJCT%,All
-				
-				StringReplace,skelhtml,skelhtml,[GITUSER],%gituser%,All
-				StringReplace,skelhtml,skelhtml,[RELEASEPG],%GITSWEB%/%gituser%/%RJPRJCT%/releases,All
-				StringReplace,skelhtml,skelhtml,[ART_ASSETS],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/ART_ASSETS/ART_ASSETS.7z,All
-				
-				StringReplace,skelhtml,skelhtml,[RDATE],%RDATE%,All
-				StringReplace,skelhtml,skelhtml,[RSIZE],%dvms%,All
-				StringReplace,skelhtml,skelhtml,[RSIZE2],%dvmg%,All
-				StringReplace,skelhtml,skelhtml,[DBSIZE],%DATSZ%,All
-				
-				FileDelete,%SITEDIR%\index.html
-				ifnotexist, %SITEDIR%
-					{
-						FileCreateDir,%SITEDIR%,1
-						FileCreateDir,%SITEDIR%\img,1
-						FileCopy,%SKELD%\site\*,%SITEDIR%,1
-						FileCopy,%SKELD%\site\img\*,%SITEDIR%\img,1			
-					}	
-				FileAppend,%skelhtml%,%SITEDIR%\index.html
-				RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
-				SB_SetText(" committing changes to git ")
-				RunWait, %comspec% /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
-				FileAppend, "%PushNotes%`n",%DEPL%\changelog.txt
-
-				SB_SetText(" Source changes committed.  Files Copied to git.")
-				StringReplace,PushNotes,PushNotes,",,All
-				;"
-				FileDelete, %DEPL%\sitecommit.cmd
-				FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\*.otf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-				FileAppend,copy /y "%BUILDIR%\site\version.txt" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-
-				RunWait, %comspec% /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
-				RunWait, %comspec% /c " "%DEPL%\sitecommit.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
-				SB_SetText(" Uploading to server ")
-				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
-			}
-		FileDelete, %DEPL%\gpush.cmd
-		FileAppend,set PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%`n,%DEPL%\gpush.cmd		
-		fileappend,cd "%GITROOT%"`n,%DEPL%\gpush.cmd
-		if (GitPush = 1)
-			{
-				FileDelete,%GITD%\ReadMe.md
-				FileAppend,%readme%,%GITD%\ReadMe.md
-				FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-				fileappend,if not exist ".git\" cd ..\ && git -C "%GITD%" init && cd "%GITD%"`n,%DEPL%\gpush.cmd
 				FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
 				fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
-				fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd
+				fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd	
 				fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd
 				fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd
-				FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd
-				FileAppend,gh repo create %RJPRJCT% --public --source="%GITD%"`n,%DEPL%\gpush.cmd
-				fileappend,git add .`n,%DEPL%\gpush.cmd
-				fileappend,git remote add %RJPRJCT% %GITSWEB%/%GITUSER%/%RJPRJCT%`n,%DEPL%\gpush.cmd
-				FileAppend,git commit -a -m "%PushNotes%"`n,%DEPL%\gpush.cmd
-				FileAppend,git push -f --all %RJPRJCT%`n,%DEPL%\gpush.cmd
-				fileappend,popd`n,%DEPL%\gpush.cmd
+				FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd					
 			}
-		if (SiteUpdate = 1)
-			{
-				FileDelete,%SITEDIR%\ReadMe.md
-				FileAppend,%readme%,%SITEDIR%\ReadMe.md
-				FileAppend,pushd "%SITEDIR%\..\"`n,%DEPL%\gpush.cmd
-				fileappend,if not exist "%SITEDIR%\.git\" git -C "%SITEDIR%\..\" init`n,%DEPL%\gpush.cmd
-				if (GitPush <> 1)
-					{
-						FileAppend,git config --local credential.helper wincred`n,%DEPL%\gpush.cmd
-						fileappend,git config --local user.name %GITUSER%`n,%DEPL%\gpush.cmd
-						fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd	
-						fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd
-						fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd
-						FileAppend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd					
-					}
-				FileAppend,gh repo create %GITUSER%.github.io --public --source="%GITROOT%\%GITUSER%.github.io"`n,%DEPL%\gpush.cmd
-				FileAppend,git add "%RJPRJCT%"`n,%DEPL%\gpush.cmd
-				FileAppend,pushd "%SITEDIR%"`n,%DEPL%\gpush.cmd
-				FileAppend,git add .`n,%DEPL%\gpush.cmd
-				fileappend,git remote add %GITUSER%.github.io %GITSWEB%/%GITUSER%/%GITUSER%.github.io`n,%DEPL%\gpush.cmd		
-				FileAppend,git commit -a -m "%PUSHNOTES%"`n,%DEPL%\gpush.cmd
-				FileAppend,git push -f --all %GITUSER%.github.io`n,%DEPL%\gpush.cmd
-			}
-		;`
-		SB_SetText(" Uploading binaries to server ")
-		if (PortVer = 1)
-			{
-					FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-					FileAppend,gh release delete portable -y --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
-					FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip" --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
-			}
-		if (OvrStable = 1)
-			{
-				FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
-				FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
-				FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
-			}
-		guicontrol,,progb,80
-		if (GitPush = 1)
-			{
-				RunWait, %comspec% /c echo.###################  GIT DEPLOYMENT PUSH  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-				RunWait, %comspec% /c " "gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
-				RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
-			}
-	}	
-
+		FileAppend,gh repo create %GITUSER%.github.io --public --source="%GITROOT%\%GITUSER%.github.io"`n,%DEPL%\gpush.cmd
+		FileAppend,git add "%RJPRJCT%"`n,%DEPL%\gpush.cmd
+		FileAppend,pushd "%SITEDIR%"`n,%DEPL%\gpush.cmd
+		FileAppend,git add .`n,%DEPL%\gpush.cmd
+		fileappend,git remote add %GITUSER%.github.io %GITSWEB%/%GITUSER%/%GITUSER%.github.io`n,%DEPL%\gpush.cmd		
+		FileAppend,git commit -a -m "%PUSHNOTES%"`n,%DEPL%\gpush.cmd
+		FileAppend,git push -f --all %GITUSER%.github.io`n,%DEPL%\gpush.cmd
+	}
+	;`
+SB_SetText(" Uploading binaries to server ")
+if (ServerPush = 1)
+	{
+		FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
+		FileAppend,gh release delete portable -y --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
+		FileAppend,gh release create portable -t "portable" -n "" "%DEPL%\portable.zip" --repo "%GITSWEB%/%GITUSER%/%RJPRJCT%"`n,%DEPL%\gpush.cmd
+		FileAppend,pushd "%GITD%"`n,%DEPL%\gpush.cmd
+		FileAppend,gh release delete Installer -y`n,%DEPL%\gpush.cmd
+		FileAppend,gh release create Installer -t "Installer" -n "" "%DEPL%\%RJPRJCT%.zip"`n`n,%DEPL%\gpush.cmd
+	}
+guicontrol,,progb,80
+if (GitPush = 1)
+	{
+		RunWait, %comspec% /c echo.###################  GIT DEPLOYMENT PUSH  ####################### >>"%DEPL%\deploy.log", ,%rntp%
+		RunWait, %comspec% /c " "gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
+		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
+	}
 guicontrol,,progb,100
 SB_SetText(" Complete ")
 gosub, canclbld
