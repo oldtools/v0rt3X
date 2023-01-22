@@ -1,3 +1,4 @@
+;};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #NoEnv
 ;#Warn
 ;#NoTrayIcon
@@ -2594,6 +2595,58 @@ if (ServerPush = 0)
 				buildnum= -%olnan5%
 			}
 	}
+	
+SB_SetText(" Updating the website ")
+RDATE= %date% %timestring%
+FileRead,skelhtml,%BUILDIR%\site\index.html
+FileDelete, %DEPL%\site\index.html
+StringReplace,skelhtml,skelhtml,[CURV],%vernum%,All
+Fileappend,%vernum%=[CURV]`n,%DEPL%\deploy.log
+StringReplace,skelhtml,skelhtml,[TAGLINE],%tagline%,All
+FileDelete,%BUILDIR%\insts.sha1
+ifExist, %DEPL%\%RJPRJCT%-installer.exe
+	{
+		CrCFLN= %DEPL%\%RJPRJCT%-installer.exe
+		gosub, SHA1GET
+	}
+ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
+	{
+		FileGetSize,dvlsize,%DEPL%\%RJPRJCT%-%date%%buildnum%.zip, K
+		dvps:= dvlsize / 1000
+		StringLeft,dvms,dvps,4
+	}
+StringReplace,skelhtml,skelhtml,[RSHA1],%ApndSHA%,All
+StringReplace,skelhtml,skelhtml,[WEBURL],https://%GITUSER%.github.io,All
+StringReplace,skelhtml,skelhtml,[PAYPAL],%donation%
+StringReplace,skelhtml,skelhtml,[GIT_USER],%GITUSER%,All
+StringReplace,skelhtml,skelhtml,[GITSRC],%GITSRC%,All
+StringReplace,skelhtml,skelhtml,[REVISION],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/Installer/%RJPRJCT%.zip,All
+StringReplace,skelhtml,skelhtml,[PORTABLE],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/portable/portable.zip,All
+
+StringReplace,skelhtml,skelhtml,[RJ_PROJ],%RJPRJCT%,All
+
+StringReplace,skelhtml,skelhtml,[GITUSER],%gituser%,All
+StringReplace,skelhtml,skelhtml,[RELEASEPG],%GITSWEB%/%gituser%/%RJPRJCT%/releases,All
+StringReplace,skelhtml,skelhtml,[ART_ASSETS],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/ART_ASSETS/ART_ASSETS.7z,All
+
+StringReplace,skelhtml,skelhtml,[RDATE],%RDATE%,All
+StringReplace,skelhtml,skelhtml,[RSIZE],%dvms%,All
+StringReplace,skelhtml,skelhtml,[RSIZE2],%dvmg%,All
+StringReplace,skelhtml,skelhtml,[DBSIZE],%DATSZ%,All
+
+if (SiteUpdate = 1)
+	{
+		FileDelete,%SITEDIR%\index.html
+		if !fileexist(SITEDIR . "\")
+			{
+				FileCreateDir,%SITEDIR%,1
+				FileCreateDir,%SITEDIR%\img,1
+				FileCopy,%SKELD%\site\*,%SITEDIR%,1
+				FileCopy,%SKELD%\site\img\*,%SITEDIR%\img,1			
+			}	
+	}
+	
+	
 RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 SB_SetText(" committing changes to git ")
 RunWait, %comspec% /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
@@ -2602,14 +2655,17 @@ SB_SetText(" Source changes committed.  Files Copied to git.")
 StringReplace,PushNotes,PushNotes,",,All
 ;"
 FileDelete, %DEPL%\sitecommit.cmd
-FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\*.otf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
-FileAppend,copy /y "%BUILDIR%\site\version.txt" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+if (SiteUpdate =1)
+	{
+		FileAppend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\*.otf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\*.ttf" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\ReadMe.md" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+		FileAppend,copy /y "%BUILDIR%\site\version.txt" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd
+	}
 
 RunWait, %comspec% /c echo.##################  SITE COMMIT  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 
