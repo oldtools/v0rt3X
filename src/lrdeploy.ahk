@@ -2472,66 +2472,65 @@ if (BCANC = 1)
 		return
 	}	
 
-if (GitPush = 1)
+ifinstring,pushnotes,|
 	{
-		ifinstring,pushnotes,|
+		stringsplit,ebeb,pushnotes,|
+		TAGLINE= %ebeb2%				
+	}
+	else {
+		TAGLINE= Profiles FOR Your Windows Games.
+	}
+ifinstring,pushnotes,$
+	{
+		stringgetpos,verstr,pushnotes,$
+		stringgetpos,endstr,pushnotes,.00
+		if (ErrorLevel <> "")
 			{
-				stringsplit,ebeb,pushnotes,|
-				TAGLINE= %ebeb2%				
+				strstr:= verstr + 2
+				midstr:= (endstr - verstr - 1)
+				stringmid,donation,pushnotes,strstr,midstr
+				SB_SetText(" $" donation " found")
 			}
-			else {
-				TAGLINE= Profiles FOR Your Windows Games.
-			}
-		ifinstring,pushnotes,$
+	}
+If (PushNotes = "")
+	{
+		PushNotes= %date% %TimeString%
+		Loop, Read, %getversf%
 			{
-				stringgetpos,verstr,pushnotes,$
-				stringgetpos,endstr,pushnotes,.00
-				if (ErrorLevel <> "")
+				sklnum+=1
+				getvern= 
+				ifinstring,A_LoopReadLine,$
 					{
-						strstr:= verstr + 2
-						midstr:= (endstr - verstr - 1)
-						stringmid,donation,pushnotes,strstr,midstr
-						SB_SetText(" $" donation " found")
-					}
-			}
-		If (PushNotes = "")
-			{
-				PushNotes= %date% %TimeString%
-				Loop, Read, %getversf%
-					{
-						sklnum+=1
-						getvern= 
-						ifinstring,A_LoopReadLine,$
-							{
-								stringgetpos,verstr,A_LoopReadLine,$
-								stringgetpos,endstr,A_LoopReadLine,.00
-								if (ErrorLevel <> "")
-									{			
-										strstr:= verstr + 2
-										midstr:= (endstr - verstr - 1)
-										stringmid,donation,A_LoopReadLine,strstr,midstr
-										if (midstr = [PAYPAL])
-											{
-												donation= 00.00
-											}
-										if (donation = "[PAYPAL].00")
-											{
-												donation= 00.00
-											}
-										SB_SetText(" $" donation " found")
-										break
-											
+						stringgetpos,verstr,A_LoopReadLine,$
+						stringgetpos,endstr,A_LoopReadLine,.00
+						if (ErrorLevel <> "")
+							{			
+								strstr:= verstr + 2
+								midstr:= (endstr - verstr - 1)
+								stringmid,donation,A_LoopReadLine,strstr,midstr
+								if (midstr = [PAYPAL])
+									{
+										donation= 00.00
 									}
+								if (donation = "[PAYPAL].00")
+									{
+										donation= 00.00
+									}
+								SB_SetText(" $" donation " found")
+								break
+									
 							}
-								continue
 					}
+						continue
 			}
-		if (donation = "")
-			{
-				donation= 00.00				
-			}
-			
-		FileDelete, %DEPL%\!gitupdate.cmd
+	}
+if (donation = "")
+	{
+		donation= 00.00				
+	}
+FileDelete, %DEPL%\!gitupdate.cmd
+if (SiteUpdate = 1)
+	{
 		FileAppend, mkdir "%GITD%\site"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, mkdir "%GITD%\src"`n,%DEPL%\!gitupdate.cmd
 		FileAppend, del /s /q "%GITD%\src\*.ini"`n,%DEPL%\!gitupdate.cmd
