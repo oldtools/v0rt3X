@@ -2330,8 +2330,6 @@ guicontrol,disable,REPODATS
 guicontrol,disable,PortVer
 guicontrol,disable,INITINCL
 guicontrol,disable,DevlVer
-
-
 readme= 
 FileMove,%SKELD%\ReadMe.md, %DEPL%\ReadMe.bak,1
 FileRead,readme,%SKELD%\src\ReadMe.set
@@ -2344,8 +2342,6 @@ FileAppend,%readme%,%SKELD%\ReadMe.md
 FileCopy,%SKELD%\ReadMe.md,%GITD%,1
 FileCopy,%SKELD%\ReadMe.md,%SITEDIR%,1
 FileCopy,%SKELD%\ReadMe.md,%SKELD%\License.md,1
-FileDelete, %SKELD%\bin\Setup.exe
-FileDelete,%SKELD%\bin\setup.tmp
 FileMove,%SKELD%\src\Setup.ahk,%DEPL%\Setup.bak,1
 FileCopy, %SKELD%\src\working.ahk, %SKELD%\src\Setup.tmp,1
 sktmp= 
@@ -2367,9 +2363,6 @@ StringReplace,sktmv,sktmv,[RJ_EXE],%RJ_PROJ%,All
 stringreplace,sktmv,sktmv,`/`*  `;`;[DEBUGOV],,All
 stringreplace,sktmv,sktmv,`*`/  `;`;[DEBUGOV],,All
 FileAppend,%sktmv%,%SKELD%\src\Setup.ahk
-FileDelete,%SKELD%\src\Setup.tmp
-FileDelete,%SKELD%\bin\jkvtx.exe
-
 FileDelete,%SKELD%\src\%RJEXFN%.ahk
 FileRead, itmv,%SKELD%\src\jkvtx.ahk
 StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
@@ -2387,7 +2380,7 @@ if (BCANC = 1)
 	}
 	
 SB_SetText(" Compiling ")
-if (OvrStable = 1)
+if (ServerPush = 1)
 	{
 		ifexist, %DEPL%\%RJPRJCT%-installer.exe
 			{
@@ -2406,6 +2399,10 @@ if (OvrStable = 1)
 	
 if (INITINCL = 1)
 	{		
+		FileDelete,%SKELD%\src\Setup.tmp
+		FileDelete,%SKELD%\bin\%RJEXFN%.exe
+		FileDelete, %SKELD%\bin\Setup.exe
+		FileDelete,%SKELD%\bin\setup.tmp
 		RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
@@ -2615,6 +2612,7 @@ ifExist, %DEPL%\%RJPRJCT%-%date%%buildnum%.zip
 		dvps:= dvlsize / 1000
 		StringLeft,dvms,dvps,4
 	}
+guicontrol,,progb,90
 StringReplace,skelhtml,skelhtml,[RSHA1],%ApndSHA%,All
 StringReplace,skelhtml,skelhtml,[WEBURL],https://%GITUSER%.github.io,All
 StringReplace,skelhtml,skelhtml,[PAYPAL],%donation%
@@ -2622,8 +2620,29 @@ StringReplace,skelhtml,skelhtml,[GIT_USER],%GITUSER%,All
 StringReplace,skelhtml,skelhtml,[GITSRC],%GITSRC%,All
 StringReplace,skelhtml,skelhtml,[REVISION],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/Installer/%RJPRJCT%.zip,All
 StringReplace,skelhtml,skelhtml,[PORTABLE],%GITSWEB%/%gituser%/%RJPRJCT%/releases/download/portable/portable.zip,All
-
 StringReplace,skelhtml,skelhtml,[RJ_PROJ],%RJPRJCT%,All
+HTMLINJ=
+acntv=
+Loop,parse,RJPRJCT,`
+	{
+		if ((acntv = "")&&(A_LoopField = ""))
+			{
+				continue
+			}
+		acntv+=1
+		if (acntv = 1)
+			{
+				stringreplace,skelhtml,skelhtml,[-|-],%A_LoopField%,All
+				continue
+			}
+		HTMLINJ.= "<h1>" . A_LoopField . "</h1>" . "`n" . "<h1> </h1>" . "`n"
+		if (acntv = 30)
+			{
+				HTMLINJ.= "..."
+				break
+			}
+	}
+StringReplace,skelhtml,skelhtml,<!--[HTMLINJECTION]-->,%HTMLINJ%,All
 
 StringReplace,skelhtml,skelhtml,[GITUSER],%gituser%,All
 StringReplace,skelhtml,skelhtml,[RELEASEPG],%GITSWEB%/%gituser%/%RJPRJCT%/releases,All
@@ -2644,6 +2663,7 @@ if (SiteUpdate = 1)
 				FileCopy,%SKELD%\site\*,%SITEDIR%,1
 				FileCopy,%SKELD%\site\img\*,%SITEDIR%\img,1			
 			}	
+		FileAppend,%skelhtml%,%SITEDIR%\index.html
 	}
 	
 	
