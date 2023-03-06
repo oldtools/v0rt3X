@@ -16,7 +16,8 @@ EnvGet,xprgfls,PROGRAMFILES(X86)
 EnvGet,DRVRT,WINDIR
 rootiterate=%LADTA%|%A_AppData%|%USRPRF%|%xprgfls%|%A_Temp%|%PBLCFLDR%|%DRVSYSTM%|%PBLCFLDR%
 
-
+CENX:=(A_ScreenWidth/2)-(250/2)
+CENY:=(A_ScreenHeight/2)-(600/2)
 Loop %0%  
 	{
 		GivenPath := %A_Index%
@@ -873,27 +874,103 @@ if (prestk2 <> "")
 				Run,%precrun%%wscrop%,%A_ScriptDir%,%runhow%,precpid
 				iniwrite,%precpid%,%curpidf%,3_Pre,pid
 			}
+			
 		if (prestk2 = "CLOUD")
 			{
 				;gosub, PRECLOUD
 			}
 	}
 return
+NewList:
+guicontrolget,NList,,NewList
+return
+
+AltLaunch:
+stringsplit,NListP,nlist,/
+plfp=%NlistP2%\%NlistP1%%A_SPace%
+
+stringleft,plfpchk,plfp,1
+if (plfpchk = "\")
+stringtrimleft,plfp,plfp,1
+splitpath,plfp,,pldr
+linkOptions=
+plarg=
+nrx=
+goto, begin
+
 
 begin:
 GUIMSG:= "Loading " .  gmnamex . "`n" . JOYMESSAGE 
 gosub, TTIPS
+exiting=
 if (nrx > 2)
 	{
+		nxel=
+		Blockinput,off
+		awv=	
+		ivex=
+		ivev=
+		Loop,parse,exe_list,|
+			{
+				ivev=
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				awv+=1	
+				if (awv <> 1)
+					{
+						splitpath,A_loopField,,ivev
+						if (!instr(ivex,ivev)&& (ivev <> ""))
+							{
+								ivev= %ivev%
+							}	   
+						Loop,Files,%ivev%\*.exe
+							{
+								if (A_LoopFileName = "")
+									{
+										continue
+									}
+								ivex.= A_LoopFilePath . "|"
+							}
+					}
+				splitpath,A_LoopField,ExeName,exePath
+				nxel.= ExeName . "/" . exePath . "|"
+			}	
+		Loop,parse,ivex,|
+				{
+					stringreplace,kivh,A_loopField,\,,All
+					if !instr(exe_list,A_LoopField)
+						{
+							exe_list.= A_LoopField . "|"
+						}
+				}
+		exiting=1	
 		GUIMSG:= "reload exceeded marker`nBe sure you have the launched executable in the exe_list for this game."
-		gosub, TTIPS
+		Gui +hWndhMainWnd
+		Gui,Color,%bgcolor%
+		Gui,Font,%fontColor% %fontXmed%,%fontName%
+		Gui,Add,Listbox,  w440 h440 vNewlist gNewList,|%exe_list%
+		Gui,add,Button, w200 h30 vAltLaunch gAltLaunch, LAUNCH
+		Gui, Show,w450 h480, %RJ_EXE%
+		GUicontrol,choose,NewList,1
+		guicontrol,focus,AltLaunch
+		Return
+	}
+if (exiting = 1)
+	{
 		goto, givup
 	}
+gosub, TTIPS
 Blockinput, Off	
 GUIMSG:=
 gosub, TTIPS
 tvi= %plfp%%linkoptions%%plarg%
 gosub,TransformVarInput
+GUIMSG= %tvo%`n%pldr%
+gosub, TTIPS
+sleep, 4000
+Gui, Destroy
 Run, %tvo%,%pldr%,max UseErrorLevel,dcls
 nerlv= %errorlevel%
 GUIMSG:= JOYMESSAGE
@@ -908,12 +985,13 @@ appcheck:
 sleep, 1000
 Loop,parse,exe_list,|
 	{
-		apchkn+=1
 		if (A_LoopField = "")
 			{
 				continue
 			}
-		process,exist,%A_LoopField%
+		apchkn+=1
+		splitpath,A_LoopField,ProcEXN
+		process,exist,%ProcEXN%
 		erahkpid= %errorlevel%
 		if (erahkpid <> 0)
 			{
@@ -973,7 +1051,8 @@ if (exe_list <> "")
 	{
 		Loop,parse,exe_list,|
 			{
-				process,close,%A_LoopField%
+				splitpath,A_LoopField,ProcEXN
+				process,close,%ProcEXN%
 			}
 		GUIMSG:= ""
 		Gosub, TTIPS
@@ -1097,6 +1176,8 @@ Ctrl & f12::
 nosave= 
 GUIMSG:= "Keyboard / Mouse are disabled`n:::Please be patient:::"
 gosub, TTIPS
+
+
 givup:
 filedelete,%curpidf%
 GUIMSG:= "...Quitting..."
@@ -1595,7 +1676,8 @@ if (exe_list <> "")
 	{
 		Loop,parse,exe_list,|
 			{
-				process,close,%A_LoopField%
+				splitpath,A_LoopField,ProcEXN
+				process,close,%ProcEXN%
 			}
 	}
 Run,%comspec%  /c "" taskkill /f /im "%plnkn%*",,hide
@@ -1780,6 +1862,7 @@ loop, 16
 			}
 	}
 return
+
 NameTuning:
 StringReplace,gmnamex,tempn,%A_Space%Launcher,,All
 StringReplace,gmnamex,gmnamex,_Launcher,,All

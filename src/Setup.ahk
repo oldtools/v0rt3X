@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-01-21 10:50 PM"
-VERSION := "0.99.84.21"
+RELEASE := "2023-03-06 12:10 PM"
+VERSION := "0.99.84.22"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -5355,6 +5355,12 @@ Loop, %fullstn0%
 							iniwrite,%OutDir%,%gamecfg%,CONFIG,Install_Folder
 							iniwrite,%prnmx%,%gamecfg%,CONFIG,Exe_File
 							killist:
+							invar= %gmnamed%
+							gosub, stripvar
+							stringreplace,invarx,invarx,.,,All
+							t_inv:= % (_%invarx%)
+							iniwrite,%exe_list%,%home%\cst.tmp,%invarx%,exe
+							bvar:= % t_inv
 							if ((KILLCHK = 1)&&(klist = ""))
 								{										   
 									klist= |%prnmx%|
@@ -5362,7 +5368,8 @@ Loop, %fullstn0%
 										{
 											splitpath,A_LoopFileFullPath,tmpfn,tmpfd,,tmpfo
 											abson=
-											abexe=|%tmpfn%|
+											stringreplace,tmpfz,A_LoopFileFullPath,%tlevel%\,,All
+											abexe=|%A_LoopFileFullPath%|
 											Loop,parse,absol,`r`n
 												{
 													if (A_LoopField = "")
@@ -5377,14 +5384,21 @@ Loop, %fullstn0%
 												}
 											if (!instr(klist,abexe) && (abson = ""))
 												{
-													klist.= tmpfn . "|"
+													klist.= A_LoopFileFullPath . "|"
 												}
 										}
 									iniread,nklist,%gamecfg%,CONFIG,exe_list
 									if ((nklist = "")or(nklist = "ERROR")or(OVERWRT = 1))
 										{
 											iniwrite,%klist%,%gamecfg%,CONFIG,exe_list
+										iniwrite,%klist%,%home%\cst.tmp,%invarx%,exe
 										}
+									if (nklist <> "")
+									  {
+										nklist.= klist
+										iniwrite,%nklist%,%gamecfg%,CONFIG,exe_list
+										iniwrite,%nklist%,%home%\cst.tmp,%invarx%,exe
+									  }
 								}
 						}
 				}
