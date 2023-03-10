@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-03-06 12:10 PM"
-VERSION := "0.99.84.22"
+RELEASE := "2023-03-09 7:04 PM"
+VERSION := "0.99.84.30"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -1208,7 +1208,7 @@ Loop,parse,MAPCFGS,|
 		if (abb = "")
 			{
 				lkgn:= gnm . "\" . gnm . ".exe"
-				Loop,prglp,|
+				Loop,parse,prglp,|
 					{
 						if fileexist(A_LoopField . "\" . lkgn)
 							{
@@ -4161,7 +4161,7 @@ Loop,parse,simpnk,`r`n
 			}
 		fenx= %A_LoopField%
 		splitpath,fenx,fenf,fendir,fenxtn,fenol
-		Loop,NSPLIT,|
+		Loop,Parse,NSPLIT,|
 			{
 				if (A_LoopField = "")
 					{
@@ -7379,7 +7379,7 @@ SB_SetText("")
 return
 
 BINGETS:
-Loop,6,
+Loop,6
 	{
 		URLNX%A_Index%:= ""
 	}
