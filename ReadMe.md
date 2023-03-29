@@ -14,94 +14,94 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.84.30
+This Version:0.99.84.36
 
-This Build: 2023-03-09 7:04 PM
+This Build: 2023-03-29 3:03 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
 v0rt3X
 +-- bin
-Â¦   +-- aria2c.exe
-Â¦   +-- 7za.exe
-Â¦   +-- lrDeploy.exe
-Â¦   +-- NewOSK.exe
-Â¦   +-- v0rt3X.exe
-Â¦   +-- Setup.exe
-Â¦   +-- Source_Builder.exe
-Â¦   +-- Update.exe
-Â¦
+¦   +-- aria2c.exe
+¦   +-- 7za.exe
+¦   +-- lrDeploy.exe
+¦   +-- NewOSK.exe
+¦   +-- v0rt3X.exe
+¦   +-- Setup.exe
+¦   +-- Source_Builder.exe
+¦   +-- Update.exe
+¦
 +-- site
-Â¦   +-- img
-Â¦       +-- Install.png
-Â¦       +-- key.png
-Â¦       +-- runas.png
-Â¦       +-- Setup.png
-Â¦       +-- Tip.png
-Â¦       +-- Update.png
+¦   +-- img
+¦       +-- Install.png
+¦       +-- key.png
+¦       +-- runas.png
+¦       +-- Setup.png
+¦       +-- Tip.png
+¦       +-- Update.png
 |
-Â¦   +-- index.html
-Â¦   +-- Hermit-Regular.otf
-Â¦   +-- key.ico
-Â¦   +-- ReadMe.md
-Â¦   +-- TruenoLt.otf
-Â¦   +-- version.txt
-Â¦
+¦   +-- index.html
+¦   +-- Hermit-Regular.otf
+¦   +-- key.ico
+¦   +-- ReadMe.md
+¦   +-- TruenoLt.otf
+¦   +-- version.txt
+¦
 +-- src
-Â¦   +-- absol.set
-Â¦   +-- am_Blank.set
-Â¦   +-- am_GameTemplate.set
-Â¦   +-- am_KBM_Template.set
-Â¦   +-- am_DesktopTemplate.set
-Â¦   +-- am_Trigger.set
-Â¦   +-- ax_Blank.set
-Â¦   +-- ax_KBM_Template.set
-Â¦   +-- ax_GameTemplate.set
-Â¦   +-- ax_DesktopTemplate.set
-Â¦   +-- ax_Trigger.set
-Â¦   +-- BTT.ahk
-Â¦   +-- build.ahk
-Â¦   +-- Buildtools.set
-Â¦   +-- cmdtemplate.set
-Â¦   +-- Deploy.ico
-Â¦   +-- exclfnms.set
-Â¦   +-- exez.set
-Â¦   +-- Gdip_All.ahk
-Â¦   +-- Install.ico
-Â¦   +-- jk_GameTemplate.set
-Â¦   +-- jk_DestktopTemplate.set
-Â¦   +-- jk_Trigger.set
-Â¦   +-- ks_Blank.set
-Â¦   +-- ks_GameTemplate.set
-Â¦   +-- ks_DesktopTemplate.set
-Â¦   +-- ks_Trigger.set
-Â¦   +-- Joystick.ico
-Â¦   +-- jkvtx.ahk
-Â¦   +-- lrDeploy.ahk
-Â¦   +-- lrDeploy.set
-Â¦   +-- newosk.ahk
-Â¦   +-- NewOSK.ico
-Â¦   +-- NonNull.ahk
-Â¦   +-- ox_DesktopTemplate.set
-Â¦   +-- ox_GameTemplate.set
-Â¦   +-- ox_Trigger.set
-Â¦   +-- rabsol.set
-Â¦   +-- readme.set
-Â¦   +-- repos.set
-Â¦   +-- RJDB.set
-Â¦   +-- rlsgrps.set
-Â¦   +-- Run.ico
-Â¦   +-- Setup.ico
-Â¦   +-- Setup.ahk
-Â¦   +-- Source_Builder.ico
-Â¦   +-- steam.json
-Â¦   +-- unlike.set
-Â¦   +-- unsel.set
-Â¦   +-- Update.ahk
-Â¦   +-- xp_GameTemplate.set
-Â¦   +-- xp_DesktopTemplate.set
-Â¦   +-- xp_Trigger.set
-Â¦
+¦   +-- absol.set
+¦   +-- am_Blank.set
+¦   +-- am_GameTemplate.set
+¦   +-- am_KBM_Template.set
+¦   +-- am_DesktopTemplate.set
+¦   +-- am_Trigger.set
+¦   +-- ax_Blank.set
+¦   +-- ax_KBM_Template.set
+¦   +-- ax_GameTemplate.set
+¦   +-- ax_DesktopTemplate.set
+¦   +-- ax_Trigger.set
+¦   +-- BTT.ahk
+¦   +-- build.ahk
+¦   +-- Buildtools.set
+¦   +-- cmdtemplate.set
+¦   +-- Deploy.ico
+¦   +-- exclfnms.set
+¦   +-- exez.set
+¦   +-- Gdip_All.ahk
+¦   +-- Install.ico
+¦   +-- jk_GameTemplate.set
+¦   +-- jk_DestktopTemplate.set
+¦   +-- jk_Trigger.set
+¦   +-- ks_Blank.set
+¦   +-- ks_GameTemplate.set
+¦   +-- ks_DesktopTemplate.set
+¦   +-- ks_Trigger.set
+¦   +-- Joystick.ico
+¦   +-- jkvtx.ahk
+¦   +-- lrDeploy.ahk
+¦   +-- lrDeploy.set
+¦   +-- newosk.ahk
+¦   +-- NewOSK.ico
+¦   +-- NonNull.ahk
+¦   +-- ox_DesktopTemplate.set
+¦   +-- ox_GameTemplate.set
+¦   +-- ox_Trigger.set
+¦   +-- rabsol.set
+¦   +-- readme.set
+¦   +-- repos.set
+¦   +-- RJDB.set
+¦   +-- rlsgrps.set
+¦   +-- Run.ico
+¦   +-- Setup.ico
+¦   +-- Setup.ahk
+¦   +-- Source_Builder.ico
+¦   +-- steam.json
+¦   +-- unlike.set
+¦   +-- unsel.set
+¦   +-- Update.ahk
+¦   +-- xp_GameTemplate.set
+¦   +-- xp_DesktopTemplate.set
+¦   +-- xp_Trigger.set
+¦
 +-- README.md
 ```
 # Documentation

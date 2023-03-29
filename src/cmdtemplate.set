@@ -1,4 +1,4 @@
-
+﻿
 @echo off
 cd "%~dp0"
 for /f "tokens=" %%a in ("Game.ini") do if not exist ("Game.ini") goto ZETA

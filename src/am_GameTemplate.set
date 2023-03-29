@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <gamecontroller configversion="19" appversion="2.23">
     <!--The SDL name for a joystick is included for informational purposes only.-->
     <sdlname></sdlname>

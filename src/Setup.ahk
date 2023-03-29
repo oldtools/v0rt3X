@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-03-09 7:04 PM"
-VERSION := "0.99.84.30"
+RELEASE := "2023-03-29 3:03 PM"
+VERSION := "0.99.84.36"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -2312,20 +2312,37 @@ guicontrol,,_PREDDT,%predd%
 return
 
 INITALL:
+FileDelete,%home%\RJDB.ini
 FileRead,RJTMP,%source%\RJDB.set
+stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
+Loop, parse, RJTMP,`n`r
+{
+	if (A_LoopField = "")
+		{
+			Continue
+		}
+	lpab= %A_LoopField%	
+	stringsplit,avx,lpab,=
+	stringleft,aba,lpab,1
+	if (aba = "[")
+		{
+			cursc= %lpab%
+			stringreplace,cursc,cursc,[,,All
+			stringreplace,cursc,cursc,],,All
+			continue
+		}
+	stringreplace,aval,lpab,%avx1%=,,
+	iniwrite,%aval%,%home%\RJDB.ini,%cursc%,%avx1%
+}
 Loop,parse,STDVARS,|
-    {
-        %A_LoopField%:= ""
-    }
+{
+	%A_LoopField%:= ""
+}
 initz= 1
 if !fileexist(cacheloc)
-	{
-		filecreatedir,%cacheloc%
-	}
-stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
-FileDelete,%home%\RJDB.ini
-fileappend,`n,%home%\RJDB.ini,UTF-8-RAW
-FileAppend,%RJTMP%,%home%\RJDB.ini,UTF-8-RAW
+{
+	filecreatedir,%cacheloc%
+}
 return
 
 RESET:
@@ -2880,6 +2897,12 @@ if (fileExist(Steam_ROOT)&& !instr(Steam_directory,Steam_ROOT))
 							*/	
 						}
 				}
+	}
+	else {
+		if fileexist(STEAM_ROOT)
+			{
+				STEAM_ROOT.= "|"
+			}
 	}
 STMLKUP=
 Loop,parse,dralbet,|
@@ -5020,7 +5043,26 @@ Loop, %fullstn0%
 			cfgcopied:= ""
 			if (!FileExist(gamecfg)or(OVERWRT = 1))
 				{
-					Filecopy,%RJDBINI%,%gamecfg%
+					FileRead,RJTMP,%RJDBINI%
+					Loop, parse, RJTMP,`n`r
+						{
+							if (A_LoopField = "")
+								{
+									Continue
+								}
+							lpab= %A_LoopField%	
+							stringsplit,avx,lpab,=
+							stringleft,aba,lpab,1
+							if (aba = "[")
+								{
+									cursc= %lpab%
+									stringreplace,cursc,cursc,[,,All
+									stringreplace,cursc,cursc,],,All
+									continue
+								}
+							stringreplace,aval,lpab,%avx1%=,,
+							iniwrite,%aval%,%gamecfg%,%cursc%,%avx1%
+						}
 					cfgcopied:= 1
 					klist:= ""
 				}
@@ -5225,8 +5267,16 @@ Loop, %fullstn0%
 						}
 					if (GMCONF = 1)
 						{
-							Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
-							Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
+							Player1x=
+							Player2x=
+							Player3x=
+							Player4x=
+							MediaCenter_ProfileX=
+							if ((Mapper <> "")&&(Mapper <> 0))
+									{
+										Player1x= %sidn%\%subfldrep%%GMNAMEX%.%Mapper_Extension%
+										Player2x= %sidn%\%subfldrep%%GMNAMEX%_2.%Mapper_Extension%
+									}
 							
 							
 							stringreplace,pl1ovr,pl1ovr,<,,All
@@ -5256,8 +5306,11 @@ Loop, %fullstn0%
 									MediaCenter_Template:= mcpovr
 								}
 								
-							SplitPath,MediaCenter_Template,MediaCenter_TemplateName	
-							MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_TemplateName%	
+							SplitPath,MediaCenter_Template,MediaCenter_TemplateName
+							if ((Mapper <> "")&&(Mapper <> 0))
+								{
+									MediaCenter_ProfileX= %sidn%\%subfldrep%%MediaCenter_TemplateName%	
+								}
 							if (CENPL1 = 1)
 								{
 									Player1x:= Player1_Template
@@ -5363,7 +5416,8 @@ Loop, %fullstn0%
 							bvar:= % t_inv
 							if ((KILLCHK = 1)&&(klist = ""))
 								{										   
-									klist= |%prnmx%|
+									klist= 
+									;;klist= |%prnmx%|
 									Loop,files,%tlevel%\*.exe,R
 										{
 											splitpath,A_LoopFileFullPath,tmpfn,tmpfd,,tmpfo
@@ -5405,55 +5459,55 @@ Loop, %fullstn0%
 			if ((GMJOY = 1) && (subfldrep = ""))
 				{
 					IF ((CENPL1 <> 1)or(Player1_Template = "DISABLED"))
-						{							
-							if (Player1_Template <> player1X)
+						{
+							if ((Player1_Template <> player1X)&&if (player1x <> "")&&(Player1_Template <> ""))
 								{
 									Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
-								}
-							if ((errorlevel = 0)or fileexist(player1X))
-								{
-									if (OVERWRT = 1)
+									if ((errorlevel = 0)or fileexist(player1X))
 										{
-											iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
-										}
-									else {
-											if ((G_Player1 = "ERROR")or(G_Player1 = ""))
+											if (OVERWRT = 1)
 												{
 													iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
 												}
 										}
 								}
-						}
-						else {
-							if ((G_Player1 = "ERROR")or(G_Player1 = "")or(OVERWRT = 1))
-								{
-									iniwrite,%Player1_Template%,%gamecfg%,JOYSTICKS,Player1
+							else {
+									if ((G_Player1 = "ERROR")or(G_Player1 = ""))
+										{
+											iniwrite,%player1x%,%GAMECFG%,JOYSTICKS,Player1
+										}
 								}
+						}
+					else {
+						if ((Player1_Template <> "")&&(G_Player1 = "ERROR")or(G_Player1 = "")or(OVERWRT = 1))
+							{
+								iniwrite,%Player1_Template%,%gamecfg%,JOYSTICKS,Player1
+							}
 						}
 					if ((MAPPER <> 3)&&(Mapper <> "")&&(Mapper <> 0))
 						{
 							if ((CENPL2 <> 1)or(Player2_Template = "DISABLED"))
 								{
-									if (Player2_Template <> player2X)
+									if ((Player2_Template <> player2X)&&(player2x <> "")&&(Player2_Template <> ""))
 										{
 											Filecopy,%Player2_Template%,%player2X%,%OVERWRT%
-										}
-									if ((errorlevel = 0)or fileexist(player2x))
-										{
-											if (OVERWRT = 1)
+											if ((errorlevel = 0)or fileexist(player2x))
 												{
-													iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
-												}
-											else {
-													if ((G_Player2 = "ERROR")or(G_Player2 = ""))
+													if (OVERWRT = 1)
 														{
 															iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
 														}
 												}
-										}
+										}												
+									else {
+											if ((G_Player2 = "ERROR")or(G_Player2 = ""))
+												{
+													iniwrite,%player2x%,%GAMECFG%,JOYSTICKS,Player2
+												}
+											}
 								}
 							else {
-								if ((G_Player2 = "ERROR")or(G_Player2 = "")or(OVERWRT = 1))
+								if ((Player2_Template <> "")&&(G_Player2 = "ERROR")or(G_Player2 = "")or(OVERWRT = 1))
 									{
 										iniwrite,%Player2_Template%,%gamecfg%,JOYSTICKS,Player2
 									}
@@ -5461,31 +5515,32 @@ Loop, %fullstn0%
 						}
 					if ((CENMC <> 1)&&(MediaCenter_Template = "DISABLED"))
 						{
-							if (MediaCenter_Template <> MediaCenter_ProfileX)
+							if ((MediaCenter_Template <> MediaCenter_ProfileX) && (MediaCenter_Template <> "") && (Mapper <> "") && (Mapper <> "0"))
 								{
 									Filecopy,%MediaCenter_Template%,%MediaCenter_ProfileX%,%OVERWRT%
-								}
-							if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX)or(MediaCenter_ProfileX = "DISABLED"))
-								{
-									if (OVERWRT = 1)
+									if ((errorlevel = 0)or fileexist(MediaCenter_ProfileX)or(MediaCenter_ProfileX = "DISABLED"))
 										{
-											iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
-										}
-									else {
-											if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = ""))
+											if (OVERWRT = 1)
 												{
 													iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
 												}
 										}
-								}	
+								}
+							else {
+									if ((MediaCenter_ProfileX <> "")&&(G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = ""))
+										{
+											iniwrite,%MediaCenter_ProfileX%,%GAMECFG%,JOYSTICKS,MediaCenter_Profile
+										}
+								}
+						}	
+						else {
+							if ((MediaCenter_ProfileX <> "")&&(G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = "")or(OVERWRT = 1))
+								{
+									iniwrite,%MediaCenter_ProfileX%,%gamecfg%,JOYSTICKS,MediaCenter_Profile
+								}
 						}
-					else {
-						if ((G_MediaCenter_Profile = "ERROR")or(G_MediaCenter_Profile = "")or(OVERWRT = 1))
-							{
-								iniwrite,%MediaCenter_Template%,%gamecfg%,JOYSTICKS,MediaCenter_Profile
-							}
-					}	
 				}
+			
 			JUSTB:= JustBeforeExit
 			JUSTA:= JustAfterLaunch	
 			stringreplace,jlovr,jlovr,<,,All
