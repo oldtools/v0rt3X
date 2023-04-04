@@ -1,4 +1,4 @@
-set pro1=%1%
+﻿set pro1=%1%
 set ProX=%2%
 set ProG=%3%
 
