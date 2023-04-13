@@ -153,7 +153,7 @@ Gui Add, Text, x123 y112 w228 h14 vTxtRls +Right, %GITRLS%
 Gui Add, Button, x355 y108 w20 h19 vSelRls gSelRls, F
 
 Gui Add, Button, x16 y130 w13 h17 vDwnNSIS gDwnNSIS, V
-Gui Add, Text, x123 y134 w228 h14 vTxtNSIS +Right, %NSIS%
+Gui Add, Text, x123 y134 w228 h14 vTxtNSIS +Right, %NSISH%
 Gui Add, Button, x355 y130 w20 h19 vSelNSIS gSelNSIS, F
 
 Gui Add, Button, x16 y152 w13 h17 vDwnAHK gDwnAHK, V
@@ -185,7 +185,7 @@ Gui Add, Edit, x123 y310 w235 h21 vUVER gUVER, %UPDTURL%
 Gui Add, Edit, x123 y333 w235 h21 vUFLU gUFLU, %UPDTFILE%
 Gui Font,Bold
 Gui Font,Normal
-Gui Add, Edit, x210 y358 w80 h21 right RJEXFN gRJEXFN,%RJEXFN%
+Gui Add, Edit, x210 y358 w80 h21 right vRJEXFN gRJEXFN,%RJEXFN%
 ;Gui Add, Edit, x30 y357 w326 h21 vIURL gIURL, %_GETIPADR%
 Gui Add, Button, x10 y432 w51 h19 vIReset gIReset, reset_all
 Gui Add, Button, x331 y432 w51 h19 vSelDXB gSelDXB, quick
@@ -529,7 +529,7 @@ if !FileExist(GITRLS)
 		SB_SetText("gh.exe not defined")
 		return
 	}
-if !FileExist(NSIS)
+if !FileExist(NSISH)
 	{
 		SB_SetText("makensis.exe not defined")
 		return
@@ -674,7 +674,7 @@ Loop,parse,BLDITEMS,|
 			{
 				gosub, GetAHKZ
 			}
-		if !FileExist(NSIS)
+		if !FileExist(NSISH)
 			{
 				gosub, GetNSIS
 			}
@@ -809,6 +809,7 @@ if ((RJEXFN = "")or(RJEXFN = "v0rt3X"))
 			}
 		guicontrol,,RJEXFN,
 		guicontrol,,RJEXFN,%RJEXFN%
+		iniwrite,%RJEXFN%,%SKOPT%,GLOBAL,Exe_Name	
 		gui,submit,nohide
 		return
 	}
@@ -1639,7 +1640,7 @@ ifnotexist, %nsisv%
 	}
 NSISD= 
 NSISDT= 
-NSIS= 
+NSISH= 
 NSISDT= %binhome%
 if (autoinstall = 1)
 	{
@@ -2202,7 +2203,7 @@ Loop, Read, %SKOPT%
 				{
 					if ((curlz <> "")&&(curlz <> "ERROR"))
 						{
-							NSIS= %curlz%
+							NSISH= %curlz%
 						}
 				}
 		if (curvl1 = "Compiler_Directory")
@@ -2388,7 +2389,8 @@ StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
 StringReplace,itmv,itmv,[CURV],%vernum%,All
 StringReplace,itmv,itmv,[RJ_PROJ],%RJPRJCT%,All
 StringReplace,itmv,itmv,[RJ_EXE],%RJEXFN%,All
-fileappend, %itmv%,%SKELD%\src\%RJEXFN%.ahk,UTF-8
+fileDelete,%SKELD%\src\%RJEXFN%.ahk,UTF-8
+fileappend,%itmv%,%SKELD%\src\%RJEXFN%.ahk,UTF-8
 if (BCANC = 1)
 	{
 		SB_SetText(" Cancelling Compile ")
@@ -2715,7 +2717,7 @@ if (ServerPush = 1)
 	}
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 FileDelete, %DEPL%\gpush.cmd
-fileappend,set PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%`n,%DEPL%\gpush.cmd		,UTF-8
+fileappend,set "PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%"`n,%DEPL%\gpush.cmd		,UTF-8
 fileappend,cd "%GITROOT%"`n,%DEPL%\gpush.cmd,UTF-8
 if (GitPush = 1)
 	{
@@ -2849,7 +2851,7 @@ fileappend, %nsiv%, %DEPL%\lrdeploy.nsi,UTF-8
 SB_SetText("Building Installer")
 FileDelete,%DEPL%\%RJPRJCT%-Installer.exe.bak
 RunWait, %comspec% /c echo.###################  DEPLOYMENT LOG FOR %date%  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-RunWait,"%NSIS%" "%DEPL%\lrdeploy.nsi",,hide
+RunWait,"%NSISH%" "%DEPL%\lrdeploy.nsi",,hide
 ;NSITST:= cmdret(nsicommand)
 buildnum= 
 ifExist,%DEPL%\%RJPRJCT%-Installer.exe

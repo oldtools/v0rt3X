@@ -14,9 +14,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-This Version:0.99.84.40
+This Version:0.99.85.59
 
-This Build: 2023-04-12 9:26 PM
+This Build: 2023-04-12 10:31 PM
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -26,7 +26,7 @@ v0rt3X
 ¦   +-- 7za.exe
 ¦   +-- lrDeploy.exe
 ¦   +-- NewOSK.exe
-¦   +-- .exe
+¦   +-- v0rt3X.exe
 ¦   +-- Setup.exe
 ¦   +-- Source_Builder.exe
 ¦   +-- Update.exe
