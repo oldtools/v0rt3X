@@ -1,4 +1,4 @@
-#NoEnv
+﻿#NoEnv
 #MaxMem 4095
 SendMode Input
 SetWorkingDir %A_ScriptDir%
@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-04-04 2:39 AM"
-VERSION := "0.99.84.49"
+RELEASE := "2023-04-12 9:26 PM"
+VERSION := "0.99.84.40"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -147,7 +147,7 @@ PCGWAPI=https://www.pcgamingwiki.com/api/appid.php?appid=
 STEAMDBI=https://steamdb.info/app/
 DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludeDD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludedD|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
@@ -184,7 +184,8 @@ Loop,parse,chariterate,|
     uv_%A_Index%:= A_LoopField
 }
 RJDBORIJ:= home . "\RJDB.ini"
-if !fileExist(RJDBORIJ)
+RJREPOS:= home . "\repos.ini"
+if (!fileExist(RJDBORIJ)or !fileExist(RJREPOS))
 {
     ASADMIN:= 1
     gosub,INITALL
@@ -352,7 +353,7 @@ if (ToolTips = 1)
 {
     Tltp:= "checked"
 }
-if (IncludeDD = 1)
+if (IncludedD = 1)
 {
     InclDD:= "checked"
 }
@@ -425,7 +426,7 @@ if (Hide_Taskbar = 0)
     taskbarv:= ""
 }
 stmddchk:= ""
-if instr(IncludeDD,"Steam")
+if instr(IncludedD,"Steam")
 {
     stmddchk:= "checked"
 }
@@ -463,9 +464,7 @@ Menu,BGM_RCMenu,Add,,
 Menu,BGM_RCMenu,Add,Disable,BGM_ProgBDisable
 
 Menu,MMCFG_RCMenu,Add,Disable,MMCFGDisable
-Menu,MDCFG_RCMenu,Add,Disable,MDCFGDisable
 Menu,MMCFG_RCMenu,Add,Reset,MMCFGReset
-Menu,MDCFG_RCMenu,Add,Reset,MDCFGReset
 
 Menu,PL1_RCMenu,Add,Disable,PL1Disable
 Menu,PL2_RCMenu,Add,Disable,PL2Disable
@@ -565,7 +564,7 @@ Gui,Tab, 1
 Gui Tab, Setup
 Gui, Add, GroupBox, x18 y18 w277 h638
 
-GUi, Add, Checkbox, x100 y80 h14 vIncludeDD gIncludeDD Right %stmddchk%,<Include>
+GUi, Add, Checkbox, x100 y80 h14 vIncludedD gIncludedD Right %stmddchk%,<Include>
 Gui, Add, DropDownList, x174 y77 w80 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 ;;Gui, Add, Radio, x95 y32 vEXEONLY gEXEONLY checked hidden, Exe`,Cmd`,Bat
 
@@ -654,15 +653,22 @@ Gui, Add, Text, x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
 Gui, Font, cBlack
 
 Gui, Font, Normal
-Gui, Add, Text, x24 y440 w222 h14,<Gaming Configuration File>
+Gui, Add, Text, x24 y440 w222 h14,<Game Mon Config>
+Gui, Add, Radio, x205 y458 w18 h14 vMMResDR gMMResDR hidden,
+Gui, Add, Radio, x223 y458 w18 h14 vMMResTR gMMResTR hidden,
+Gui, Add, Radio, x241 y458 w18 h14 vMMResSR gMMResSR hidden,
+Gui, Add, DropDownList, x64 y456 w95 vMMResDD gMMResDD hidden,
+Gui, Add, DropDownList, x162 y456 w40 vMMResHD gMMResHD hidden,
 Gui, Font, Bold
 Gui, Font, cSilver
 Gui, Add, Button, x25 y456 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
+Gui, Add, Text, x163 y442 h14 vMMResXX hidden,hz __ | [_] [C] [S]
+Gui, Add, Button, x261 y456 w28 vMMResB gMMResB hidden,OK
 Gui, Add, Text, x64 y458 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
 Gui, Font, cBlack
 
 Gui, Font, Normal
-Gui, Add, Text, x24 y478 w214 h14,<MediaCenter/Desktop Configuration File>
+Gui, Add, Text, x24 y478 w214 h14,<HTPC/Desktop Mon Config>
 Gui, Font, Bold
 Gui, Add, Button, x25 y495 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
 Gui, Font, cSilver
@@ -825,6 +831,9 @@ CenPRE_TT := ": CENTRALIZED :`n Each configuration will refer to this singular f
 CenPST_TT := ": CENTRALIZED :`n Each configuration will refer to this singular file for each game's POST-execution programs/scripts`n: UNCHECKED :`n Component will be copied to the profile folder."
 CENTRLCKB_TT :="Joystick profiles, monitor configs and pre/post scritps are ''centralized'' as defined in the GUI `nand not copied to each profile folder."
 CREFLD_TT :="Creates the profile folder"
+MMResDR_TT :="Default Scaling"
+MMResSR_TT :="Stretched Scaling"
+MMResTR_TT :="Centered Scaling"
 ToolTips_TT :="Displays the current process as a tool-tip during game-launch"
 DDINCLD_TT :="Digital Distribution System"
 REMEXCL_TT :="Removes the currently visable path in the dropdown"
@@ -841,7 +850,7 @@ GMJOY_TT :="creates the joystick profiles"
 GMLNK_TT :="creates the shortcuts"
 Hide_TaskBar_TT :="Hides the windows taskbar while game is running"
 INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
-IncludeDD_TT :="Include games from digital distributor to include"
+IncludedD_TT :="Include games from digital distributor to include"
 JALWAIT_TT :="waits for the program to exit"
 JAL_ProgB_TT :=" ''J''ust ''A''fter ''L''aunch`nAssign a program to run after the game is launched`n* (good for trainers or executable-aware programs.)"
 JAL_RC_TT :="disable or download and assign a program after launch"
@@ -864,7 +873,7 @@ MM_ToolB_TT :=" ''M''ulti''M''onitor''T''ool`nAssigns the multimonitor executabl
 MM_Game_ConfigT_TT :="the multimonitor game-configuration template file`n Right_Click to Edit or propagate the selected item"
 MM_MediaCenter_ConfigT_TT :="the MediaCenter/Frontend configuration template file`n Right_Click to Edit or propagate the selected item"
 MultiMonitor_ToolT_TT :="the multimonitor program`n Right_Click to Edit or propagate the selected item"
-MyListView_TT :="The current queue`n The fields marked with ''y'' may be edited to ''1'' for ''on''`n and ''n'' for ''off'' or ''�''`n The fields marked with ''<'' may be edited to the path to any file as an override`n (.cmd,.bat,.ps1,.psm1,.vb,.vbs,.vbe,.wsf,.wse,.sh,.tsch) script files obey localization."
+MyListView_TT :="The current queue`n The fields marked with ''y'' may be edited to ''1'' for ''on''`n and ''n'' for ''off'' or ''Ø''`n The fields marked with ''<'' may be edited to the path to any file as an override`n (.cmd,.bat,.ps1,.psm1,.vb,.vbs,.vbe,.wsf,.wse,.sh,.tsch) script files obey localization."
 NAMECHK_TT :="Matches guessed names at steam database."
 NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases.`nRight Click to reset the Lookup-Table"
 Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
@@ -1370,7 +1379,138 @@ EXCL_DirB:
         mmtrc:= ""
     return
 
+DCPROG:
+        ADMNV:= ""
+        if (ASADMIN = 1)
+        {
+            ADMNV:= "/RunAsAdmin" . A_Space
+        }
+        filedelete,%home%\cv.xml
+		SB_SetText("Querying Monitor Devices")
+        RunWait, "%MultiMonitor_Tool%" -create="%home%\cv.xml",%home%,hide
+        fileread,cv,%home%\cv.xml
+        vn=
+        Loop,parse,cv,`n`r
+            {
+                if (A_LOopfield = "")
+                    {
+                        continue
+                    }
+                kv= %A_LoopField%
+                if (kv = "</monitor>")
+                    {
+                        vn+=1	
+                        %vn%Nice= %Nice%
+                        %vn%Name= %Name%
+                        %vn%Path= %Path%
+						Menu,addona,Add,%nice%`,%name%`,%path%,ReinHC
+						AL_NM.= name . "|"
+                        continue
+                    }
+                stringsplit,en,kv,<>=
+                if (en2 = "path")
+                    {
+                        Path= %en3%
+                        stringreplace,path,path,?,.,All
+                        stringreplace,path,path,&amp`;,&,All
+                        stringleft,path,path,40
+                        continue
+                    }
+                if (en2 = "name")
+                    {
+                        if instr(en3,"\")
+                            {
+                                name=%en3%
+                                continue
+                            }
+                        Nice= %en3%
+                        continue	
+                    }
+            } 
+			/*
+		dispx=	
+		Loop,%vn%
+        {	
+			za:= A_Index . "Nice"
+			zb:= A_Index . "Name"
+			zc:= A_Index . "Path"
+			va:= % za
+			vb:= % zb
+			vc:= % zc
+            dispx:= va . "`," . vb . "`," . vc
+            Menu,addona,Add,%dispx%,ReinHC
+        }
+		  */
+		SB_SetText("Select your Game Monitor")
+        Menu, addona, Show, x64 y354
+    return
+
+    ReinHC:
+		SB_SetText("Generating Monitor Config Choices")
+		Loop,parse,GUIVARS,|
+			{
+				guicontrol,disable,%A_LoopField%
+			}
+        filedelete,%home%\cv.cmd
+        filedelete,%home%\cv.tmp
+        mondev:= A_ThisMenuItem
+		stringsplit,tspl,mondev,`,
+		splitpath,MultiMonitor_Tool,,MLTMP
+		SB_SetText("Generating Monitor Config Script")
+		FileAppend,pushd "%home%"`n"%MLTMP%\dc64cmd.exe" -monitor="%tspl2%" -listmodes>"%home%\cv.tmp"`nping -n 10 127.0.0.1 > nul`nexit /b`n,%home%\cv.cmd,UTF-8-RAW
+		sleep,4800
+		SB_SetText("Executing Monitor Config Script")
+		Run, %comspec% /c "%home%\cv.cmd",%home%,hide
+		sleep,8000
+		if !fileExist(home . "\" . "cv.tmp")
+			{
+				Runwait, %MLTMP%\dc64cmd.exe -monitor="%tspl2%" -listmodes>>"%home%\cv.tmp",%home%,hide
+				sleep,10000
+				if !fileExist(home . "\" . "cv.tmp")
+					{
+						Run, %comspec% /c ""%MLTMP%\dc64cmd.exe" -monitor=%tspl2% -listmodes>>"%home%\cv.tmp"",%home%,hide
+						;msgbox,,,%comspec% /c ""%MLTMP%\dc64cmd.exe" -monitor=%tspl2% -listmodes>>"%home%\cv.tmp"",3
+						sleep,8000
+					}
+			}
+        monch= %tspl2%
+		SB_SetText("Populating Resolution Options")
+		Fileread,cvtmp,%home%\cv.tmp
+        reslist=
+		ftmp=
+		Loop,parse,cvtmp,`n`r
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				ab5=	
+				lk= %A_LoopField%	
+				stringsplit,ab,lk,%A_Space%%A_Tab%
+				ftmp.= ab1 . " X " . ab2 . A_Space . ab4 . "hz" . A_Space . ab5 .  "`n"
+				if !instr(reslist,ab1 . " X " . ab2)
+					{
+						reslist.= ab1 . " X " . ab2 . "|"
+						continue						
+					}
+			}
+		reslist.= "|" . ab1 . " X " . ab2	
+		Sort,reslist,F RevDir D|		
+		GuiControl,hide,MM_Game_ConfigT	
+		GuiControl,show,MMResDD	
+		GuiControl,show,MMResHD	
+		GuiControl,show,MMResDR	
+		GuiControl,show,MMResXX	
+		GuiControl,show,MMResTX	
+		GuiControl,show,MMResB	
+        GuiControl,,MMResDD,|%reslist%
+		gosub, MMResDD
+		SB_SetText("Select A Resolution and refresh-rate.  Strech or Center is optional")
+    return
+
+
     MMPROG:
+		SB_SetText("Querying Monitor Devices")
         ADMNV:= ""
         if (ASADMIN = 1)
         {
@@ -1405,6 +1545,7 @@ EXCL_DirB:
             dispn%miny%:= ebk2 . "|" . ebw7
             Menu,addonz,Add,%ebw9%|%ebw6%|%ebw7%,XeinHC
         }
+		SB_SetText("Select Game Monitor")
         Menu, addonz, Show, x64 y354
     return
 
@@ -1416,6 +1557,7 @@ EXCL_DirB:
         abn:= 0
         mon_sel:= ""
         miny:= ""
+		SB_SetText("Generating Monitor Resolution Choices")
         Loop,7
         {
             resadx:= ""
@@ -1474,10 +1616,12 @@ EXCL_DirB:
             }
             abn+=1
         }
+		SB_SetText("Select a Monitor Resolution")
         Menu, addonh, Show,x64 y354
     return
 
     TeinHC:
+		SB_SetText("Creating a Monitor Configuration File ")
         splitres1:= ""
         splitres2:= ""
         reschoice:= A_ThisMenuItem
@@ -1508,6 +1652,7 @@ EXCL_DirB:
         iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
         guicontrol, +cLime, MM_Game_ConfigT
         guicontrol,,MM_GAME_ConfigT,%MM_GAME_Config%
+		SB_SetText("Monitor Configuration File Created")
     return
 
     DeviceReturn:
@@ -1552,6 +1697,8 @@ EXCL_DirB:
         iniwrite,%A_SPace%,%RJDBINI%,GENERAL,MultiMonitor_Tool
         iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
         iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
+        iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MMSAVE
+        iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MMLOAD
         Guicontrol,,MultiMonitor_ToolT,
         Guicontrol,,MM_Game_ConfigT,
         Guicontrol,,MM_MediaCenter_ConfigT,
@@ -1576,40 +1723,75 @@ EXCL_DirB:
 
     MM_AUTO:
         MultiMonitor_Tool:= A_Space
+        MultiMonitor_ToolT=
         MM_GAME_Config:= A_Space
         MM_MediaCenter_Config:= A_Space
-        if fileexist(ProgramFiles . "\Multimonitortool.exe")
-        {
-            MultiMonitor_Tool= %ProgramFiles%\Nirsoft\x64\Multimonitortool.exe
-        }
-        if fileexist(ProgramFilesx86 . "\Nirsoft\x64\Multimonitortool.exe")
-        {
-            MultiMonitor_Tool= %ProgramFilesx86%\Nirsoft\x64\Multimonitortool.exe
-        }
-        if fileexist(binhome . "\Multimonitortool.exe")
-        {
-            MultiMonitor_Tool= %binhome%\Multimonitortool.exe
-        }
-        iniwrite,%MultiMonitor_ToolT%,%RJDBINI%,GENERAL,MultiMonitor_Tool
-        if fileexist(home . "\DesktopMonitors.mon")
-        {
-            MM_MediaCenter_Config= %home%\DesktopMonitors.mon
-        }
-        if fileexist(home . "\GameMonitors.mon")
-        {
-            MM_GAME_Config= %home%\GameMonitors.mon
-        }
-        iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
-        iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
-        iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
-        guicontrol,,MultiMonitor_ToolT,%MultiMontior_Tool%
-        guicontrol,,MM_Game_Config,%MM_Game_Config%
-        guicontrol,,MM_MediaCenter_Config,%MM_MediaCenter_Config%
+		MPIter=MultimonitorTool.exe|dc2.exe
+		Loop,parse,MPIter,|
+			{
+				if (A_LoopField = "")
+					{
+						continue
+					}
+				if fileExist(A_ProgramFiles . "\" . A_LoopField)
+					{
+						MultiMonitor_Tool= %A_ProgramFiles%
+						MultiMonitor_ToolT= %A_ProgramFiles%
+					}
+				if fileexist(A_ProgramFiles . "\" . A_LoopFIeld)
+				{
+					MultiMonitor_Tool= %A_ProgramFiles%\%A_LoopField%
+				}
+				if fileexist(A_ProgramFilesx86 . "\Nirsoft\x64\" . A_LoopFIeld)
+				{
+					MultiMonitor_Tool= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
+					MultiMonitor_ToolT= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
+				}
+				if fileexist(binhome . "\" . A_LoopField)
+				{
+					MultiMonitor_Tool= %binhome%\%A_LoopFIeld%
+					MultiMonitor_ToolT= %binhome%\%A_LoopFIeld%
+				}
+				MMLOAD:= "/loadconfig "
+				MMSAVE:= "/saveconfig "
+				monxtn= mon
+				MONGT=MM
+				iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
+				if instr(MultiMonitor_Tool,"dc2.exe")
+					{
+						splitpath,MultiMonitor_Tool,,MMTPTH
+						Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+						MMLOAD:= "-configure="
+						MMSAVE:= "-create="
+						monxtn= xml
+						MONGT=DC
+					}
+				iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
+				iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
+			}
+		if (MultiMonitor_ToolT <> "")
+			{
+				if fileexist(home . "\DesktopMonitors." . monxtn)
+				{
+					MM_MediaCenter_Config= %home%\DesktopMonitors.%monxtn%
+				}
+				if fileexist(home . "\GameMonitors." . monxtn)
+				{
+					MM_GAME_Config= %home%\GameMonitors.%monxtn%
+				}
+				iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
+				iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
+				iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
+				guicontrol,,MultiMonitor_ToolT,%MultiMontior_Tool%
+				guicontrol,,MM_Game_Config,%MM_Game_Config%
+				guicontrol,,MM_MediaCenter_Config,%MM_MediaCenter_Config%
 
-        if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
-        {
-            iniwrite,1,%RJDBINI%,GENERAL,MonitorMode
-        }
+				if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
+				{
+					iniwrite,1,%RJDBINI%,GENERAL,MonitorMode
+				}
+				
+			}
     return
 
     MM_ToolB:
@@ -1617,11 +1799,12 @@ EXCL_DirB:
         if (dchk = "")
         {
             MultiMonitor_ToolT:= ""
-            FileSelectFile,MultiMonitor_ToolT,3,%binhome%,Select File,multimonitor*.exe
+            FileSelectFile,MultiMonitor_ToolT,3,%binhome%,Select File,multimonitor*.exe;dc2.exe
         }
         dchk:= ""
         if ((MultiMonitor_ToolT <> "")&& !instr(MultiMonitor_ToolT,"<"))
         {
+
             MultiMonitor_Tool= %MultiMonitor_ToolT%
             iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
         }
@@ -1631,66 +1814,251 @@ EXCL_DirB:
             return
         }
         guicontrol,,MultiMonitor_ToolT,%MultiMonitor_Tool%
-        if ((MM_Mediacenter_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe"))
+        if ((MM_Mediacenter_Config = "")&& instr(MultiMonitor_ToolT,"MultiMonitorTool.exe")or instr(MultiMonitor_ToolT,"dc2.exe"))
         {
-            msgbox,4100,Setup,Setup the MediaCenter Monitor Profile now?
+			MMSAVE:= "/SaveConfig "
+			MMLOAD:= "/SaveConfig "
+			monxtn= mon
+			MONGT=MM
+			if instr(MultiMonitor_ToolT,"dc2.exe")
+				{
+                    splitpath,MultiMonitor_Tool,,MMTPTH
+					Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+					MMSAVE:= "-create="
+					MMLOAD:= "-configure="
+					monxtn= xml
+					MONGT=DC
+				}
+			msgbox,4100,Setup,Setup the MediaCenter Monitor Profile now?
             ifmsgbox,yes
             {
                 gosub, MMSETUPD
             }
         }
-        if ((MM_GAME_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe"))
+        if ((MM_GAME_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe")or instr(MultiMonitor_Tool,"dc2.exe"))
         {
             msgbox,4100,Setup,Setup the Game Monitor Profile now?`nSelect the game-monitor in the dropdown menu
             ifmsgbox,yes
             {
-                gosub, MMPROG
+                gosub, %MONGT%PROG
             }
         }
-        if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
+        if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_ToolT))
         {
+            MMLOAD:= "/loadconfig "
+            MMSAVE:= "/saveconfig "
+			monxtn= mon
+			MONGT=MM
+            if instr(MultiMonitor_ToolT,"dc2.exe")
+                {
+                    splitpath,MultiMonitor_Tool,,MMTPTH
+					Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+					MMLOAD:= "-configure="
+                    MMSAVE:= "-create="
+					monxtn= xml
+					MONGT=DC
+                }
             iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
             guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
             guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
             guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
+            iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
+            iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
         }
-        guicontrol,,MultiMonitor_ToolT,%MultiMonitor_Tool%
     return
+	MMResDD:
+	gui,submit,nohide
+	GuiControl,,MMResDR,1
+	GuiControl,hide,MMResTR	
+	GuiControl,hide,MMResSR	
+	guicontrolget,MMResDD,,MMRESDD
+	stringreplace,MMResPP,MMResDD,%A_Space%,,All
+	stringsplit,MMResP,MMResPP,X
+	hzlist=
+	Loop,parse,cvtmp,`n`r
+		{
+			if (A_LoopField = "")
+				{
+					continue
+				}
+			ab5=	
+			lk= %A_LoopField%	
+			stringsplit,ab,lk,%A_Space%%A_Tab%
+			if ((ab1 = MMResP1)&& (ab2 = MMResP2)&& !instr(hzlist,ab4))
+				{
+					
+					hzlist.= ab4 . "|"
+					continue						
+				}
+		}
+	hzlist.= "|" . ab4
+	Sort,hzlist,F RevDir D|
+	if instr(ftmp,MMResDD . A_Space . ab4 . "hz" . A_Space . "center")
+		{
+			GuiControl,show,MMResTR	
+		}
+	if instr(ftmp,MMResDD . A_Space . ab4 . "hz" . A_Space . "stretch")
+		{
+			GuiControl,show,MMResSR	
+		}
+	guicontrol,,MMResHD,|%hzlist%
+	gosub, MMResHD
+	;msgbox,,,x=%MMResP1%`ny=%mmresp2%`nzh=%hzlist%
+	return	
+	MMResHD:
+	gui,submit,nohide
+	GuiControl,hide,MMResTR	
+	GuiControl,hide,MMResSR
+	GuiControl,,MMResDR,1
+	guicontrolget,MMResDD,,MMRESDD
+	guicontrolget,MMResHD,,MMRESHD
+		if instr(ftmp,MMResDD . A_Space . MMRESHD . "hz" . A_Space . "center")
+		{
+			GuiControl,show,MMResTR	
+		}
+	if instr(ftmp,MMResDD . A_Space . MMRESHD . "hz" . A_Space . "stretch")
+		{
+			GuiControl,show,MMResSR	
+		}
+	gui,submit,nohide
+	return	
 
+	MMResDR:
+	gui,submit,nohide
+	MMResTR:
+	gui,submit,nohide
+	MMResSR:
+	gui,submit,nohide
+	Return
+	MMResB:
+	Blockinput,on
+	gui,submit,nohide
+	SB_SetText("Querying Monitor Devices")
+	guicontrolget,MMResHD,,MMRESHD
+	guicontrolget,MMResDD,,MMRESDD
+	guicontrolget,MMResDR,,MMRESDR
+	guicontrolget,MMResSR,,MMRESSR
+	guicontrolget,MMResTR,,MMRESTR
+	if (MMresDR = 1)
+		{
+			
+		}
+	GuiControl,hide,MMResDD	
+	GuiControl,hide,MMResHD	
+	GuiControl,hide,MMResXX	
+	GuiControl,hide,MMResTX	
+	GuiControl,hide,MMResDR	
+	GuiControl,hide,MMResTR	
+	GuiControl,hide,MMResSR	
+	GuiControl,hide,MMResB	
+	stringreplace,MMResPP,MMResDD,%A_Space%,,All
+	stringsplit,MMResP,MMResPP,X
+	NCDCOM:= A_Space . "-refresh=" . MMResHD
+	if (MMResTR = 1)
+		{
+			NCDCOM.= A_Space . "-fixedoutput=center"
+		}
+	if (MMResSR = 1)
+		{
+			NCDCOM.= A_Space . "-fixedoutput=stretch"
+		}	
+	Loop,parse,AL_NM,|
+		{
+			if (A_LoopField = "")
+				{
+					continue
+				}
+			if (A_LoopField <> monch)
+				{
+					DCCOM.= A_Space . "-monitor=" . A_LoopField . A_Space . "-detach"
+				}
+		}
+	SB_SetText("Generating Preview")
+	FileDelete,%home%\dcmd.cmd	
+	FileDelete,%home%\cv.xml
+	FileAppend,pushd "%home%"`n"%Display_ChangerCMD%" -monitor="%monch%" -width=%MMResP1% -height=%MMResP2%%NCDCOM% -apply`nping -n 2 127.0.0.1 > nul`n"%Display_ChangerCMD%"%DCCOM% -apply`nping -n 10 127.0.0.1 > nul`nexit /b`n,%home%\dcmd.cmd,UTF-8-RAW
+	Sleep,4000
+	Run, %comspec% /c "%home%\dcmd.cmd",%home%,hide
+	
+	Sleep,8000
+	SB_SetText("...Generating Preview....")
+	Runwait, "%MultiMonitor_Tool%" -create="%home%\cv.xml",%home%,hide
+	tooltip,`n:::::     current resolution-template for games      :::::::`n:::::::            testing           :::::::`n`ncurrent layout:`n%A_Tab%%home%\GameMonitors.xml`n:::::::::::%A_Tab%%A_Tab%:::::::::::::
+	;Msgbox,,,dc=%Display_ChangerCMD%`nncdcom=%NCDCOM%`nDCCOM=%DCCOM%`nmonch=%monch%`nwidth=%MMResP1%`nheight=%MMResP2%
+	Sleep,4000
+	SB_SetText("Setting Desktop Config")
+	ToolTip,
+	Runwait, "%MultiMonitor_Tool%" -configure="%home%\DesktopMonitors.xml",%home%,hide
+	Sleep,2500
+	Blockinput,off
+	SB_SetText("")
+	Msgbox,4100,Correct?,Did the monitor layout look correct for your games?
+	ifmsgbox,yes
+		{
+			Filecopy,%home%\cv.xml,%home%\GameMonitors.xml,1
+			MM_Game_Config= %home%\GameMonitors.xml
+			MM_Game_ConfigT= %MM_Game_Config%
+			guicontrol,,MM_Game_ConfigT,%MM_Game_ConfigT%
+			iniwrite,%MM_Game_Config%,%RJDBINI%,CONFIG,MM_Game_Config
+		} 
+	Loop,parse,GUIVARS,|
+	{
+		guicontrol,enable,%A_LoopField%
+	}
+	GuiControl,show,MM_Game_ConfigT
+	return
+	
     MM_Game_CfgB:
         gui,submit,nohide
         guicontrolget,gmcfg,,MM_Game_ConfigT
         setupmm:= ""
-        if (!fileexist(CFGDIR . "\" . "GameMonitors.mon")or !fileexist(gmcfg))
+		MMLOAD:= "/loadconfig "
+		MMSAVE:= "/saveconfig "
+		monxtn= mon
+		MONGT=MM
+		SB_SetText("Querying Monitor Devices")
+		if instr(MultiMonitor_ToolT,"dc2.exe")
+			{
+				splitpath,MultiMonitor_Tool,,MMTPTH
+				Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+				MMLOAD:= "-configure="
+				MMSAVE:= "-create="
+				monxtn= xml
+				MONGT=DC
+			}
+        if !fileexist(gmcfg)
         {
             msgbox,4100,Setup,Setup the Multimonitor Tool now?
             ifmsgbox,yes
             {
-                gosub, MMPROG
+                gosub, %MONGT%PROG
                 setupmm= 1
             }
         }
-        if ((setupmm = "")or !fileexist(CFGDIR . "\" . "GameMonitors.mon"))
+        if ((setupmm = "")or !fileexist(CFGDIR . "\" . "GameMonitors." . monxtn))
         {
-            FileSelectFile,MM_GAME_ConfigT,35,,Select File,*.cfg; *.mon
+            FileSelectFile,MM_GAME_ConfigT,35,,Select File,*.cfg; *.mon; *.xml
             if ((MM_GAME_ConfigT <> "")&& !instr(MM_GAME_ConfigT,"<"))
             {
                 MM_GAME_Config= %MM_GAME_ConfigT%
-                FileCopy,%MM_GAME_Config%,%home%\GameMonitors.mon
+                splitpath,MM_Game_ConfigT,,,mmcx
+                FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%mmcx%
                 iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
             }
             else {
                 guicontrol,,MM_GAME_ConfigT,
+				SB_SetText("Cleared Game-Monitor Config Location")
                 return
             }
         }
-        if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
+        if (fileexist(MM_Game_Config) && fileexist(MM_MediaCenter_Config) && fileExist(MultiMonitor_Tool))
         {
             iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
             guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
             guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
             guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
         }
+		SB_SetText("Assigned Game-Monitor Config File Location")
         guicontrol,,MM_GAME_ConfigT,%MM_GAME_Config%
     return
 
@@ -1698,7 +2066,7 @@ EXCL_DirB:
         gui,submit,nohide
         guicontrolget,dtcfg,,MM_MediaCenter_ConfigT
         setupmm:= ""
-        if (!fileexist(CFGDIR . "\" . "DesktopMonitors.mon")or !fileexist(dtcfg))
+        if !fileexist(dtcfg)
         {
             msgbox,4100,Setup,Setup the MediaCenter Monitors now?
             ifmsgbox,yes
@@ -1707,13 +2075,13 @@ EXCL_DirB:
                 setupmm= 1
             }
         }
-        if ((setupmm = "")or !fileexist(CFGDIR . "\" . "DesktopMonitors.mon"))
+        if ((setupmm = "")or !fileexist(MM_MediaCenter_Config))
         {
-            FileSelectFile,MM_MediaCenter_ConfigT,35,%home%,Select File,*.cfg;*.mon
+            FileSelectFile,MM_MediaCenter_ConfigT,35,%home%,Select File,*.cfg;*.mon;*.xml
             if ((MM_MediaCenter_ConfigT <> "")&& !instr(MM_MediaCenter_ConfigT,"<"))
             {
                 MM_MediaCenter_Config= %MM_MediaCenter_ConfigT%
-                FileCopy,%MM_MediaCenter_Config%,%home%\DesktopMonitors.mon
+                FileCopy,%MM_MediaCenter_Config%,%home%,1
                 iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
             }
             else {
@@ -2376,10 +2744,27 @@ EXCL_DirB:
     return
 
     INITALL:
-        FileDelete,%home%\RJDB.ini
-        FileRead,RJTMP,%source%\RJDB.set
-        stringreplace,RJTMP,RJTMP,[LOCV],%home%,All
-        Loop, parse, RJTMP,`n`r
+        niniloc= %home%\RJDB.ini
+        FileDelete,%niniloc%
+        FileRead,INIGOT,%source%\RJDB.set
+        stringreplace,INIGOT,INIGOT,[LOCV],%home%,All
+        gosub, reWriteINI
+        niniloc= %home%\repos.ini
+        FileDelete,%niniloc%
+        FileRead,INIGOT,%source%\repos.set
+        gosub, reWriteINI
+        Loop,parse,STDVARS,|
+        {
+            %A_LoopField%:= ""
+        }
+        initz= 1
+        if !fileexist(cacheloc)
+        {
+            filecreatedir,%cacheloc%
+        }
+    return
+    ReWriteINI:
+    Loop, parse, INIGOT,`n`r
         {
             if (A_LoopField = "")
             {
@@ -2396,21 +2781,12 @@ EXCL_DirB:
                 continue
             }
             stringreplace,aval,lpab,%avx1%=,,
-            iniwrite,%aval%,%home%\RJDB.ini,%cursc%,%avx1%
-        }
-        Loop,parse,STDVARS,|
-        {
-            %A_LoopField%:= ""
-        }
-        initz= 1
-        if !fileexist(cacheloc)
-        {
-            filecreatedir,%cacheloc%
+            iniwrite,%aval%,%niniloc%,%cursc%,%avx1%
         }
     return
 
     RESET:
-        Msgbox,260,Reset,Reset the program to default settings?, 5
+        Msgbox,260,Rese  t,Reset the program to default settings?, 5
         ifMsgbox,Yes
         {
             gosub,INITALL
@@ -2438,7 +2814,7 @@ EXCL_DirB:
             filedelete,%home%\MediaCenter2.cfg
             filedelete,%home%\Player1.cfg
             filedelete,%home%\Player2.cfg
-            filedelete,%SRCFILE%
+            filedelete,%SRCFILE%    
             filedelete,%home%\*.tmp
             filedelete,%home%\GameAudio.cmd
             filedelete,%home%\MediaCenterAudio.cmd
@@ -2492,7 +2868,7 @@ EXCL_DirB:
         Guicontrol,,MM_Game_ConfigT,
         Guicontrol,,MM_MediaCenter_ConfigT,
         gosub,MMSETUPD
-        gosub,MMPROG
+        gosub,%MONGT%PROG
     return
 
     WRITEMAPR:
@@ -2911,8 +3287,8 @@ EXCL_DirB:
         }
         if (ACONCAT_ROOT <> "")
         {
-            IncludeDD=0
-            ;iniwrite,0,%RJDBINI%,GENERAL,IncludeDD
+            IncludedD=0
+            ;iniwrite,0,%RJDBINI%,GENERAL,IncludedD
         }
     STEAM_Q:
         STEAM_ROOT:= ""
@@ -3660,15 +4036,23 @@ EXCL_DirB:
     return
 
     MMSETUPD:
+        MMSAVE:= "/SaveConfig " . A_Space
+		monxtn= mon
+        if instr(Multimonitor_Tool,"dc2.exe")
+            {
+                MMSAVE:= "-create="
+                monxtn= xml
+            }
+		mon_loc="%CFGDIR%\DesktopMonitors.%monxtn%"
         Msgbox,,Default Desktop Config,Configure your monitor/s as you would have them for your`nMediaCenter or Desktop`nthen click "OK"
         ifmsgbox,OK
         {
-            FileMove,%home%\DesktopMonitors.mon,%home%\DesktopMonitors.mon.bak
-            RunWait, %multimonitor_tool% /SaveConfig "%CFGDIR%\DesktopMonitors.mon",%home%,hide
-            ifexist,%CFGDIR%\DesktopMonitors.mon
+            FileMove,%home%\DesktopMonitors.%monxtn%,%home%\DesktopMonitors.%monxtn%.bak
+            RunWait, "%multimonitor_tool%" %MMSAVE%"%mon_loc%",%home%,hide
+            ifexist,%CFGDIR%\DesktopMonitors.%monxtn%
             {
-                MM_MEDIACENTER_Config= %CFGDIR%\DesktopMonitors.mon
-                iniwrite,%CFGDIR%\DesktopMonitors.mon,%RJDBINI%,CONFIG,MM_MEDIACENTER_Config
+                MM_MEDIACENTER_Config= %CFGDIR%\DesktopMonitors.%monxtn%
+                iniwrite,%CFGDIR%\DesktopMonitors.%monxtn%,%RJDBINI%,CONFIG,MM_MEDIACENTER_Config
             }
             else {
                 Msgbox,,Failure,The current monitor configuration could not be saved
@@ -3874,7 +4258,7 @@ EXCL_DirB:
         Gui,Listview,MyListView
         guicontrolget,enablelogging,,enablelogging
         guicontrolget,NameChk,,NameChk
-        guicontrolget,IncludeDD,,IncludeDD
+        guicontrolget,IncludedD,,IncludedD
         guicontrolget,BGP_Enable,,BGP_Enable
         guicontrolget,teval,,BGP_TE
         teval:= (teval * 8)
@@ -4007,8 +4391,8 @@ EXCL_DirB:
                             continue
                         }
                         DDLp= %A_LoopField%
-                        iniread,IncludeDD,%RJDBINI%,GENERAL,IncludeDD
-                        if (instr(IncludeDD,DDLp) or (IncludeDD = "") or (IncludeDD = "ERROR"))
+                        iniread,IncludedD,%RJDBINI%,GENERAL,IncludedD
+                        if (instr(IncludedD,DDLp) or (IncludedD = "") or (IncludedD = "ERROR"))
                         {
                             continue
                         }
@@ -5964,23 +6348,23 @@ EXCL_DirB:
                         DDINCLD:
                             gui,submit,nohide
                             guicontrolget,DDINCLD,,DDINCLD
-                            guicontrolget,IncludeDD,,IncludeDD
-                            iniread,IncDD,%RJDBINI%,GENERAL,IncludeDD
+                            guicontrolget,IncludedD,,IncludedD
+                            iniread,IncDD,%RJDBINI%,GENERAL,IncludedD
                             if instr(IncDD,DDINCLD)
                             {
-                                guicontrol,,IncludeDD,1
+                                guicontrol,,IncludedD,1
                                 return
                             }
-                            guicontrol,,IncludeDD,0
+                            guicontrol,,IncludedD,0
                         return
 
-                        IncludeDD:
+                        IncludedD:
                             gui,submit,nohide
-                            guicontrolget,IncludeDD,,IncludeDD
+                            guicontrolget,IncludedD,,IncludedD
                             guicontrolget,DDInc,,DDIncld
-                            iniread,IncDD,%RJDBINI%,GENERAL,IncludeDD
+                            iniread,IncDD,%RJDBINI%,GENERAL,IncludedD
                             guicontrolget,Exclude_Fldr,,EXCLUDE_DirectoryT
-                            if (IncludeDD = 0)
+                            if (IncludedD = 0)
                             {
                                 if ((INcDD = "ERROR")or(IncDD = ""))
                                 {
@@ -6015,13 +6399,13 @@ EXCL_DirB:
                                     }
                                 }
                                 stringreplace,IncDD,IncDD,%DDinc%|,,
-                                iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+                                iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludedD
                                 iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
                                 guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
                                 return
                             }
 
-                            if (IncludeDD = 1)
+                            if (IncludedD = 1)
                             {
                                 if ((INcDD = "ERROR")or(IncDD = ""))
                                 {
@@ -6078,7 +6462,7 @@ EXCL_DirB:
                                 }
                                 stringreplace,IncDD,IncDD,%DDinc%|,,
                                 IncDD.= DDInc . "|"
-                                iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludeDD
+                                iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludedD
                                 iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
                                 guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
                                 return
@@ -6622,10 +7006,22 @@ EXCL_DirB:
                             }
                             Menu,addonp,show
                         return
-
+                        DC2Download:
+                          curemote= _Display_Changer_
+                            gosub, BINGETS
+                            ;msgbox,,,xtractpath="%extractloc%"`nxtractpath="%xtractpath%"`nURLFILE="%URLFILE%"
+                            gosub, DOWNLOADIT
+                            binka=2
+                            binkb=64cmd
+                            Display_ChangerT= %binhome%\DC%binka%.exe
+                            gosub, MM_ToolB
+                            dchk:= ""
+                            SB_SetText("")
+                        return
                         MMDownload:
                             curemote= _MultiMonitorTool_
                             gosub, BINGETS
+                           ;msgbox,,,xtractpath="%extractloc%"`nxtractpath="%xtractpath%"`nURLFILE="%URLFILE%"
                             gosub, DOWNLOADIT
                             MultiMonitor_ToolT= %binhome%\multimonitortool.exe
                             gosub, MM_ToolB
@@ -6725,6 +7121,7 @@ EXCL_DirB:
                             Menu,dwnlbmn,Add
                             Menu,dwnlbmn,DeleteAll
                             Menu,dwnlbmn,Add,MultiMonitorTool,MMdownload
+                            Menu,dwnlbmn,Add,DisplayChanger,DC2download
                             Menu,dwnlbmn,show
                         return
 
@@ -6911,6 +7308,9 @@ EXCL_DirB:
                             Menu,KBM_RCMenu,Show, x52 y224
                         return
 
+                        KeyCfgM:
+                        return
+
                         ResetMprs:
                             Loop,parse,MAPCFGS,|
                             {
@@ -6922,6 +7322,7 @@ EXCL_DirB:
                             }
                             menu,keycfgm,Show
                         return
+
 
                         Menu,dwnlbmn,show
                         prerc:= ""
@@ -7487,7 +7888,7 @@ EXCL_DirB:
                                 }
                                 renfrm:= ""
                                 rento:= ""
-                                iniread,URLFILESPLIT,%source%\repos.set,BINARIES,%curemote%
+                                iniread,URLFILESPLIT,%RJREPOS%,BINARIES,%curemote%
                                 stringsplit,URLNX,URLFILESPLIT,|
                                 URLFILE:= URLNX1
                                 Splitpath,URLFILE,binarcf
@@ -8058,6 +8459,7 @@ EXCL_DirB:
                                 guicontrol,,%InterpXpnd%T,%ExtrpExpnd%
                             return
 
+                            
                             MMCFGDisable:
                                 iniwrite,Disable,%RJDBINI%,CONFIG,MM_Game_Config
                                 guicontrol, +cLime, MM_Game_ConfigT
@@ -8081,7 +8483,7 @@ EXCL_DirB:
                                 iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
                                 gosub,MMSETUPD
                             return
-
+                            
                             MMCFGReset:
                                 if (MultiMonitor_Tool = "")
                                 {
@@ -8091,7 +8493,7 @@ EXCL_DirB:
                                 MM_GAME_Config:= ""
                                 MM_GAME_ConfigT:= ""
                                 iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
-                                gosub,MMPROG
+                                gosub,%MONGT%PROG
                             return
 
                             Pl1Disable:
@@ -9337,6 +9739,10 @@ Class LV_InCellEdit {
    }
 }
 
+RevDir(a1, a2, offset)
+{
+    return offset
+}
 uriDecode(str) {
     Loop
  If RegExMatch(str, "i)(?<=%)[\da-f]{1,2}", hex)

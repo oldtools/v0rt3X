@@ -1,4 +1,4 @@
-
+﻿
 set pro1=%1%
 set ProX=%2%
 for /f "delims=" %%a in ('echo."%pro1%"') do (

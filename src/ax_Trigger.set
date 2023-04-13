@@ -1,4 +1,4 @@
-
+﻿
 set pro1=%1%
 set pro2= --next --profile-controller 2 --profile %2%
 set pro3= --next --profile-controller 3 --profile %3%

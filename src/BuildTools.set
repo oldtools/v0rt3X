@@ -1,4 +1,4 @@
-[BUILDENV]
+﻿[BUILDENV]
 GIT_32=https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/PortableGit-2.37.3-32-bit.7z.exe
 Github_Release_32=https://github.com/cli/cli/releases/download/v2.5.1/gh_2.14.7_windows_amd32.zip
 GIT_64=https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/PortableGit-2.37.3-64-bit.7z.exe
