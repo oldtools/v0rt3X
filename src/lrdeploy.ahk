@@ -2827,7 +2827,7 @@ Loop, parse, INIGOT,`n`r
 				hardval= %avx1%
 			}
 		stringreplace,aval,lpab,%avx1%=,,
-		iniwrite,%hardval%,%INIOUT%,%cursc%,%aval%
+		iniwrite,%aval%,%INIOUT%,%cursc%,%hardval%
 	}
 return
 

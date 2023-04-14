@@ -2,11 +2,11 @@
 
 ## 3 Reasons:
 
-**1.** Mickey Mouse DRM
+**1.** Removing a Mickey Mouse sticker bricked the device and voided the repair warranty 
 
 **2.** Steam has no gaemz
 
-**3.** Civil-disobedience is a consumer-lifestyle choice
+**3.** DRM / Malware concerns
 ## Use Case
 
 Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as
@@ -21,9 +21,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-- This Version: **0.99.85.60**
+- This Version: **0.99.85.61**
 
-- This Build: **2023-04-14 1:30 AM**
+- This Build: **2023-04-14 3:28 AM**
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -106,7 +106,7 @@ v0rt3X
 			│   ├──  unlike.set
 			│   ├──  unsel.set
 			│   ├──  Update.ahk
-			│   ├──  [RJEXE].ahk
+			│   ├──  v0rt3X.ahk
 			│   ├──  xp_GameTemplate.set
 			│   ├──  xp_DesktopTemplate.set
 			│   └──  xp_Trigger.set
