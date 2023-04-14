@@ -2550,7 +2550,7 @@ if (donation = "")
 FileDelete, %DEPL%\!gitupdate.cmd
 if (SiteUpdate = 1)
 	{
-		fileappend, mkdir "%GITD%\site"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend,`nmkdir "%GITD%\site"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, mkdir "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.ini"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.txt"`n,%DEPL%\!gitupdate.cmd,UTF-8
@@ -2690,7 +2690,7 @@ if (SiteUpdate = 1)
 	
 RunWait, %comspec% /c echo.##################  GIT UPDATE  ######################## >>"%DEPL%\deploy.log", ,%rntp%
 SB_SetText(" committing changes to git ")
-RunWait, %comspec% /c " "%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+RunWait, %comspec% /c ""%DEPL%\!gitupdate.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
 fileappend, "%PushNotes%`n",%DEPL%\changelog.txt,UTF-8
 SB_SetText(" Source changes committed.  Files Copied to git.")
 StringReplace,PushNotes,PushNotes,",,All
@@ -2698,7 +2698,7 @@ StringReplace,PushNotes,PushNotes,",,All
 FileDelete, %DEPL%\sitecommit.cmd
 if (SiteUpdate =1)
 	{
-		fileappend,pushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd,UTF-8
+		fileappend,`npushd "%gitroot%\%GITUSER%.github.io"`n,%DEPL%\sitecommit.cmd,UTF-8
 		fileappend,copy /y "%BUILDIR%\site\*.ico" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd,UTF-8
 		fileappend,copy /y "%BUILDIR%\site\img\*.png" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd,UTF-8
 		fileappend,copy /y "%BUILDIR%\site\img\*.svg" "%SITEDIR%"`n,%DEPL%\sitecommit.cmd,UTF-8
@@ -2712,12 +2712,12 @@ RunWait, %comspec% /c echo.##################  SITE COMMIT  ####################
 
 if (ServerPush = 1)
 	{
-		RunWait, %comspec% /c " "%DEPL%\sitecommit.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
+		RunWait, %comspec% /c ""%DEPL%\sitecommit.cmd" "site-commit" >>"%DEPL%\deploy.log"",%BUILDIR%,%rntp%
 		SB_SetText(" Uploading to server ")
 	}
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 FileDelete, %DEPL%\gpush.cmd
-fileappend,set "PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%"`n,%DEPL%\gpush.cmd		,UTF-8
+fileappend,`nset "PATH=`%PATH`%`;%GITAPPDIR%`;%GITRLSDIR%"`n,%DEPL%\gpush.cmd		,UTF-8
 fileappend,cd "%GITROOT%"`n,%DEPL%\gpush.cmd,UTF-8
 if (GitPush = 1)
 	{
@@ -2776,7 +2776,7 @@ guicontrol,,progb,80
 if (GitPush = 1)
 	{
 		RunWait, %comspec% /c echo.###################  GIT DEPLOYMENT PUSH  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-		RunWait, %comspec% /c " "gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
+		RunWait, %comspec% /c ""gpush.cmd" >>"%DEPL%\deploy.log"",%DEPL%,
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 	}
 guicontrol,,progb,100
@@ -2808,26 +2808,26 @@ ReWriteINI:
 Loop, parse, INIGOT,`n`r
 	{
 		if (A_LoopField = "")
-		{
-			Continue
-		}
+			{
+				Continue
+			}
 		lpab= %A_LoopField%
 		stringsplit,avx,lpab,=
 		stringleft,aba,lpab,1
 		if (aba = "[")
-		{
-			cursc= %lpab%
-			stringreplace,cursc,cursc,[,,All
-			stringreplace,cursc,cursc,],,All
-			continue
-		}
-		hardval:= % avx1
+			{
+				cursc= %lpab%
+				stringreplace,cursc,cursc,[,,All
+				stringreplace,cursc,cursc,],,All
+				continue
+			}
+		hardval:= % (avx1)
 		if (hardval = "")
 			{
 				hardval= %avx1%
 			}
 		stringreplace,aval,lpab,%avx1%=,,
-		iniwrite,%aval%,%INIOUT%,%cursc%,%hardval%
+		iniwrite,%hardval%,%INIOUT%,%cursc%,%aval%
 	}
 return
 

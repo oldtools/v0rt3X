@@ -554,7 +554,7 @@ return
 PRE_MON:
 if (MonitorMode > 0)
 	{
-		if instr(MultiMonitor_Tool,"multimonitortool")
+		if instr(MultiMonitor_Tool,"multimonitortool.exe")
 			{
 				gosub, MMPRPMON
 			}
@@ -1512,11 +1512,11 @@ return
 POST_MON:
 if (MonitorMode > 0)
 	{
-		if (instr(MULTIMONITOR_TOOL,"multimonitortool") fileexist(multimonitor_tool) && fileexist(MM_MediaCenter_Config))
+		if (instr(MULTIMONITOR_TOOL,"multimonitortool.exe") or instr(MULTIMONITOR_TOOL,"dc2.exe") && fileexist(multimonitor_tool) && fileexist(MM_MediaCenter_Config))
 			{
 				if (nosave = "")
 					{
-						Run, %MultiMonitor_Tool% %MMSAVE% "%MM_Game_Config%",%mmpath%,hide,dsplo
+						Run, %MultiMonitor_Tool% %MMSAVE%"%MM_Game_Config%",%mmpath%,hide,dsplo
 					}
 				Run, %MultiMonitor_Tool% %MMLOAD%"%MM_MediaCenter_Config%",%mmpath%,hide,dsplo
 			}
@@ -1749,6 +1749,12 @@ SetupINIT:
 nogmnx= WIN32|WIN64|Game|Win|My Documents|My Games|Windows Games|Shortcuts
 nogmne= Launch|Launcher|bat|cmd|exe|Program Files|Program Files (x86)|Windows|Roaming|Local|AppData|Documents|Desktop|%A_Username%|\|/|:|
 CreateSetup= 1
+monxtn= mon
+iniread,mmpst,%home%\RJDB.ini,GENERAL,MultiMonitor_Tool
+if instr(mmpst,"dc2.exe")
+	{
+		monxtn= xml
+	}
 iniread,Game_Profiles,%home%\RJDB.ini,GENERAL,Game_Profiles
 Game_Profiles= %Game_Profiles%\%gmnamex%
 iniread,mapper_extension,%home%\RJDB.ini,JOYSTICKS,mapper_extension
@@ -1767,12 +1773,12 @@ player1= %This_Profile%\%gmnamex%.%mapper_extension%
 FileCopy,%Player1_Template%,%player1%,
 player2= %This_Profile%\%gmnamex%_2.%mapper_extension%
 FileCopy,%Player2_Template%,%player2%,
-Filecopy,%home%\GameMonitors.mon,%This_Profile%\GameMonitors.mon
-Filecopy,%home%\DesktopMonitors.mon,%This_Profile%\DesktopMonitors.mon
+Filecopy,%home%\GameMonitors.%monxtn%,%This_Profile%\GameMonitors.%monxtn%
+Filecopy,%home%\DesktopMonitors.%monxtn%,%This_Profile%\DesktopMonitors.%monxtn%
 Filecopy,%home%\Mediacenter.%mapper_extension%,%This_Profile%\Mediacenter.%mapper_extension%
 FileCopy,%home%\RJDB.ini,%This_Profile%\Game.ini
-iniwrite,%This_Profile%\DesktopMonitors.mon,%Game_Profile%,CONFIG,MM_MEDIACENTER_Config
-iniwrite,%This_Profile%\GameMonitors.mon,%Game_Profile%,CONFIG,MM_Game_Config
+iniwrite,%This_Profile%\DesktopMonitors.%monxtn%,%Game_Profile%,CONFIG,MM_MEDIACENTER_Config
+iniwrite,%This_Profile%\GameMonitors.%monxtn%,%Game_Profile%,CONFIG,MM_Game_Config
 iniwrite,%player1%,%Game_Profile%,JOYSTICKS,Player1
 iniwrite,%player2%,%Game_Profile%,JOYSTICKS,Player2
 iniwrite,%This_Profile%\MediaCenter.%mapper_extension%,%Game_Profile%,JOYSTICKS,MediaCenter_Profile

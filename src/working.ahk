@@ -148,7 +148,7 @@ STEAMDBI=https://steamdb.info/app/
 DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
 GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludedD|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL
-STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
+STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MMLOAD|MMSAVE|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
 DDTC= <$This_prog$><Monitor><Mapper>
@@ -1726,6 +1726,10 @@ DCPROG:
         MultiMonitor_ToolT=
         MM_GAME_Config:= A_Space
         MM_MediaCenter_Config:= A_Space
+		MMLOAD:= A_Space
+		MMSAVE:= A_Space
+		monxtn= mon
+		MONGT=MM
 		MPIter=MultimonitorTool.exe|dc2.exe
 		Loop,parse,MPIter,|
 			{
@@ -1739,53 +1743,60 @@ DCPROG:
 						MultiMonitor_ToolT= %A_ProgramFiles%
 					}
 				if fileexist(A_ProgramFiles . "\" . A_LoopFIeld)
-				{
-					MultiMonitor_Tool= %A_ProgramFiles%\%A_LoopField%
-				}
+					{
+						MultiMonitor_Tool= %A_ProgramFiles%\%A_LoopField%
+					}
 				if fileexist(A_ProgramFilesx86 . "\Nirsoft\x64\" . A_LoopFIeld)
-				{
-					MultiMonitor_Tool= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
-					MultiMonitor_ToolT= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
-				}
+					{
+						MultiMonitor_Tool= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
+						MultiMonitor_ToolT= %A_ProgramFilesx86%\Nirsoft\x64\%A_LoopFIeld%
+					}
 				if fileexist(binhome . "\" . A_LoopField)
-				{
-					MultiMonitor_Tool= %binhome%\%A_LoopFIeld%
-					MultiMonitor_ToolT= %binhome%\%A_LoopFIeld%
-				}
+					{
+						MultiMonitor_Tool= %binhome%\%A_LoopFIeld%
+						MultiMonitor_ToolT= %binhome%\%A_LoopFIeld%
+					}
+			}
+		if instr(MultiMonitor_Tool,"multimonitortool.exe")
+			{
+				iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
 				MMLOAD:= "/loadconfig "
 				MMSAVE:= "/saveconfig "
 				monxtn= mon
-				MONGT=MM
+				MONGT=MM			
+			}
+		if instr(MultiMonitor_Tool,"dc2.exe")
+			{
 				iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
-				if instr(MultiMonitor_Tool,"dc2.exe")
+				splitpath,MultiMonitor_Tool,,MMTPTH
+				Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+				if fileexist(Display_ChangerCMD)
 					{
-						splitpath,MultiMonitor_Tool,,MMTPTH
-						Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
-						MMLOAD:= "-configure="
-						MMSAVE:= "-create="
-						monxtn= xml
-						MONGT=DC
+						iniwrite,%Display_ChangerCMD%,%RJDBINI%,GENERAL,Display_Changer
 					}
-				iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
-				iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
+				MMLOAD:= "-configure="
+				MMSAVE:= "-create="
+				monxtn= xml
+				MONGT=DC
 			}
 		if (MultiMonitor_ToolT <> "")
 			{
 				if fileexist(home . "\DesktopMonitors." . monxtn)
-				{
-					MM_MediaCenter_Config= %home%\DesktopMonitors.%monxtn%
-				}
+					{
+						MM_MediaCenter_Config= %home%\DesktopMonitors.%monxtn%
+					}
 				if fileexist(home . "\GameMonitors." . monxtn)
-				{
-					MM_GAME_Config= %home%\GameMonitors.%monxtn%
-				}
+					{
+						MM_GAME_Config= %home%\GameMonitors.%monxtn%
+					}
 				iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
 				iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
 				iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
 				guicontrol,,MultiMonitor_ToolT,%MultiMontior_Tool%
 				guicontrol,,MM_Game_Config,%MM_Game_Config%
 				guicontrol,,MM_MediaCenter_Config,%MM_MediaCenter_Config%
-
+				iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
+				iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
 				if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
 				{
 					iniwrite,1,%RJDBINI%,GENERAL,MonitorMode
@@ -1806,15 +1817,37 @@ DCPROG:
         {
 
             MultiMonitor_Tool= %MultiMonitor_ToolT%
+			if instr(MultiMonitor_Tool,"dc2.exe")
+				{
+					splitpath,MultiMonitor_Tool,,MMTPTH
+					Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+					if fileexist(Display_ChangerCMD)
+						{
+							iniwrite,%Display_ChangerCMD%,%RJDBINI%,GENERAL,Display_Changer
+						}
+					MMLOAD:= "-configure="
+					MMSAVE:= "-create="
+					monxtn= xml
+					MONGT=DC
+				}
+			if instr(MultiMonitor_Tool,"multimonitortool.exe")
+				{
+					MMLOAD:= "/loadconfig "
+					MMSAVE:= "/saveconfig "
+					monxtn= mon
+					MONGT=MM			
+				}
             iniwrite,%MultiMonitor_Tool%,%RJDBINI%,GENERAL,MultiMonitor_Tool
+			iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
+			iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
         }
         else {
             guicontrol,,MultiMonitor_ToolT,
             iniwrite,0,%RJDBINI%,GENERAL,MonitorMode
             return
         }
-        guicontrol,,MultiMonitor_ToolT,%MultiMonitor_Tool%
-        if ((MM_Mediacenter_Config = "")&& instr(MultiMonitor_ToolT,"MultiMonitorTool.exe")or instr(MultiMonitor_ToolT,"dc2.exe"))
+	guicontrol,,MultiMonitor_ToolT,%MultiMonitor_Tool%
+	if ((MM_Mediacenter_Config = "")&& instr(MultiMonitor_ToolT,"MultiMonitorTool.exe")or instr(MultiMonitor_ToolT,"dc2.exe"))
         {
 			MMSAVE:= "/SaveConfig "
 			MMLOAD:= "/SaveConfig "
@@ -1836,13 +1869,13 @@ DCPROG:
             }
         }
         if ((MM_GAME_Config = "")&& instr(MultiMonitor_Tool,"MultiMonitorTool.exe")or instr(MultiMonitor_Tool,"dc2.exe"))
-        {
-            msgbox,4100,Setup,Setup the Game Monitor Profile now?`nSelect the game-monitor in the dropdown menu
-            ifmsgbox,yes
-            {
-                gosub, %MONGT%PROG
-            }
-        }
+			{
+				msgbox,4100,Setup,Setup the Game Monitor Profile now?`nSelect the game-monitor in the dropdown menu
+				ifmsgbox,yes
+					{
+						gosub, %MONGT%PROG
+					}
+			}
         if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_ToolT))
         {
             MMLOAD:= "/loadconfig "
@@ -2027,37 +2060,37 @@ DCPROG:
 				MONGT=DC
 			}
         if !fileexist(gmcfg)
-        {
-            msgbox,4100,Setup,Setup the Multimonitor Tool now?
-            ifmsgbox,yes
-            {
-                gosub, %MONGT%PROG
-                setupmm= 1
-            }
-        }
+			{
+				msgbox,4100,Setup,Setup the Multimonitor Tool now?
+				ifmsgbox,yes
+				{
+					gosub, %MONGT%PROG
+					setupmm= 1
+				}
+			}
         if ((setupmm = "")or !fileexist(CFGDIR . "\" . "GameMonitors." . monxtn))
-        {
-            FileSelectFile,MM_GAME_ConfigT,35,,Select File,*.cfg; *.mon; *.xml
-            if ((MM_GAME_ConfigT <> "")&& !instr(MM_GAME_ConfigT,"<"))
-            {
-                MM_GAME_Config= %MM_GAME_ConfigT%
-                splitpath,MM_Game_ConfigT,,,mmcx
-                FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%mmcx%
-                iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
-            }
-            else {
-                guicontrol,,MM_GAME_ConfigT,
-				SB_SetText("Cleared Game-Monitor Config Location")
-                return
-            }
-        }
+			{
+				FileSelectFile,MM_GAME_ConfigT,35,,Select File,*.cfg; *.mon; *.xml
+				if ((MM_GAME_ConfigT <> "")&& !instr(MM_GAME_ConfigT,"<"))
+					{
+						MM_GAME_Config= %MM_GAME_ConfigT%
+						splitpath,MM_Game_ConfigT,,,mmcx
+						FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%mmcx%
+						iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
+					}
+				else {
+					guicontrol,,MM_GAME_ConfigT,
+					SB_SetText("Cleared Game-Monitor Config Location")
+					return
+				}
+			}
         if (fileexist(MM_Game_Config) && fileexist(MM_MediaCenter_Config) && fileExist(MultiMonitor_Tool))
-        {
-            iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
-            guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
-            guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
-            guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
-        }
+			{
+				iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
+				guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
+				guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
+				guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
+			}
 		SB_SetText("Assigned Game-Monitor Config File Location")
         guicontrol,,MM_GAME_ConfigT,%MM_GAME_Config%
     return
@@ -2067,36 +2100,36 @@ DCPROG:
         guicontrolget,dtcfg,,MM_MediaCenter_ConfigT
         setupmm:= ""
         if !fileexist(dtcfg)
-        {
-            msgbox,4100,Setup,Setup the MediaCenter Monitors now?
-            ifmsgbox,yes
-            {
-                gosub, MMSETUPD
-                setupmm= 1
-            }
-        }
+			{
+				msgbox,4100,Setup,Setup the MediaCenter Monitors now?
+				ifmsgbox,yes
+				{
+					gosub, MMSETUPD
+					setupmm= 1
+				}
+			}
         if ((setupmm = "")or !fileexist(MM_MediaCenter_Config))
-        {
-            FileSelectFile,MM_MediaCenter_ConfigT,35,%home%,Select File,*.cfg;*.mon;*.xml
-            if ((MM_MediaCenter_ConfigT <> "")&& !instr(MM_MediaCenter_ConfigT,"<"))
-            {
-                MM_MediaCenter_Config= %MM_MediaCenter_ConfigT%
-                FileCopy,%MM_MediaCenter_Config%,%home%,1
-                iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
-            }
-            else {
-                guicontrol,,MM_MediaCenter_ConfigT,
-                return
-            }
-        }
+			{
+				FileSelectFile,MM_MediaCenter_ConfigT,35,%home%,Select File,*.cfg;*.mon;*.xml
+				if ((MM_MediaCenter_ConfigT <> "")&& !instr(MM_MediaCenter_ConfigT,"<"))
+				{
+					MM_MediaCenter_Config= %MM_MediaCenter_ConfigT%
+					FileCopy,%MM_MediaCenter_Config%,%home%,1
+					iniwrite,%MM_MediaCenter_Config%,%RJDBINI%,CONFIG,MM_MediaCenter_Config
+				}
+				else {
+					guicontrol,,MM_MediaCenter_ConfigT,
+					return
+				}
+			}
         setupmm:= ""
         if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_Tool))
-        {
-            iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
-            guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
-            guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
-            guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
-        }
+			{
+				iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
+				guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
+				guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
+				guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
+			}
         guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
     return
 
@@ -2715,79 +2748,79 @@ DCPROG:
     return
 
     PREDD:
-        gui,submit,nohide
-        guicontrolget,predd,,PreDD
-        stringsplit,povr,predd,<
-        if instr(povr1,3)
+	gui,submit,nohide
+	guicontrolget,predd,,PreDD
+	stringsplit,povr,predd,<
+	if instr(povr1,3)
         {
             guicontrol,,PREDDT,<$This_Prog$><Monitor><Mapper><game.exe>
         }
-        if instr(povr1,2)
+	if instr(povr1,2)
         {
             guicontrol,,PREDDT,<Monitor><$This_Prog$><Mapper><game.exe>
         }
-        if instr(povr1,1)
+	if instr(povr1,1)
         {
             guicontrol,,PREDDT,<Monitor><Mapper><$This_Prog$><game.exe>
         }
-        if instr(povr1,"W")
+	if instr(povr1,"W")
         {
             guicontrol,,Prewait,1
         }
-        else {
+	else {
             guicontrol,,Prewait,0
         }
-        stringreplace,PRETNUM,povr1,W,,
-        guicontrol,,PRETNUM,%PRETNUM%
-        guicontrol,,_PRETNUM,%PRETNUM%
-        guicontrol,,_PREDDT,%predd%
+	stringreplace,PRETNUM,povr1,W,,
+	guicontrol,,PRETNUM,%PRETNUM%
+	guicontrol,,_PRETNUM,%PRETNUM%
+	guicontrol,,_PREDDT,%predd%
     return
 
     INITALL:
-        niniloc= %home%\RJDB.ini
-        FileDelete,%niniloc%
-        FileRead,INIGOT,%source%\RJDB.set
-        stringreplace,INIGOT,INIGOT,[LOCV],%home%,All
-        gosub, reWriteINI
-        niniloc= %home%\repos.ini
-        FileDelete,%niniloc%
-        FileRead,INIGOT,%source%\repos.set
-        gosub, reWriteINI
-        Loop,parse,STDVARS,|
-        {
-            %A_LoopField%:= ""
-        }
-        initz= 1
-        if !fileexist(cacheloc)
-        {
-            filecreatedir,%cacheloc%
-        }
+	niniloc= %home%\RJDB.ini
+	FileDelete,%niniloc%
+	FileRead,INIGOT,%source%\RJDB.set
+	stringreplace,INIGOT,INIGOT,[LOCV],%home%,All
+	gosub, reWriteINI
+	niniloc= %home%\repos.ini
+	FileDelete,%niniloc%
+	FileRead,INIGOT,%source%\repos.set
+	gosub, reWriteINI
+	Loop,parse,STDVARS,|
+		{
+			%A_LoopField%:= ""
+		}
+	initz= 1
+	if !fileexist(cacheloc)
+		{
+			filecreatedir,%cacheloc%
+		}
     return
     ReWriteINI:
     Loop, parse, INIGOT,`n`r
         {
-            if (A_LoopField = "")
-            {
-                Continue
-            }
+			if (A_LoopField = "")
+				{
+					Continue
+				}
             lpab= %A_LoopField%
             stringsplit,avx,lpab,=
             stringleft,aba,lpab,1
             if (aba = "[")
-            {
-                cursc= %lpab%
-                stringreplace,cursc,cursc,[,,All
-                stringreplace,cursc,cursc,],,All
-                continue
-            }
+				{
+					cursc= %lpab%
+					stringreplace,cursc,cursc,[,,All
+					stringreplace,cursc,cursc,],,All
+					continue
+				}
             stringreplace,aval,lpab,%avx1%=,,
             iniwrite,%aval%,%niniloc%,%cursc%,%avx1%
         }
     return
 
     RESET:
-        Msgbox,260,Rese  t,Reset the program to default settings?, 5
-        ifMsgbox,Yes
+	Msgbox,260,Rese  t,Reset the program to default settings?, 5
+	ifMsgbox,Yes
         {
             gosub,INITALL
             resetting= 1
@@ -2818,6 +2851,8 @@ DCPROG:
             filedelete,%home%\*.tmp
             filedelete,%home%\GameAudio.cmd
             filedelete,%home%\MediaCenterAudio.cmd
+            filedelete,%home%\GameMonitors.xml
+            filedelete,%home%\DesktopMonitors.xml
             filedelete,%home%\GameMonitors.mon
             filedelete,%home%\DesktopMonitors.mon
             goto,popgui
@@ -2829,148 +2864,148 @@ DCPROG:
     return
 
     EnableLogging:
-        gui,submit,nohide
-        guicontrolget,EnableLogging,,EnableLogging
-        iniwrite,%EnableLogging%,%RJDBINI%,GENERAL,Logging
+	gui,submit,nohide
+	guicontrolget,EnableLogging,,EnableLogging
+	iniwrite,%EnableLogging%,%RJDBINI%,GENERAL,Logging
     return
 
     OPNLOG:
-        gui,submit,NoHide
-        if fileexist(home . "\" . "log.txt")
+	gui,submit,NoHide
+	if fileexist(home . "\" . "log.txt")
         {
             Run,Notepad %thelog%,
         }
-        else {
+	else {
             SB_SetText("no log exists")
         }
     return
 
     MM_ToolBReset:
-        if (MultiMonitor_Tool = "")
+	if (MultiMonitor_Tool = "")
         {
             SB_SetText("Multimonitor Tool is not configured")
             return
         }
-        mmtclr= Lime
-        if !fileExist(MultiMonitor_Tool)
+	mmtclr= Lime
+	if !fileExist(MultiMonitor_Tool)
         {
             SB_SetText("Multimonitor Tool not found")
             mmtclr= Red
         }
-        Guicontrol, +c%mmtclr%, MultiMonitor_ToolT
-        Guicontrol,, MultiMonitor_ToolT,%MultiMonitor_ToolT%
-        MM_GAME_Config:= ""
-        MM_GAME_ConfigT:= ""
-        MM_MEDIACENTER_Config:= ""
-        MM_MEDIACENTER_ConfigT:= ""
-        iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
-        iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
-        Guicontrol,,MM_Game_ConfigT,
-        Guicontrol,,MM_MediaCenter_ConfigT,
-        gosub,MMSETUPD
-        gosub,%MONGT%PROG
+	Guicontrol, +c%mmtclr%, MultiMonitor_ToolT
+	Guicontrol,, MultiMonitor_ToolT,%MultiMonitor_ToolT%
+	MM_GAME_Config:= ""
+	MM_GAME_ConfigT:= ""
+	MM_MEDIACENTER_Config:= ""
+	MM_MEDIACENTER_ConfigT:= ""
+	iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_GAME_Config
+	iniwrite,%A_SPace%,%RJDBINI%,CONFIG,MM_Mediacenter_Config
+	Guicontrol,,MM_Game_ConfigT,
+	Guicontrol,,MM_MediaCenter_ConfigT,
+	gosub,MMSETUPD
+	gosub,%MONGT%PROG
     return
 
     WRITEMAPR:
 
     INITANTIMICRO:
-        Mapper= 1
-        prf= am
-        JMAP= antimicro
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= gamecontroller.amgp
-        gosub,KEYMAPSET
-        iniwrite,%home%,%binhome%\%JMAP%_settings.ini,GENERAL,DefaultProfileDir
-        iniwrite,%home%,%binhome%\%JMAP%_settings.ini,GENERAL,LastProfileDir
-        iniwrite,1,%binhome%\%JMAP%_settings.ini,GENERAL,CloseToTray
-        iniwrite,1,%binhome%\%JMAP%_settings.ini,GENERAL,MinimizeToTaskbar
-        iniwrite,@Size(650 580),%binhome%\%JMAP%_settings.ini,GENERAL,WindowSize
-        iniwrite,@Point(0 0),%binhome%\%JMAP%_settings.ini,GENERAL,WindowPosition
+	Mapper= 1
+	prf= am
+	JMAP= antimicro
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= gamecontroller.amgp
+	gosub,KEYMAPSET
+	iniwrite,%home%,%binhome%\%JMAP%_settings.ini,GENERAL,DefaultProfileDir
+	iniwrite,%home%,%binhome%\%JMAP%_settings.ini,GENERAL,LastProfileDir
+	iniwrite,1,%binhome%\%JMAP%_settings.ini,GENERAL,CloseToTray
+	iniwrite,1,%binhome%\%JMAP%_settings.ini,GENERAL,MinimizeToTaskbar
+	iniwrite,@Size(650 580),%binhome%\%JMAP%_settings.ini,GENERAL,WindowSize
+	iniwrite,@Point(0 0),%binhome%\%JMAP%_settings.ini,GENERAL,WindowPosition
     return
 
     INITXPADDER:
-        Mapper= 2
-        prf= xp
-        JMAP= Xpadder
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= xpadderprofile
-        goto,KEYMAPSET
+	Mapper= 2
+	prf= xp
+	JMAP= Xpadder
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= xpadderprofile
+	goto,KEYMAPSET
     return
 
     INITJOYTOKEY:
-        Mapper= 3
-        prf= jk
-        JMAP= JoyToKey
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= cfg
-        goto,KEYMAPSET
+	Mapper= 3
+	prf= jk
+	JMAP= JoyToKey
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= cfg
+	goto,KEYMAPSET
     return
 
     INITJOYXOFF:
-        Mapper= 4
-        prf= of
-        JMAP= JoyXoff
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= joyx
-        goto,KEYMAPSET
+	Mapper= 4
+	prf= of
+	JMAP= JoyXoff
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= joyx
+	goto,KEYMAPSET
     return
 
     INITANTIMICROX:
-        Mapper= 5
-        prf= ax
-        JMAP= antimicrox
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= gamecontroller.amgp
-        gosub,KEYMAPSET
-        iniwrite,%home%,%LADTA%\%JMAP%_settings.ini,GENERAL,DefaultProfileDir
-        iniwrite,%home%,%LADTA%\%JMAP%_settings.ini,GENERAL,LastProfileDir
-        iniwrite,1,%LADTA%\%JMAP%_settings.ini,GENERAL,CloseToTray
-        iniwrite,1,%LADTA%\%JMAP%_settings.ini,GENERAL,MinimizeToTaskbar
-        iniwrite,@Size(650 580),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowSize
-        iniwrite,@Point(0 0),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowPosition
+	Mapper= 5
+	prf= ax
+	JMAP= antimicrox
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= gamecontroller.amgp
+	gosub,KEYMAPSET
+	iniwrite,%home%,%LADTA%\%JMAP%_settings.ini,GENERAL,DefaultProfileDir
+	iniwrite,%home%,%LADTA%\%JMAP%_settings.ini,GENERAL,LastProfileDir
+	iniwrite,1,%LADTA%\%JMAP%_settings.ini,GENERAL,CloseToTray
+	iniwrite,1,%LADTA%\%JMAP%_settings.ini,GENERAL,MinimizeToTaskbar
+	iniwrite,@Size(650 580),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowSize
+	iniwrite,@Point(0 0),%LADTA%\%JMAP%_settings.ini,GENERAL,WindowPosition
     return
 
     INITKEYSTICKS:
-        Mapper= 6
-        prf= ks
-        JMAP= Keysticks
-        %JMAP%_executable=%kbmpprt%
-        mapper_extension= xpadderprofile
-        goto,KEYMAPSET
+	Mapper= 6
+	prf= ks
+	JMAP= Keysticks
+	%JMAP%_executable=%kbmpprt%
+	mapper_extension= xpadderprofile
+	goto,KEYMAPSET
     return
 
     KEYMAPSET:
-        if (kbmpprt = "")
+	if (kbmpprt = "")
         {
             kbmt= \%jmap%\%jmap%.exe
             kbmdefloc:= ""
             kbmpprt:= ""
             JMAPini:= ""
-            if fileexist(Programfilesx86 . kbmt)
-            {
-                kbmdefloc= %programfilesx86%\%JMAP%
-                kbmpprt= %kbmdefloc%\%JMAP%.exe
-            }
-            if fileexist(A_Programfiles . kbmt)
-            {
-                kbmdefloc= %programfiles%\%JMAP%
-                kbmpprt= %kbmdefloc%\%JMAP%.exe
-            }
-            if fileexist(binhome . kbmt)
-            {
-                kbmdefloc= %binhome%\%JMAP%
-                kbmpprt= %kbmdefloc%\%JMAP%.exe
-            }
-            ifexist,%jtkprgd%\%JMAP%.ini
-            {
-                %JMAP%ini:= jtkprgd "\" . JMAP . ".ini"
-            }
-            if fileexist(A_MyDocuments . "\JoyToKey" . "\" . JMAP . ".ini")
-            {
-                %JMAP%ini:= A_MyDocuments . "\JoyToKey\" . JMAP . ".ini"
-            }
+			if fileexist(Programfilesx86 . kbmt)
+				{
+					kbmdefloc= %programfilesx86%\%JMAP%
+					kbmpprt= %kbmdefloc%\%JMAP%.exe
+				}
+			if fileexist(A_Programfiles . kbmt)
+				{
+					kbmdefloc= %programfiles%\%JMAP%
+					kbmpprt= %kbmdefloc%\%JMAP%.exe
+				}
+			if fileexist(binhome . kbmt)
+				{
+					kbmdefloc= %binhome%\%JMAP%
+					kbmpprt= %kbmdefloc%\%JMAP%.exe
+				}
+			ifexist,%jtkprgd%\%JMAP%.ini
+				{
+					%JMAP%ini:= jtkprgd "\" . JMAP . ".ini"
+				}
+			if fileexist(A_MyDocuments . "\JoyToKey" . "\" . JMAP . ".ini")
+				{
+					%JMAP%ini:= A_MyDocuments . "\JoyToKey\" . JMAP . ".ini"
+				}
         }
-        if (kbmpprt <> "")
+	if (kbmpprt <> "")
         {
             tmpx:= % %JMAP%_executable
             oskloc:= binhome . "\NewOSK.exe"
@@ -3025,29 +3060,29 @@ DCPROG:
             iniwrite,%Player2_Template%,%RJDBINI%,JOYSTICKS,Player2_Template
             iniwrite,%MediaCenter_Template%,%RJDBINI%,JOYSTICKS,MediaCenter_Template
             if (ASADMIN = 1)
-            {
-                RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %kbmpprt%, ~ RUNASADMIN
-            }
+				{
+					RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers, %kbmpprt%, ~ RUNASADMIN
+				}
             KBMAPALRT:= "Lime"
             PLR1TALRT:= "Lime"
             PLR2TALRT:= "Lime"
             MCPRFALRT:= "Lime"
             if !fileExist(Keyboard_Mapper)
-            {
-                KBMAPALRT:= "Red"
-            }
+				{
+					KBMAPALRT:= "Red"
+				}
             if !fileExist(Player1_Template)
-            {
-                PLR1TALRT:= "Red"
-            }
+				{
+					PLR1TALRT:= "Red"
+				}
             if !fileExist(Player2_Template)
-            {
-                PLR2TALRT:= "Red"
-            }
+				{
+					PLR2TALRT:= "Red"
+				}
             if !fileExist(MediaCenter_Template)
-            {
-                MCPRFALRT:= "Red"
-            }
+				{
+					MCPRFALRT:= "Red"
+				}
             guicontrol,+c%KBMAPALRT%,Keyboard_MapperT
             guicontrol,+c%PLR1TALRT%,Player1_TemplateT
             guicontrol,+c%PLR2TALRT%,Player2_TemplateT
@@ -3057,7 +3092,7 @@ DCPROG:
             guicontrol,,Player2_TemplateT,%Player2_Template%
             guicontrol,,MediaCenter_TemplateT,%MediaCenter_Template%
         }
-        kbmpprt:= ""
+	kbmpprt:= ""
     return
 
     ReadLBL:
@@ -4731,19 +4766,19 @@ DCPROG:
                 ;exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
                 dwnovwr=False
                 if !fileExist(save)
-                {
-                    Msgbox,258,,Json Download Failed,Steam Database was not downloaded.`n Try again?
-                    ifmsgbox,Abort
-                    {
-                        Filemove,%save%.bak,%save%,R
-                        return
-                    }
-                    if Msgbox,Retry
-                    {
-                        goto, RESTEAM
-                    }
-                    SB_SetText(" " save " ""downloaded")
-                }
+					{
+						Msgbox,258,,Json Download Failed,Steam Database was not downloaded.`n Try again?
+						ifmsgbox,Abort
+						{
+							Filemove,%save%.bak,%save%,R
+							return
+						}
+						if Msgbox,Retry
+						{
+							goto, RESTEAM
+						}
+						SB_SetText(" " save " ""downloaded")
+					}
                 goto, RELOOKUP
 
             getsivk:
@@ -4759,74 +4794,75 @@ DCPROG:
                     goto, JSONPARSED
                 }
             RELOOKUP:
-                filedelete,%LKUP_DB%
-                sivk=
-                Nsivk=
-                RENMD=
-                fileread, stfn, %STM_DB%
-                intl= {"applist":{"apps":[{
-                entl= }]}}
-                split="}`,{"
-                join="`r"
-                nnm=`,"name"
-                nxm=`r"name"
-                aid= "appid":
-                nid= "name":
-                ali= "applist":
-                appz= "apps": [
-                singq= "
-                ;"
-                stringreplace,json,stfn,{`r,,All		;"
-                stringreplace,json,json,%intl%,,All
-                stringreplace,json,json,%entl%,,All
-                stringreplace,json,json,%split%,%join%,All
-                stringreplace,json,json,%nnm%,%nxm%,All
-                stringreplace,json,json,}`,,,All
-                stringreplace,json,json,}`,`r,,,All
-                stringreplace,json,json,}`r,,,All
-                stringreplace,json,json,]`r,,,All
-                stringreplace,json,json,`,`r,,All
-                stringreplace,json,json,%ali%,,All
-                stringreplace,json,json,%appz%,,All
-                stringreplace,json,json,%aid%,,All
-                stringreplace,json,json,%nid%,,All
-                stringreplace,json,json,<,,All
-                stringreplace,json,json,>,,All
-                stringreplace,json,json,\,,All
-                stringreplace,json,json,/,-,All
-                stringreplace,json,json,?,-,All
-                stringreplace,json,json,*,-,All
-                stringreplace,json,json,:,-,All
-                stringreplace,json,json,|,-,All
-                stringreplace,json,json,--,-,All
-                stringreplace,json,json,",,All		;"
-                stringreplace,json,json,&amp`;amp`;,&&,All
-                stringreplace,json,json,&amp`;,&,All
-                stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
-                stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
-                Loop, parse, json,`r`n
-                    {
-                        if (A_LoopField = "")
-                            {
-                                continue
-                            }
-                        if instr(A_LoopField,singq)			
-                            {
-                                kame= %A_LoopField%
-                                invar= %kame%
-                                gosub, StripVar
-                                gosub, spechar
-                                if (RENNOS = "")
-                                    {
-                                        RENNOS= %invarx%
-                                    }
-                                Nsivk.= "|" . kame . "|" . RENNOS . "|" . appid . "|" . RENMD . "|" . "`n"
-                                continue
-                            }
-                            else {
-                                appid= %A_LoopField%
-                            }
-                    }
+			filedelete,%LKUP_DB%
+			sivk=
+			Nsivk=
+			RENMD=
+			fileread, stfn, %STM_DB%
+			intl= {"applist":{"apps":[{
+			entl= }]}}
+			split="}`,{"
+			join="`r"
+			nnm=`,"name"
+			nxm=`r"name"
+			aid= "appid":
+			nid= "name":
+			ali= "applist":
+			appz= "apps": [
+			singq= "
+			;"
+			stringreplace,json,stfn,{`r,,All		;"
+			stringreplace,json,json,:"",:"-",All
+			stringreplace,json,json,%intl%,,All
+			stringreplace,json,json,%entl%,,All
+			stringreplace,json,json,%split%,%join%,All
+			stringreplace,json,json,%nnm%,%nxm%,All
+			stringreplace,json,json,}`,,,All
+			stringreplace,json,json,}`,`r,,,All
+			stringreplace,json,json,}`r,,,All
+			stringreplace,json,json,]`r,,,All
+			stringreplace,json,json,`,`r,,All
+			stringreplace,json,json,%ali%,,All
+			stringreplace,json,json,%appz%,,All
+			stringreplace,json,json,%aid%,,All
+			stringreplace,json,json,%nid%,,All
+			stringreplace,json,json,<,,All
+			stringreplace,json,json,>,,All
+			stringreplace,json,json,\,,All
+			stringreplace,json,json,/,-,All
+			stringreplace,json,json,?,-,All
+			stringreplace,json,json,*,-,All
+			stringreplace,json,json,:,-,All
+			stringreplace,json,json,|,-,All
+			stringreplace,json,json,--,-,All
+			stringreplace,json,json,",,All		;"
+			stringreplace,json,json,&amp`;amp`;,&&,All
+			stringreplace,json,json,&amp`;,&,All
+			stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
+			stringreplace,json,json,%A_Space%%A_Space%,%A_Space%,All
+			appid= 
+			Loop, parse, json,`r`n
+				{
+					if (A_LoopField = "")
+						{
+							continue
+						}
+					if (Appid = "")
+						{
+							appid= %A_LoopField%
+							continue
+						}
+					kame= %A_LoopField%
+					invar= %kame%
+					gosub, StripVar
+					gosub, spechar
+					if (RENNOS = "")
+						{
+							RENNOS= %invarx%
+						}
+					Nsivk.= "|" . kame . "|" . RENNOS . "|" . appid . "|" . RENMD . "|" . "`n"
+					appid=
+				}
             fileappend,%NSIVK%,%LKUP_DB%,UTF-8
             JSONPARSED:
             return
@@ -5408,22 +5444,37 @@ DCPROG:
                         }
                         bsvl.= gmnamed . "|"
                         stringtrimright,subfldrepn,subfldrep,1
-
+						monxtn= mon
+						if (fileexist(sidn . "\" . "Game.ini") && (OVERWRT = ""))
+								{
+									iniread,sffb,%sidn%\Game.ini,GENERAL,Multimonitor_Tool
+									if instr(sffb,"dc2.exe")
+										{
+											monxtn= xml
+										}
+								}
+							else {
+								iniread,sffb,%RJDBINI%,GENERAL,Multimonitor_Tool
+								if instr(sffb,"dc2.exe")
+									{
+										monxtn= xml
+									}
+							}	
                         sidn= %Game_Profiles%\%gmnameD%
                         if (Localize = 1)
                         {
                             sidn= %OUTDIR%
                         }
                         splitpath,sidn,sidnf,sidnpth
-                        GMon= %subfldrep%%gmnamex%_GameMonitors.mon
-                        DMon= %subfldrep%%gmnamex%_DesktopMonitors.mon
+                        GMon= %subfldrep%%gmnamex%_GameMonitors.%monxtn%
+                        DMon= %subfldrep%%gmnamex%_DesktopMonitors.%monxtn%
                         gamecfgn= %subfldrep%%gmnamex%.ini
                         if ((renum = 1)or(rn = ""))
                         {
                             FileCreateDir,%sidn%\alternates
                             subfldrep:= ""
-                            GMon= GameMonitors.mon
-                            DMon= DesktopMonitors.mon
+                            GMon= GameMonitors.%monxtn%
+                            DMon= DesktopMonitors.%monxtn%
                             gamecfgn= Game.ini
                             gmnamex= %gmnamed%
 
@@ -7007,13 +7058,12 @@ DCPROG:
                             Menu,addonp,show
                         return
                         DC2Download:
-                          curemote= _Display_Changer_
+                          curemote= _DisplayChanger_
                             gosub, BINGETS
-                            ;msgbox,,,xtractpath="%extractloc%"`nxtractpath="%xtractpath%"`nURLFILE="%URLFILE%"
                             gosub, DOWNLOADIT
                             binka=2
-                            binkb=64cmd
-                            Display_ChangerT= %binhome%\DC%binka%.exe
+                            MultiMonitor_ToolT= %binhome%\dc2.exe
+                            Display_ChangerCMD= %binhome%\dc64cmd.exe
                             gosub, MM_ToolB
                             dchk:= ""
                             SB_SetText("")
@@ -7021,9 +7071,8 @@ DCPROG:
                         MMDownload:
                             curemote= _MultiMonitorTool_
                             gosub, BINGETS
-                           ;msgbox,,,xtractpath="%extractloc%"`nxtractpath="%xtractpath%"`nURLFILE="%URLFILE%"
                             gosub, DOWNLOADIT
-                            MultiMonitor_ToolT= %binhome%\multimonitortool.exe
+							  MultiMonitor_ToolT= %binhome%\multimonitortool.exe
                             gosub, MM_ToolB
                             dchk:= ""
                             SB_SetText("")
@@ -7120,8 +7169,9 @@ DCPROG:
                         MMToolBDownload:
                             Menu,dwnlbmn,Add
                             Menu,dwnlbmn,DeleteAll
-                            Menu,dwnlbmn,Add,MultiMonitorTool,MMdownload
                             Menu,dwnlbmn,Add,DisplayChanger,DC2download
+                            Menu,dwnlbmn,Add,,
+                            Menu,dwnlbmn,Add,MultiMonitorTool,MMdownload
                             Menu,dwnlbmn,show
                         return
 
@@ -7411,41 +7461,40 @@ DCPROG:
                             stringright,chkq,chktest,1
                             StringCaseSense, On
                             if (A_GuiEvent == "I")
-                            {
-                                if InStr(ErrorLevel, "C", true)
-                                {
-                                    SPENB:= "+Check"
-                                    if (chkq = "?")
-                                        SPENQ:= "|"
-                                    stringreplace,chkrepl,chktest,?,,All
-                                    stringreplace,chkrepl,chkrepl,`n,,All
-                                    stringreplace,chkrepl,chkrepl,`r,,All
-                                }
-                                else
-                                {
-                                    SPENB:= ""
-                                    if (chkq = "?")
-                                        SPENQ:= "?"
-                                    stringreplace,chkrepl,chktest,?,,All
-                                    stringreplace,chkrepl,chkrepl,`n,,All
-                                    stringreplace,chkrepl,chkrepl,`r,,All
-                                    chkrepl.= "?"
-                                }
-                                if (SPENQ <> chkq)
-                                {
-                                    stringreplace,NSOURCEDLIST,SOURCEDLIST,%chktest%,%chkrepl%,All
-                                    stringreplace,NSOURCEDLIST,SOURCEDLIST,??,?,All
-                                    filedelete,%SRCFILE%
-                                    fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
-                                    %A_EventInfo%SDL:= chkrepl
-                                    SOURCEDLIST:= NSOURCEDLIST
-                                    StringCaseSense, Off
-                                    blockinput,off
-                                    popui:= ""
-                                    return
-                                }
-                            }
-
+								{
+									if InStr(ErrorLevel, "C", true)
+									{
+										SPENB:= "+Check"
+										if (chkq = "?")
+											SPENQ:= "|"
+										stringreplace,chkrepl,chktest,?,,All
+										stringreplace,chkrepl,chkrepl,`n,,All
+										stringreplace,chkrepl,chkrepl,`r,,All
+									}
+									else
+										{
+											SPENB:= ""
+											if (chkq = "?")
+												SPENQ:= "?"
+											stringreplace,chkrepl,chktest,?,,All
+											stringreplace,chkrepl,chkrepl,`n,,All
+											stringreplace,chkrepl,chkrepl,`r,,All
+											chkrepl.= "?"
+										}
+									if (SPENQ <> chkq)
+										{
+											stringreplace,NSOURCEDLIST,SOURCEDLIST,%chktest%,%chkrepl%,All
+											stringreplace,NSOURCEDLIST,SOURCEDLIST,??,?,All
+											filedelete,%SRCFILE%
+											fileappend,%NSOURCEDLIST%,%SRCFILE%,UTF-8
+											%A_EventInfo%SDL:= chkrepl
+											SOURCEDLIST:= NSOURCEDLIST
+											StringCaseSense, Off
+											blockinput,off
+											popui:= ""
+											return
+										}
+								}
                             StringCaseSense, Off
                             Msx:= ""
                             If (A_GuiEvent == "F") {
@@ -7522,21 +7571,21 @@ DCPROG:
                                     }
                                 }
                                 if (OnCol = 18)
-                                {
-                                    if onTxt is digit
-                                    {
-                                        goto, RECONT
-                                    }
-                                    else {
-                                        LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
-                                        SB_SetText("SteamID must be a number and only a number")
-                                        popui:= ""
-                                        return
-                                    }
-                                }
+									{
+										if onTxt is digit
+											{
+												goto, RECONT
+											}
+										else {
+											LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
+											SB_SetText("SteamID must be a number and only a number")
+											popui:= ""
+											return
+										}
+									}
                             }
-                            popui:= ""
-                            blockinput,off
+						popui:= ""
+						blockinput,off
                         return
 
                         RECONT:
@@ -7734,53 +7783,51 @@ DCPROG:
                             return
 
                             DOWNLOADIT:
-                                STEAMQUERY:= ""
-                                extractloc:= binhome . "\" . xtractpath
-                                if (redp = 1)
-                                {
-                                    extractloc:= xtractpath
-                                }
-                                extractlocf= "%extractloc%"
-                                filecreateDir,%home%\downloaded
-                                save:= home . "\downloaded\" . binarcf
-                                splitpath,save,savefile,savepath,savextn
-                                svaf= %savefile%
-                                svap=%savepath%
-                                savef= "%save%"
-                                compltdwn:= % curemote
-                                if (fileexist(save)&& (compltdwn = 1))
-                                {
-                                    Msgbox,260,Redownload,Download the %binarcf% file again?`noriginal will be renamed ".bak",3
-                                    ifmsgbox,yes
-                                    {
-                                        gosub,DOWNBIN
-                                    }
-                                    if (dwnrej = "")
-                                    {
-                                        goto, EXTRACTING
-                                    }
-                                    dwnrej:= ""
-                                }
+							STEAMQUERY:= ""
+							extractloc:= binhome . "\" . xtractpath
+							if (redp = 1)
+								{
+									extractloc:= xtractpath
+								}
+							extractlocf= "%extractloc%"
+							filecreateDir,%home%\downloaded
+							save:= home . "\downloaded\" . binarcf
+							splitpath,save,savefile,savepath,savextn
+							svaf= %savefile%
+							svap=%savepath%
+							savef= "%save%"
+							compltdwn:= % curemote
+							if (fileexist(save)&& (compltdwn = 1))
+								{
+									Msgbox,260,Redownload,Download the %binarcf% file again?`noriginal will be renamed ".bak",3
+									ifmsgbox,yes
+										{
+											gosub,DOWNBIN
+										}
+									if (dwnrej = "")
+										{
+											goto, EXTRACTING
+										}
+									dwnrej:= ""
+								}
                             DOWNBIN:
-                                SB_SetText("Downloading " "" binarcf "")
-
-                                Loop,parse,GUIVARS,|
-                                {
-                                    guicontrol,disable,%A_LoopField%
-                                }
-
+							SB_SetText("Downloading " "" binarcf "")
+							Loop,parse,GUIVARS,|
+								{
+									guicontrol,disable,%A_LoopField%
+								}
                             DWNCONFIRM:
-                                dwnrej:= ""
-                                DownloadFile(URLFILE,save,dwnovwr,True)
-                                ;exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
-                                dwnovwr=False
-                                SB_SetText(" " binarcf " ""downloaded")
-                                if (UPDATING = 1)
+							dwnrej:= ""
+							DownloadFile(URLFILE,save,dwnovwr,True)
+							;exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
+							dwnovwr=False
+							SB_SetText(" " binarcf " ""downloaded")
+							if (UPDATING = 1)
                                 {
                                     Loop,parse,GUIVARS,|
-                                    {
-                                        guicontrol,enable,%A_LoopField%
-                                    }
+										{
+											guicontrol,enable,%A_LoopField%
+										}
                                     return
                                 }
 
@@ -7791,41 +7838,41 @@ DCPROG:
                                     return
                                 }
                             EXTRACTING:
-                                GUIMSG:=
-                                for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+							GUIMSG:=
+							for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
                                 {
                                     btt(GUIMSG,,,,"Style2",{Transparent:v})
                                     Sleep, 30
                                 }
-                                Sleep, 500
-                                if (fileexist(save)&& !fileexist(exetfnd))
+							Sleep, 500
+							if (fileexist(save)&& !fileexist(exetfnd))
                                 {
-                                    GUIMSG:= "Extracting..."
-                                    for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+								GUIMSG:= "Extracting..."
+								for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
                                     {
                                         btt(GUIMSG,,,,"Style2",{Transparent:v})
                                         Sleep, 30
                                     }
-                                    if !fileexist(extractloc . "\")
+								if !fileexist(extractloc . "\")
                                     {
                                         FileCreateDir,%extractloc%
                                     }
-                                    if (!fileexist(binhome . "\" . "7za.exe")&&(savextn <> "7z"))
+								if (!fileexist(binhome . "\" . "7za.exe")&&(savextn <> "7z"))
                                     {
                                         Extract2Folder(savef,extractlocf)
                                     }
-                                    else {
-                                        if fileexist(binhome . "\" . "7za.exe")
+								else {
+									if fileexist(binhome . "\" . "7za.exe")
                                         {
                                             RunWait,%binhome%\7za.exe x -y "%home%\downloaded\%binarcf%" -O"%extractloc%",%binhome%,hide
                                         }
-                                        else {
-                                            Msgbox,258,,7za.exe not found,Binary file 7za.exe is missing from`n%binhome%`n`nContinue?
-                                            ifmsgbox,Abort
+									else {
+										Msgbox,258,,7za.exe not found,Binary file 7za.exe is missing from`n%binhome%`n`nContinue?
+										ifmsgbox,Abort
                                             {
                                                 exitapp
                                             }
-                                            if Msgbox,Retry
+										if Msgbox,Retry
                                             {
                                                 curemote= originalBinary
                                                 xtractpath:= ""
@@ -7834,141 +7881,144 @@ DCPROG:
                                             }
                                         }
                                     }
-                                    GUIMSG:= "Extracted."
-                                    for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+								GUIMSG:= "Extracted."
+								for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
                                     {
                                         btt(GUIMSG,,,,"Style2",{Transparent:v})
                                         Sleep, 30
                                     }
-                                    dchk= 1
-                                    if (rento <> "")
+								dchk= 1
+								if (rento <> "")
                                     {
                                         FileMoveDir,%extractloc%,%rento%,R
                                     }
-                                    if (msi = 1)
+								if (msi = 1)
                                     {
                                         RunWait, MSIEXEC /I "%extractloc%\%exetfndsp%" DIR="%renfrm%" INSTALLDIR="%renfrm%" INSTALLLOCATION="%renfrm%" APPDIR="%renfrm%" DEFAULTPATHC="%renfrm%" APPLICATIONFOLDER="%renfrm%" DIRECTORY="%renfrm%" TARGETDIR="%renfrm%" INSTALLFOLDER="%renfrm%" /quiet /passive /norestart,%extractloc%
                                     }
                                 }
 
                                 Loop,parse,GUIVARS,|
-                                {
-                                    guicontrol,enable,%A_LoopField%
-                                }
+									{
+										guicontrol,enable,%A_LoopField%
+									}
 
                                 Sleep, 500
                                 GUIMSG:= ""
                                 for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
-                                {
-                                    btt(GUIMSG,,,,"Style2",{Transparent:v})
-                                    Sleep, 30
-                                }
+									{
+										btt(GUIMSG,,,,"Style2",{Transparent:v})
+										Sleep, 30
+									}
                                 ifnotexist,%save%
-                                {
-                                    msgbox,258,Download Failed,%binarcf% did not download.`nYou may select the location of support files later`n`nContinue?
-                                    ifmsgbox,Abort
-                                    {
-                                        if (curemote = "originalBinary")
-                                        {
-                                            exitapp
-                                        }
-                                    }
-                                    if Msgbox,Retry
-                                    {
-                                        goto, DOWNLOADIT
-                                    }
-                                }
+									{
+										msgbox,258,Download Failed,%binarcf% did not download.`nYou may select the location of support files later`n`nContinue?
+										ifmsgbox,Abort
+											{
+												if (curemote = "originalBinary")
+												{
+													exitapp
+												}
+											}
+										if Msgbox,Retry
+											{
+												goto, DOWNLOADIT
+											}
+									}
                                 SB_SetText("")
                             return
-
+							
                             BINGETS:
-                                Loop,6
+							Loop,6
                                 {
                                     URLNX%A_Index%:= ""
                                 }
-                                renfrm:= ""
-                                rento:= ""
-                                iniread,URLFILESPLIT,%RJREPOS%,BINARIES,%curemote%
-                                stringsplit,URLNX,URLFILESPLIT,|
-                                URLFILE:= URLNX1
-                                Splitpath,URLFILE,binarcf
-                                exetfndsp:= URLNX2
-                                xtractpath:= URLNX3
-                                redp:= ""
-                                if instr(xtractpath,"{temp}")
+							renfrm:= ""
+							rento:= ""
+							iniread,URLFILESPLIT,%RJREPOS%,BINARIES,%curemote%
+							stringsplit,URLNX,URLFILESPLIT,|
+							URLFILE:= URLNX1
+							Splitpath,URLFILE,binarcf
+							exetfndsp:= URLNX2
+							xtractpath:= URLNX3
+							redp:= ""
+							if instr(xtractpath,"{temp}")
                                 {
                                     stringreplace,xtractpath,xtractpath,{temp},%home%\downloaded
                                     redp:= 1
                                 }
-                                stringsplit,rensp,urlnx4,?
-
-                                renfrm:= rensp1
-                                stringreplace,renfrm,renfrm,{home},%home%,
-                                rento:= rensp2
-                                msi:= ""
-                                if instr(exetfndsp,".msi")
+							if (urlnx4 <> "")
+								{
+									stringsplit,rensp,urlnx4,?
+									renfrm:= rensp1
+									stringreplace,renfrm,renfrm,{home},%home%,
+									rento:= rensp2
+								}
+							msi:= ""
+							if instr(exetfndsp,".msi")
                                 {
                                     msi:= 1
                                 }
-                                if (URLFILE = "") or (URLFILE = "ERROR")
+							if (URLFILE = "") or (URLFILE = "ERROR")
                                 {
-                                    URLFILE:= URLFILEX
+                                    URLFILE:= URLFILESPLIT
                                 }
+							msgbox,,,iniread-urlfilespl=%URLFILESPLIT%`ninifile=%RJREPOS%`nSection=BINARIES`ncuremote=%curemote%`nurlfile=%URLFILE%`nxtractpath=%xtractpath%`n	
                             return
 
                             GuiContextMenu:
-                                gui,submit,nohide
-                                If A_GuiControlEvent RightClick
+							gui,submit,nohide
+							If A_GuiControlEvent RightClick
                                 {
-                                    butrclick:= A_GuiControl
-                                    MENU_X:= A_GuiX*(A_ScreenDPI/96)
-                                    MENU_Y:= A_GuiY*(A_ScreenDPI/96)
-                                    if A_GuiControl = RESET
+								butrclick:= A_GuiControl
+								MENU_X:= A_GuiX*(A_ScreenDPI/96)
+								MENU_Y:= A_GuiY*(A_ScreenDPI/96)
+								if A_GuiControl = RESET
                                     {
                                         Menu, UPDButton, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Player1_TempB
+								if A_GuiControl = Player1_TempB
                                     {
                                         Menu, Pl1_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Player2_TempB
+								if A_GuiControl = Player2_TempB
                                     {
                                         Menu, Pl2_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MediaCenter_ProfB
+								if A_GuiControl = MediaCenter_ProfB
                                     {
                                         Menu, MCP_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MM_ToolB
+								if A_GuiControl = MM_ToolB
                                     {
                                         Menu, MM_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MM_Game_CfgB
+								if A_GuiControl = MM_Game_CfgB
                                     {
                                         Menu, MMCFG_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MM_MediaCenter_CfgB
+								if A_GuiControl = MM_MediaCenter_CfgB
                                     {
                                         Menu, MDCFG_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = BGM_ProgB
+								if A_GuiControl = BGM_ProgB
                                     {
                                         Menu, BGM_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Keyboard_MapB
+								if A_GuiControl = Keyboard_MapB
                                     {
                                         Menu, KBM_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = POSTAPP
+								if A_GuiControl = POSTAPP
                                     {
                                         butrclick:= "POSTAPP"
                                         postrc:= 1
@@ -7986,111 +8036,111 @@ DCPROG:
                                         Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = PREAPP
-                                    {
-                                        butrclick=PREAPP
-                                        prerc=1
-                                        guicontrolget,PPNUM,,PREDNUM
-                                        vikb:= % (%PPNUM%_Pre)
-                                        Menu,PP_RCMenu,Delete
-                                        Menu,PP_RCMenu,Add,: Download ::>,PPDownload
-                                        Menu,PP_RCMenu,Add,,
-                                        Menu,PP_RCMenu,Add,Cloud_Backup,PreCloud
-                                        Menu,PP_RCMenu,Add,,
-                                        if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
+							if A_GuiControl = PREAPP
+								{
+									butrclick=PREAPP
+									prerc=1
+									guicontrolget,PPNUM,,PREDNUM
+									vikb:= % (%PPNUM%_Pre)
+									Menu,PP_RCMenu,Delete
+									Menu,PP_RCMenu,Add,: Download ::>,PPDownload
+									Menu,PP_RCMenu,Add,,
+									Menu,PP_RCMenu,Add,Cloud_Backup,PreCloud
+									Menu,PP_RCMenu,Add,,
+									if (fileexist(binhome . "\" . "SoundVolumeView.exe")or instr(vikb,"SoundVolumeView.exe"))
                                         {
                                             Menu,PP_RCMenu,Add,SoundVolumeView,SNDVOLVIEWDOWNLOAD
                                         }
-                                        Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
-                                        return
-                                    }
-                                    if A_GuiControl = JBE_ProgB
+									Menu,PP_RCMenu,Show,%MENU_X% %MENU_Y%
+									return
+								}
+								if A_GuiControl = JBE_ProgB
                                     {
                                         Menu,JBE_RCMenu,Show,%MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = JAL_ProgB
+								if A_GuiControl = JAL_ProgB
                                     {
                                         Menu,JAL_RCMenu,Show,%MENU_X% %MENU_Y%
                                         return
                                     }
 
-                                    if A_GuiControl = GAME_DirectoryT
+								if A_GuiControl = GAME_DirectoryT
                                     {
                                         Menu, PropLNC, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = GAME_ProfilesT
+								if A_GuiControl = GAME_ProfilesT
                                     {
                                         Menu, PropPRO, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = BGM_ProgB
+								if A_GuiControl = BGM_ProgB
                                     {
                                         Menu, MM_RCMenu, Show, %MENU_X% %MENU_Y%
                                         return
-                                    }
-                                    if A_GuiControl = NetChk
+									}
+								if A_GuiControl = NetChk
                                     {
                                         Menu, LookupDBCHK, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Keyboard_MapperT
+								if A_GuiControl = Keyboard_MapperT
                                     {
                                         Menu, PROPKBL, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Player1_TemplateT
+								if A_GuiControl = Player1_TemplateT
                                     {
                                         Menu, PROPPl1, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Player2_TemplateT
+								if A_GuiControl = Player2_TemplateT
                                     {
                                         Menu, PROPPl2, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MediaCenter_TemplateT
+								if A_GuiControl = MediaCenter_TemplateT
                                     {
                                         Menu, PROPMC, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MM_Game_ConfigT
+								if A_GuiControl = MM_Game_ConfigT
                                     {
                                         Menu, PROPGM, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MM_MediaCenter_ConfigT
+								if A_GuiControl = MM_MediaCenter_ConfigT
                                     {
                                         Menu, PROPDM, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = JustAfterLaunchT
+								if A_GuiControl = JustAfterLaunchT
                                     {
                                         Menu, PropJAL, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = JustBeforeExitT
+								if A_GuiControl = JustBeforeExitT
                                     {
                                         Menu, PropJBE, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = PREDDT
+								if A_GuiControl = PREDDT
                                     {
                                         Menu, PropPRE, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = POSTDDT
+								if A_GuiControl = POSTDDT
                                     {
                                         Menu, PropPST, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = Borderless_Gaming_ProgramT
+								if A_GuiControl = Borderless_Gaming_ProgramT
                                     {
                                         Menu, PropBGE, Show, %MENU_X% %MENU_Y%
                                         return
                                     }
-                                    if A_GuiControl = MultiMonitor_ToolT
+								if A_GuiControl = MultiMonitor_ToolT
                                     {
                                         Menu, PropMMTE, Show, %MENU_X% %MENU_Y%
                                         return
@@ -8153,19 +8203,18 @@ DCPROG:
                             return
 
                             ContextProperties:
-                                Loop
+							Loop
                                 {
                                     FocusedRowNumber := LV_GetNext(0, "F")
                                     if not FocusedRowNumber
-                                    {
-                                        continue
-                                    }
+										{
+											continue
+										}
                                     else {
                                         LV_GetText(nmFName, FocusedRowNumber, 1)
                                         LV_GetText(nmFDir, FocusedRowNumber, 2)
                                         LV_GetText(nmOpt, FocusedRowNumber, 3)
                                         LV_GetText(nmArg, FocusedRowNumber, 4)
-
                                         LV_GetText(nmovr, FocusedRowNumber, 5)
                                         LV_GetText(kbmstat, FocusedRowNumber, 6)
                                         LV_GetText(pl1stat, FocusedRowNumber, 7)
@@ -8186,133 +8235,131 @@ DCPROG:
                                 }
                             return
                             TOGITMLST:
-                                if InStr(A_ThisMenuItem, "Open in Explorer")
+							if InStr(A_ThisMenuItem, "Open in Explorer")
                                 {
                                     Run, Explorer `"%nmfDir%`"
                                 }
-
-                                else {
-                                    if InStr(A_ThisMenuItem, "Toggle")
-                                    {
-                                        if instr(A_ThisMenuItem, "KBM")
-                                        {
-                                            if ((kmstat = "1")or(kmstat = "on")or(kmstat = "y"))
-                                            {
-                                                LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
-                                            }
-                                        }
-                                    }
-
-                                }
-                                if ErrorLevel
+							else {
+								if InStr(A_ThisMenuItem, "Toggle")
+									{
+										if instr(A_ThisMenuItem, "KBM")
+											{
+												if ((kmstat = "1")or(kmstat = "on")or(kmstat = "y"))
+													{
+														LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
+													}
+											}
+									}
+								}
+							if ErrorLevel
                                 {
                                     ;; MsgBox Could not perform requested action on "%FileDir%\%FileName%".
                                 }
                             return
 
                             DelProf:
-                                gui,submit,nohide
-                                Msgbox,8449,Confirm Delete,Are you sure you want to delete profiles?
-                                ifmsgbox,ok
-                                {
-                                    SB_SetText("Deleting Profiles")
-                                    Loop,files,%Game_Profiles%\*,D
-                                    {
-                                        FileDelete,%A_LoopFIleFUllPath%
-                                    }
-                                    SB_SetText("Profiles Deleted")
-                                }
+							gui,submit,nohide
+							Msgbox,8449,Confirm Delete,Are you sure you want to delete profiles?
+							ifmsgbox,ok
+								{
+									SB_SetText("Deleting Profiles")
+									Loop,files,%Game_Profiles%\*,D
+										{
+											FileDelete,%A_LoopFIleFUllPath%
+										}
+									SB_SetText("Profiles Deleted")
+								}
                             return
 
-                            PropMMTE:
-                                InterpXpnd= MultiMonitor_Tool
-                                extrpa=T
-                                goto, EDITPV
-                            PropKBCmdE:
-                                InterpXpnd= Keyboard_Mapper
-                                extrpa=T
-                                goto, EDITPV
+							PropMMTE:
+							InterpXpnd= MultiMonitor_Tool
+							extrpa=T
+							goto, EDITPV
+							PropKBCmdE:
+							InterpXpnd= Keyboard_Mapper
+							extrpa=T
+							goto, EDITPV
 
-                            PropPl1jpE:
-                                InterpXpnd= Player1_Template
-                                extrpa=T
-                                goto, EDITPV
+							PropPl1jpE:
+							InterpXpnd= Player1_Template
+							extrpa=T
+							goto, EDITPV
 
-                            PropPl2jpE:
-                                InterpXpnd= Player2_Template
-                                extrpa=T
-                                goto, EDITPV
+							PropPl2jpE:
+							InterpXpnd= Player2_Template
+							extrpa=T
+							goto, EDITPV
 
-                            PropMCjpE:
-                                InterpXpnd= MediaCenter_Template
-                                extrpa=T
-                                goto, EDITPV
+							PropMCjpE:
+							InterpXpnd= MediaCenter_Template
+							extrpa=T
+							goto, EDITPV
 
-                            PropGMcfgE:
-                                InterpXpnd= MM_Game_Config
-                                extrpa=T
-                                goto, EDITPV
+							PropGMcfgE:
+							InterpXpnd= MM_Game_Config
+							extrpa=T
+							goto, EDITPV
 
-                            PropDMcfgE:
-                                InterpXpnd= MM_Mediacenter_Config
-                                extrpa=T
-                                goto, EDITPV
+							PropDMcfgE:
+							InterpXpnd= MM_Mediacenter_Config
+							extrpa=T
+							goto, EDITPV
 
-                            PropJALcE:
-                                InterpXpnd= JustAfterLaunch
-                                extrpa=T
-                                goto, EDITPV
+							PropJALcE:
+							InterpXpnd= JustAfterLaunch
+							extrpa=T
+							goto, EDITPV
 
-                            PropJBEcE:
-                                InterpXpnd= JustAfterExit
-                                extrpa=T
-                                goto, EDITPV
+							PropJBEcE:
+							InterpXpnd= JustAfterExit
+							extrpa=T
+							goto, EDITPV
 
-                            PropPREcE:
-                                InterpXpnd= PREDD
-                                extrpa:= ""
-                                goto, EDITPV
+							PropPREcE:
+							InterpXpnd= PREDD
+							extrpa:= ""
+							goto, EDITPV
 
-                            PropPSTcE:
-                                InterpXpnd= POSTDD
-                                extrpa:= ""
-                                goto, EDITPV
+							PropPSTcE:
+							InterpXpnd= POSTDD
+							extrpa:= ""
+							goto, EDITPV
 
                             PropLNCE:
-                                InterpXpnd= Game_Directory
-                                extrpa=T
-                                goto, EDITPV
+							InterpXpnd= Game_Directory
+							extrpa=T
+							goto, EDITPV
 
                             PropPROE:
-                                InterpXpnd= Game_Profiles
-                                extrpa=T
-                                goto, EDITPV
+							InterpXpnd= Game_Profiles
+							extrpa=T
+							goto, EDITPV
 
                             PropBGEE:
-                                InterpXpnd= Borderles_Gaming_Program
-                                extrpa=T
-                                goto, EDITPV
+							InterpXpnd= Borderles_Gaming_Program
+							extrpa=T
+							goto, EDITPV
 
                             EDITPV:
-                                PREPSTALRT= Lime
-                                prtxb=
-                                epvsec= GENERAL
-                                iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
-                                if (ExtrpExpnd = "ERROR")
+							PREPSTALRT= Lime
+							prtxb=
+							epvsec= GENERAL
+							iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
+							if (ExtrpExpnd = "ERROR")
                                 {
                                     epvsec= JOYSTICKS
                                     iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
                                 }
-                                if (ExtrpExpnd = "ERROR")
+							if (ExtrpExpnd = "ERROR")
                                 {
                                     epvsec= CONFIG
                                     iniread,ExtrpExpnd,%RJDBINI%,%epvsec%,%InterpXpnd%
                                 }
-                                if !fileExist(ExtrpExpnd)
+							if !fileExist(ExtrpExpnd)
                                 {
                                     PREPSTALRT= Red
                                 }
-                                if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
+							if ((InterpXpnd = "JustAfterLaunch")or(InterpXpnd = "JustBeforeExit"))
                                 {
                                     epvsec= GENERAL
                                     iniread,JUSTtmpx,%RJDBINI%,%epvsec%,%InterpXpnd%
@@ -8320,7 +8367,7 @@ DCPROG:
                                     ExtrpExpnd= %ah2%
                                     prtxb= %ah1%
                                 }
-                                if ((InterpXpnd = "POSTDD")or(InterpXpnd = "PREDD"))
+							if ((InterpXpnd = "POSTDD")or(InterpXpnd = "PREDD"))
                                 {
                                     epvsec= CONFIG
                                     guicontrolget,pnum,,POSTDNUM
@@ -8341,19 +8388,19 @@ DCPROG:
                                         PREPSTALRT= Red
                                     }
                                 }
-                                if (ExtrpExpnd = "ERROR")
+							if (ExtrpExpnd = "ERROR")
                                 {
                                     ExtrpExpnd=
                                 }
-                                Gui +LastFound +OwnDialogs +AlwaysOnTop
-                                GUIMSG:= "!!!!!Incorrect Values may lead to program malfunction!!!!!"
-                                for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+							Gui +LastFound +OwnDialogs +AlwaysOnTop
+							GUIMSG:= "!!!!!Incorrect Values may lead to program malfunction!!!!!"
+							for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
                                 {
                                     btt(GUIMSG,,,,"Style2",{Transparent:v})
                                     Sleep, 30
                                 }
-                                InputBox, TRNSFERVAR, Invalid Paths will cause errors.,Enter the path for %InterpXpnd%,,520,300,,,Locale,,%ExtrpExpnd%
-                                if (TRNSFERVAR <> "")
+							InputBox, TRNSFERVAR, Invalid Paths will cause errors.,Enter the path for %InterpXpnd%,,520,300,,,Locale,,%ExtrpExpnd%
+							if (TRNSFERVAR <> "")
                                 {
                                     stringright,ablb,InterpXpnd,1
                                     if ((ablb = "\") or (ablb = "/"))
@@ -8365,7 +8412,7 @@ DCPROG:
                                     guicontrol, +c%PREPSTALRT%, %InterpXpnd%%extrpa%
                                     guicontrol,,%InterpXpnd%%extrpa%,%prtxb%%ExtrpExpnd%
                                 }
-                                if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "terminate")or (TRNSFERVAR = "frontend")or (TRNSFERVAR = "nothing")or(TRNSFERVAR = "del")or(TRNSFERVAR = "none")or(TRNSFERVAR = "delete")or(TRNSFERVAR = "*.*"))
+							if ((TRNSFERVAR = "disable")or (TRNSFERVAR = "disabled")or (TRNSFERVAR = "terminate")or (TRNSFERVAR = "frontend")or (TRNSFERVAR = "nothing")or(TRNSFERVAR = "del")or(TRNSFERVAR = "none")or(TRNSFERVAR = "delete")or(TRNSFERVAR = "*.*"))
                                 {
                                     if ((InterpXpnd = Player1_Template)or (InterpXpnd = Player2_Template)or (InterpXpnd = MediaCenter_Profile))
                                     {
