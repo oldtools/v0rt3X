@@ -1,5 +1,5 @@
 ﻿;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-04-14 3:37 AM 0.99.85.62 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2023-04-16 8:01 AM 0.99.85.62 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -470,6 +470,9 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 				process,close,%bgpid%
 			}
 	}
+return
+
+DCPRPMON:
 return
 
 MMPRPMON:

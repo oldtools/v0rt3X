@@ -472,6 +472,9 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 	}
 return
 
+DCPRPMON:
+return
+
 MMPRPMON:
 alir= %home%\devlist.cmd
 filedelete,%home%\cv.tmp
