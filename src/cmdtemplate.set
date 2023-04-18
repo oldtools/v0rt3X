@@ -24,6 +24,10 @@ for /f "delims=" %%a in ("[MediaCenter_Profile]") do if "%MediaCenter_Profile%" 
 for /f "delims=" %%a in ("[Player1]") do if "%Player1%" == "" set Player1=%%~a
 for /f "delims=" %%a in ("[Player2]") do if "%Player2%" == "" set Player2=%%a
 for /f "delims=" %%a in ("[MultiMonitor_Tool]") do if "%MultiMonitor_Tool%" == "" set MultiMonitor_Tool=%%~a
+set "MMLOAD=/loadconfig "
+set "MMSAVE=/saveconfig "
+for /f "delims=" %%a in ("[MultiMonitor_Tool]") do if "%%~nxa" == "dc2.exe" set MMLOAD=-configure=
+for /f "delims=" %%a in ("[MultiMonitor_Tool]") do if "%%~nxa" == "dc2.exe" set MMSAVE=-create=
 for /f "delims=" %%a in ("[MM_Game_Config]") do if "%MM_Game_Config%" == "" set MM_Game_Config=%%~a
 for /f "delims=" %%a in ("[MM_MEDIACENTER_Config]") do if "%MM_MEDIACENTER_Config%" == "" set MM_MEDIACENTER_Config=%%~a
 
@@ -104,9 +108,9 @@ if "%MONITORMODE%" == "" goto POST1
 if "%MONITORMODE%" == "0" goto POST1
 if not exist "%multimonitor_tool%" goto POST1
 REM if "%MM_Game_Config%" == "" set MM_Game_Config=GameMonitors.mon
-REM call "%multimonitor_tool%" /SaveConfig "%mm_Game_config%"
+REM call "%multimonitor_tool%" [MMSAVE]"%mm_Game_config%"
 if not exist "%MM_MediaCenter_Config%" goto POST1
-call "%multimonitor_tool%" /LoadConfig "%mm_mediacenter_config%"
+call "%multimonitor_tool%" [MMLOAD]"%mm_mediacenter_config%"
 
 :POST1
 if not exist "%A_Post%" goto QUITOUT

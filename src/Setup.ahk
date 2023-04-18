@@ -8,8 +8,8 @@ FileEncoding UTF-8
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-04-16 8:01 AM"
-VERSION := "0.99.85.62"
+RELEASE := "2023-04-18 12:59 AM"
+VERSION := "0.99.85.63"
 
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -1469,7 +1469,6 @@ DCPROG:
 				if !fileExist(home . "\" . "cv.tmp")
 					{
 						Run, %comspec% /c ""%MLTMP%\dc64cmd.exe" -monitor=%tspl2% -listmodes>>"%home%\cv.tmp"",%home%,hide
-						;msgbox,,,%comspec% /c ""%MLTMP%\dc64cmd.exe" -monitor=%tspl2% -listmodes>>"%home%\cv.tmp"",3
 						sleep,8000
 					}
 			}
@@ -1669,9 +1668,9 @@ DCPROG:
         Loop,parse,inff,`n`r
         {
             if (A_LoopField = "")
-            {
-                continue
-            }
+				{
+					continue
+				}
             vein+=1
             ak%vein%:= A_LoopField
             Menu,addonx,Add,%A_loopField%,VeinHC
@@ -1705,20 +1704,20 @@ DCPROG:
     return
 
     GBT_AUTO:
-        Borderless_gaming_Program:= A_Space
-        if fileexist(ProgramFiles . "\" "Borderless Gaming" . "\" . "BorderlessGaming.exe")
+	Borderless_gaming_Program:= A_Space
+	if fileexist(ProgramFiles . "\" "Borderless Gaming" . "\" . "BorderlessGaming.exe")
         {
             Borderless_gaming_Program= %ProgramFiles%\Borderless Gaming\BorderlessGaming.exe
         }
-        if fileexist(ProgramFilesx86 . "\" "Borderless Gaming" . "\" . "BorderlessGaming.exe")
+	if fileexist(ProgramFilesx86 . "\" "Borderless Gaming" . "\" . "BorderlessGaming.exe")
         {
             Borderless_gaming_Program= %ProgramFilesx86%\Borderless Gaming\BorderlessGaming.exe
         }
-        if fileexist(binhome . "\" "Borderless Gaming" . "\" . "borderless-gaming-portable.exe")
+	if fileexist(binhome . "\" "Borderless Gaming" . "\" . "borderless-gaming-portable.exe")
         {
             Borderless_gaming_Program= %ProgramFilesx86%\Borderless Gaming\borderless-gaming-portable.exe
         }
-        iniwrite,%Borderless_Gaming_Program%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
+	iniwrite,%Borderless_Gaming_Program%,%RJDBINI%,GENERAL,Borderless_Gaming_Program
     return
 
     MM_AUTO:
@@ -1733,7 +1732,7 @@ DCPROG:
 		MPIter=MultimonitorTool.exe|dc2.exe
 		Loop,parse,MPIter,|
 			{
-				if (A_LoopField = "")
+			if (A_LoopField = "")
 					{
 						continue
 					}
@@ -1877,27 +1876,27 @@ DCPROG:
 					}
 			}
         if (fileexist(MM_Game_Config)&& fileexist(MM_MediaCenter_Config)&& fileExist(MultiMonitor_ToolT))
-        {
-            MMLOAD:= "/loadconfig "
-            MMSAVE:= "/saveconfig "
-			monxtn= mon
-			MONGT=MM
-            if instr(MultiMonitor_ToolT,"dc2.exe")
-                {
-                    splitpath,MultiMonitor_Tool,,MMTPTH
-					Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
-					MMLOAD:= "-configure="
-                    MMSAVE:= "-create="
-					monxtn= xml
-					MONGT=DC
-                }
-            iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
-            guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
-            guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
-            guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
-            iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
-            iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
-        }
+			{
+				MMLOAD:= "/loadconfig "
+				MMSAVE:= "/saveconfig "
+				monxtn= mon
+				MONGT=MM
+				if instr(MultiMonitor_ToolT,"dc2.exe")
+					{
+						splitpath,MultiMonitor_Tool,,MMTPTH
+						Display_ChangerCMD= %MMTPTH%\dc64cmd.exe
+						MMLOAD:= "-configure="
+						MMSAVE:= "-create="
+						monxtn= xml
+						MONGT=DC
+					}
+				iniwrite,2,%RJDBINI%,GENERAL,MonitorMode
+				guicontrol,,MultiMontior_ToolT,%MultiMontior_Tool%
+				guicontrol,,MM_MediaCenter_ConfigT,%MM_MediaCenter_Config%
+				guicontrol,,MM_Game_ConfigT,%MM_Game_Config%
+				iniwrite,%MMLOAD%,%RJDBINI%,GENERAL,MMLOAD
+				iniwrite,%MMSAVE%,%RJDBINI%,GENERAL,MMSAVE
+			}
     return
 	MMResDD:
 	gui,submit,nohide
@@ -1936,7 +1935,6 @@ DCPROG:
 		}
 	guicontrol,,MMResHD,|%hzlist%
 	gosub, MMResHD
-	;msgbox,,,x=%MMResP1%`ny=%mmresp2%`nzh=%hzlist%
 	return	
 	MMResHD:
 	gui,submit,nohide
@@ -1984,6 +1982,7 @@ DCPROG:
 	GuiControl,hide,MMResTR	
 	GuiControl,hide,MMResSR	
 	GuiControl,hide,MMResB	
+	monxtn= xml
 	stringreplace,MMResPP,MMResDD,%A_Space%,,All
 	stringsplit,MMResP,MMResPP,X
 	NCDCOM:= A_Space . "-refresh=" . MMResHD
@@ -2008,20 +2007,21 @@ DCPROG:
 		}
 	SB_SetText("Generating Preview")
 	FileDelete,%home%\dcmd.cmd	
+	FileDelete,%home%\DCTemplate.cmd	
 	FileDelete,%home%\cv.xml
-	FileAppend,pushd "%home%"`n"%Display_ChangerCMD%" -monitor="%monch%" -width=%MMResP1% -height=%MMResP2%%NCDCOM% -apply`nping -n 2 127.0.0.1 > nul`n"%Display_ChangerCMD%"%DCCOM% -apply`nping -n 10 127.0.0.1 > nul`nexit /b`n,%home%\dcmd.cmd,UTF-8-RAW
+	FileAppend,`npushd "%home%"`n"%Display_ChangerCMD%" -monitor="%monch%" -width=%MMResP1% -height=%MMResP2%%NCDCOM% -apply`n"%Display_ChangerCMD%"%DCCOM% -apply`nexit /b`n,%home%\DCTemplate.cmd,UTF-8-RAW
+	FileAppend,`npushd "%home%"`n"%Display_ChangerCMD%" -monitor="%monch%" -width=%MMResP1% -height=%MMResP2%%NCDCOM% -apply`nping -n 2 127.0.0.1 > nul`n"%Display_ChangerCMD%"%DCCOM% -apply`nping -n 10 127.0.0.1 > nul`nexit /b`n,%home%\dcmd.cmd,UTF-8-RAW
 	Sleep,4000
 	Run, %comspec% /c "%home%\dcmd.cmd",%home%,hide
 	
 	Sleep,8000
 	SB_SetText("...Generating Preview....")
-	Runwait, "%MultiMonitor_Tool%" -create="%home%\cv.xml",%home%,hide
+	Runwait, "%MultiMonitor_Tool%" -create="%home%\cv.%monxtn%",%home%,hide
 	tooltip,`n:::::     current resolution-template for games      :::::::`n:::::::            testing           :::::::`n`ncurrent layout:`n%A_Tab%%home%\GameMonitors.xml`n:::::::::::%A_Tab%%A_Tab%:::::::::::::
-	;Msgbox,,,dc=%Display_ChangerCMD%`nncdcom=%NCDCOM%`nDCCOM=%DCCOM%`nmonch=%monch%`nwidth=%MMResP1%`nheight=%MMResP2%
 	Sleep,4000
 	SB_SetText("Setting Desktop Config")
 	ToolTip,
-	Runwait, "%MultiMonitor_Tool%" -configure="%home%\DesktopMonitors.xml",%home%,hide
+	Runwait, "%MultiMonitor_Tool%" -configure="%home%\DesktopMonitors.%monxtn%",%home%,hide
 	Sleep,2500
 	Blockinput,off
 	SB_SetText("")
@@ -2030,7 +2030,20 @@ DCPROG:
 		{
 			Filecopy,%home%\cv.xml,%home%\GameMonitors.xml,1
 			MM_Game_Config= %home%\GameMonitors.xml
-			MM_Game_ConfigT= %MM_Game_Config%
+			MM_Game_ConfigT= %MM_Game_Config%MM_GAME_Config= %MM_GAME_ConfigT%
+			splitpath,MM_Game_ConfigT,,,
+			FileDelete,%home%\Multimonitor_Tool.cmd
+			FileDelete,%home%\%MONGT%Template.cmd
+			FileDelete,%home%\MonitorSwitch.cmd
+			FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%monxtn%
+			GMMT= `npushd "`%~dp0"`nstart "[MMTLOC]"[MMLOAD]"[GAMCFGLOC]"`nexit /b`n
+			FileAppend,%GMMT%,%home%\%MONGT%Template.cmd,UTF-8
+			stringreplace,GMMO,GMMO,[GAMCFGLOC],%home%\GameMonitors.%monxtn%,All
+			stringreplace,GMMO,GMMT,[MMTLOC],%MultiMonitor_Tool%,All
+			stringreplace,GMMO,GMMO,[GAMCFGLOC],%home%\GameMonitors.%monxtn%,All
+			stringreplace,GMMO,GMMO,[MMLOAD],%MMLOAD%,All
+			FileAppend,%GMMO%,%home%\MonitorSwitch.cmd,UTF-8
+			iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
 			guicontrol,,MM_Game_ConfigT,%MM_Game_ConfigT%
 			iniwrite,%MM_Game_Config%,%RJDBINI%,CONFIG,MM_Game_Config
 		} 
@@ -2074,8 +2087,18 @@ DCPROG:
 				if ((MM_GAME_ConfigT <> "")&& !instr(MM_GAME_ConfigT,"<"))
 					{
 						MM_GAME_Config= %MM_GAME_ConfigT%
-						splitpath,MM_Game_ConfigT,,,mmcx
-						FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%mmcx%
+						splitpath,MM_Game_ConfigT,,,
+						FileDelete,%home%\Multimonitor_Tool.cmd
+						FileDelete,%home%\%MONGT%Template.cmd
+						FileDelete,%home%\MonitorSwitch.cmd
+						FileCopy,%MM_GAME_Config%,%home%\GameMonitors.%monxtn%
+						GMMT= `npushd "`%~dp0"`nstart "[MMTLOC]"[MMLOAD]"[GAMCFGLOC]"`nexit /b`n
+						FileAppend,%GMMT%,%home%\%MONGT%Template.cmd
+						stringreplace,GMMO,GMMO,[GAMCFGLOC],%home%\GameMonitors.%monxtn%,All
+						stringreplace,GMMO,GMMT,[MMTLOC],%MultiMonitor_Tool%,All
+						stringreplace,GMMO,GMMO,[GAMCFGLOC],%home%\GameMonitors.%monxtn%,All
+						stringreplace,GMMO,GMMO,[MMLOAD],%MMLOAD%,All
+						FileAppend,%GMMO%,%home%\MonitorSwitch.cmd
 						iniwrite,%MM_GAME_Config%,%RJDBINI%,CONFIG,MM_GAME_Config
 					}
 				else {
@@ -5126,12 +5149,12 @@ DCPROG:
                         }
                     }
                     if (!instr(stmdbfnd,steamquery)or(STEAMQUERY = 0))
-                    {
-                        GameData:= ""
-                        SaveData:= ""
-                        exe_list:= ""
-                        klist:= ""
-                    }
+						{
+							GameData:= ""
+							SaveData:= ""
+							exe_list:= ""
+							klist:= ""
+						}
                     prn= %expth%\%exfnm%
                     stringlen,prt,prn
                     if (!fileexist(prn)or (prt < 6))
@@ -5202,12 +5225,23 @@ DCPROG:
                         {
                             gmnamed= %nameOverride%
                             sexjnj= %nameOverride%
-                            njName= %gmnamed%
-                            exedp= %gmnamed%
+                            njName= %nameOverride%
+                            exedp= %nameOverride%
                             stringreplace,excp,gmnamed,%A_Space%,,All
                             excn=|%excp%|
                             goto, nameOVR
                         }
+						if (nameOverride <> "")
+							{
+							    gmnamed= %nameOverride%
+								sexjnj= %nameOverride%
+								njName= %nameOverride%
+								exedp= %nameOverride%
+								stringreplace,excp,gmnamed,%A_Space%,,All
+								excn=|%excp%|
+								goto, nameOVR
+							}
+						
 
                         gosub, GETGOODNAME
                         gmnamed= %njname%
@@ -6120,6 +6154,20 @@ DCPROG:
                                     }
                                     JUSTA:= prea2
                                 }
+								if (DEPLOY_DC = 1)
+									{
+										Loop,files,%Downloaded%\*noon*
+											{
+												noon=%A_LoopfieldLongPath%
+											}
+										RunWait, %home%\7za.exe e -y "%noon%" -O"%outdir%"
+										MultiMonitor_Tool= %outdir%\dc2.exe
+										Display_ChangerCMD= %outdir%\dc64cmd.exe
+										GameMon= %outdir%\GameMonitors.xml
+										DeskMon= %outdir%\DesktopMonitors.xml
+										MMSAVE:= "-create"
+										MMLOAD:= "-configure="
+									}
                                 stringreplace,cmdtmp,cmdtmp,[1_Post],%1_Post%
                                 stringreplace,cmdtmp,cmdtmp,[1_PostW],%1_PostW%
                                 stringreplace,cmdtmp,cmdtmp,[2_Post],%2_Post%
@@ -6136,6 +6184,8 @@ DCPROG:
                                 stringreplace,cmdtmp,cmdtmp,[JBEW],%JBEW%
                                 stringreplace,cmdtmp,cmdtmp,[JustAfterLaunch],%JUSTA%
                                 stringreplace,cmdtmp,cmdtmp,[JALW],%JALW%
+                                stringreplace,cmdtmp,cmdtmp,[MMSAVE],%MMSAVE%
+                                stringreplace,cmdtmp,cmdtmp,[MMLOAD],%MMLOAD%
                                 stringreplace,cmdtmp,cmdtmp,[exelist],%klist%
                                 stringreplace,cmdtmp,cmdtmp,[MultiMonitor_tool],%MultiMonitor_Tool%
                                 stringreplace,cmdtmp,cmdtmp,[keyboard_mapper],%keyboard_mapper%
@@ -7963,7 +8013,6 @@ DCPROG:
                                 {
                                     URLFILE:= URLFILESPLIT
                                 }
-							msgbox,,,iniread-urlfilespl=%URLFILESPLIT%`ninifile=%RJREPOS%`nSection=BINARIES`ncuremote=%curemote%`nurlfile=%URLFILE%`nxtractpath=%xtractpath%`n	
                             return
 
                             GuiContextMenu:
@@ -9275,44 +9324,47 @@ DCPROG:
                                     
                                 return
                             }
+;;##########################################################################################
+;;##############################  FUNCTIONS ####################################
+;;##########################################################################################;;
+Extract2Folder(Zip, Dest="", jhFln="")
+	{
+		SplitPath, Zip,, SourceFolder
+		if ! SourceFolder
+			Zip := A_ScriptDir . "\" . Zip
 
-                            Extract2Folder(Zip, Dest="", jhFln="")
-                            {
-                                SplitPath, Zip,, SourceFolder
-                                if ! SourceFolder
-                                    Zip := A_ScriptDir . "\" . Zip
+		if ! Dest {
+			SplitPath, Zip,, DestFolder,, Dest
+			Dest := DestFolder . "\" . Dest . "\"
+		}
+		if SubStr(Dest, 0, 1) <> "\"
+			Dest .= "\"
+		SplitPath, Dest,,,,,DestDrive
+		if ! DestDrive
+			Dest := A_ScriptDir . "\" . Dest
 
-                                if ! Dest {
-                                    SplitPath, Zip,, DestFolder,, Dest
-                                    Dest := DestFolder . "\" . Dest . "\"
-                                }
-                                if SubStr(Dest, 0, 1) <> "\"
-                                    Dest .= "\"
-                                SplitPath, Dest,,,,,DestDrive
-                                if ! DestDrive
-                                    Dest := A_ScriptDir . "\" . Dest
+		fso := ComObjCreate("Scripting.FileSystemObject")
+		If Not fso.FolderExists(Dest)
+		{
+			fso.CreateFolder(Dest)
+		}
 
-                                fso := ComObjCreate("Scripting.FileSystemObject")
-                                If Not fso.FolderExists(Dest)
-                                {
-                                    fso.CreateFolder(Dest)
-                                }
-
-                                AppObj := ComObjCreate("Shell.Application")
-                                FolderObj := AppObj.Namespace(Zip)
-                                if jhFln {
-                                    FileObj := FolderObj.ParseName(jhFln)
-                                    AppObj.Namespace(Dest).CopyHere(FileObj, 4|16)
-                                }
-                                else
-                                {
-                                    FolderItemsObj := FolderObj.Items()
-                                    AppObj.Namespace(Dest).CopyHere(FolderItemsObj, 4|16)
-                                }
-                            }
-                            CmdRet(sCmd, callBackFuncObj := "", encoding := ""){
-                                static HANDLE_FLAG_INHERIT := 0x00000001, flags := HANDLE_FLAG_INHERIT
-                                    , STARTF_USESTDHANDLES := 0x100, CREATE_NO_WINDOW := 0x08000000
+		AppObj := ComObjCreate("Shell.Application")
+		FolderObj := AppObj.Namespace(Zip)
+		if jhFln {
+			FileObj := FolderObj.ParseName(jhFln)
+			AppObj.Namespace(Dest).CopyHere(FileObj, 4|16)
+		}
+		else
+		{
+			FolderItemsObj := FolderObj.Items()
+			AppObj.Namespace(Dest).CopyHere(FolderItemsObj, 4|16)
+		}
+	}
+	
+CmdRet(sCmd, callBackFuncObj := "", encoding := ""){
+	static HANDLE_FLAG_INHERIT := 0x00000001, flags := HANDLE_FLAG_INHERIT
+		, STARTF_USESTDHANDLES := 0x100, CREATE_NO_WINDOW := 0x08000000
 
    (encoding = "" && encoding := "cp" . DllCall("GetOEMCP", "UInt"))
    DllCall("CreatePipe", "PtrP", hPipeRead, "PtrP", hPipeWrite, "Ptr", 0, "UInt", 0)
