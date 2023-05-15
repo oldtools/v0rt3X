@@ -1,5 +1,5 @@
 ﻿;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-04-18 12:59 AM 0.99.85.63 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2023-05-15 11:42 AM 0.99.85.63 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -15,12 +15,18 @@ EnvGet,DRVSYSTM,SYSTEM
 EnvGet,xprgfls,PROGRAMFILES(X86)
 EnvGet,DRVRT,WINDIR
 rootiterate=%LADTA%|%A_AppData%|%USRPRF%|%xprgfls%|%A_Temp%|%PBLCFLDR%|%DRVSYSTM%|%PBLCFLDR%
-
+RFweb= v0rt3X://
 CENX:=(A_ScreenWidth/2)-(250/2)
 CENY:=(A_ScreenHeight/2)-(600/2)
 Loop %0%  
 	{
 		GivenPath := %A_Index%
+		if instr(GivenPath,RFweb)
+			{
+				stringreplace,RFWebPath,GivenPath,%RFWeb%,,All
+				GivenPath:= PathCreateFromUrl( RFWebPath )
+				
+			}
 		Loop %GivenPath%,
 			{
 				if (plink = "")
@@ -1162,6 +1168,21 @@ if (CWIN = 1)
 	}	
 return	
 	
+^!+f6::
+CWIN:= GetKeyState("LWin")
+if (CWIN = 0)
+	{
+		CWIN:= GetKeyState("RWin")
+		if (CWIN = 0)
+			{
+				return				
+			}
+	}
+blockinput, off
+Suspend, Toggle
+SetKeyDelay,-1
+msgbox,,, whatever
+return
 
 Ctrl & f8::
 nosave= 1
@@ -1183,8 +1204,12 @@ Sleep, 1000
 CWIN:= GetKeyState("LWin")
 if (CWIN = 0)
 	{
-		nosave=
-		return
+		CWIN:= GetKeyState("RWin")
+		if (CWIN = 0)
+			{
+				nosave=
+				return				
+			}
 	}
 goto,givup
 Ctrl & f12::
@@ -1982,6 +2007,13 @@ for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
 	}
 ;ToolTip
 return
+
+PathCreateFromURL( URL ) {
+ VarSetCapacity( fPath, Sz := 2084, 0 )
+ DllCall( "shlwapi\PathCreateFromUrl" ( A_IsUnicode ? "W" : "A" )
+         , Str,URL, Str,fPath, UIntP,Sz, UInt,0 )
+Return fPath
+}
 
 
 CmdRet(sCmd, callBackFuncObj := "", encoding := "")

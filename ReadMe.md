@@ -11,7 +11,7 @@
 
 Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as
  keyboad-mapping and monitor layout.  Tools which automate the process of creating and loading presets for devices, games and settings at 
- a granular level are can be downloaded and installed from directly within the program.
+ a granular level are downloaded and installed from directly within the program.
 
 Games not installed through steam/gog/epic/origin/etc are detected and given a proper name:
 
@@ -23,7 +23,7 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 ## Installation
 - This Version: **0.99.85.63**
 
-- This Build: **2023-04-18 12:59 AM**
+- This Build: **2023-05-15 11:42 AM**
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -36,24 +36,24 @@ v0rt3X
 			│   ├──  NewOSK.exe
 			│   ├──  Setup.exe
 			│   ├──  Source_Builder.exe
-			│   └──  Update.exe
-			│   ├──  v0rt3X.exe
+			│   ├──  Update.exe
+			│   └── v0rt3X.exe
 			│
 			├──  site
-			│   └──  img
+			│
+			│   ├──  index.html
+			│   ├──  Hermit-Regular.otf
+			│   ├──  key.ico
+			│   ├──  ReadMe.md
+			│   ├──  TruenoLt.otf
+			│   ├──  version.txt
+			│	└──  img
 			│       ├──  Install.png
 			│       ├──  key.png
 			│       ├──  runas.png
 			│       ├──  Setup.png
 			│       ├──  Tip.png
 			│       └──  Update.png
-			|
-			│   ├──  index.html
-			│   ├──  Hermit-Regular.otf
-			│   ├──  key.ico
-			│   ├──  ReadMe.md
-			│   ├──  TruenoLt.otf
-			│   └──  version.txt
 			│
 			├──  src
 			│   ├──  absol.set

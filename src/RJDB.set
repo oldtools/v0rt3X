@@ -67,3 +67,14 @@ Exe_File=
 GameData=
 SaveData=
 Install_Folder=
+[DEPLOYMENTS]
+KBPak=
+Pl1Pak=
+Pl2Pak=
+MCjPak=
+GMPak=
+DMPak=
+JALPak=
+JBEPak=
+PREPak=
+PSTPak=

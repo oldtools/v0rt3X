@@ -11,7 +11,7 @@
 
 Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as
  keyboad-mapping and monitor layout.  Tools which automate the process of creating and loading presets for devices, games and settings at 
- a granular level are can be downloaded and installed from directly within the program.
+ a granular level are downloaded and installed from directly within the program.
 
 Games not installed through steam/gog/epic/origin/etc are detected and given a proper name:
 
@@ -36,24 +36,24 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 			│   ├──  NewOSK.exe
 			│   ├──  Setup.exe
 			│   ├──  Source_Builder.exe
-			│   └──  Update.exe
-			│   ├──  [RJ_EXE].exe
+			│   ├──  Update.exe
+			│   └── [RJ_EXE].exe
 			│
 			├──  site
-			│   └──  img
+			│
+			│   ├──  index.html
+			│   ├──  Hermit-Regular.otf
+			│   ├──  key.ico
+			│   ├──  ReadMe.md
+			│   ├──  TruenoLt.otf
+			│   ├──  version.txt
+			│	└──  img
 			│       ├──  Install.png
 			│       ├──  key.png
 			│       ├──  runas.png
 			│       ├──  Setup.png
 			│       ├──  Tip.png
 			│       └──  Update.png
-			|
-			│   ├──  index.html
-			│   ├──  Hermit-Regular.otf
-			│   ├──  key.ico
-			│   ├──  ReadMe.md
-			│   ├──  TruenoLt.otf
-			│   └──  version.txt
 			│
 			├──  src
 			│   ├──  absol.set
