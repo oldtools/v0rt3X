@@ -20,6 +20,8 @@ Cloud_Backup=
 Cloud_Restore=
 Hide_Taskbar=0
 BorderLess_Gaming_Program=
+SyncThing=
+rclone=
 BGP_State=13
 Mapper=
 CENTRALIZE=
@@ -67,6 +69,7 @@ Exe_File=
 GameData=
 SaveData=
 Install_Folder=
+
 [DEPLOYMENTS]
 KBPak=
 Pl1Pak=

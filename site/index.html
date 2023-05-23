@@ -1,15 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title>
-        [RJ_PROJ]</title>
+    <title>[RJ_PROJ]</title>
 </head>
-
 <body>
-
     <body onload="myFunction()" style="margin:0;">
         <div id="loader"></div>
         <div style="display:none;" id="myDiv" class="animate-bottom">
@@ -34,7 +30,6 @@
 					<li>
                         <a href="#PREPOST" class="pk" data-smoothie>PRE/POST</a>
                     </li>
-					
                     <li>
                         <a href="#FAQS" class="pk" data-smoothie>CONTACT</a>
                     </li>
@@ -103,9 +98,7 @@
                                     <div id="detailsdiv" align="left">
                                         <div>
 										<div align="center">
-										
 											<br><br>
-											  
                                         </div>
                                     </div>
                                     <br>
@@ -134,6 +127,7 @@
                 <div align="left" id="outer">
                     <div id="inner">
                         <h3><a>To Do:</a></h3>
+                            <p>Cloud-saving and file-sync backup</p>
                             <a href="#FAQS" data-smoothie>- Ask for your feature</a>
                             <a href="https://www.paypal.me/romjacket"></a>
                         </p>
@@ -155,109 +149,226 @@
                     </div>
                     <div align="left" id="outer">
                         <div id="inner" align="left">
-                            <div>
-									<h3>Profiles</h3>
-                                    <p>Each game is given a profile directory with it's name as the folder.</p>
-									<h3>Launchers</h3>
-                                    <p>Each game is given a launcher-shortcut which uses the [RJ_PROJ] program to load the settings for that game.</p>
-									 <ul class="accordion css-accordion" align="right">
-                            <li class="accordion-item">
+						<div>
+						<h3>Profiles</h3>
+						<p>A "profiles" folder contains profile jackets properly named for each game.<br>
+                            <h3>Launchers</h3>
+						<p>A "launchers" folder contains a shortcut for each game profile.<br>
+                        </p>
+                    </p>
+						 <ul class="accordion css-accordion" align="right">
+                             <li class="accordion-item">
                                 <input class="accordion-item-input" type="checkbox" name="accordion" id="item-profiles" />
                                 <label for="item-profiles" class="accordion-item-hd" align="right">↕ Usage Details<span class="accordion-item-hd-cta">&#9650;</span></label>
-                                <div class="accordion-item-bd">
+								<div class="accordion-item-bd">
                                     <div id="detailsdiv" align="left">
                                         <div>
                                             <h4>Profile Directory</h4>
-                                             <h4>alternates/ </h4><p>alternate shortcuts to executables selected</p><br>
-                                            <h4> Game Name (.lnk) </h4><p>link to the game</p><br>
-                                             <h4>Game Name (.cmd) </h4><p>a batch file which can run the game with settings specified in game.ini</p><br>
-                                             <h4>Game Name[_2-_4](.gamecontroller.amgp/.xpadder/.cfg) </h4><p>Player keympper config files</p><br>
-                                             <h4>Mediacenter(.gamecontroller.amgp/.xpadder/.cfg) </h4><p>Player keympper config files</p><br>
-                                             <h4>DesktopMonitors.mon </h4><p>Frontend/Mediacenter monitor configuration layout file</p><br>
-                                             <h4>GameMonitors.mon </h4><p>Monitor configuration layout file for the game</p><br>
-                                            <h4> Antimicro\x/xpadder/joyXoff/joytokey_!.cmd </h4><p>proxy script to launch the keymapper</p><br>
-                                            <h4> GameAudio.cmd <br>MediaCenterAudio.cmd</h4><p>Script to switch audio devices</p><br>
-                                             <h4>Game.ini </h4><p>Configuration file for [RJ_PROJ]</p><br>
-                                           
-                                            <h4>Mediacenter / Desktop</h4>
-                                            <p></p>
-                                            <h4>Saving Profiles</h4>
-                                            <p></p>
+											<p>A profile folder may contain many files including a "Game.ini configuration file, a shortcut to the executable, controller profiles,<br>
+                                                monitor configuration files, audio-device preferences, pre-run / post-run scripts and other metadata files such as<br>
+                                                an html file with the name of the profile found on pcgamingwiki and a numreical json file corresponding to the appid on steam's database</p>
+                                                <h4>Launcher Shortcuts</h4>
+                                                <p>Each shortcut uses the [RJ_PROJ] program to load the settings found in the corresponding profile folder (Game.ini).</p>
+                                                <p>In addition to the executable's shortcut launcher found inside each profile folder is also a batch file that can launch the game with most abilities<br>
+                                                    available to the [RJ_PROJ] launcher program and doesn't require [RJ_PROJ].<br>
+                                                    Executables in each Game's installation folder can be included during the launcher-creation process to allow [RJ_PROJ] to determine the appropriate<br>
+                                                    executable while providing an easy way to reassign it to another which are linked as shortcuts in the "alternates" subdirectory.</p>
+                                                    <!----, and a "Game.html" which may be used as a static component for html frontends.--><br>
+                                            <br>
+                                        </div>
+									</div>
+                                    <br>
+								</div>
+							</li>
+                        </ul><p></p>
+					</div>
+				</div>
+			</div>
+		</div>
+            <div id="SectSeparate" align="center">
+                <h1>Setup &amp; Config</h1>
+            </div>
+            <div align="left" id="outer">
+                <div id="inner">
+                    <h3><a>Setup Tab</a></h3>
+                    <p>The Setup Tab contains global options such as program-assignments, directories and template references.</p>
+                    <br>
+                    <ul class="accordion css-accordion" align="right">
+                        <li class="accordion-item">
+                            <input class="accordion-item-input" type="checkbox" name="accordion" id="stab-details" />
+                            <label for="stab-details" class="accordion-item-hd" align="right">↕ Setup Options<span class="accordion-item-hd-cta">&#9650;</span></label>
+                            <div class="accordion-item-bd">
+                                <div id="detailsdiv" align="left">
+                                    <div>
+                                        <h4>Setup Tab</h4>
+                                        <p>[RJ_PROJ] basic setttings such as profile &amp; launcher locations, game-installation directory inclusions, online-library exceptions and the order of operations governing ancillary programs can be configured in the setup tab.<br>
+                                                Keymappers, monitor-confuration and audio-device-switching programs can be downloaded, assigned and configured to establish templates for your games.</br>
+                                            [RJ_PROJ] has ingegrated configuration-wizards for supported programs.  Clicking on the small buttons adjacent to path-assignment selection-buttons will display a list of supported programs which can automatically be downloaded for a simplified and streamlined setup.<br>
+                                                Many UI elements hold right-click sub-options unique and granular.</p>   
+                                        <br>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </li>
+                    </ul>
+                    <h3><a>Config Tab</a></h3>
+                    <p>The Config tab offers options to localize, centralize, package and update existing assets.</p>
+                    <br>
+                    <ul class="accordion css-accordion" align="right">
+                        <li class="accordion-item">
+                            <input class="accordion-item-input" type="checkbox" name="accordion" id="ctab-details" />
+                            <label for="ctab-details" class="accordion-item-hd" align="right">↕ Config Settings<span class="accordion-item-hd-cta">&#9650;</span></label>
+                            <div class="accordion-item-bd">
+                                <div id="detailsdiv" align="left">
+                                    <div>
+                                        <h4>Config Tab</h4>
+                                        <p>Localize, Centralize &amp; Package<br><br>
+                                        A profile folder may contain many supporting assets, however these assets may exist in a variety of spaces.<br>
+                                        Any item not marked as centralized will be propagated as a unique asset for every game's profile folder.<br><br>  
+                                        A "Localized" configuration generates profile assets in the game's installation folder.<br>
+                                        Using the "Package" option will deploy supported programs into each game-installation folder.</br>
+                                        <br>A "Centralized" configuration does not propagate assets and instead references singular script files and template-items as existing in the assigned locations, thus centralized games share assets with others similarly configured.</p>
+                                    <br>
+                                    <p>>Overwrite or Update</p></br>
+                                    <p>Overwrite will re-create and propagate all assigned items, while update will only append itemss previously unassigned to existing game profile configuration files.    
+                                    </p><br>
+                                    <br>
+                                    <p>Net-Check &amp; Name-Check</p>
+                                    <br><p>Name-Check enables the lookup-table to be referenced during game-identification.  Matching titles are assigned the steam appid number.
+                                     </p></br>
+                                     <p>Net-Check downloads available json-data correllating to the assigned steam-appid which contains extensive information and assets-links.<br>
+                                        An html file is aquired from PCGamingWiki.com to supply alternate possibilities for locations configuration-settings and save-data can be found.</p></br>
+                                    </br>
+                                    <p>Borderless Gaming</p><br>
+                                    <p>Limitations restricting a game's video output may be overcome through the use of a windowing program such as the supported program "BorderlessGaming".<br>
+                                    The need for windowing is usually reserved for unique and older titles, however multi-monitor environments may require one as a matter of compatibility.<br>
+                                    Options are provided to control the persistence of the assigned windowing program.</p>
+                                        <br>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </li>
+                    </ul>
+                    </div>
+                </br>
+                </div>
+                <div id="SectSeparate" align="center">
+                    <h1>Library Population &amp; Filtering</h1>
+                </div>
+                <div align="left" id="outer">
+                    <div id="inner">
+                        <h3><a>Executable List</a></h3>
+                        <p>The detected executables populate the library list-view panel where any file can be assigned unique options, arguments, templates or exclusions.</p>
+                        <br>
+                        <ul class="accordion css-accordion" align="right">
+                            <li class="accordion-item">
+                                <input class="accordion-item-input" type="checkbox" name="accordion" id="exelist-details" />
+                                <label for="exelist-details" class="accordion-item-hd" align="right">↕ Setup Options<span class="accordion-item-hd-cta">&#9650;</span></label>
+                                <div class="accordion-item-bd">
+                                    <div id="detailsdiv" align="left">
+                                        <div>
+                                            <h4>Executable List</h4>
+                                            <br>
+                                            <p>The speed at which a library populates is drastically effected by enabling the "net-check" option.<br>
+                                            The metadata aquired by the net-check option is not generating functionally integrated data, so enable this option for posterity only.</p>
+                                            <br><p>General list manipulations such as clear-all, select/remove -all/none alongside other functions such as downloading meta-data, opening the profile-directory, opening an executable's directory, and adding cli options and arguments. </p>
+                                            <p>Uninstallers, driver/dependency frameworks, crash-dumpers, debug-modes and other commonly included peripipheral executable files are automatically excluded from during library population .</p>
+                                            <br>   
                                             <br>
                                         </div>
                                     </div>
                                     <br>
                                 </div>
                             </li>
-                        </ul><p></p>
-                            </div>
-    
-                        </div>
-                    </div>
-                </div>
-                <div id="SectSeparate" align="center">
-                    <h1>[Keymappers]</h1>
-                </div>
-                <div align="left" id="outer">
-                    <div id="inner">
-                        <h3><a>Antimicro/x</a></h3>
-                        <p>Free and open sourced.  This is the preferred keymapper.</p>
-						<h3><a>JoyXoff</a></h3>
-						<p>JoyXoff is a unique and capable keymapper with a built-in on-screen-keyboard.  Some games may prevent joyxoff from operating properly and I have yet to determine workarounds.</p>
-						<h3><a>Xpadder</a></h3>
-                        <p>The version available for download is the last "free version".  Xpadder is very versitile.</p>
-                        <h3><a>JoyToKey</a></h3>
-                        <p>Free and open sourced but with imited support through [RJ_PROJ].</p>
+                        </ul>
+                        <h3><a>Individuated Overrides</a></h3>
+                        <p>Names, steam appids, arguments and run-options as well as any tempalte to propagate can be set with an override.</p>
+                        <br>
                         <ul class="accordion css-accordion" align="right">
                             <li class="accordion-item">
-                                <input class="accordion-item-input" type="checkbox" name="accordion" id="item-keymappers" />
-                                <label for="item-keymappers" class="accordion-item-hd" align="right">↕ Keymapper Details<span class="accordion-item-hd-cta">&#9650;</span></label>
+                                <input class="accordion-item-input" type="checkbox" name="accordion" id="override-details" />
+                                <label for="override-details" class="accordion-item-hd" align="right">↕ Config Settings<span class="accordion-item-hd-cta">&#9650;</span></label>
                                 <div class="accordion-item-bd">
                                     <div id="detailsdiv" align="left">
                                         <div>
-											<img alt="" src="img/keymapper.png" width="630">
-                                            <h4>Templates</h4>
-                                            <p>The templates are designed to control the mouse and keyboard while holding the "back" button.<br>
-											The Right analog stick controls the mouse.<br>
-											The R-Stick Button is Left-click.<br>
-											The R-Trigger Button is Right-click.<br>
-											The L-Trigger Button is Middle-Mouse-Button-Click.<br>
-											The A-Button is the enter-key.<br>
-											The X-Button is the Shift-key.<br>
-											The B-Button is the Alt-key.<br>
-											The Y Button is the Ctrl-key.<br>
-											The L-Shoulder(bumper) button is the Backspace-key.<br>
-											The R-Shoulder(bumper) button is the Space-Key.<br>
-											The D-Pad corresponds to arrow keys.<br>
-											Holding the Left-Analog stick upwards for a few seconds will activate the Win-Key.<br>
-											The game-quit button combination is Back+Hold + Menu-Button(ctrl + f12)<br>
-											the game-reset button combination is Back+Hold + L-Stick-Button) (ctrl + f2)<br>
-											The on-screen-keyboard is Back+Hold + guide (xbox) button. (alt+ctrl+f9)<br>
-											</p>
-                                            <h4>Mediacenter / Desktop</h4>
-                                            <p></p>
-                                            <h4>Saving Profiles</h4>
-                                            <p></p>
-                                            <p<br>
-                                            </p>
+                                            <h4>"<" "y" "n"</h4>
+                                            <p>The "<" fields will allow for any file path. Boolean values found as "y" fields can be changed to "n" "0" or "off" and conversely, "y" "1" and "on".<br>
+                                            Enabling or disabling a boolean override affects the changes to the configuration file and file propagation, however this follows any centralization options.</p><p>Every game title included to be part of a library follows the settings defined in the config tab.<br>
+                                                Games which require overrides to any of these options may define them explicitly by double-clicking a cell which corresponds to the feature.</p>
+                                            <br>
                                         </div>
                                     </div>
                                     <br>
                                 </div>
                             </li>
                         </ul>
-						<br>
+                        </div>
+                    </br>
                     </div>
+			<a id="KEYMAPPERS"></a>
+                <div id="SectSeparate" align="center">
+                <h1>[Keymappers]</h1>
                 </div>
-				
-				
-				
+			<div align="left" id="outer">
+				<div id="inner">
+					<h3><a>Antimicro/x</a></h3>
+					<p>Free and open sourced.  These are the preferred keymappers offering the highest compatability and most options while remaining simple to configure.</p>
+					<h3><a>JoyXoff</a></h3>
+					<p>JoyXoff is a unique and capable keymapper with a built-in on-screen-keyboard.  Robust and exhaustive low-level reamapping options make JoyXoff extremely powerful.</p>
+					<h3><a>Xpadder</a></h3>
+					<p>The version available for download is the last "free version".  Xpadder is very versitile, easy to use, lightweight and provides standard abilities adopted by most keymappers.</p>
+					<h3><a>JoyToKey</a></h3>
+					<p>Free and open sourced but with imited support through [RJ_PROJ].</p>
+					<ul class="accordion css-accordion" align="right">
+						<li class="accordion-item">
+							<input class="accordion-item-input" type="checkbox" name="accordion" id="item-keymappers" />
+							<label for="item-keymappers" class="accordion-item-hd" align="right">↕ Keymapper Details<span class="accordion-item-hd-cta">&#9650;</span></label>
+							<div class="accordion-item-bd">
+								<div id="detailsdiv" align="left">
+									<div>
+										<img alt="" src="img/keymapper.png" width="630">
+										<h4>Templates</h4>
+										<p>The templates are designed to control the mouse and keyboard while holding the "back" button.<br>
+										The Right analog stick controls the mouse.<br>
+										The R-Stick Button is Left-click.<br>
+										The R-Trigger Button is Right-click.<br>
+										The L-Trigger Button is Middle-Mouse-Button-Click.<br>
+										The A-Button is the enter-key.<br>
+										The X-Button is the Shift-key.<br>
+										The B-Button is the Alt-key.<br>
+										The Y Button is the Ctrl-key.<br>
+										The L-Shoulder(bumper) button is the Backspace-key.<br>
+										The R-Shoulder(bumper) button is the Space-Key.<br>
+										The D-Pad corresponds to arrow keys.<br>
+										Holding the Left-Analog stick upwards for a few seconds will activate the Win-Key.<br>
+										The game-quit button combination is Back+Hold + Menu-Button(ctrl + f12)<br>
+										the game-reset button combination is Back+Hold + L-Stick-Button) (ctrl + f2)<br>
+										The on-screen-keyboard is Back+Hold + guide (xbox) button. (alt+ctrl+f9)<br>
+										</p>
+										<h4>Mediacenter / Desktop</h4>
+										<p></p>
+										<h4>Saving Profiles</h4>
+										<p></p>
+										<p<br>
+										</p>
+									</div>
+								</div>
+								<br>
+							</div>
+						</li>
+					</ul>
+					<br>
+				</div>
+			</div>
+			<a id="MONITORS"></a>
 				 <div id="SectSeparate" align="center">
-                    <h1>[Monitors]</h1>
-                </div>
+					<h1>[Monitors]</h1>
+				</div>
                 <div align="left" id="outer">
                     <div id="inner">
-                        <h3><a>Display Changer</a></h3>
+                        <h3><a>DisplayChanger</a></h3>
                         <p>This is the preferred monitor layout utility.  A preview is offered during configuration for the current monitor/s resolution/s of the current running game upon exit of the launcher.</p>
                         <p></p>
                         <ul class="accordion css-accordion" align="right">
@@ -267,14 +378,13 @@
                                 <div class="accordion-item-bd">
                                     <div id="detailsdiv" align="left">
                                         <div>
-                                            <h4>Templates</h4>
-                                            <p>Templates are copied to the profile and called upon during launch.</p>
-                                            <h4>Mediacenter / Desktop</h4>
-                                            <p>Uses XML files</p>
-                                            <h4>Saving Profiles</h4>
-                                            <p>Uses XML files</p>
-                                            <p>br>
-                                            </p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <p></p>
                                         </div>
                                     </div>
                                     <br>
@@ -292,14 +402,13 @@
                                 <div class="accordion-item-bd">
                                     <div id="detailsdiv" align="left">
                                         <div>
-                                            <h4>Templates</h4>
-                                            <p>Templates are copied to the profile and called upon during launch.</p>
-                                            <h4>Mediacenter / Desktop</h4>
-                                            <p>Uses MON files</p>
-                                            <h4>Saving Profiles</h4>
-                                            <p>Uses MON files</p>
-                                            <p>br>
-                                            </p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <h4></h4>
+                                            <p></p>
+                                            <p></p>
                                         </div>
                                     </div>
                                     <br>
@@ -309,7 +418,6 @@
 						<br>
                     </div>
                 </div>
-				
 				 <div id="SectSeparate" align="center">
                     <h1>[Just After Lauch &amp; Just Before Exit]</h1>
                 </div>
@@ -319,7 +427,7 @@
                         <p>This program will run after launching the game executable.<br>
                             Executable-Aware programs such as trainers or mods can be set here.</p>
                         <h3><a>Run Before Exit</a></h3>
-                        <p>This program will launch before the game is exited.<br>
+                        <p>This program will launch before the game is exited.<br>Cloud-backup and save-state procedures may find utility<br>
                              </p>
                         <ul class="accordion css-accordion" align="right">
                             <li class="accordion-item">
@@ -339,16 +447,14 @@
 						<br>
                     </div>
                 </div>
-				
+			<a id="PREPOST"></a>
 				 <div id="SectSeparate" align="center">
                     <h1>[Pre / Post]</h1>
                 </div>
                 <div align="left" id="outer">
                     <div id="inner">
-                        <h3><a>Pre-Run</a></h3>
-                        <p>Pre-Run programs are applications or scripts which can be set to run prior to the game's execution.</p>
-						<h3><a>Post-Run</a></h3>
-                        <p>Post-Run programs are applications or scripts which can be set to run after the game's termination.</p>
+                        <h3><a>Pre-Run & Post-Run</a></h3>
+                        <p>Pre-Run and Post-Run programs and scripts can be arranged in any order both before the game's execution and after the game has exited repectfully.</p>
                         <ul class="accordion css-accordion" align="right">
                             <li class="accordion-item">
                                 <input class="accordion-item-input" type="checkbox" name="accordion" id="item-prepost" />
@@ -357,13 +463,12 @@
                                     <div id="detailsdiv" align="left">
                                         <div>
                                             <h4>Options</h4>
-                                            <p>A checkbox to wait until the exectuable terminates</p>
+                                            <p>A checkbox to wait until the exectuable terminates<br>Any pre/post scripts native to windows platforms and those generated by [RJ_PROJ] are propagated as assets during profile/launcher creation.</p>
                                             <h4>Order</h4>
                                             <p>The order of the pre or post application can be identified as $This Prog$ in the feedback line beneath the dropdown.</p>
                                             <h4>Integration</h4>
-                                            <p>SoundVolumeView can be downloaded and configured to create audio-configuration profiles.<br>
-                                            A dropdown is provided to select an audio device.<br></p>
-                                    
+                                            <p>SoundVolumeView, and other utilities can be downloaded and configured to create device-configuration profiles.<br>
+                                            A dropdown is provided to select a device upon detection.<br></p>
                                         </div>
                                     </div>
                                     <br>
@@ -373,8 +478,6 @@
 						<br>
                     </div>
                 </div>
-				
-				
                 <div align="left" id="outer">
                         <a id="FAQS"></a>
                         <div id="SectSeparate" align="center">
@@ -385,7 +488,7 @@
                                 <p><strong>Answer: </strong>eh... It works under wine, but <span style="font-size: xx-small">pretty much windows only.</span>
                                 <p><strong>Question: </strong> I'm having trouble with a feature. It's a bug?</p>
                                 <p><strong>Answer: </strong> <a href="https://github.com/[GIT_USER]/[RJ_PROJ]/issues" target="_self"> Create
-			an issue on Github.com</a> and I'll respond or
+									an issue on Github.com</a> and I'll respond or
                                     <div align="right">
                                         <ul class="accordion css-accordion" align="right">
                                             <li class="accordion-item">
@@ -416,7 +519,6 @@
                                         <a href="https://www.buymeacoffee.com/[GIT_USER]" target="_blank"><img src="https://[GIT_USER].github.io/img/coffee.png"></a>
                                     </h5>
                                 </footer>
-
                                 </div>
                                 <br>
                                 </div>
@@ -435,11 +537,9 @@
 </html>
     <script>
         var myVar;
-
         function myFunction() {
             myVar = setTimeout(showPage, 3000);
         }
-
         function showPage() {
             document.getElementById("loader").style.display = "none";
             document.getElementById("myDiv").style.display = "block";
@@ -447,22 +547,18 @@
         $(function() {
             var $refreshButton = $('#refresh');
             var $results = $('#css_result');
-
             function refresh() {
                 var css = $('style.cp-pen-styles').text();
                 $results.html(css);
             }
-
             refresh();
             $refreshButton.click(refresh);
-
             // Select all the contents when clicked
             $results.click(function() {
                 $(this).select();
             });
         });
     </script>
-
     <script>
         ! function(e, t) {
             if ("function" == typeof define && define.amd) define(["module", "exports"], t);
@@ -520,16 +616,13 @@
         youtubelightbox.querySelector('.centeredchild').addEventListener('click', function(e) {
             e.stopPropagation()
         }, false)
-
         function onYouTubeIframeAPIReady() {
             createlightbox()
         }
-
         function getyoutubeid(link) {
             var youtubeidreg = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
             return youtubeidreg.exec(link)[1]
         }
-
         function createyoutubeplayer(videourl) {
             player = new YT.Player('playerdiv', {
                 videoId: videourl,
@@ -538,7 +631,6 @@
                 }
             })
         }
-
         function createlightbox() {
             var targetlinks = document.querySelectorAll('.lightbox')
             for (var i = 0; i < targetlinks.length; i++) {
@@ -579,7 +671,6 @@
         for (i = 0; i < accHD.length; i++) {
             accHD[i].addEventListener('click', toggleItem, false);
         }
-
         function toggleItem() {
             var itemClass = this.parentNode.className;
             for (i = 0; i < accItem.length; i++) {
@@ -595,7 +686,6 @@
             font-family: 'Hermit';
             src: url('Hermit-Regular.otf') format('opentype');
         }
-        
         @font-face {
             font-family: 'Trueno';
             src: url('TruenoLt.otf') format('opentype');
@@ -618,7 +708,6 @@
             -webkit-animation: spin 1s linear infinite;
             animation: spin 1s linear infinite;
         }
-        
         @-webkit-keyframes spin {
             0% {
                 -webkit-transform: rotate(0deg);
@@ -627,7 +716,6 @@
                 -webkit-transform: rotate(360deg);
             }
         }
-        
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -636,7 +724,6 @@
                 transform: rotate(360deg);
             }
         }
-        
         .animate-bottom {
             position: relative;
             -webkit-animation-name: animatebottom;
@@ -644,7 +731,6 @@
             animation-name: animatebottom;
             animation-duration: 1s;
         }
-        
         @-webkit-keyframes animatebottom {
             from {
                 bottom: -100px;
@@ -655,7 +741,6 @@
                 opacity: 1;
             }
         }
-        
         @keyframes animatebottom {
             from {
                 bottom: -100px;
@@ -666,7 +751,6 @@
                 opacity: 1;
             }
         }
-        
         #myDiv {
             display: none;
             text-align: center;
@@ -693,7 +777,6 @@
             transform-origin: initial;
             transform-origin: unset;
         }
-        
         td,
         th {
             font-size: 14px;
@@ -702,11 +785,9 @@
             margin: 0;
             align-content: center;
         }
-        
         p {
             max-width: 87%;
         }
-        
         h1 {
             font-weight: bolder;
             font-size: 37px;
@@ -715,80 +796,63 @@
             text-shadow: 1px 1px 1px #919191, 1px 2px 1px #919191, 1px 3px 1px #919191, 1px 4px 1px #919191, 1px 5px 1px #919191, 1px 6px 1px #919191, 1px 7px 1px #919191, 1px 8px 1px #919191, 1px 9px 1px #919191, 1px 10px 1px #919191, 1px 18px 6px rgba(16, 16, 16, 0.6), 1px 22px 10px rgba(16, 16, 16, 0.3), 1px 25px 35px rgba(16, 16, 16, 0.3), 1px 30px 60px rgba(16, 16, 16, 0.5);
             transition: text-shadow .3s linear, transform .3s ease-out;
         }
-        
         h1:hover {
             color: #eeeeee;
             transform: scale(0.90, 0.95) translate(0px, 10px);
             text-shadow: 0px 1px 1px #818181, 0px 2px 1px #919191, 0px 3px 1px #919191, 0px 4px 1px #919191, 0px 5px 1px #8f8f8f, 0px 0px 0px #8b8b8b, 0px 0px 0px #8d8d8d, 0px 0px 0px #858585, 0px 0px 0px #838383, 0px 0px 0px #808080, 1px 11px 8px rgba(16, 16, 16, 0.8), 1px 6px 6px rgba(16, 16, 16, 0.5), 1px 6px 15px rgba(16, 16, 16, 0.5), 1px 6px 20px rgba(16, 16, 16, 0.7);
             transition: text-shadow .3s linear, transform .3s ease-out;
         }
-        
         h2 {
             font-weight: bolder;
             font-size: 21px;
         }
-        
         h3 {
             font-weight: bold;
             font-size: 18px;
         }
-        
         a {
             text-shadow: 0px -1px 1px rgba(1, 69, 216, 0.0), 0px 1px -1px rgba(255, 255, 255, 0.0);
             transition: text-shadow .5s ease-in-out;
         }
-        
         a:hover {
             text-shadow: 0px 1px 2px rgba(1, 69, 216, 0.842), 0px -1px 1px rgba(255, 255, 255, 0.9);
             transition: text-shadow .5s ease-in-out;
         }
-        
         h4 {
             font-weight: bold;
             font-size: 17px;
         }
-        
         h8 {
             font-color: blue;
             font-weight: bolder;
             margin-top: 15px;
         }
-        
         h9 {
             font-size: 40px;
             padding: 35px 18px;
             text-align: center;
         }
-        
         h99 {
             font-weight: bolder;
         }
-        
         h88 {}
-        
         h77 {}
-        
         h66 {}
-        
         h55 {
             font-weight: bolder;
         }
-        
         main {
             margin-top: 55px;
         }
-        
         #superflex {
             flex: auto;
             flex-wrap: wrap;
         }
-        
         #global {
             margin-left: 5%;
             margin-right: 5%;
             margin-top: 0px;
         }
-        
         #outer {
             max-width: 87%;
             border-color: white;
@@ -796,7 +860,6 @@
             margin-left: 2%;
             padding-top: 8px;
         }
-        
         #indent {
             margin-bottom: 3px;
             margin-right: 0px;
@@ -805,7 +868,6 @@
             padding-right: 5px;
             padding-bottom: 9px;
         }
-        
         #inner {
             background-image: -webkit-linear-gradient(90deg, rgba(207, 207, 207, 1.00) 0%, rgba(232, 232, 232, 1.00) 100%);
             background-image: -moz-linear-gradient(90deg, rgba(207, 207, 207, 1.00) 0%, rgba(232, 232, 232, 1.00) 100%);
@@ -825,17 +887,14 @@
             * padding-right: 3%;
             box-shadow: 2px -2px 2px 2px rgba(230, 230, 230, .8), 4px -4px 4px 6px rgba(184, 184, 184, .6), 6px -6px 6px 6px rgba(174, 174, 174, .3), -2px 2px 2px 6px rgba(140, 140, 140, .8), -3px 3px 6px 6px rgba(80, 80, 80, .6), -4px 4px 8px 8px rgba(80, 80, 80, .3);
         }
-        
         #inner:hover {
             transition: box-shadow .4s ease-in-out;
             background-image: linear-gradient(0deg, rgb(209, 210, 211) 0%, rgb(227, 229, 231) 100%);
             box-shadow: 2px -2px 2px 2px rgba(208, 222, 226, 0.8), 2px -2px 3px 4px rgba(188, 192, 204, 0.6), 3px -3px 6px 6px rgba(204, 217, 230, 0.3), -2px 2px 2px 3px rgba(176, 183, 185, 0.8), -2px 2px 3px 3px rgba(76, 77, 80, 0.6), -4px 4px 8px 8px rgba(215, 232, 252, 0.3);
         }
-        
         .step {
             background-color: #000;
         }
-        
         #detailsdiv {
             /*background-color: #515151;*/
             transform-origin: 0%;
@@ -859,48 +918,39 @@
             * padding-right: 3%;
             box-shadow: 4px -4px 4px 4px rgba(230, 230, 230, 1), -3px 3px 6px 6px rgba(80, 80, 80, .7);
         }
-        
         #detailsdiv:hover {
             background-image: linear-gradient(0deg, rgba(15, 15, 15, 1.00) 0%, rgba(27, 27, 27, 1.00) 25.91%, rgba(27, 27, 27, 1.00) 28%, rgb(0, 0, 0) 50%, rgba(27, 27, 27, 1.00) 92%, rgba(33, 33, 33, 1.00) 93.26%, rgba(3, 3, 3, 1.00) 100%);
         }
-        
         .p {
             text-shadow: -1px 1px 6px rgba(0, 0, 0, 0.1);
             color: rgba(255, 255, 255, 0);
             transform: scale(1, 0)
         }
-        
         .h3 {
             text-shadow: -1px 1px 6px rgba(0, 0, 0, 0.1);
             color: rgba(255, 255, 255, 0);
             transform: scale(0, 1);
             transition: text-shadow .5s ease-in-out;
-
         }
-        
         .code {
             text-shadow: -1px 1px 6px rgba(0, 0, 0, 0.1);
             color: rgba(255, 255, 255, 0);
             transform: scale(0, 1)
         }
-        
         #SectSeparate {
             text-align: center;
         }
-        
         .pk {
             font-weight: bolder;
             color: rgba(211, 211, 211, 0.8);
             text-shadow: -1px 1px 1px rgba(30, 30, 30, 0.8);
         }
-        
         .pk:hover {
             color: rgb(222, 222, 255);
             text-shadow: 0px 0px 4px rgba(110, 110, 255, 0.83);
             transition: color .2s ease-in-out, text-shadow .5s ease-in-out;
         }
     </style>
-
     <style>
         .parent {
             position: fixed;
@@ -912,14 +962,12 @@
             text-align: center;
             z-index: 9;
         }
-        
         .parent:before {
             content: '';
             display: inline-block;
             height: 100%;
             vertical-align: middle;
         }
-        
         .parent:after {
             background: black;
             content: '';
@@ -932,7 +980,6 @@
             z-index: 10;
         }
         /* Centered child element can be any width and height */
-        
         .centeredchild {
             position: relative;
             /* position element to participate in z-indexing */
@@ -944,7 +991,6 @@
             /* can be any width */
         }
         /* Video container to maintain Youtube 16:9 aspect ratio */
-        
         .videowrapper {
             position: relative;
             padding-top: 25px;
@@ -954,7 +1000,6 @@
             z-index: 9;
         }
         /* Make Youtube IFRAME responsive */
-        
         .videowrapper iframe {
             position: absolute;
             top: 0;
@@ -964,7 +1009,6 @@
             z-index: 9;
         }
     </style>
-
     <style>
         #menuToggle {
             display: block;
@@ -976,14 +1020,12 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        
         #menuToggle:hover {
             zoom: 1;
             filter: alpha(opacity=100);
             opacity: 1.0;
             transition: 0.15s ease-in;
         }
-        
         #menuToggle input {
             display: block;
             width: 40px;
@@ -996,7 +1038,6 @@
             z-index: 2;
             -webkit-touch-callout: none;
         }
-        
         #menuToggle span {
             display: block;
             width: 33px;
@@ -1011,17 +1052,14 @@
             box-shadow: 1px -1px 0px 0px rgba(230, 230, 230, .3), 1px -1px 2px 2px rgba(184, 184, 184, .2), 2px -1px 3px 3px rgba(174, 174, 174, .1), -1px 1px 1px 1px rgba(140, 140, 140, .1), -1px 1px 2px 2px rgba(80, 80, 80, .05), -1px 1px 3px 3px rgba(80, 80, 80, .025);
             transition: 0.3s;
         }
-        
         #menuToggle span:first-child {
             transform-origin: 0% 0%;
             transition: 0.3s;
         }
-        
         #menuToggle span:nth-last-child(2) {
             transform-origin: 0% 100%;
             transition: 0.3s;
         }
-        
         #menuToggle input:checked~span {
             transform: rotate(45deg) translate(-2px, -1px) scale(0.25, 1);
             transition: 0.45s;
@@ -1033,21 +1071,18 @@
 	box-shadow: 0px 0px 0px 0px rgba(230, 230, 230, .0);
 		*/
         }
-        
         #menuToggle input:checked~span:nth-last-child(3) {
             opacity: 1;
             transform: translate(12px, 1px) rotate(45deg) scale(.25, 1);
             transition: 0.45s;
             background-image: radial-gradient(#f5f5f5, #E0E0E0);
         }
-        
         #menuToggle input:checked~span:nth-last-child(2) {
             opacity: 1;
             transform: rotate(-45deg) translate(0, -1px) scale(0.585, 1);
             transition: 0.45s;
             background-image: radial-gradient(#f5f5f5, #E0E0E0);
         }
-        
         #menu {
             position: absolute;
             width: 138px;
@@ -1069,7 +1104,6 @@
             transform: translate(100%, 0);
             transition: 0.3s;
         }
-        
         #menu:hover {
             -webkit-transition: none;
             -moz-transition: none;
@@ -1081,7 +1115,6 @@
             opacity: 0.8;
             transition: 0.15s ease-in;
         }
-        
         #menu li {
             font-size: 16px;
             font-weight: bolder;
@@ -1089,11 +1122,9 @@
             padding: 5% 8%;
             text-shadow: -1px 1px -1px rgba(0, 0, 0, 0.5);
         }
-        
         #menuToggle input:checked~ul {
             transform: scale(1.0, 1.0);
         }
-        
         .dtext {
             font-family: Hermit;
             position: relative;
@@ -1106,7 +1137,6 @@
             color: #f5f5f5;
             text-shadow: 1px 1px 1px #919191, 1px 2px 1px #919191, 1px 3px 1px #919191, 1px 4px 1px #919191, 1px 5px 1px #919191, 1px 6px 1px #919191, 1px 7px 1px #919191, 1px 8px 1px #919191, 1px 9px 1px #919191, 1px 10px 1px #919191, 1px 18px 6px rgba(16, 16, 16, 0.6), 1px 22px 10px rgba(16, 16, 16, 0.3), 1px 25px 35px rgba(16, 16, 16, 0.3), 1px 30px 60px rgba(16, 16, 16, 0.5);
         }
-        
         .dtext.entered {
             color: #38cc70;
             text-shadow: 5px 5px 5px #919191
@@ -1132,27 +1162,21 @@
                 font-size: 21px;
             }
         }
-        
         h2 {
             font-size: 19px;
         }
-        
         h3 {
             color: #ffffff;
             font-size: 22px;
             text-shadow: -2px 2px 4px rgba(250, 250, 250, 0.3), 1px 2px 3px rgba(16, 16, 16, 0.8), 1px 2px 1px #b9b9b9, 1px 3px 1px #b9b9b9, 1px 4px 1px #cfcfcf, 1px 5px 1px #cfcfcf, 1px 6px 1px #cfcfcf, 1px 7px 1px #cfcfcf, 1px 8px 1px #b9b9b9, 1px 9px 1px #b9b9b9, 1px 10px 1px #b9b9b9, 1px 18px 6px rgba(16, 16, 16, 0.6), 1px 22px 10px rgba(16, 16, 16, 0.3), 1px 25px 35px rgba(16, 16, 16, 0.3), 1px 30px 60px rgba(16, 16, 16, 0.5);
             transition: text-shadow .5s ease-in-out;
-
         }
-        
         h4 {
             font-size: 13px;
         }
-        
         #menu li {
             font-size: 13px;
-        }
-        
+        }        
         #menu {
             padding-top: 7px;
             padding-bottom: 7px;
@@ -1198,7 +1222,6 @@
                 width: 98px;
             }
         }
-        
         inlimg {
             display: inline;
         }
@@ -1209,11 +1232,9 @@
             margin: 0 auto;
             list-style: none outside;
         }
-        
         .accordion>*+* {
             border-top: 1px solid white;
         }
-        
         .accordion-item-hd {
             /* display: block;*/
             background-image: -webkit-linear-gradient(90deg, rgba(207, 207, 207, 1.00) 0%, rgba(232, 232, 232, 1.00) 100%);
@@ -1228,14 +1249,12 @@
             font-weight: bold;
             box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0), 2px -2px 2px 2px rgba(230, 230, 230, .8), 4px -4px 4px 6px rgba(184, 184, 184, .6);
         }
-        
         .accordion-item-hd:hover {
             transition: text-shadow .4s ease-in-out, box-shadow .4s ease-in-out;
             color: rgb(60, 145, 255);
             text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.53), 0px 0px 4px rgba(110, 110, 255, 0.83);
             box-shadow: 0px 0px 15px 15px rgba(42, 177, 255, 0.1), 1px -1px 1px 2px rgba(227, 231, 233, 0.5), 3px -3px 3px 4px rgba(179, 184, 185, 0.7);
         }
-        
         .accordion-item-input:checked~.accordion-item-bd {
             max-height: 1500px;
             padding-top: 15px;
@@ -1243,7 +1262,6 @@
             -webkit-transition: max-height .3s ease-in, margin .3s ease-in, padding .3s ease-in;
             transition: max-height .3s ease-in, margin .3s ease-in, padding .3s ease-in;
         }
-        
         .accordion-item-input:checked~.accordion-item-bd>#detailsdiv code,
         .accordion-item-input:checked~.accordion-item-bd>#detailsdiv p {
             /*background-color: #515151;*/
@@ -1253,7 +1271,6 @@
             color: white;
             text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.23);
         }
-        
         .accordion-item-input:checked~.accordion-item-bd>#detailsdiv h4,
         .accordion-item-input:checked~.accordion-item-bd>#detailsdiv h3 {
             transition-delay: 1s;
@@ -1262,13 +1279,11 @@
             color: white;
             text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.23);
         }
-        
         .accordion-item-input:checked~.accordion-item-hd>.accordion-item-hd-cta {
             -webkit-transform: rotate(0);
             -ms-transform: rotate(0);
             transform: rotate(0);
         }
-        
         .accordion-item-hd-cta {
             display: block;
             width: 30px;
@@ -1285,7 +1300,6 @@
             text-align: center;
             line-height: 1;
         }
-        
         .accordion-item-bd {
             transform-origin: top;
             border-spacing: 25px;
@@ -1295,7 +1309,6 @@
             -webkit-transition: max-height .15s ease-out, margin-bottom .3s ease-out, padding .3s ease-out;
             transition: max-height .15s ease-out, margin-bottom .3s ease-out, padding .3s ease-out, scale .8s ease-in-out;
         }
-        
         .accordion-item-input {
             clip: rect(0 0 0 0);
             width: 1px;
@@ -1305,7 +1318,6 @@
             position: absolute;
             left: -9999px;
         }
-        
         #msriv {
             display: inline-flex;
         }
