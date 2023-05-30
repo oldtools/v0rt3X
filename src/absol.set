@@ -6,7 +6,6 @@ Autologon
 Autorun
 bluetooth
 BrowserSubprocess
-bug_reporter
 bugreporter
 cache
 CapsLock
@@ -23,6 +22,8 @@ CPUSTRES
 crackintro
 crashhand
 crashreport
+crashpad_handler
+crashdump
 crashsend
 crc16
 crc32
@@ -50,7 +51,9 @@ firmware
 flashrom
 fmod
 fmv
+GameBrowser
 Gfwlivesetup
+gmliveserver
 hidewindow
 hosting
 http
@@ -61,10 +64,12 @@ joystk
 jpg
 keybd
 LAVFilter
+languageSelector
 lesskey
 licensing
 linux
 logoff
+LogPacker
 logonsession
 lzma
 MelonLoader
@@ -76,6 +81,7 @@ mp4
 MultiMonitor
 NetSess
 notification
+ndp48web
 ntfs
 NumLock
 oalinst
@@ -137,11 +143,22 @@ UPlayBrowser
 UE4Prereq
 vmmap
 vshost
-vshost
+vcredist
+vc_redist
+vcredist
+vcredist_x86
+vc_redist_x86
+vcredist_x64
+vc_redist_x64
+vcredist.x64
+vc_redist.x64
+vcredist.x86
+vc_redist.x86
 wakeonlan
 webcat
 webserver
 WebViewHelper
+WebViewPopup
 wget
 whois
 wincrashreport
@@ -152,3 +169,4 @@ wlua
 x360
 xpak
 ZipTo
+ZFGameBrowser

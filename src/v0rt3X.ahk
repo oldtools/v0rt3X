@@ -1,5 +1,5 @@
 ﻿;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-05-22 9:56 PM 0.99.87.40 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2023-05-30 7:18 AM 0.99.89.88 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
@@ -416,8 +416,11 @@ if (prestk2 <> "")
 					}
 				iniwrite,%preapid%,%home%/rjpids.ini,1_Pre,pid
 			}
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
+				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
+				stringright,precloud,precldn,6
+				gosub, pre%precloud%
 				;gosub, PRECLOUD
 			}
 	}
@@ -634,6 +637,13 @@ if (jalprog <> "")
 			{
 				runhow= hide
 			}
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
+			{
+				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
+				stringright,precloud,precldn,6
+				gosub, pre%precloud%
+				;gosub, PRECLOUD
+			}
 		if fileexist(prestk2)
 			{
 				if instr(presA,"0")
@@ -695,8 +705,11 @@ if (prestk2 <> "")
 				Run,%prebrun%%wscrop%,%A_ScriptDir%,%runhow%,prebpid
 				iniwrite,%prebpid%,%curpidf%,2_Pre,pid
 			}
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
+				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
+				stringright,precloud,precldn,6
+				gosub, pre%precloud%
 				;gosub, PRECLOUD
 			}
 	}
@@ -895,8 +908,11 @@ if (prestk2 <> "")
 				iniwrite,%precpid%,%curpidf%,3_Pre,pid
 			}
 			
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
+				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
+				stringright,precloud,precldn,6
+				gosub, pre%precloud%
 				;gosub, PRECLOUD
 			}
 	}
@@ -1413,9 +1429,12 @@ if (prestk2 <> "")
 					}
 				Run,%pstarun%%wscrop%,%A_ScriptDir%,%runhow%,postapid
 			}
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
-				gosub, POSTCLOUD
+				splitpath,prestk2,pstapcld,pstpcldp,pstcldxtn,pstcldn
+				stringright,pstcloud,pstcldn,6
+				gosub, pst%pstcloud%
+				;gosub, PSTCLOUD
 			}
 	}
 return
@@ -1560,9 +1579,12 @@ if (prestk2 <> "")
 					}
 				Run,%prestk2%%wscrop%,%A_ScriptDir%,%runhow%,postbpid
 			}
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
-				gosub, POSTCLOUD
+				splitpath,prestk2,pstapcld,pstpcldp,pstcldxtn,pstcldn
+				stringright,pstcloud,pstcldn,6
+				gosub, pst%pstcloud%
+				;gosub, PSTCLOUD
 			}
 	}
 return
@@ -1670,10 +1692,192 @@ if (prestk2 <> "")
 					}
 				Run,%pstcrun%%wscrop%,%A_ScriptDir%,%runhow%,postcpid
 			}
-		if (prestk2 = "CLOUD")
+		if (instr(prestk2,"rclone.cmd")or instr(prestk2,"ludusavi.cmd")or instr(prestk2,"OpenCloudSave.cmd")or instr(prestk2,"syncthing.cmd"))
 			{
-				gosub, POSTCLOUD
+				splitpath,prestk2,pstapcld,pstpcldp,pstcldxtn,pstcldn
+				stringright,pstcloud,pstcldn,6
+				gosub, pst%pstcloud%
+				;gosub, PSTCLOUD
 			}
+	}
+return
+
+
+PSTRCLONE:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via rclone...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via rclone...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+return	
+PSTDUSAVI:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via ludusavi...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via ludusavi...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+return
+PSTUDSAVE:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via openCloudSave...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via openCloudSave...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+return
+PSTCTHING:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via syncthing...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via syncthing...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%pstpcldp%,hide
+			}
+		
+	}
+return
+
+PRERCLONE:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via rclone...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via rclone...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+return
+PREDUSAVI:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via ludusavi...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via ludusavi...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+return
+PREUDSAVE:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via openCloudSave...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via openCloudSave...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+return
+PRECTHING:
+Loop,parse,GameData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via syncthing...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
+	}
+Loop,parse,saveData,|
+	{
+		if fileexist(A_LoopField)
+			{
+				GUIMSG:= "`n" . "...   ...Syncing with the Cloud via syncthing...   ..." . "`n"
+				gosub, TTIPS
+				RunWait, %prestk2% "%A_LoopField%",%prepcldp%,hide
+			}
+		
 	}
 return
 

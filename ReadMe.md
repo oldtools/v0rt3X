@@ -28,9 +28,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-- This Version: **0.99.87.40**
+- This Version: **0.99.89.88**
 
-- This Build: **2023-05-22 9:56 PM**
+- This Build: **2023-05-30 7:18 AM**
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -44,7 +44,7 @@ v0rt3X
 			│   ├──  Setup.exe
 			│   ├──  Source_Builder.exe
 			│   ├──  Update.exe
-			│   └── v0rt3X.exe
+			│   └──  v0rt3X.exe
 			│
 			├──  site
 			│   ├──  AnkaCoder_b.otf

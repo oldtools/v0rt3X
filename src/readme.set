@@ -44,7 +44,7 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 			│   ├──  Setup.exe
 			│   ├──  Source_Builder.exe
 			│   ├──  Update.exe
-			│   └── [RJ_EXE].exe
+			│   └──  [RJ_EXE].exe
 			│
 			├──  site
 			│   ├──  AnkaCoder_b.otf
