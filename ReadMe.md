@@ -28,9 +28,9 @@ Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-- This Version: **0.99.89.88**
+- This Version: **0.99.89.94**
 
-- This Build: **2023-05-30 7:18 AM**
+- This Build: **2023-06-02 8:06 AM**
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
@@ -42,13 +42,16 @@ v0rt3X
 			│   ├──  lrDeploy.exe
 			│   ├──  NewOSK.exe
 			│   ├──  Setup.exe
+			│   ├──  SkinHu.dll
 			│   ├──  Source_Builder.exe
 			│   ├──  Update.exe
+			│   ├──  USkin.dll
 			│   └──  v0rt3X.exe
 			│
 			├──  site
 			│   ├──  AnkaCoder_b.otf
 			│   ├──  index.html
+			│   ├──  InterUI.html
 			│   ├──  Hermit-Regular.otf
 			│   ├──  key.ico
 			│   ├──  ReadMe.md
@@ -77,6 +80,8 @@ v0rt3X
 			│   ├──  build.ahk
 			│   ├──  Buildtools.set
 			│   ├──  cmdtemplate.set
+			│   ├──  DarkMode.mssytles
+			│   ├──  DarkMode.she
 			│   ├──  Deploy.ico
 			│   ├──  exclfnms.set
 			│   ├──  exez.set
@@ -90,6 +95,8 @@ v0rt3X
 			│   ├──  ks_Trigger.set
 			│   ├──  Joystick.ico
 			│   ├──  jkvtx.ahk
+			│   ├──  LightMode.msstyles
+			│   ├──  LightMode.she
 			│   ├──  lrDeploy.ahk
 			│   ├──  lrDeploy.set
 			│   ├──  newosk.ahk

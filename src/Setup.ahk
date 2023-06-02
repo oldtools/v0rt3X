@@ -5,12 +5,21 @@ SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
 FileEncoding UTF-8
+
+/*  ;;[DEBUG32]
+if !(A_IsUnicode=1 and A_PtrSize=4)
+{
+	SplitPath, A_AhkPath, , sknshrpd
+	Run, %sknshrpd%\AutoHotkeyU32.exe "%A_ScriptFullPath%"
+	goto, QUITOUT
+}
+*/  ;;[DEBUG32]
 ;{#################################   ENVIRONMENT SETUP   #################################
 ;###########################################################################################
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-05-30 7:18 AM"
-VERSION := "0.99.89.88"
+RELEASE := "2023-06-02 8:06 AM"
+VERSION := "0.99.89.94"
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
 EnvGet,SYSTMRT,SYSTEMROOT
@@ -30,22 +39,20 @@ Loop %0%
 {
 	GivenPath := %A_Index%
 	Loop %GivenPath%,
-	{
-		if (plink = "")
 		{
-			plink:= A_LoopFileLongPath
-			continue
+			if (plink = "")
+				{
+					plink:= A_LoopFileLongPath
+					continue
+				}
 		}
-	}
 	IF (!INSTR(LinkOptions,GivenPath)&& !instr(LinkOptions,plink)&& (GivenPath <> plink))
-	{
-		LinkOptions.= GivenPath . a_SpACE
-	}
+		{
+			LinkOptions.= GivenPath . a_SpACE
+		}
 }
 Process,Exist
 CURPID= %ERRORLEVEL%
-;#Include %A_ScriptDir%\..\src\Cst_Font.ahk
-;#Include %A_ScriptDir%\..\src\BTT.ahk
 if fileExist(USRPRF . "\My Documents\")
 	{
 		MYDOX= %USRPRF%\My Documents
@@ -76,6 +83,46 @@ binhome := home . "\bin"
 THELOG := home . "\log.txt"
 ARIA:= binhome . "\aria2c.exe"
 cacheloc:= home . "\downloaded"
+
+/*  ;;[DEBUG32]
+SkinStyle= %source%\
+iniread,ThemeNV,%RJDBINI%,THEME,GUI_Theme_Name
+splitpath,ThemeNV,ThemeN,skinpth,skinxtn
+ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
+if (((ThemeN = "")) or (instr(ThemeA,ThemeN . "|") && !fileExist(source . "\" . skinfile)))
+	{
+		ThemeN= Native_Dark
+		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
+		ThemeAll=|%ThemeN%||%ThemeA%
+		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
+		goto, ThemeLoaded
+	}
+if fileExist(source . "\" . ThemeN)
+	{
+		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
+		ThemeALL=|%ThemeN%||%ThemeA%
+		iniwrite,%skinFile%,%RJDBINI%,THEME,GUI_theme_name
+		if (skinxtn = "msstyles")
+			{
+				SkinForm(Apply, binhome "\USkin.dll", SkinStyle . ThemeN)
+				goto, ThemeLoaded
+			}
+		if (skinxtn = "she")
+			{
+				hSkinH := DllCall("LoadLibrary", "Str", binhome "\SkinHu.dll")
+				DllCall("SkinHu\SkinH_AttachEx", "Str", SkinStyle . ThemeN)
+				goto, ThemeLoaded
+			}
+	}
+ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+stringreplace,ThemeA,ThemeA,%ThemeN%|,,
+ThemeAll=|%ThemeN%||%ThemeA%
+iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
+
+ThemeLoaded:
+*/ ;;[DEBUG32]
+
 ;}#################################  ENVIRONMENT SET  #################################
 ;###########################################################################################
 ;{#################################   VARIABLE SETUP   #################################
@@ -101,9 +148,9 @@ if fileexist(SRCFILE)
 	Loop,parse,SOURCEDLIST,`n`r
 	{
 		if ((A_LoopField = "") or instr(NSOURCEDLIST,A_LoopField))
-		{
-			continue
-		}
+			{
+				continue
+			}
 		vavn+=1
 		%vavn%SDL:= A_LoopField
 		NSOURCEDLIST.= A_LoopField . "`n"
@@ -130,6 +177,8 @@ MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 PROFINST=Profile
 stmdbeb= <td><code>
 stmdbee= </code></td>
+GUI_THEMES= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+	
 ini_p=IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg
 exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|Antimicrox-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
 cfg_p=MediaCenter-Profile|Player 1|Player 2|Player 3|Player 4|Player 5|Player 6|Player 7|Player 8|Monitor-MEDIACENTER-Cfg|Monitor-Game-Cfg|Save Data|Install-Folder|Game Data|keyboard-Mapper
@@ -235,144 +284,125 @@ Loop,parse, MAPCFGS,|
 		SWAPMAPR.= A_LoopField . "|"
 	}
 }
-bgcolor= c111112
-fontColor= ccbeff4
-fontBColor= cWhite
-fontCColor= cSilver
-fontCColor= c698482
-fontDColor= cLime
-fontEColor= c236fa8
-fontDXmed= s8 
-fontXmed= s9 
-fontXsm= s7
-fontXlg= s8 Bold
-fontDXlg= s6 Bold
-if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . "AnkaCoder_b.ttf")&& fileexist(site_local . "\" . "malgun.ttf"))
+
+iniread,Gui_Theme_Name,%RJDBINI%,THEME,Gui_Theme_Name
+/*  ;;[DEBUG32]
+if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . "AnkaCoder_b.ttf")&& fileexist(site_local . "\" . "malgun.ttf")&& fileexist(site_local . "\" . "InterUI.ttf"))
 	{
 		font1:= New CustomFont(site_local . "\" . "TruenoLt.otf")
 		font2:= New CustomFont(site_local . "\" . "AnkaCoder_b.ttf")
 		font3:= New CustomFont(site_local . "\" . "malgun.ttf")
-		fontName= Malgun Gothic
+		font4:= New CustomFont(site_local . "\" . "InterUI.ttf")
+		fontAName= Malgun Gothic
 		fontBName= Anka/Coder
 		fontCName= Trueno
+		fontDName= Inter UI
+		fontEName= Default
+		iniread,LFontL,%RJDBINI%,THEME,Gui_Light_FontL
+		iniread,LFontM,%RJDBINI%,THEME,Gui_Light_FontM
+		iniread,LFontS,%RJDBINI%,THEME,Gui_Light_FontS
+		iniread,LFontB,%RJDBINI%,THEME,Gui_Light_FontB
+		iniread,LFontG,%RJDBINI%,THEME,Gui_Light_FontG
+		iniread,DFontL,%RJDBINI%,THEME,Gui_Dark_FontL
+		iniread,DFontM,%RJDBINI%,THEME,Gui_Dark_FontM
+		iniread,DFontS,%RJDBINI%,THEME,Gui_Dark_FontS
+		iniread,DFontB,%RJDBINI%,THEME,Gui_Dark_FontB
+		iniread,DFontG,%RJDBINI%,THEME,Gui_Dark_FontG
+		iniread,bgLightcolor,%RJDBINI%,THEME,GUI_Light_BG
+		iniread,bgccolor,%RJDBINI%,THEME,Gui_Dark_BG
 	}
 	else {
-		fontDXmed= s7 Normal
-		fontXmed= s9 Normal
-		fontXsm= s7 Normal
-		fontEXsm= s7 Bold
-		fontDXlg= s8 Bold
-		fontXlg= s11 Bold
-		fontName=Default
-		fontBName=Default
+*/  ;;[DEBUG32]
+		fontAName= Default
+		fontBName= Default
+		fontCName= Default
+		fontDName= Default
+		fontEName= Default
+		fontAColor= cSilver
+		fontBColor= cSilver
+		fontCColor= cSilver
+		fontDColor= cSilver
+		fontEColor= cSilver
+		bgDarkcolor= 151515
+		bgLightcolor= 000000
+		DFontM=%fontAColor% s7,Default
+		DFontL=%fontBColor% s7 Bold,Default	
+		DFontG=%fontCColor% s7,Default
+		DFontB=%fontDColor% s7 Bold,Default
+		DFontS=%fontEColor% s6 Bold,Default
+/*  ;;[DEBUG32]
 	}
-Dflt_FONT=%fontColor% %fontXmed%,%fontCName%
-Bld_FONT=%fontBColor% %fontXlg%,%fontBName%	
-Sil_Font=%fontCColor% %fontDXlg%,%FontBName%
-But_Font=%fontDColor% %fontDXlg%,%fontName%
-ddl_Font=%fontEColor% %fontEXlg%,%fontCName%
+*/  ;;[DEBUG32]	
+FontM=Gui, Font, %DFontM%
+FontL=Gui, Font, %DFontL%
+FontG=Gui, Font, %DFontG%
+FontB=Gui, Font, %DFontB%
+FontS=Gui, Font, %DFontS%
+bgcolor= %bgDarkcolor%
+if instr(Gui_Theme_Name,"Light")
+	{
+		FontM=Gui, Font, %LFontM%
+		FontL=Gui, Font, %LFontL%
+		FontG=Gui, Font, %LFontG%
+		FontB=Gui, Font, %LFontB%
+		FontS=Gui, Font, %LFontS%
+		bgcolor= %bgLightcolor%
+	}
+
 gosub, popgui
-/*
-	bgcolor= Default
-	iniread,forecolor,%RJDBINI%,THEME,GUI_foreground
-	if ((forecolor = "")or(forecolor = "ERROR"))
-	{
-		forecolor= Default
-		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_foreground
-	}
-	iniread,bgcolor,%RJDBINI%,THEME,GUI_background
-	if ((bgcolor = "")or(bgcolor = "ERROR"))
-	{
-		bgcolor= Default
-		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_background
-	}
-	iniread,themen,%RJDBINI%,THEME,GUI_theme_name
-	if ((skthemen = "")or(skthemen = "ERROR"))
-	{
-		themen= Default
-		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_theme_name
-	}
-	iniread,fontColor,%RJDBINI%,THEME,GUI_font_color
-	if ((fontColor = "")or(fontColor = "ERROR"))
-	{
-		fontColor= Default
-		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_color
-	}
-	iniread,fontName,%RJDBINI%,THEME,GUI_font_name
-	if ((fontName = "")or(fontName = "ERROR"))
-	{
-		fontName:= ""
-		iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_name
-	}
-	iniread,fontXlg,%RJDBINI%,THEME,GUI_font_large
-	if ((fontXlg = "")or(fontXlg = "ERROR"))
-	{
-		fontXlg= s11
-		iniwrite,%fontXlg%,%RJDBINI%,THEME,GUI_font_large
-	}
-	iniread,fontXmed,%RJDBINI%,THEME,GUI_font_medium
-	if ((fontXmed = "")or(fontXmed = "ERROR"))
-	{
-		fontXmed= s9
-		iniwrite,%fontXmed%,%RJDBINI%,THEME,GUI_font_medium
-	}
-	iniread,fontXsm,%RJDBINI%,THEME,GUI_font_small
-	if ((fontXsm = "")or(fontXsm = "ERROR"))
-	{
-		fontXsm= s7
-		iniwrite,%fontXsm%,%RJDBINI%,THEME,GUI_font_small
-	}
-*/
+
 if (Logging = 1)
 {
 	loget:= "checked"
 	enablelogging:= 1
 }
+
 STM_DB:= source . "\steam.json"
 LKUP_DB:= home . "\lookup.db"
+
 if (Name_Check = 1)
-{
-	gosub, getsivk
-}
+	{
+		gosub, getsivk
+	}
 gbtstate:= ""
 bgptu:= "checked"
 bgpte:= "checked"
 if (BGP_State = 1)
-{
-	gbtstate:= "checked"
-	bgptu:= ""
-	bgpte:= ""
-}
+	{
+		gbtstate:= "checked"
+		bgptu:= ""
+		bgpte:= ""
+	}
 if (BGP_State = 5)
-{
-	gbtstate:= ""
-	bgptu:= "checked"
-	bgpte:= ""
-}
+	{
+		gbtstate:= ""
+		bgptu:= "checked"
+		bgpte:= ""
+	}
 if (BGP_State = 6)
-{
-	gbtstate:= "checked"
-	bgptu:= "checked"
-	bgpte:= ""
-}
+	{
+		gbtstate:= "checked"
+		bgptu:= "checked"
+		bgpte:= ""
+	}
 if (BGP_State = 8)
-{
-	gbtstate:= ""
-	bgptu:= ""
-	bgpte:= "checked"
-}
+	{
+		gbtstate:= ""
+		bgptu:= ""
+		bgpte:= "checked"
+	}
 if (BGP_State = 9)
-{
-	gbtstate:= "checked"
-	bgptu:= ""
-	bgpte:= "checked"
-}
+	{
+		gbtstate:= "checked"
+		bgptu:= ""
+		bgpte:= "checked"
+	}
 if (BGP_State = 13)
-{
-	gbtstate:= ""
-	bgptu:= "checked"
-	bgpte:= "checked"
-}
+	{
+		gbtstate:= ""
+		bgptu:= "checked"
+		bgpte:= "checked"
+	}
 if (BGP_State = 14)
 	{
 		gbtstate:= "checked"
@@ -388,9 +418,9 @@ cnckb:=
 Loop,parse,CENTRALIZE,|
 	{
 		if (A_LoopField = "")
-		{
-			continue
-		}
+			{
+				continue
+			}
 		stringreplace,cnitm,A_LoopField,Cen,cn
 		%cnitm%:= "checked"
 		cnitnum+= 1
@@ -486,23 +516,23 @@ if (Hide_Taskbar = 0)
 	}
 stmddchk:= ""
 if instr(IncludedD,"Steam")
-{
-	stmddchk:= "checked"
-}
+	{
+		stmddchk:= "checked"
+	}
 if (Steam_Directory = "")
-{
-	Steam_Directory:= "[STEAMDIRECTORY]"
-}
+	{
+		Steam_Directory:= "[STEAMDIRECTORY]"
+	}
 if (Steam_UserID = "")
-{
-	Steam_UserID:= "[STEAMUSERID]"
-}
+	{
+		Steam_UserID:= "[STEAMUSERID]"
+	}
 ;}#################################    VARIABLES SET   #################################
 ;###########################################################################################
 ;{################################# MENU PREPERATION #################################
 ;#####################################################################################
-Gui +hWndhMainWnd
-Gui,Color,%bgcolor%
+
+BLDGUI:
 Menu,PP_RCMenu,Add,,
 Menu,MM_RCMenu,Add,: Download ::>,MMToolBDownload
 Menu,MM_RCMenu,Add,,
@@ -574,34 +604,6 @@ Menu,PropJAL,Add,Propagate,PropJALc
 Menu,PropJBE,Add,Propagate,PropJBEc
 Menu,PropPRE,Add,Propagate,PropPREc
 Menu,PropPST,Add,Propagate,PropPSTc
-;} ################################# MENU PREPARED ####################################
-;#######################################################################################
-;{ ################################# GUI GENERATION #########################################
-;###################################################################################################
-Gui, Add, GroupBox, x680 y0 w123 h35
-Gui, Add, GroupBox, x683 y0 w121 h35
-Gui, Font, %But_Font%
-Gui, Add, Button, x318 y10 h20 vADDGAME gADDGAME disabled, ADD+
-Gui, Font, %Dflt_Font%
-Gui, Add, GroupBox, x432 y0 w122 h35
-Gui, Add, Text, x439 y12 h12, Check:
-Gui, Font, %But_Font%
-Gui, Add, Button, x480 y10 h19 vSELALLBUT gSELALLBUT hidden, All
-Gui, Add, Button, x507 y10 h19 vSELNONEBUT gSELNONEBUT hidden, None
-Gui, Add, Button, x580 y10 h19 vButtonClear gButtonClear hidden disabled, Empty List
-Gui, Font, %Sil_Font%
-;Gui, Add, Edit, x530 y12 w50 cWhite disabled,
-Gui, Font, %But_Font%
-;Gui, Add, Button, x565 y12 w14 h14 disabled,X
-Gui, Add, Button, x688 y11 h19 vButtonCreate gButtonCreate hidden disabled,CREATE
-Gui, Font, %Dflt_FONT%
-Gui, Add, Text, x744 y13 h12,Launchers
-Gui, Add, ListView, r44 x310 y35 h560 w340 -Readonly vMyListView gMyListView hwndHLV1 AltSubmit Checked hidden,Name|Directory/Location|Opt /s|Arg /s|Name Override|KBM|P1|P2|McP|MMT|GM|DM|JAL|JBE|Pre|Pst|Bgm|SteamID
-LV_ModifyCol(3, "Integer")
-ImageListID1 := IL_Create(10)
-ImageListID2 := IL_Create(10, 10, true)
-LV_SetImageList(ImageListID1)
-LV_SetImageList(ImageListID2)
 Menu, MyContextMenu, Add, Edit Profile, ContextEditProfile
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Open Profile Dir, ContextOpenFile
@@ -612,151 +614,175 @@ Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Download Meta-Data, GetMetaData
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
-Gui, Font, %But_Font%
-Gui, Add, Button, x236 y7 w55 h17 vCANCLDBUT gCANCLDBUT hidden disabled,CANCEL
-Gui, Font, %Dflt_FONT%
+;} ################################# MENU PREPARED ####################################
+;#######################################################################################
+;{ ################################# GUI GENERATION #########################################
+;###################################################################################################
+Gui +hWndhMainWnd
+Gui,Color,%bgcolor%
+Gui, Add, GroupBox, x680 y0 w123 h35
+Gui, Add, GroupBox, x683 y0 w121 h35
+Gui, Font, %FontB%
+Gui, Add, Button, x318 y10 h20 vADDGAME gADDGAME disabled, ADD+
+Gui, Font, %FontM%
+Gui, Add, GroupBox, x432 y0 w122 h35
+Gui, Add, Text, x439 y12 h12, Check:
+Gui, Font, %FontB%
+Gui, Add, Button, x480 y10 h19 vSELALLBUT gSELALLBUT hidden, All
+Gui, Add, Button, x507 y10 h19 vSELNONEBUT gSELNONEBUT hidden, None
+Gui, Add, Button, x580 y10 h19 vButtonClear gButtonClear hidden disabled, Empty List
+Gui, Add, Button, x688 y11 h19 vButtonCreate gButtonCreate hidden disabled,CREATE
+Gui, Font, %FontM%
+Gui, Add, Text, x744 y13 h12,Launchers
+Gui, Add, ListView, r44 x310 y35 h560 w340 -Readonly vMyListView gMyListView hwndHLV1 AltSubmit Checked hidden,Name|Directory/Location|Opt /s|Arg /s|Name Override|KBM|P1|P2|McP|MMT|GM|DM|JAL|JBE|Pre|Pst|Bgm|SteamID
+LV_ModifyCol(3, "Integer")
+ImageListID1 := IL_Create(10)
+ImageListID2 := IL_Create(10, 10, true)
+LV_SetImageList(ImageListID1)
+LV_SetImageList(ImageListID2)
+Gui, Font, %FontB%
+Gui, Add, Button, x236 y4 w55 h20 vCANCLDBUT gCANCLDBUT hidden disabled,CANCEL
+Gui, Font, %FontM%
 GUI Add,TAB2, x2 y0 w297 h676 vTABMENU, Setup||Config|Edit
-Gui, Add, StatusBar, x0 y675 w314 h28 vRJStatus, Status Bar
+Gui, Add, StatusBar, x0 y675 w314 h28 vRJStatus -Theme Background404040, Status Bar
 Gui,Tab, 1
 Gui Tab, Setup
-;Gui, Add, GroupBox, x18 y18 w277 h638
-Gui, Font, %Sil_Font%
-GUi, Add, Checkbox, x90 y80 h14 vIncludedD gIncludedD c9fb695 Right %stmddchk%,<Include>
-Gui, Font, %ddl_Font%
+Gui, Add, GroupBox, x0 y20 w296 h655
+Gui, Font, %FontG%
+GUi, Add, Checkbox, x90 y80 h14 vIncludedD gIncludedD Right %stmddchk%,<Include>
+Gui, Font, %FontS%
 Gui, Add, DropDownList, x184 y77 w80 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 ;;Gui, Add, Radio, x95 y32 vEXEONLY gEXEONLY checked hidden, Exe`,Cmd`,Bat
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x24 y50 w41 h21 vSOURCE_DirB gSOURCE_DirB,SRC+
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x24 y33 h14 vCURDP c9fb695 Right,<Game Fldrs>
-Gui, Font, %ddl_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x24 y33 h14 vCURDP Right,<Game Fldrs>
+Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y50 w192 vSOURCE_DirectoryT gSOURCE_DirectoryDD,%sourcepop%
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x269 y52 w15 h15 vREMSRC gREMSRC,X
 Gui, Add, Button, x24 y104 w41 h19 vEXCL_DirB gEXCL_DirB,EXC+
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x28 y87 h14 c9fb695,<Exclude>
-Gui, Font, %ddl_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x28 y87 h14,<Exclude>
+Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y104 w192 vEXCLUDE_DirectoryT gEXCLUDE_DirectoryDD,%exclpop%
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x268 y107 w15 h15 vREMEXCL gREMEXCL,X
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x24 y128 h14 c9fb695,<Shortcut Output Directory>
-Gui, Font, %But_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x24 y128 h14,<Shortcut Output Directory>
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y144 w35 h21 vGame_DirB gGame_DirB,OUT
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y148 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
-Gui, Add, Text, x24 y168 w132 h14 vGame_ProfilesR c9fb695,<Game-Profiles-Directory>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y168 w132 h14 vGame_ProfilesR,<Game-Profiles-Directory>
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y184 w35 h21 vGame_ProfB gGame_ProfB,GPD
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y186 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
-Gui, Add, Text, x24 y206 w206 h14 c9fb695,<Keyboard Mapper Program>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y206 w206 h14,<Keyboard Mapper Program>
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y222 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
 Gui Add, Button, x4 y222 w14 h17 vKBM_RC gKBM_RC, v
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x67 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
-Gui, Add, Text, x24 y248 w222 h14 c9fb695,<Template Profile for Player 1>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y248 w222 h14,<Template Profile for Player 1>
+Gui, Font, %FontB%
 Gui, Add, Button, x25 y266 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y268 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x24 y285 w222 h14 c9fb695,<Template for Player 2>
-Gui, Font, %But_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x24 y285 w222 h14,<Template for Player 2>
+Gui, Font, %FontB%
 Gui, Add, Button, x25 y303 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y305 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
-Gui, Add, Text, x24 y324 w222 h14 c9fb695,<Template for MediaCenter/Desktop>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y324 w222 h14,<Template for MediaCenter/Desktop>
+Gui, Font, %FontB%
 Gui, Add, Button, x25 y339 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y341 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
-Gui, Add, Text, x24 y361 w125 h14 c9fb695,<Borderless_Program>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y361 w125 h14,<Borderless_Program>
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y376 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
 Gui Add, Button, x4 y376 w14 h17 vBGM_RC gBGM_RC, v
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x67 y378 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
-Gui, Add, Text, x24 y399 w222 h14 c9fb695,<Multimonitor Program>
-Gui, Font, %But_Font%
+Gui, Add, Text, x24 y399 w222 h14,<Multimonitor Program>
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y415 w35 h21 vMM_ToolB gMM_ToolB,MMT
 Gui Add, Button, x4 y415 w14 h17 vMMT_RC gMMT_RC, v
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x70 y417 w202 h14 vMultiMonitor_ToolT c9fb695 Right,%MultiMonitor_Tool%
-Gui, Add, Text, x24 y440 w222 h14 c9fb695,<Game Monitor CFG>
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontG%
+Gui, Add, Text, x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+Gui, Add, Text, x24 y440 w222 h14,<Game Monitor CFG>
+Gui, Font, %FontM%
 Gui, Add, Radio, x205 y458 w18 h14 vMMResDR gMMResDR hidden,
 Gui, Add, Radio, x223 y458 w18 h14 vMMResTR gMMResTR hidden,
 Gui, Add, Radio, x241 y458 w18 h14 vMMResSR gMMResSR hidden,
-Gui, Font, %ddl_Font%
+Gui, Font, %FontS%
 Gui, Add, DropDownList, x64 y456 w95 vMMResDD gMMResDD hidden,
 Gui, Add, DropDownList, x162 y456 w40 vMMResHD gMMResHD hidden,
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x25 y456 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui, Add, Text, x163 y442 h14 vMMResXX hidden,hz __ | [_] [C] [S]
-Gui, Font, %but_FONT%
+Gui, Font, %FontB%
 Gui, Add, Button, x261 y456 w28 vMMResB gMMResB hidden,OK
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y458 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
-Gui, Font, %Sil_FONT%
-Gui, Add, Text, x24 y478 w214 h14 c9fb695,<HTPC/Desktop Monitor CFG>
-Gui, Font, %But_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x24 y478 w214 h14,<HTPC/Desktop Monitor CFG>
+Gui, Font, %FontB%
 Gui, Add, Button, x25 y495 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui, Add, Text, x64 y497 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y522 w35 h21 vJAL_ProgB gJAL_ProgB,JAL
 Gui Add, Button, x4 y522 w14 h17 vJAL_RC gJAL_RC,v
-Gui, Font, %Dflt_Font%
-Gui, Add, Text, x71 y525 w195 h14 vJustAfterLaunchT c9fb695 Right,%JustAfterLaunchT%
+Gui, Font, %FontM%
+Gui, Add, Text, x71 y525 w195 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
 Gui, Add, Checkbox, x273 y524 w12 h14 vJALWait gJALWait %jalstatus%
 ;Gui, Add, Text,  x64 y526 w198 h14,<Run After Launch>
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y550 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
 Gui Add, Button, x4 y550 w14 h17 vJBE_RC gJBE_RC,v
-Gui, Font, %Dflt_Font%
-Gui, Add, Text, x67 y550 w198 h14 vJustBeforeExitT c9fb695 Right,%JustBeforeExitT%
+Gui, Font, %FontM%
+Gui, Add, Text, x67 y550 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
 Gui, Add, Checkbox, x273 y552 w12 h14 vJBEWait gJBEWait %jbestatus%
 ;Gui, Add, Text, x64 y548 w198 h14,<Run Before Exit>
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x21 y576 w36 h21 vPREAPP gPREAPP ,PRE
 Gui Add, Button, x4 y576 w14 h17 vPRE_RC gPRE_RC, v
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x63 y578 h12 vPRETNUM c99ff6c,1 
-Gui, Font, %ddl_Font%
+Gui, Font, %FontG%
+Gui, Add, Text, x63 y578 h12 vPRETNUM,1 
+Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y576 w193 vPREDD gPREDD Right,%prelist%
-Gui, Add, Text, x40 y597 h14 w230 vPREDDT cAqua,<$This_Prog$><Monitor><Mapper><game.exe>
-Gui, Font, %Dflt_FONT%
+Gui, Add, Text, x4 y597 h14 w260 vPREDDT cAqua,<$This_Prog$><Monitor><Mapper><game.exe>
+Gui, Font, %FontM%
 Gui, Add, Checkbox, x273 y578 w12 h14 vPreWait gPreWait %prestatus%,
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x273 y595 w14 h14 vDELPREAPP gDELPREAPP ,X
 Gui, Add, Button, x21 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
 Gui Add, Button, x4 y614 w14 h17 vPOST_RC gPOST_RC, v
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x63 y616 h12 vPOSTDNUM c99ff6c,1
-Gui, Font, %ddl_Font%
-Gui, Add, DropDownList, x72 y616 w193 vPostDD gPostDD c99ff6c Right,%postlist%
-Gui, Font, %Sil_Font%
-Gui, Add, Text, x34 y638 h14 w230 vPOSTDDT cAqua,<game.exe><$This_Prog$><Mapper><Monitor>
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontG%
+Gui, Add, Text, x63 y616 h12 vPOSTDNUM,1
+Gui, Font, %FontS%
+Gui, Add, DropDownList, x72 y616 w193 vPostDD gPostDD Right,%postlist%
+Gui, Font, %FontG%
+Gui, Add, Text, x4 y638 h14 w260 vPOSTDDT cAqua,<game.exe><$This_Prog$><Mapper><Monitor>
+Gui, Font, %FontM%
 Gui, Add, Checkbox, x273 y619 w12 h14 vPostWait gPostWait %poststatus%
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x273 y636 w14 h14 vDELPOSTAPP gDELPOSTAPP ,X
 Gui, Add, Button, x268 y656 h16 w18 vRESET gRESET,R
-Gui, Font, %Dflt_FONT%
-
+Gui, Font, %FontM%
+/*  ;;[DEBUGINT]
 	Gui, Add, Checkbox, x40 y657 h16 w18 vEnableLogging gEnableLogging right %loget%,
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 	Gui, Add, Button, x20 y656 h16 w18 vOPNLOG gOPNLOG,!
-	Gui, Font, %Dflt_FONT%
-;Gui,Add,DropDownList, hwndDplHndl2 x42 y655 w85 vTHEMEN gTHEMEN,%themen%||Default|Gray|White|Blue|Black
-
+*/  ;;[DEBUGINT]
 Gui, Tab, 2
 Gui, Tab, Config
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui, Add, Radio, x30 y38 h14 vOVERWRT gUPDTSC %ovrwrchk%,Overwrite
 Gui, Add, Radio, x110 y38 h14 vUPDTSC gOVERWRT %updtchk%,Update
 Gui, Add, GroupBox, x7 y50 w284 h218
@@ -767,6 +793,7 @@ GUi, Add, Checkbox, x65 y123 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admi
 Gui, Add, Checkbox, x65 y141 w109 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
 GUi, Add, Checkbox, x50 y159 h14 vGMLNK gGMLNK %lnkget% %lnkenbl%,Launcher Shortcuts
 GUi, Add, Checkbox, x50 y177 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joystick Profiles
+Gui, Add, Checkbox, x202 y169 h14 vToolTips gToolTips %Tltp% Right,Tool-Tips
 Gui, Add, GroupBox, x7 y280 w284 h370 center,
 Gui, Add, Checkbox, x30 y205 h14 vBGP_Enable gBGP_Enable %gbtstate%, Enable Borderless-Gaming Program
 Gui, Add, Checkbox, x50 y225 h14 vBGP_TU gBGP_TU %bgptu%,Terminate if unused
@@ -775,8 +802,9 @@ Gui, Add, Checkbox, x50 y243 h14 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
 Gui, Add, Checkbox, x185 y112 h14 vNameChk gNameChk right %nmchkst%,Name-Check
 Gui, Add, Checkbox, x185 y92 h14 vNetChk gNetChk right %netnchk%,Net-Check
 
-Gui, Add, Checkbox, x190 y300 w85 h14 vLocalize gLocalize %cnlocz% %fontColor%,LOCALIZE
-Gui, Add, Checkbox, x38 y300 w105 h14 vCENTRLCKB gCENTRLCKB %cntz% %fontColor%,CENTRALIZE
+Gui, Add, Checkbox, x125 y295 w85 h14 vLocalize gLocalize %cnlocz% %fontAColor% Right,LOCALIZE
+Gui, Add, Checkbox, x202 y309 h14 vPackage gPackage %pkckb% %pkcol% Right,Package
+Gui, Add, Checkbox, x38 y300 h14 vCENTRLCKB gCENTRLCKB %cntz% %fontAColor%,CENTRALIZE
 Gui, Add, Checkbox, x55 y330 w14 h14 vCenKBM gCenKBM %cnkbm%,
 Gui, Add, Checkbox, x55 y360 w14 h14 vCenPL1 gCenPL1 %cnpl1%,
 Gui, Add, Checkbox, x55 y390 w14 h14 vCenPL2 gCenPL2 %cnpl2%,
@@ -787,7 +815,6 @@ Gui, Add, Checkbox, x55 y515 w14 h14 vCenJAL gCenJAL %cnJAL%,
 Gui, Add, Checkbox, x55 y547 w14 h14 vCenJBE gCenJBE %cnJBE%,
 Gui, Add, Checkbox, x55 y579 w14 h14 vCenPRE gCenPRE %cnPRE%,
 Gui, Add, Checkbox, x55 y617 w14 h14 vCenPST gCenPST %cnPST%,
-Gui, Add, Checkbox, x180 y656 w105 h14 vPackage gPackage %pkckb% %pkcol% Right,Package
 Gui, Add, Checkbox, x272 y330 w14 h14 vKBPak gKBPak %KBPak_p% %pkcvz%,
 Gui, Add, Checkbox, x272 y360 w14 h14 vPl1Pak gPl1Pak %Pl1Pak_p% %pkcvz%,
 Gui, Add, Checkbox, x272 y390 w14 h14 vPl2Pak gPl2Pak %Pl2Pak_p% %pkcvz%,
@@ -798,6 +825,7 @@ Gui, Add, Checkbox, x272 y515 w14 h14 vJALPak gJALPak %JALPak_p% %pkcvz%,
 Gui, Add, Checkbox, x272 y547 w14 h14 vJBEPak gJBEPak %JBEPak_p% %pkcvz%,
 Gui, Add, Checkbox, x272 y579 w14 h14 vPREPak gPREPak %PREPak_p% %pkcvz%,
 Gui, Add, Checkbox, x272 y617 w14 h14 vPSTPak gPSTPak %PSTPak_p% %pkcvz%,
+Gui, Font, %FontG%
 Gui, Add, Text, x22 y330 w31 h14,KBM:
 Gui, Add, Text, x22 y360 w31 h14,PL1:
 Gui, Add, Text, x22 y390 w31 h14,PL2:
@@ -808,7 +836,6 @@ Gui, Add, Text, x22 y515 w31 h14,JAL:
 Gui, Add, Text, x22 y547 w31 h14,JBE:
 Gui, Add, Text, x22 y579 h14 w31 h14,PRE:
 Gui, Add, Text, x22 y618 h14 w31 h14,PST:
-Gui, Font, %Sil_Font%
 Gui, Add, Text, x84 y330 w182 h14 v_Keyboard_MapperT Right,%Keyboard_Mapper%
 Gui, Add, Text, x84 y360 w182 h14 v_Player1_TemplateT Right,%Player1_Template%
 Gui, Add, Text, x84 y390 w182 h14 v_Player2_TemplateT Right,%Player2_Template%
@@ -821,92 +848,91 @@ Gui, Add, Text, x72 y578 h14 w8 v_PRETNUM,1
 Gui, Add, Text, x72 y616 h14 w8 v_POSTDNUM,1
 Gui, Add, Text, x84 y578 h14 w182 v_PREDDT Right,
 Gui, Add, Text, x84 y616 h14 w182 v_POSTDDT Right,
-Gui, Font, %Dflt_FONT%
-Gui, Add, Checkbox, x18 y656 w102 h14 vToolTips gToolTips %Tltp%,Tool-Tips
-Gui, Font, %But_Font%
+Gui, Font, %FontB%
 Gui, Add, Button, x231 y4 w55 h15 vREINDEX gREINDEX %repopbut%,re-index
-Gui, Add, Button, x241 y28 w45 h25 vPOPULATE cLime gPOPULATE,GO>
+Gui, Add, Button, x241 y27 w45 h23 vPOPULATE gPOPULATE,GO>
+/*  ;;[DEBUG32]
+Gui, Add, DDL, x70 y652 w170 hwndDplHndl2 vTHEMEN gTHEMEN,%themeALL%
+*/  ;;[DEBUG32]
 Gui, Tab, 3
 Gui, Tab, Edit
-Gui, Font, %Dflt_FONT%
-Gui,Add,Text,x15 y35 w50 h15,Game.ini
-Gui, Font, %Sil_Font%
-Gui,Add,Text, x100 y32 w177 h15 vIniSel hidden right,%gameifile%
-Gui, Font, %But_FONT%
-Gui,add,Button,x70 y32 w26 h21 viniBut giniBut,...
-Gui, Font, %Dflt_FONT%
-Gui,Add,Checkbox,x30 y56 w144 h20 vMMODET gMMODET hidden,Multimonitor Mode
-Gui,Add,Checkbox,x30 y80 w142 h20 vTBARTOG gTBARTOG hidden,Hide Taskbar
-Gui, Font, %Dflt_FONT%
-Gui,Add,Text,x48 y108 w43 h15,Mapper
-Gui, Font, %ddl_Font%
-Gui,Add,DropDownList,x110 y108 w90 vMapDDL gMapDDL hidden, %MAPCFGS%
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
+Gui, Add, GroupBox, x7 y20 w288 h116
+Gui, Font, %FontG%
+Gui,Add,Text,x15 y45 h15,Game.ini
+Gui,Add,Text, x100 y42 w177 h15 vIniSel hidden right,%gameifile%
+Gui, Font, %FontB%
+Gui,add,Button,x70 y42 w26 h21 viniBut giniBut,...
+Gui, Font, %FontM%
+Gui,Add,Checkbox,x30 y66 w144 h20 vMMODET gMMODET hidden,Multimonitor Mode
+Gui,Add,Checkbox,x30 y90 w142 h20 vTBARTOG gTBARTOG hidden,Hide Taskbar
+Gui, Font, %FontM%
+Gui,Add,Text,x208 y80 w43 h15,Mapper
+Gui, Font, %FontS%
+Gui,Add,DropDownList,x184 y96 w90 vMapDDL gMapDDL hidden, %MAPCFGS%
+Gui, Font, %FontM%
 Gui,Add, GroupBox, x7 y138 w288 h68,Programs/Scripts
-Gui, Font, %ddl_Font%
+Gui, Font, %FontS%
 Gui,Add,DDL,x25 y160 w175 vexeDDL gexeDDL hidden,%exe_p%
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui, Add, Checkbox, x205 y160 w25 h20 v_LCLeP gLCLeP hidden,L
 Gui, Add, Checkbox, x230 y160 w25 h20 v_CENeP gCENeP hidden,C
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add,Text,x25 y184 w222 h15 viniexe right hidden,
-Gui, Font, %But_FONT%
-Gui,Add, Button, x258 y182 w26 h21 vExeBut gExeBut hidden, ...
+Gui, Font, %FontB%
+Gui,Add, Button, x258 y182 w26 h21889 gExeBut hidden, ...
 Gui,add,Button,x278 y162 w15 h15 vDelExe gDelExe hidden,x
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, GroupBox, x7 y208 w288 h69,Config-File/Folder
 Gui,Add,DDL,x25 y232 w175 vcfgDDL gcfgDDL hidden,%cfg_p%
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui, Add, Checkbox, x205 y232 w25 h20 v_LCLcP gLCLcP hidden,L
 Gui, Add, Checkbox, x230 y232 w25 h20 v_CENcP gCENcP hidden,C
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add,Text,x25 y256 w222 h15 vinicfg right hidden,
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,Add, Button, x258 y251 w26 h21 vCfgBut gCfgBut hidden,...
 Gui,add,Button,x278 y230 w15 h15 vDelcfg gDelCfg hidden,x
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, GroupBox,x7 y280 w288 h127 right,Name/Attributes
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, Text,x25 y303 w75 h15,Profile Name
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add, Edit,x105 y303 w170 h23 vPRFNAME gPRFNAME cWhite hidden,
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, Text,x25 y335 w75 h15,Steam AppID
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add, Edit,x105 y335 w70 h23 vSappID gSappID hidden cWhite,
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,Add, Button,x245 y372 w40 h23 vSaveName gSaveName hidden,save
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, GroupBox,x7 y412 w288 h135 right,Save Data/Game Data
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add,DropDownList,x25 y435 w175 vCloudSavDDL gCloudSavDDL hidden,
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, Text,x205 y435 h15,Save Files
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,add,Button,x278 y435 w15 h15 vDelCloudSav gDelCloudSav hidden,x
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add, Edit,x25 y462 w222 h21 vCloudSavEdt gCloudSavedt cWhite hidden,
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,Add, Button, x254 y462 w31 h21 vCloudSavBut gCloudSavBut hidden,... +
-Gui, Font, %DDL_FONT%
+Gui, Font, %FontS%
 Gui,Add,DropDownList,x25 y491 w175 vCloudCfgDDL gCloudCfgDDL hidden,
-Gui, Font, %Dflt_FONT%
+Gui, Font, %FontM%
 Gui,Add, Text,x205 y491 h15,Config Files
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,add,Button,x278 y491 w15 h15 vDelCloudCfg gDelCloudCfg hidden,x
-Gui, Font, %Sil_Font%
+Gui, Font, %FontG%
 Gui,Add, Edit,x25 y520 w222 h21 vCloudCfgEdt gCloudCfgedt cWhite hidden,
-Gui, Font, %But_FONT%
+Gui, Font, %FontB%
 Gui,Add, Button, x254 y520 w31 h21 vCloudCfgBut gCloudCfgBut hidden,... +
-Gui, Font, %Dflt_FONT%
-
-Gui,Add, Button,x5 y32 h16 w18 vopnif gopnif hidden,O
-Gui,Add, Button,x24 y32 h16 w18 vopnRLD gopnRLD hidden,R
-
+Gui, Font, %FontM%
 
 	OnMessage(0x200, "WM_MOUSEMOVE")
 
 Gui Show, w314 h700, v0rt3X_GUI
+GuiOpen := 1
 ;}    #######################################  GUI CREATED ##############################
 ;###################################################################################################
 ;{#####################  TOOL-TIP GENERATION  #################################
@@ -1026,9 +1052,32 @@ UPDTSC_TT :="creates new profile/configurations and updates profiles with any bl
 Return
 ;} ######################  TT GENERATED  ################################;;
 !esc::
-GuiEscape:
+Msgbox,4100,Quit?,Quit v0rt3X
+if Msgbox,No
+return
+
 GuiClose:
+Gui, Hide
+/*  ;;[DEBUG32]
+if instr(themen,"msstyles")
+	{
+		SkinForm(0)
+	}
+*/  ;;[DEBUG32]	
+Gui, Destroy
+GuiOpen := 0
+return
+
+QUITOUT:
+Gui, Hide
+/*  ;;[DEBUG32]
+if instr(skinxtn,"msstyles")
+	{
+		SkinForm(0)
+	}
+*/  ;;[DEBUG32]	
 ExitApp
+
 Game_ProfB:
 gui,submit,nohide
 FileSelectFolder,GAME_ProfilesT,*%home%,3,Select Folder
@@ -3133,6 +3182,8 @@ Loop,parse,PAKLST,|
 return
 RESET:
 Msgbox,260,Reset,Reset the program to default settings?, 5
+
+	
 ifMsgbox,Yes
 	{
 		gosub,INITALL
@@ -3174,6 +3225,7 @@ ifMsgbox,Yes
 		guicontrol,,PreDD,|1<||2<|3<
 		guicontrol,,PostDD,|1<||2<|3<
 	}
+
 return
 EnableLogging:
 gui,submit,nohide
@@ -5526,13 +5578,13 @@ intl= {"applist":{"apps":[{
 				}
 				if (nameOverride <> "")
 					{
-					gmnamed= %nameOverride%
-					sexjnj= %nameOverride%
-					njName= %nameOverride%
-					exedp= %nameOverride%
-					stringreplace,excp,gmnamed,%A_Space%,,All
-					excn=|%excp%|
-					goto, nameOVR
+						gmnamed= %nameOverride%
+						sexjnj= %nameOverride%
+						njName= %nameOverride%
+						exedp= %nameOverride%
+						stringreplace,excp,gmnamed,%A_Space%,,All
+						excn=|%excp%|
+						goto, nameOVR
 				}
 				gosub, GETGOODNAME
 				gmnamed= %njname%
@@ -5553,11 +5605,11 @@ intl= {"applist":{"apps":[{
 				gmnamfcm= %invarx%
 				if instr(gmnamecm,ExeSN)
 					{
-					priority:= 2
+						priority:= 2
 				}
 				if instr(gmnamecm,gmnamfcm)
 					{
-					priority:= 4
+						priority:= 4
 				}
 				if (gmnamfcm = gmnamecm)
 					{
@@ -5992,25 +6044,25 @@ intl= {"applist":{"apps":[{
 				cfgcopied:= ""
 				if (!FileExist(gamecfg)or(OVERWRT = 1))
 					{
-					FileRead,RJTMP,%RJDBINI%
-					Loop, parse, RJTMP,`n`r
-						{
-						if (A_LoopField = "")
+						FileRead,RJTMP,%RJDBINI%
+						Loop, parse, RJTMP,`n`r
 							{
-								Continue
+							if (A_LoopField = "")
+								{
+									Continue
+								}
+							lpab= %A_LoopField%
+							stringsplit,avx,lpab,=
+							stringleft,aba,lpab,1
+							if (aba = "[")
+								{
+								cursc= %lpab%
+								stringreplace,cursc,cursc,[,,All
+								stringreplace,cursc,cursc,],,All
+								continue
 							}
-						lpab= %A_LoopField%
-						stringsplit,avx,lpab,=
-						stringleft,aba,lpab,1
-						if (aba = "[")
-							{
-							cursc= %lpab%
-							stringreplace,cursc,cursc,[,,All
-							stringreplace,cursc,cursc,],,All
-							continue
-						}
-						stringreplace,aval,lpab,%avx1%=,,
-						iniwrite,%aval%,%gamecfg%,%cursc%,%avx1%
+							stringreplace,aval,lpab,%avx1%=,,
+							iniwrite,%aval%,%gamecfg%,%cursc%,%avx1%
 					}
 					cfgcopied:= 1
 					klist:= ""
@@ -6530,9 +6582,9 @@ intl= {"applist":{"apps":[{
 							{
 								MonitorMode:= 2
 								if ((mmovr = "n") or (mmovr ="0"))
-								{
-									MonitorMode:= 0
-								}
+									{
+										MonitorMode:= 0
+									}
 								stringreplace,cmdtmp,cmdtpp,[MonitorMode],%MonitorMode%
 								stringreplace,cmdtmp,cmdtmp,[multimonitor_tool],%multimonitor_tool%
 								stringreplace,cmdtmp,cmdtmp,[Mapper],%mapper%
@@ -7547,10 +7599,13 @@ intl= {"applist":{"apps":[{
 		GuiControl, Font, CENTRLCKB
 		GuiControl, Font, Localize
 		return
+		
 		ToolTips:
 		gui,submit,nohide
+		guicontrolget,ToolTips,,ToolTips
 		iniwrite,%ToolTips%,%RJDBINI%,GENERAL,ToolTips
 		return
+
 		Hide_Taskbar:
 		gui,submit,nohide
 		iniwrite,%Hide_Taskbar%,%RJDBINI%,GENERAL,Hide_Taskbar
@@ -8731,75 +8786,77 @@ intl= {"applist":{"apps":[{
 		stringreplace,nvat,gamefini,%A_Space%,·,All
 		guicontrol,,IniSel,%nvat%	
 		return
+/*  ;;[DEBUG32]		
 		THEMEN:
 		gui,submit,nohide
 		guicontrolget,themen,,THEMEN
-		if (themen = "Default")
-		{
-			iniwrite,Default,%RJDBINI%,THEME,GUI_theme_name
-			iniwrite,Default,%RJDBINI%,THEME,GUI_background
-			iniwrite,Default,%RJDBINI%,THEME,GUI_foreground
-			iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
-			iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
-			iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
-			iniwrite,Default,%RJDBINI%,THEME,GUI_font_color
-			iniwrite,%A_Space%,%RJDBINI%,THEME,GUI_font_name
-			SB_SetText("Theme change requires restart")
-			return
-		}
-		if (themen = "Gray")
-		{
-			iniwrite,Dark,%RJDBINI%,THEME,GUI_theme_name
-			iniwrite,Gray,%RJDBINI%,THEME,GUI_background
-			iniwrite,White,%RJDBINI%,THEME,GUI_foreground
-			iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
-			iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
-			iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
-			iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
-                                ;;iniwrite,Segoe UI,%RJDBINI%,THEME,GUI_font_name
-			SB_SetText("Theme change requires restart")
-			return
-		}
-		if (themen = "Black")
-		{
-			iniwrite,Dark,%RJDBINI%,THEME,GUI_theme_name
-			iniwrite,Black,%RJDBINI%,THEME,GUI_background
-			iniwrite,White,%RJDBINI%,THEME,GUI_foreground
-			iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
-			iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
-			iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
-			iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
-                                ;;iniwrite,Segoe UI,%RJDBINI%,THEME,GUI_font_name
-			SB_SetText("Theme change requires restart")
-			return
-		}
-		if (themen = "White")
-		{
-			iniwrite,White,%RJDBINI%,THEME,GUI_theme_name
-			iniwrite,White,%RJDBINI%,THEME,GUI_background
-			iniwrite,Black,%RJDBINI%,THEME,GUI_foreground
-			iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
-			iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
-			iniwrite,s7,%RJDBINI%,THEME,GUI_font_small
-			iniwrite,cBlack,%RJDBINI%,THEME,GUI_font_color
-                                ;;iniwrite,Palatino Linotype,%RJDBINI%,THEME,GUI_font_name
-			SB_SetText("Theme change requires restart")
-			return
-		}
-		if (themen = "Blue")
-		{
-			iniwrite,Blue,%RJDBINI%,THEME,GUI_theme_name
-			iniwrite,0000FF,%RJDBINI%,THEME,GUI_background
-			iniwrite,FFFFFF,%RJDBINI%,THEME,GUI_foreground
-			iniwrite,s11,%RJDBINI%,THEME,GUI_font_large
-			iniwrite,s9,%RJDBINI%,THEME,GUI_font_medium
-			iniwrite,s7,%RJDBINI%,THEME,GUI_font_smallf
-			iniwrite,cWhite,%RJDBINI%,THEME,GUI_font_color
-                                ;;iniwrite,MS Serif,%RJDBINI%,THEME,GUI_font_name
-			SB_SetText("Theme change requires restart")
-			return
-		}
+		if instr(themen,"Light")
+			{
+				iniwrite,9a9a9a,%RJDBINI%,THEME,GUI_Light_BG
+				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
+				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontS
+				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontM
+				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontB
+				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontG
+				SB_SetText("Theme change may require restarting v0rt3X")
+			}
+		if instr(themen,"Dark")
+			{
+				iniwrite,151515,%RJDBINI%,THEME,GUI_Dark_BG
+				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
+				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontS
+				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontM
+				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontB
+				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontG
+				SB_SetText("Theme change requires restart")
+			}
+		if ((themen = "LightMode.she")or (themen = "DarkMode.she"))
+			{
+				iniwrite,%source%\%themen%,%RJDBINI%,THEME,GUI_theme_name
+				SB_SetText("Theme change may require restarting v0rt3X")
+			}
+		if ((themen = "DarkMode.msstyles") or (themen = "LightMode.msstyles"))
+			{
+				iniwrite,%source%\%themen%,%RJDBINI%,THEME,GUI_theme_name
+				SB_SetText("Theme change may require restarting v0rt3X")
+			}
+			
+		iniwrite,%themen%,%RJDBINI%,THEME,GUI_theme_name
+		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		stringreplace,ThemeN,ThemeN,%skinName%|,,
+		Guicontrol,,ThemeN,|%skinName%||%ThemeA%
+		if instr(ThemeN,"msstyles")
+			{
+				DllCall(binhome . "\USkin.dll" . "\USkinExit")
+				DllCall(binhome . "\USkin.dll" . "\USkinInit", Int,0, Int,0, AStr,_Skin)
+				Gui, Hide
+				SkinForm(0)
+				Gui, Destroy
+				GuiOpen := 0
+				while (1) 
+					{
+						if (GuiOpen)
+							Sleep, 500
+						else
+							break
+					}
+				SkinForm("0", binhome "\USkin.dll", SkinStyle . ThemeN)
+				SkinForm(Apply, binhome "\USkin.dll", SkinStyle . ThemeN)
+				goto, ThemeRenew
+			}
+		if instr(ThemeN,"she")
+			{
+				hSkinH := DllCall("LoadLibrary", "Str", binhome "\SkinHu.dll")
+				DllCall("SkinHu\SkinH_AttachEx", "Str", SkinStyle . ThemeN)
+				LV_GetText(OutputVar, A_EventInfo)
+				DllCall("SkinHu\SkinH_AttachEx", "Str", SkinStyle . ThemeN)
+				goto, ThemeRenew
+			}
 		return
+		ThemeRenew:
+		return
+*/  ;;[DEBUG32]	
+
 		UpdateRJLR:
 		curemote= originalBinary
 		gosub, BINGETS
@@ -8816,7 +8873,7 @@ intl= {"applist":{"apps":[{
 				FileCopy, %binhome%\Update.exe, %A_Temp%
 				Run, "%A_Temp%\Update.exe" "%save%"
 				Process, close, Setup.exe
-				exitapp
+				goto, QUITOUT
 			}
 		SB_SetText("Update file not found")
 		return
@@ -8923,13 +8980,13 @@ intl= {"applist":{"apps":[{
 		return
 		ResetMprs:
 		Loop,parse,MAPCFGS,|
-		{
-			abb:= % %A_LoopField%_executable
-			if fileexist(abb)
 			{
-				menu,keycfgm,Add,%A_LoopField%,INIT%A_LOOPFIELD%
+				abb:= % %A_LoopField%_executable
+				if fileexist(abb)
+					{
+						menu,keycfgm,Add,%A_LoopField%,INIT%A_LOOPFIELD%
+					}
 			}
-		}
 		menu,keycfgm,Show
 		return
 		Menu,dwnlbmn,show
@@ -9430,7 +9487,7 @@ intl= {"applist":{"apps":[{
 						Msgbox,258,,7za.exe not found,Binary file 7za.exe is missing from`n%binhome%`n`nContinue?
 						ifmsgbox,Abort
 							{
-								exitapp
+								goto, QUITOUT
 							}
 						if Msgbox,Retry
 							{
@@ -9475,7 +9532,7 @@ intl= {"applist":{"apps":[{
 					{
 						if (curemote = "originalBinary")
 							{
-								exitapp
+								goto, QUITOUT
 							}
 					}
 				if Msgbox,Retry
@@ -10585,8 +10642,8 @@ intl= {"applist":{"apps":[{
 		}
 		GLBTRY:= 0
 		pcgwin:= ""
-		stringreplace,pcgw,pcgw,="//,="https://,All
 		stringreplace,pcgw,pcgw,="/,="https://pcgamingwiki.com/,All
+		stringreplace,pcgw,pcgw,="//,="https://,All
 		Loop,parse,pcgw,`r`n
 		{
 			if (A_LoopField = "")
@@ -10778,9 +10835,31 @@ intl= {"applist":{"apps":[{
 		SOURCEDLIST:= nsrcdl
 		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 		return
+		
+
+Return
+
+MenuHandler:
+Return
+testMenu:
+Return
+
 ;;##########################################################################################
 ;{;##############################  FUNCTIONS ####################################
 ;;##########################################################################################;;
+
+/*  ;;[DEBUG32]
+
+SkinForm(Param1 = "Apply", DLL = "", SkinName = ""){
+	;Dll:=binhome . "\Uskin.dll"
+	if(Param1 = Apply){
+		DllCall("LoadLibrary", str, DLL)
+		DllCall(DLL . "\USkinInit", Int,0, Int,0, AStr, SkinName)
+	}else if(Param1 = 0){
+		DllCall(DLL . "\USkinExit")
+		}
+}
+*/  ;;[DEBUG32]
 Class CustomFont
 {
 	static FR_PRIVATE  := 0x10
@@ -11601,7 +11680,10 @@ Class BeautifulToolTip
       if (!this.pToken)
       {
         MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
-        ExitApp
+/*  ;;[DEBUG32
+        SkinForm(0)
+*/  ;;[DEBUG32		
+		exitapp
       }
       this.Monitors := MDMF_Enum()
       for hMonitor, v in this.Monitors.Clone()

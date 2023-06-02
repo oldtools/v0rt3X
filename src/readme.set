@@ -42,13 +42,16 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 			│   ├──  lrDeploy.exe
 			│   ├──  NewOSK.exe
 			│   ├──  Setup.exe
+			│   ├──  SkinHu.dll
 			│   ├──  Source_Builder.exe
 			│   ├──  Update.exe
+			│   ├──  USkin.dll
 			│   └──  [RJ_EXE].exe
 			│
 			├──  site
 			│   ├──  AnkaCoder_b.otf
 			│   ├──  index.html
+			│   ├──  InterUI.html
 			│   ├──  Hermit-Regular.otf
 			│   ├──  key.ico
 			│   ├──  ReadMe.md
@@ -77,6 +80,8 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 			│   ├──  build.ahk
 			│   ├──  Buildtools.set
 			│   ├──  cmdtemplate.set
+			│   ├──  DarkMode.mssytles
+			│   ├──  DarkMode.she
 			│   ├──  Deploy.ico
 			│   ├──  exclfnms.set
 			│   ├──  exez.set
@@ -90,6 +95,8 @@ Run the installer or extract the binary to a location of your choice, **or** dow
 			│   ├──  ks_Trigger.set
 			│   ├──  Joystick.ico
 			│   ├──  jkvtx.ahk
+			│   ├──  LightMode.msstyles
+			│   ├──  LightMode.she
 			│   ├──  lrDeploy.ahk
 			│   ├──  lrDeploy.set
 			│   ├──  newosk.ahk

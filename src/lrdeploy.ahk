@@ -562,7 +562,10 @@ if !FileExist(GITD)
 		;FileCopy,%SKELD%\src\repos.set,%GITD%\bin,1
 		FileCopy,%SKELD%\src\*.ahk,%GITD%\src,1
 		FileCopy,%SKELD%\src\steam.json,%GITD%\src,1
+		FileCopy,%SKELD%\bin\*.dll,%GITD%\bin,1
 		FileCopy,%SKELD%\src\*.set,%GITD%\src,1
+		FileCopy,%SKELD%\src\*.msstyles,%GITD%\src,1
+		FileCopy,%SKELD%\src\*.she,%GITD%\src,1
 		FileCopy,%SKELD%\site\img\*,%GITD%\site\img,1
 		FileCopy,%SKELD%\site\*,%GITD%\site,1
 	}
@@ -2381,7 +2384,10 @@ StringReplace,sktmv,sktmv,[RJ_PROJ],%RJPRJCT%,All
 StringReplace,sktmv,sktmv,[RJ_EXE],%RJ_PROJ%,All
 stringreplace,sktmv,sktmv,`/`*  `;`;[DEBUGOV],,All
 stringreplace,sktmv,sktmv,`*`/  `;`;[DEBUGOV],,All
+stringreplace,sktmNv,sktmv,`/`*  `;`;[DEBUG32],,All
+stringreplace,sktmNv,sktmNv,`*`/  `;`;[DEBUG32],,All
 fileappend,%sktmv%,%SKELD%\src\Setup.ahk,UTF-8
+fileappend,%sktmNv%,%SKELD%\src\Setup_theme.ahk,UTF-8
 FileDelete,%SKELD%\src\%RJEXFN%.ahk
 FileRead, itmv,%SKELD%\src\jkvtx.ahk
 StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
@@ -2421,7 +2427,7 @@ if (INITINCL = 1)
 	{		
 		FileDelete,%SKELD%\src\Setup.tmp
 		FileDelete,%SKELD%\bin\%RJEXFN%.exe
-		FileDelete, %SKELD%\bin\Setup.exe
+		FileDelete, %SKELD%\bin\Setup*.exe
 		FileDelete,%SKELD%\bin\setup.tmp
 		RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
@@ -2429,6 +2435,7 @@ if (INITINCL = 1)
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup_theme.ahk" /out "%SKELD%\bin\Setup_Theme.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 	}
 if (OvrStable = 1)
@@ -2471,11 +2478,17 @@ if (PortVer = 1)
 			}
 		FileDelete, %DEPL%\portable.zip
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%					
-		inclexe= bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
+		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.she src\*.msstyles src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		FileCopy, %DEPL%\portable.zip,%DEPL%\portable_theme.zip
+		inclexe= bin\SkinHu.dll|Uskin.dll|bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
+		stringreplace,inclexe_theme,inclexe,Setup.exe,Setup_theme.exe
 		Loop,parse,inclexe,|
 			{
 				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+			}
+		Loop,parse,inclexe_theme,|
+			{
+				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable_theme.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 			}
 		sleep, 1000
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
@@ -2551,11 +2564,15 @@ if (SiteUpdate = 1)
 	{
 		fileappend,`nmkdir "%GITD%\site"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, mkdir "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend, mkdir "%GITD%\bin"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.ini"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.txt"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "site\index.html" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "src\*.ahk" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend, copy /y "bin\*.dll" "%GITD%\bin"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "src\*.set" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend, copy /y "src\*.she" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend, copy /y "src\*.msstyles" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "src\steam.json" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "src\*.ico" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "ReadMe.md" "%GITD%"`n,%DEPL%\!gitupdate.cmd,UTF-8
