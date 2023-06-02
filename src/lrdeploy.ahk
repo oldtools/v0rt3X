@@ -2361,6 +2361,7 @@ FileCopy,%SKELD%\ReadMe.md,%GITD%,1
 FileCopy,%SKELD%\ReadMe.md,%SITEDIR%,1
 FileCopy,%SKELD%\ReadMe.md,%SKELD%\License.md,1
 FileMove,%SKELD%\src\Setup.ahk,%DEPL%\Setup.bak,1
+FileMove,%SKELD%\src\Setup_theme.ahk,%DEPL%\Setup_theme.bak,1
 FileCopy, %SKELD%\src\working.ahk, %SKELD%\src\Setup.tmp,1
 sktmp= 
 sktmc= 
@@ -2480,7 +2481,7 @@ if (PortVer = 1)
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
 		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.she src\*.msstyles src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		FileCopy, %DEPL%\portable.zip,%DEPL%\portable_theme.zip
-		inclexe= bin\SkinHu.dll|Uskin.dll|bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
+		inclexe= bin\SkinHu.dll|bin\Uskin.dll|bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
 		stringreplace,inclexe_theme,inclexe,Setup.exe,Setup_theme.exe
 		Loop,parse,inclexe,|
 			{
