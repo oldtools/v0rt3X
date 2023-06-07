@@ -18,8 +18,8 @@ if !(A_IsUnicode=1 and A_PtrSize=4)
 ;###########################################################################################
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-06-02 8:14 AM"
-VERSION := "0.99.89.94"
+RELEASE := "2023-06-07 6:05 AM"
+VERSION := "0.99.89.96"
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
 EnvGet,SYSTMRT,SYSTEMROOT
@@ -88,21 +88,14 @@ cacheloc:= home . "\downloaded"
 SkinStyle= %source%\
 iniread,ThemeNV,%RJDBINI%,THEME,GUI_Theme_Name
 splitpath,ThemeNV,ThemeN,skinpth,skinxtn
-ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
-if (((ThemeN = "")) or (instr(ThemeA,ThemeN . "|") && !fileExist(source . "\" . skinfile)))
-	{
-		ThemeN= Native_Dark
-		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
-		ThemeAll=|%ThemeN%||%ThemeA%
-		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
-		goto, ThemeLoaded
-	}
+ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
+
 if fileExist(source . "\" . ThemeN)
 	{
-		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
 		ThemeALL=|%ThemeN%||%ThemeA%
-		iniwrite,%skinFile%,%RJDBINI%,THEME,GUI_theme_name
+		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
 		if (skinxtn = "msstyles")
 			{
 				SkinForm(Apply, binhome "\USkin.dll", SkinStyle . ThemeN)
@@ -115,7 +108,15 @@ if fileExist(source . "\" . ThemeN)
 				goto, ThemeLoaded
 			}
 	}
-ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+else {
+		
+		ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
+		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
+		ThemeAll=|%ThemeN%||%ThemeA%
+		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
+		goto, ThemeLoaded
+	}
+ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 stringreplace,ThemeA,ThemeA,%ThemeN%|,,
 ThemeAll=|%ThemeN%||%ThemeA%
 iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
@@ -287,13 +288,13 @@ Loop,parse, MAPCFGS,|
 
 iniread,Gui_Theme_Name,%RJDBINI%,THEME,Gui_Theme_Name
 
-if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . "AnkaCoder_b.ttf")&& fileexist(site_local . "\" . "malgun.ttf")&& fileexist(site_local . "\" . "InterUI.ttf"))
+if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . "AnkaCoder_b.ttf")&& fileexist(site_local . "\" . "Hermit-Regular.otf")&& fileexist(site_local . "\" . "InterUI.ttf"))
 	{
 		font1:= New CustomFont(site_local . "\" . "TruenoLt.otf")
 		font2:= New CustomFont(site_local . "\" . "AnkaCoder_b.ttf")
-		font3:= New CustomFont(site_local . "\" . "malgun.ttf")
+		font3:= New CustomFont(site_local . "\" . "Hermit-Regular.otf")
 		font4:= New CustomFont(site_local . "\" . "InterUI.ttf")
-		fontAName= Malgun Gothic
+		fontAName= Hermit
 		fontBName= Anka/Coder
 		fontCName= Trueno
 		fontDName= Inter UI
@@ -325,6 +326,11 @@ if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . 
 		fontEColor= cSilver
 		bgDarkcolor= 151515
 		bgLightcolor= 000000
+		LFontM=%fontAColor% s7,Default
+		LFontL=%fontBColor% s7 Bold,Default	
+		LFontG=%fontCColor% s7,Default
+		LFontB=%fontDColor% s7 Bold,Default
+		LFontS=%fontEColor% s6 Bold,Default
 		DFontM=%fontAColor% s7,Default
 		DFontL=%fontBColor% s7 Bold,Default	
 		DFontG=%fontCColor% s7,Default
@@ -614,6 +620,8 @@ Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Download Meta-Data, GetMetaData
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
+
+ITERTARE:
 ;} ################################# MENU PREPARED ####################################
 ;#######################################################################################
 ;{ ################################# GUI GENERATION #########################################
@@ -677,14 +685,16 @@ Gui, Add, Text, x64 y148 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
 Gui, Add, Text, x24 y168 w132 h14 vGame_ProfilesR,<Game-Profiles-Directory>
 Gui, Font, %FontB%
 Gui, Add, Button, x21 y184 w35 h21 vGame_ProfB gGame_ProfB,GPD
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x64 y186 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y206 w206 h14,<Keyboard Mapper Program>
 Gui, Font, %FontB%
 Gui, Add, Button, x21 y222 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
 Gui Add, Button, x4 y222 w14 h17 vKBM_RC gKBM_RC, v
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x67 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y248 w222 h14,<Template Profile for Player 1>
 Gui, Font, %FontB%
 Gui, Add, Button, x25 y266 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
@@ -694,25 +704,29 @@ Gui, Font, %FontG%
 Gui, Add, Text, x24 y285 w222 h14,<Template for Player 2>
 Gui, Font, %FontB%
 Gui, Add, Button, x25 y303 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x64 y305 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y324 w222 h14,<Template for MediaCenter/Desktop>
 Gui, Font, %FontB%
 Gui, Add, Button, x25 y339 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x64 y341 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y361 w125 h14,<Borderless_Program>
 Gui, Font, %FontB%
 Gui, Add, Button, x21 y376 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
 Gui Add, Button, x4 y376 w14 h17 vBGM_RC gBGM_RC, v
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x67 y378 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y399 w222 h14,<Multimonitor Program>
 Gui, Font, %FontB%
 Gui, Add, Button, x21 y415 w35 h21 vMM_ToolB gMM_ToolB,MMT
 Gui Add, Button, x4 y415 w14 h17 vMMT_RC gMMT_RC, v
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Text, x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+Gui, Font, %FontG%
 Gui, Add, Text, x24 y440 w222 h14,<Game Monitor CFG>
 Gui, Font, %FontM%
 Gui, Add, Radio, x205 y458 w18 h14 vMMResDR gMMResDR hidden,
@@ -782,7 +796,7 @@ Gui, Font, %FontB%
 */  ;;[DEBUGINT]
 Gui, Tab, 2
 Gui, Tab, Config
-Gui, Font, %FontM%
+Gui, Font, %FontG%
 Gui, Add, Radio, x30 y38 h14 vOVERWRT gUPDTSC %ovrwrchk%,Overwrite
 Gui, Add, Radio, x110 y38 h14 vUPDTSC gOVERWRT %updtchk%,Update
 Gui, Add, GroupBox, x7 y50 w284 h218
@@ -836,6 +850,7 @@ Gui, Add, Text, x22 y515 w31 h14,JAL:
 Gui, Add, Text, x22 y547 w31 h14,JBE:
 Gui, Add, Text, x22 y579 h14 w31 h14,PRE:
 Gui, Add, Text, x22 y618 h14 w31 h14,PST:
+Gui, Font, %FontM%
 Gui, Add, Text, x84 y330 w182 h14 v_Keyboard_MapperT Right,%Keyboard_Mapper%
 Gui, Add, Text, x84 y360 w182 h14 v_Player1_TemplateT Right,%Player1_Template%
 Gui, Add, Text, x84 y390 w182 h14 v_Player2_TemplateT Right,%Player2_Template%
@@ -845,7 +860,9 @@ Gui, Add, Text, x84 y482 w182 h14 v_MM_MediaCenter_ConfigT Right,%MM_MediaCenter
 Gui, Add, Text, x84 y515 w182 h14 v_JustAfterLaunchT Right,%JustAfterLaunchT%
 Gui, Add, Text, x84 y544 w182 h14 v_JustBeforeExitT Right,%JustBeforeExitT%
 Gui, Add, Text, x72 y578 h14 w8 v_PRETNUM,1
+Gui, Font, %FontG%
 Gui, Add, Text, x72 y616 h14 w8 v_POSTDNUM,1
+Gui, Font, %FontM%
 Gui, Add, Text, x84 y578 h14 w182 v_PREDDT Right,
 Gui, Add, Text, x84 y616 h14 w182 v_POSTDDT Right,
 Gui, Font, %FontB%
@@ -5127,7 +5144,7 @@ Return
 ;} ###########################   POPULATED ###################################;
 RESTEAM:
 dwnrej:= ""
-iniread,URLFILE,%source%\repos.set,BINARIES,STEAMJSON
+iniread,URLFILE,%source%\repos.set,GLOBAL,STEAMJSON
 save= %STM_DB%
 splitpath,save,svaf,svap
 Filemove,%save%,%save%.bak,R
@@ -6201,8 +6218,8 @@ intl= {"applist":{"apps":[{
 					{
 						OutRunState:= 1
 						GAME_LT= %GAME_Directory%
-						if (Localize = 1)
 						/*
+						if (Localize = 1)
 						{
 							GAME_LT= %prn%
 						}
@@ -6268,11 +6285,13 @@ intl= {"applist":{"apps":[{
 									}
 								if ((rn = "")or(renum = 1))
 								{
+									FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+								
 								}
-								FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
 								if (!fileexist(linktarget)&&(renum = "")&&(SETALTSALL = 1))
 									{
 										FileCreateShortcut, %RJDB_LOCATION%\bin\%RJEXFN%.exe, %linktarget%, %OutDir%, `"%linkproxy%`"%jkoptz%, %refname%, %OutTarget%,, %IconNumber%, %OutRunState%
+							
 									}
 							}
 						if (ASADMIN = 1)
@@ -7936,7 +7955,7 @@ intl= {"applist":{"apps":[{
 				if ((paknum = 0)&&(recfl <> 1))
 					{
 						Blockinput,off
-						MsgBox,4096,WARNING,***        WARNING        ***`n`nThese options may add significant significant disk size to the Game's Installation path`nIt is recommended to run this program with administrator priveleges before continuing.
+						MsgBox,4096,WARNING,***        WARNING        ***`n`nThese options may consume (in)significant disk space to the Game's Installation path`nIt is recommended to run this program with administrator priveleges before continuing.
 						ifmsgbox,Ok
 							{
 								Blockinput,on
@@ -8792,39 +8811,28 @@ intl= {"applist":{"apps":[{
 		guicontrolget,themen,,THEMEN
 		if instr(themen,"Light")
 			{
-				iniwrite,9a9a9a,%RJDBINI%,THEME,GUI_Light_BG
+				iniwrite,Default,%RJDBINI%,THEME,GUI_Light_BG
 				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
-				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontS
-				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontM
-				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontB
-				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontG
+				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontS
+				iniwrite,c151515 s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontM
+				iniwrite,cSilver s7,Anka/Coder,%RJDBINI%,THEME,Gui_Light_FontB
+				iniwrite,c151515 s7,Trueno,%RJDBINI%,THEME,Gui_Light_FontG
 				SB_SetText("Theme change may require restarting v0rt3X")
 			}
 		if instr(themen,"Dark")
 			{
 				iniwrite,151515,%RJDBINI%,THEME,GUI_Dark_BG
 				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
-				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontS
-				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontM
-				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontB
-				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontG
+				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontS
+				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontM
+				iniwrite,cWhite s7,Anka/Coder,%RJDBINI%,THEME,Gui_Light_FontB
+				iniwrite,cWhite s7,Trueno,%RJDBINI%,THEME,Gui_Light_FontG
 				SB_SetText("Theme change requires restart")
 			}
-		if ((themen = "LightMode.she")or (themen = "DarkMode.she"))
-			{
-				iniwrite,%source%\%themen%,%RJDBINI%,THEME,GUI_theme_name
-				SB_SetText("Theme change may require restarting v0rt3X")
-			}
-		if ((themen = "DarkMode.msstyles") or (themen = "LightMode.msstyles"))
-			{
-				iniwrite,%source%\%themen%,%RJDBINI%,THEME,GUI_theme_name
-				SB_SetText("Theme change may require restarting v0rt3X")
-			}
-			
 		iniwrite,%themen%,%RJDBINI%,THEME,GUI_theme_name
-		ThemeA= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
-		stringreplace,ThemeN,ThemeN,%skinName%|,,
-		Guicontrol,,ThemeN,|%skinName%||%ThemeA%
+		ThemeA= Native_Dark|Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		stringreplace,ThemeA,ThemeA,%themen%|,,
+		Guicontrol,,ThemeN,|%themen%||%themeA%
 		if instr(ThemeN,"msstyles")
 			{
 				DllCall(binhome . "\USkin.dll" . "\USkinExit")
@@ -8847,7 +8855,6 @@ intl= {"applist":{"apps":[{
 		if instr(ThemeN,"she")
 			{
 				hSkinH := DllCall("LoadLibrary", "Str", binhome "\SkinHu.dll")
-				DllCall("SkinHu\SkinH_AttachEx", "Str", SkinStyle . ThemeN)
 				LV_GetText(OutputVar, A_EventInfo)
 				DllCall("SkinHu\SkinH_AttachEx", "Str", SkinStyle . ThemeN)
 				goto, ThemeRenew
@@ -10806,7 +10813,6 @@ intl= {"applist":{"apps":[{
 				stringreplace,SOURCEDLIST,SOURCEDLIST,%lnv%,,
 			}
 		filedelete,%SRCFILE%
-		;msgbox,,,SOURCEDLIST=%SOURCEDLIST%
 		vavn:= ""
 		nsrcdl:= ""
 		Loop,parse,sourcedlist,`n`r
@@ -10830,7 +10836,6 @@ intl= {"applist":{"apps":[{
 				krnf+=1
 				%krnf%SDL= ""
 			}
-		;msgbox,,,nsrcdl=%nsrcdl%
 		srcntot:= vavn
 		SOURCEDLIST:= nsrcdl
 		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8

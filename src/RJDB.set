@@ -86,15 +86,16 @@ PSTPak=
 
 [THEME]
 Gui_Theme_Name=Native_Dark
-GUI_Light_BG=000000
-Gui_Light_FontL=cSilver s7,Malgun Gothic
-Gui_Light_FontM=cSilver s7,Malgun Gothic
-Gui_Light_FontS=cSilver s7,Malgun Gothic
-Gui_Light_FontG=cSilver s7,Malgun Gothic
-Gui_Light_FontB=cSilver s7,Malgun Gothic
+GUI_Light_BG2=9a9a9a
+GUI_Light_BG=Default
+Gui_Light_FontL=cSilver s7 Normal,Inter UI
+Gui_Light_FontM=c151515 s7 Normal,Hermit
+Gui_Light_FontS=cSilver s7 Normal,Anka/Coder
+Gui_Light_FontG=c151515 s7 Bold,Trueno
+Gui_Light_FontB=cSilver s7 Bold,Anka/Coder
 Gui_Dark_BG=151515
-Gui_Dark_FontL=c236fa8 s7,Anka/Coder
-Gui_Dark_FontM=c236fa8 s7,Anka/Coder
-Gui_Dark_FontS=c236fa8 s7,Anka/Coder
-Gui_Dark_FontG=c236fa8 s7,Anka/Coder
-Gui_Dark_FontB=c236fa8 s7,Anka/Coder
+Gui_Dark_FontL=cPurple s8 Normal,Trueno
+Gui_Dark_FontM=cSilver s8 Normal,Hermit
+Gui_Dark_FontS=cSilver s8 Normal,Anka/Coder
+Gui_Dark_FontG=cWhite s8 Bold,Inter UI
+Gui_Dark_FontB=s8 Bold,Anka/Coder

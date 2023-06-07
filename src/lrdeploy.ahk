@@ -2395,7 +2395,7 @@ StringReplace,itmv,itmv,[VERSION],%date% %TimeString%,All
 StringReplace,itmv,itmv,[CURV],%vernum%,All
 StringReplace,itmv,itmv,[RJ_PROJ],%RJPRJCT%,All
 StringReplace,itmv,itmv,[RJ_EXE],%RJEXFN%,All
-fileDelete,%SKELD%\src\%RJEXFN%.ahk,UTF-8
+fileDelete,%SKELD%\src\%RJEXFN%.ahk
 fileappend,%itmv%,%SKELD%\src\%RJEXFN%.ahk,UTF-8
 if (BCANC = 1)
 	{
@@ -2478,6 +2478,7 @@ if (PortVer = 1)
 				FileCopy,%DEPL%\portable.zip,%DEPL%\portable-%date%.zip,1
 			}
 		FileDelete, %DEPL%\portable.zip
+		FileDelete, %DEPL%\portable_theme.zip
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
 		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.she src\*.msstyles src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		FileCopy, %DEPL%\portable.zip,%DEPL%\portable_theme.zip
@@ -2568,6 +2569,7 @@ if (SiteUpdate = 1)
 		fileappend, mkdir "%GITD%\bin"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.ini"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, del /s /q "%GITD%\src\*.txt"`n,%DEPL%\!gitupdate.cmd,UTF-8
+		fileappend, del /s /q "%GITD%\src\*.bak"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "site\index.html" "%GITD%\site"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "src\*.ahk" "%GITD%\src"`n,%DEPL%\!gitupdate.cmd,UTF-8
 		fileappend, copy /y "bin\*.dll" "%GITD%\bin"`n,%DEPL%\!gitupdate.cmd,UTF-8
