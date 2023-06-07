@@ -18,7 +18,7 @@ if !(A_IsUnicode=1 and A_PtrSize=4)
 ;###########################################################################################
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-06-07 6:05 AM"
+RELEASE := "2023-06-07 6:11 AM"
 VERSION := "0.99.89.96"
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
