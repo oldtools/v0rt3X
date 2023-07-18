@@ -27,14 +27,17 @@ if (rjrlupdfX <> "")
 		SetWorkingDir, %home%
 		goto, rjrlupdf
 	}
+ARIA:= binhome . "\aria2c.exe"
 FileDelete, %cacheloc%\version.txt
 ARCORG= %source%\repos.set
-
+save=%cacheloc%\version.txt
+splitpath,save,svaf,svap
 IniRead,sourceHost,%ARCORG%,GLOBAL,SOURCEHOST
 IniRead,UPDATEFILE,%ARCORG%,GLOBAL,UPDATEFILE
 IniRead,RELEASE,%ARCORG%,GLOBAL,VERSION
 getVer:
-URLDownloadToFile, %sourceHost%,%cacheloc%\version.txt
+exe_get(ARIA,sourceHost,svap,svaf,CURPID,cacheloc)
+;URLDownloadToFile, %sourceHost%,%cacheloc%\version.txt
 ifnotexist, %cacheloc%\version.txt
 	{
 		MsgBox,4,Not Found,Update Versioning File not found.`nRetry?
@@ -98,7 +101,9 @@ loop, %cacheloc%\%RJPRJCT%*.zip
 	}
 URLFILE= %UPDATEFILE%
 save= %cacheloc%\%RJPRJCT%%upcnt%.zip
-DownloadFile(URLFILE, save, True, True)
+splitpath,save,svaf,svap
+exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
+;DownloadFile(URLFILE, save, True, True)
 ifexist,%save%
 	{
 		Process, close, Setup.exe
@@ -115,7 +120,7 @@ ifexist,%save%
 					}
 				exitapp
 			}
-		Run, %binhome%\%RJPRJCT%.exe
+		Run, %binhome%\Setup.exe
 		exitapp
 	}
 	else {
@@ -137,10 +142,66 @@ if (ERRORLEVEL <> 0)
 	}
 if (inapp = 1)
 	{
-		Run, %binhome%\%RJPRJCT%.exe
+		Run, %binhome%\Setup.exe
 	}	
 exitapp
-
+exe_get($ARIA = "", $URL = "", $TARGET = "", $FNM = "", $SAG = "", $CACHESTAT = "")
+{
+	Global $exeg_pid
+	StringReplace, $URL, $URL, "&", "^&", All
+	$CMD = "%$ARIA%" -x16 -s16 -j16 -k1M --always-resume=true --enable-http-pipelining=true --retry-wait=3 --http-no-cache=false --http-accept-gzip=true --allow-overwrite=true --stop-with-process=%$SAG% --truncate-console-readout=false --check-certificate=false --dir="%$TARGET%" --out="%$FNM%" "%$URL%" 1>"%$CACHESTAT%\%$FNM%.status" 2>&1
+	Run, %comspec% /c "%$CMD%",,hide,$exeg_pid
+	Process, Exist, %$exeg_pid%
+	$lastline =
+	while ErrorLevel != 0
+	{
+		Loop Read, %$CACHESTAT%\%$FNM%.status
+		{
+			L = %A_LoopReadLine%
+			if ( InStr(L, `%) != 0 )
+			{
+				StringSplit, DownloadInfo, L, (`%,
+				StringLeft, L1, DownloadInfo2, 3
+				stringsplit,tosb,DownloadInfo1,/%A_Space%
+				stringsplit,spr,DownloadInfo3,%A_Space%:,]
+				SB_SetText("" spr5 "ps " tosb2 "/" tosb3 " [" spr7 "]")
+				if ( L1 = "100" )
+				{
+					Break
+				}
+			}
+			if ( InStr(L, `%) = 0 )
+			{
+				L = 0
+			}
+		}
+		if ( L1 is digit )
+			Process, Exist, %$exeg_pid%
+		Sleep, 50
+	}
+	sleep 200
+	FileGetSize, d_size, %$TARGET%\%$FNM%
+	if d_size > 0
+	{
+		FileDelete, %$CACHESTAT%\%$FNM%.status
+		Return true
+	}
+	else
+	{
+		SB_SetText(" " FNM ".status being deleted")
+		if ((batchdl = 1)or(LOGGING = 1))
+		{
+			FileRead,statdel,%$CACHESTAT%\%$FNM%.status
+			fileappend,%statdel%,%$FNM%.log
+			statdel=
+		}
+		else {
+			FileDelete, %$CACHESTAT%\%$FNM%.status
+			Return false
+		}
+	}
+}
+/*
 DownloadFile(UrlToFile, _SaveFileAs, Overwrite := True, UseProgressBar := True) {
 		FinalSize= 
 	

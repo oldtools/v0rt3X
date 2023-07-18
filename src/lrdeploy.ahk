@@ -1598,7 +1598,7 @@ if (GRLL = "")
 SETUPTOG= disable
 gosub, SETUPTOG
 SB_SetText(" Extracting github-release to " GITRLS "")
-Runwait, "%binhome%\7za.exe" x -y "%grlsv%" -O"%GRLL%",,%rntp%
+Runwait, "%binhome%\7za.exe" x -y "%grlsv%" -O"%GRLL%" -w"%SKELD%",,%rntp%
 Sleep, 1500
 SETUPTOG= enable
 gosub, SETUPTOG
@@ -1662,7 +1662,7 @@ NSISTSEL:
 SB_SetText("extracting nsis to " NSIS " ")
 SETUPTOG= disable
 gosub, SETUPTOG
-Runwait, "%binhome%\7za.exe" x -y "%nsisv%" -O"%NSIST%",,%rntp%
+Runwait, "%binhome%\7za.exe" x -y "%nsisv%" -O"%NSIST%" -w"%SKELD%",,%rntp%
 SETUPTOG= enable
 gosub, SETUPTOG
 Loop,%NSIST%\*makensis.exe,0,1
@@ -1714,7 +1714,7 @@ if (SCIL = "")
 SB_SetText(" Extracting scite to " SCITL "")
 SETUPTOG= disable
 gosub, SETUPTOG
-Runwait, "%binhome%\7za.exe" x -y "%scisv%" -O"%SCIL%",,%rntp%
+Runwait, "%binhome%\7za.exe" x -y "%scisv%" -O"%SCIL%" -w"%SKELD%",,%rntp%
 SETUPTOG= enable
 gosub, SETUPTOG
 SCITL= %SCIL%\SciTE.exe
@@ -1767,7 +1767,7 @@ ifexist, %gitzsv%
 			}
 		GITAPPT.= "\Git"
 		SB_SetText(" Extracting Git to " GITAPPT "")
-		Runwait, "%binhome%\7za.exe" x -y "%gitzsv%" -O"%GITAPPT%",,%rntp%
+		Runwait, "%binhome%\7za.exe" x -y "%gitzsv%" -O"%GITAPPT%" -w"%SKELD%",,%rntp%
 		SETUPTOG= disable
 		gosub, SETUPTOG
 		SETUPTOG= enable
@@ -1843,7 +1843,7 @@ ifnotinstring,ahktstn,AutoHotkey
 SB_SetText("Extacting to " AHKDIR " ")
 SETUPTOG= disable
 gosub, SETUPTOG
-Runwait, "%binhome%\7za.exe" x -y "%ahksv%" -O"%AHKDIT%",,%rntp%
+Runwait, "%binhome%\7za.exe" x -y "%ahksv%" -O"%AHKDIT%" -w"%SKELD%",,%rntp%
 SETUPTOG= enable
 gosub, SETUPTOG
 AHKDIR= %AHKDIT%\Compiler
@@ -2427,15 +2427,17 @@ if (ServerPush = 1)
 if (INITINCL = 1)
 	{		
 		FileDelete,%SKELD%\src\Setup.tmp
+		FileDelete,%SKELD%\src\Setup_theme.tmp
 		FileDelete,%SKELD%\bin\%RJEXFN%.exe
-		FileDelete, %SKELD%\bin\Setup*.exe
+		FileDelete, %SKELD%\bin\Setup_theme.exe
 		FileDelete,%SKELD%\bin\setup.tmp
+		FileDelete,%SKELD%\bin\setup_theme.tmp
 		RunWait, %comspec% /c echo.###################  COMPILE Updater  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Update.ahk" /out "%SKELD%\bin\Update.exe" /icon "%SKELD%\src\Update.ico" /bin "%AHKDIR%\Unicode 64-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.###################  COMPILE Builder  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Build.ahk" /out "%SKELD%\bin\Source_Builder.exe" /icon "%SKELD%\src\Source_Builder.ico" /bin "%AHKDIR%\Unicode 64-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.###################  COMPILE Setup  ####################### >>"%DEPL%\deploy.log", ,%rntp%
-		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup.ahk" /out "%SKELD%\bin\Setup.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 64-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\Setup_theme.ahk" /out "%SKELD%\bin\Setup_Theme.exe" /icon "%SKELD%\src\Setup.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 	}
@@ -2449,10 +2451,10 @@ if (OvrStable = 1)
 		if (isSrc <> 1)
 			{
 				RunWait, %comspec% /c echo.##################  COMPILE DEPLOYER  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-				runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\lrdeploy.ahk" /out "%SKELD%\bin\lrdeploy.exe" /icon "%SKELD%\src\Deploy.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%	
+				runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\lrdeploy.ahk" /out "%SKELD%\bin\lrdeploy.exe" /icon "%SKELD%\src\Deploy.ico" /bin "%AHKDIR%\Unicode 64-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%	
 			}	
 		RunWait, %comspec% /c echo.##################  COMPILE %RJPRJCT%  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\%RJEXFN%.ahk" /out "%SKELD%\bin\%RJEXFN%.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 32-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%AHKDIR%\Ahk2Exe.exe" /in "%SKELD%\src\%RJEXFN%.ahk" /out "%SKELD%\bin\%RJEXFN%.exe" /icon "%SKELD%\src\Run.ico" /bin "%AHKDIR%\Unicode 64-bit.bin" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
 		FileCopy, %SKELD%\%RJPRJCT%.exe,%DEPL%,1
 	}
@@ -2480,17 +2482,17 @@ if (PortVer = 1)
 		FileDelete, %DEPL%\portable.zip
 		FileDelete, %DEPL%\portable_theme.zip
 		RunWait, %comspec% /c echo.##################  CREATE PORTABLE ZIP  ######################## >>"%DEPL%\deploy.log", ,%rntp%	
-		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.she src\*.msstyles src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+		runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip -sse "%DEPL%\portable.zip" -r site\*.txt site\*.md src\*.she src\*.msstyles src\*.set src\steam.json src\*.ico site\*.svg site\*.png site\*.html site\*.ttf site\*.otf src\*.ahk src\*.ico -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 		FileCopy, %DEPL%\portable.zip,%DEPL%\portable_theme.zip
 		inclexe= bin\SkinHu.dll|bin\Uskin.dll|bin\NewOSK.exe|bin\Setup.exe|bin\Source_Builder.exe|bin\Update.exe|bin\7za.exe|bin\aria2c.exe|bin\%RJEXFN%.exe|bin\lrdeploy.exe
 		stringreplace,inclexe_theme,inclexe,Setup.exe,Setup_theme.exe
 		Loop,parse,inclexe,|
 			{
-				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip -sse "%DEPL%\portable.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 			}
 		Loop,parse,inclexe_theme,|
 			{
-				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip "%DEPL%\portable_theme.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
+				runwait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip -sse "%DEPL%\portable_theme.zip" %A_LoopField% -w"%SKELD%" >>"%DEPL%\deploy.log"", %SKELD%,%rntp%
 			}
 		sleep, 1000
 		RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%	
@@ -2925,7 +2927,7 @@ if (BLDERROR = 1)
 FileDelete, %SKELD%\site\version.txt
 fileappend, %date% %timestring%=%nchash%=%vernum%,%SKELD%\site\version.txt,UTF-8
 RunWait, %comspec% /c echo.##################  CREATE INSTALLER ######################## >>"%DEPL%\deploy.log", ,%rntp%
-RunWait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a "%DEPL%\%RJPRJCT%.zip" "%DEPL%\%RJPRJCT%-installer.exe" >>"%DEPL%\deploy.log"", %BUILDIR%,%rntp%
+RunWait, %comspec% /c " "%BUILDIR%\bin\7za.exe" a -tzip -sse "%DEPL%\%RJPRJCT%.zip" "%DEPL%\%RJPRJCT%-installer.exe" -w"%SKELD%" >>"%DEPL%\deploy.log"", %BUILDIR%,%rntp%
 RunWait, %comspec% /c echo.########################################## >>"%DEPL%\deploy.log", ,%rntp%
 
 return
