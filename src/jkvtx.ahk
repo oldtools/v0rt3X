@@ -811,7 +811,7 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 					}
 				PopCont:
 				BlockInput, off
-				Msgbox,4610,CONTROLLERS,CLick "Abort" to Disable Joysticks or "Ignore" to dismiss this prompt,3
+				Msgbox,4610,CONTROLLERS,CLick "Abort" to Disable Joysticks or "Ignore" to dismiss this prompt,15
 				ifmsgbox, Abort
 					{
 						iniwrite,0,%inif%,JOYSTICKS,MAPPER
@@ -986,7 +986,7 @@ begin:
 GUIMSG:= "Loading " .  gmnamex . "`n" . JOYMESSAGE 
 gosub, TTIPS
 exiting=
-if (nrx > 2)
+if (!fileExist(plfp) or (nrx > 2))
 	{
 		nxel=
 		Blockinput,off

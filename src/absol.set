@@ -22,6 +22,7 @@ CPUSTRES
 crackintro
 crashhand
 crashreport
+crashreportclient
 crashpad_handler
 crashdump
 crashsend
@@ -81,6 +82,7 @@ mp4
 MultiMonitor
 NetSess
 notification
+notification_helper
 ndp48web
 ntfs
 NumLock
@@ -134,10 +136,13 @@ unins0
 uninst
 uninstal
 uniq
+UnityCrashHandler
+UnityCrashHandler32
+UnityCrashHandler64
 unix
 unpack
 unrar
-Update
+Updater
 UpdateHelper
 UPlayBrowser
 UE4Prereq

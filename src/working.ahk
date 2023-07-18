@@ -122,7 +122,7 @@ ThemeAll=|%ThemeN%||%ThemeA%
 iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
 
 ThemeLoaded:
-*/ ;;[DEBUG32]
+*/  ;;[DEBUG32]
 
 ;}#################################  ENVIRONMENT SET  #################################
 ;###########################################################################################
@@ -171,8 +171,10 @@ SPCFIX= .|-|%A_Space%|_
 RLSPFX= .|-|(|[|%A_Space%|_|
 BGMPROGS= WindowManager|SpecialK|SpecialKtest|MultiMonitorFullscreenHelper|Magpie|SKIF|borderstripper|ShaderGlass|Magpie|Fullscreenizer|SRWE|borderlessgamingportable|BorderlessGaming|sizer|BorderlessGamingTool|WindowedBorderlessGaming|MultiMonitorFullscreenHelper|ShiftWindow|BorderlessWindowUtility|BetterFullscreen
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
-MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
-remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
+;MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
+MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|Antimicro
+;remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
+remotebins= _BorderlessGaming_|_Antimicro_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 PROFINST=Profile
@@ -181,7 +183,8 @@ stmdbee= </code></td>
 GUI_THEMES= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 	
 ini_p=IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg
-exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|Antimicrox-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
+;exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|Antimicrox-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
+exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
 cfg_p=MediaCenter-Profile|Player 1|Player 2|Player 3|Player 4|Player 5|Player 6|Player 7|Player 8|Monitor-MEDIACENTER-Cfg|Monitor-Game-Cfg|Save Data|Install-Folder|Game Data|keyboard-Mapper
 ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
 reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|steamclient|script|nocd|Tool|trainer|
@@ -219,7 +222,7 @@ cfgfld=GAME_PROFILES|Source_Directory|
 DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 PakLST=KBPak|Pl1Pak|Pl2Pak|MCjPak|GMPak|DMPak|JALPak|JBEPak|PREPak|PSTPak
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludedD|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL|IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|Package|iniBut|MMODET|TBARTOG|MapDDL|exeDDL|_LCLeP|_CENeP|ExeBut|DelExe|cfgDDL|_LCLcP|_CENcP|CfgBut|Delcfg|PRFNAME|SappID|eName|ToolTips|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludedD|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL|IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|Package|iniBut|MMODET|TBARTOG|MapDDL|exeDDL|_LCLeP|_CENeP|ExeBut|DelExe|cfgDDL|_LCLcP|_CENcP|CfgBut|Delcfg|PRFNAME|SappID|eName|ToolTips|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg|Themen
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MMLOAD|MMSAVE|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
@@ -796,7 +799,7 @@ Gui, Font, %FontB%
 */  ;;[DEBUGINT]
 Gui, Tab, 2
 Gui, Tab, Config
-Gui, Font, %FontG%
+Gui, Font, %FontM%
 Gui, Add, Radio, x30 y38 h14 vOVERWRT gUPDTSC %ovrwrchk%,Overwrite
 Gui, Add, Radio, x110 y38 h14 vUPDTSC gOVERWRT %updtchk%,Update
 Gui, Add, GroupBox, x7 y50 w284 h218
@@ -816,7 +819,7 @@ Gui, Add, Checkbox, x50 y243 h14 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
 Gui, Add, Checkbox, x185 y112 h14 vNameChk gNameChk right %nmchkst%,Name-Check
 Gui, Add, Checkbox, x185 y92 h14 vNetChk gNetChk right %netnchk%,Net-Check
 
-Gui, Add, Checkbox, x125 y295 w85 h14 vLocalize gLocalize %cnlocz% %fontAColor% Right,LOCALIZE
+Gui, Add, Checkbox, x135 y295 w85 h14 vLocalize gLocalize %cnlocz% %fontAColor% Right,LOCALIZE
 Gui, Add, Checkbox, x202 y309 h14 vPackage gPackage %pkckb% %pkcol% Right,Package
 Gui, Add, Checkbox, x38 y300 h14 vCENTRLCKB gCENTRLCKB %cntz% %fontAColor%,CENTRALIZE
 Gui, Add, Checkbox, x55 y330 w14 h14 vCenKBM gCenKBM %cnkbm%,
@@ -1075,14 +1078,15 @@ return
 
 GuiClose:
 Gui, Hide
+Gui, Destroy
+GuiOpen := 0
 /*  ;;[DEBUG32]
 if instr(themen,"msstyles")
 	{
 		SkinForm(0)
 	}
 */  ;;[DEBUG32]	
-Gui, Destroy
-GuiOpen := 0
+ExitApp
 return
 
 QUITOUT:
@@ -2548,9 +2552,9 @@ return
 BGM_ProgB:
 gui,submit,nohide
 BGP_State:= ""
-Borderless_Gaming_ProgramT:= ""
 if (dchk = "")
 {
+	Borderless_Gaming_ProgramT:= ""
 	FileSelectFile,Borderless_Gaming_ProgramT,3,%binhome%,*.exe
 }
 dchk=

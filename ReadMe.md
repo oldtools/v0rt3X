@@ -16,21 +16,21 @@
 
 **[+]** Leverages native Windows shortcuts and languages for backwards compatibility.
 
+**[+]** Executable identification, release/build versions, group-naemz and other extranious title abberations are intelligently handled to derive titles set by the publisher and the steam-database enables further metadata aqiuisition key to portability between computers, drives, and gaming-frontends.
+
 ## Use Case
 
 Creates a specialized launcher and profile-folder (jacket) for each game which houses the game's shortcut/s and isolates settings such as
  keyboad-mapping and monitor layout.  Tools which automate the process of creating and loading presets for devices, games and settings at 
  a granular level are downloaded and installed from directly within the program.
- 
-Release/build versions, group-naemz and other extranious title abberations are culled and transposed to facilitate library migration to any gaming-frontend.
 
 Antimicro/X, Xpadder, JoyXoff, Joy2Key keymappers are supported.
 
 
 ## Installation
-- This Version: **0.99.89.96**
+- This Version: **0.99.89.97**
 
-- This Build: **2023-06-07 6:11 AM**
+- This Build: **2023-07-18 4:46 AM**
 
 Run the installer or extract the binary to a location of your choice, **or** download and build and run the source files and executables.
 ```sh
