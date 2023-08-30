@@ -1,4 +1,6 @@
-﻿assets
+﻿Qsel
+X360
+assets
 authenticate
 cports
 dependencies
@@ -30,7 +32,6 @@ netlog
 packager
 prefs
 qemu
-Qsel
 script
 settings
 sfx
@@ -40,4 +41,3 @@ uname
 usbip
 verify
 wavs
-X360
