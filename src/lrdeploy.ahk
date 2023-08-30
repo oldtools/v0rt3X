@@ -2751,7 +2751,7 @@ if (GitPush = 1)
 		fileappend,git config --local user.email %GITMAIL%`n,%DEPL%\gpush.cmd,UTF-8
 		fileappend,gh config set git_protocol https`n,%DEPL%\gpush.cmd,UTF-8
 		fileappend,gh auth login -w --scopes repo`,delete_repo`n,%DEPL%\gpush.cmd,UTF-8
-		fileappend,"%gitappdir%\..\mingw64\libexec\git-core\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd,UTF-8
+		fileappend,"%gitappdir%\..\mingw64\bin\git-credential-manager-core.exe" configure`n,%DEPL%\gpush.cmd,UTF-8
 		fileappend,gh repo create %RJPRJCT% --public --source="%GITD%"`n,%DEPL%\gpush.cmd,UTF-8
 		fileappend,git add .`n,%DEPL%\gpush.cmd,UTF-8
 		fileappend,git remote add %RJPRJCT% %GITSWEB%/%GITUSER%/%RJPRJCT%`n,%DEPL%\gpush.cmd,UTF-8
