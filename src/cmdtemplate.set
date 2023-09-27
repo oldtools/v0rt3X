@@ -37,8 +37,10 @@ for /f "delims=" %%a in ("[GAME_EXE]") do (
 	set DIRNAME=%%~dpa
 	set EXE_GAME=%%~a
 )
-
+if "%Exe_Opt%" NEQ "" set EXE_GAME=%exe_opt% "%EXE_GAME%"
+if "%Exe_Arg%" NEQ "" set EXE_GAME="%EXE_GAME%" %exe_arg%
 :PRE1
+IF "%PPOVV%" == "1" goto PREMAP
 if not exist "%A_Pre%" goto PREMAP
 [1_PreW] "%A_Pre%"
 
@@ -49,6 +51,7 @@ if not exist "%player1%" goto MONMODE
 call "%keyboard_mapper%" "%player1%" %player2%
 
 :MONMODE
+if "%MONOVV%" == "1" goto PRE2
 if "%MONITORMODE%" == "" goto PRE2
 if "%MONITORMODE%" == "0" goto PRE2
 if not exist "%multimonitor_tool%" goto PRE2
@@ -56,10 +59,12 @@ if not exist "%MM_Game_Config%"  goto PRE2
 call "%multimonitor_tool%" /LoadConfig "%mm_Game_config%"
 
 :PRE2
+IF "%PPOVV%" == "1" goto PRE3
 if not exist "%B_Pre%" goto PRE3
 [2_PreW] "%B_Pre%"
 
 :PRE3
+IF "%PPOVV%" == "1" goto STARTGAME
 if not exist "%C_Pre%" goto STARTGAME
 [3_PreW] "%C_Pre%"
 
@@ -90,6 +95,7 @@ for /f "tokens=2 delims= " %%s in ('tasklist ^|find /i "%%~a"') do if "%%~a" == 
 popd
 
 :POST3
+IF "%PPOVV%" == "1" goto POSTMAP
 if not exist "%C_Post%" goto POSTMAP
 [3_PostW] "%C_Post%"
 
@@ -100,10 +106,12 @@ if not exist "%keyboard_mapper%" goto POST2
 call "%keyboard_mapper%" "%mediacenter_profile%"
 
 :POST2
+IF "%PPOVV%" == "1" goto POSTMON
 if not exist "%B_Post%" goto POSTMON
 [2_PostW] "%B_Post%"
 
 :POSTMON
+IF "%MONOVV%" == "1" goto POST1
 if "%MONITORMODE%" == "" goto POST1
 if "%MONITORMODE%" == "0" goto POST1
 if not exist "%multimonitor_tool%" goto POST1
@@ -113,6 +121,7 @@ if not exist "%MM_MediaCenter_Config%" goto POST1
 call "%multimonitor_tool%" [MMLOAD]"%mm_mediacenter_config%"
 
 :POST1
+IF "%PPOVV%" == "1" goto QUITOUT
 if not exist "%A_Post%" goto QUITOUT
 [1_PostW] "%A_Post%"
 

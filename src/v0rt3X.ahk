@@ -1,11 +1,12 @@
 ﻿;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-08-30 3:33 PM 0.99.92.44 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2023-09-27 11:09 AM 0.99.92.48 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
+DetectHiddenWindows,off
 FileEncoding, UTF-8
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -41,6 +42,9 @@ Loop %0%
 			}
 	}
 splitpath,plink,scname,scpath,scextn,gmname,gmd
+
+GUIMSG:= "%plink%"
+gosub, TTIPS
 ExtID := FileExt
 IconNumber:= 0				
 if ((plink = "") or !fileExist(plink) or (scextn = ""))
@@ -145,6 +149,8 @@ ProgramFilesX86 := A_ProgramFiles . (A_PtrSize=8 ? " (x86)" : "")
 
 READINI:
 sect= GENERAL|JOYSTICKS
+GUIMSG:= "#game:      %gmname%`n #args:     %plarg%`n::Please Be Patient::`nReading Configuration"
+gosub,TTIPS
 Loop,parse,sect,|
 	{
 		if (A_LoopField = "")
@@ -164,6 +170,8 @@ Loop,parse,sect,|
 				if (vi <> "")
 					{
 						%fi1%= %vi%
+						GUIMSG= "#game      %gmname%`n #%fi1%:     %vi%"			
+						gosub,TTIPS
 					}
 			}
 	}	
@@ -220,7 +228,19 @@ Loop, 4
 				stringtrimright,linkoptions,linkoptions,1
 			}
 	}
-linkoptions:= A_Space . LinkOptions
+if (Exe_Opts = "")
+	{
+		linkoptions:= ""
+	}
+else {
+	linkoptions:= Exe_Opts . A_Space
+}
+if (Exe_args <> "")
+	{
+		linkoptions:= LinkOptions . A_Space . Exe_Args
+	}
+GUIMSG:= "%LinkOptions%"
+gosub, TTIPS
 IniRead,rjtgl,%INIF%,CONFIG
 if (MONH = "")
 	{
@@ -271,6 +291,8 @@ Loop,parse,rjtgl,`n`r
 		if ((evi <> "")&&(evi <> "ERROR"))
 			{
 				%fn1%= %evi%
+				GUIMSG:= "#Game:     %gmname%`n %fn1%:    %evi%"
+				gosub, TTIPS
 			}
 	}
 if (disprogd = 1)
@@ -317,7 +339,7 @@ if (fileexist(Game_Profile)&&(gbar <> 1))
 	{
 		gbar = 1
 		inif= %Game_Profile%
-		GUIMSG:= "::Please Be Patient::`nReading Configuration"
+		GUIMSG:= "#game      %gmname%`n #args:     %plarg%`n::Please Be Patient::`nReading Configuration"
 		gosub,TTIPS
 		goto, readini
 	}
@@ -357,8 +379,73 @@ Loop, 16
 				MediaCenter_Profile%A_Index%VX= %scpath%\MediaCenter_%A_Index%.%mapper_extension%
 			}
 	}
+avea:=	
+Loop,parse,exe_list,|
+	{
+		if (A_LoopField = "")
+			Continue
+		avea+=1
+		if (avea = 1)
+			{
+				Menu, altRunSel, add, %A_LoopField%, altRunSelection
+				continue
+			}
+		Menu, altRunSel, add, %A_LoopField%, altRunSelection
+	}
+POSTRUNORDER=POST_BGP|POST_MON|POST_JBE|LOGOUT|POST_1|POST_MAP|POST_2|POST_3	
 PRERUNORDER=PRE_1|PRE_MON|PRE_MAP|PRE_2|PRE_3|PRE_BGP|BEGIN
 acwchk=
+EWIN:= GetKeyState("f2")
+if (EWIN <> 0)
+	{
+		goto, EditLaunch
+	}
+ALNCHE:
+if (postediting = 1)
+	{
+		gosub,MMODET
+		gosub,TBARTOG
+		gosub,BGPORG
+		gosub,ArgADJ
+		gosub,EditJAL
+		gosub,EditJBE
+		gosub,EditPRP
+		gosub,ExeSel
+		if (jbeovr = 1)
+			{
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_JBE,,
+			}
+		if (jalovr <> "")
+			{
+			}
+		if (EditPRP = 1)
+			{
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_1,,
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_2,,
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_3,,
+				stringreplace,PRERUNORDER,PRERUNORDER,PRE_1,,
+				stringreplace,PRERUNORDER,PRERUNORDER,PRE_2,,
+				stringreplace,PRERUNORDER,PRERUNORDER,PRE_3,,
+			}
+		splitpath,ExeSel,nFileF,nFileP,nFileX,nFileJ
+		if (BGPORG = 1)
+			{
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_BGP,,
+				stringreplace,PRERUNORDER,PRERUNORDER,PRE_BGP,,
+			}
+		if (ArgADJ <> "")
+			{
+				linkoptions= %ArgAdj%
+			}
+		if (monovr = 1)
+			{
+				stringreplace,POSTRUNORDER,POSTRUNORDER,POST_MON,,
+				stringreplace,PRERUNORDER,PRERUNORDER,PRE_MON,,
+			}
+		if (tbartog = 1)
+			{
+			}
+	}
 Loop,parse,PRERUNORDER,|
 	{
 		if (A_Loopfield = "")
@@ -418,6 +505,11 @@ if (prestk2 <> "")
 				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
 				stringright,precloud,precldn,6
 				gosub, pre%precloud%
+				if (CLDTRAY <> PRECLOUD)
+					{						
+						Menu, prcldcfg, Add, Configure %precloud%,CFG_%precloud%
+						CLDTRAY=%precloud%
+					}
 				;gosub, PRECLOUD
 			}
 	}
@@ -450,6 +542,8 @@ if (fileexist(Borderless_Gaming_Program)&&(Borderless_Gaming_Program <> "")&&(BG
 								gosub, TTIPS
 								process, wait, "BorderlessGaming.exe", 5
 								bgpidx= %errorlevel%
+								bgwind= 1
+								Menu, bgwind, Add, Open Config Window,SHWBGW
 							}
 					}
 			}
@@ -481,6 +575,9 @@ return
 
 
 DCPRPMON:
+layoutMM= 1
+Menu, monlay, Add, Load Game-MonitorLayout,GMLayoutManual
+Menu, monlay, Add, Load Desktop-MonitorLayout,DMLayoutManual
 return
 
 
@@ -560,6 +657,9 @@ Loop,7
 		abn+=1	
 	}	
 GUIMSG:= 
+layoutMM= 1
+Menu, monlay, Add, Load Game-MonitorLayout,GMLayoutManual
+Menu, monlay, Add, Load Desktop-MonitorLayout,DMLayoutManual
 return		
 
 
@@ -668,6 +768,11 @@ if (jalprog <> "")
 				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
 				stringright,precloud,precldn,6
 				gosub, pre%precloud%
+				if (CLDTRAY <> PRECLOUD)
+					{						
+						Menu, prcldcfg, Add, Configure %precloud%,CFG_%precloud%
+						CLDTRAY=%precloud%
+					}
 				;gosub, PRECLOUD
 			}
 		if fileexist(prestk2)
@@ -737,18 +842,38 @@ if (prestk2 <> "")
 				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
 				stringright,precloud,precldn,6
 				gosub, pre%precloud%
+				if (CLDTRAY <> PRECLOUD)
+					{						
+						Menu, prcldcfg, Add, Configure %precloud%,CFG_%precloud%
+						CLDTRAY=%precloud%
+					}
 				;gosub, PRECLOUD
 			}
 	}
 return
 
 
+ChangeMenu:
+Menu,Tray,Standard
+Menu,Tray,NoStandard
+Return
+
 killmapper:
 process,close,%mapperxn%
 sleep,600
 return
 
-
+CFG_MAPPER:
+if (A_ThisMenuItem = "Reload Mapper")
+{
+gosub, killmapper
+gosub, premapper
+}
+if (A_ThisMenuItem = "Exit Mapper")
+{
+gosub, killmapper
+}
+return
 PRE_MAP:
 premapper:	
 Mapper_Extension:= % Mapper_Extension
@@ -799,7 +924,12 @@ if ((Mapper > 0)&&(Mapper <> "")or(RESETJOY = 1))
 		JOYMESSAGE= Joysticks: %JOYCOUNT%
 		GUIMSG:= JoyCount . " Joysticks found"
 		gosub, TTIPS
-
+		if (cfgjoymenu = "")
+			{
+				cfgjoymenu=	1
+				Menu,cfgjoym,Add, Reload Mapper,CFG_MAPPER
+				Menu,cfgjoym,Add, Exit Mapper,CFG_MAPPER
+			}
 
 		JoyAsk:
 		if ((JoyCount = 0)or if (JoyCount = ""))
@@ -950,18 +1080,81 @@ if (prestk2 <> "")
 				splitpath,prestk2,preapcld,prepcldp,precldxtn,precldn
 				stringright,precloud,precldn,6
 				gosub, pre%precloud%
+				if (CLDTRAY <> PRECLOUD)
+					{
+						Menu, prcldcfg, Add, Configure %precloud%,CFG_%precloud%
+						CLDTRAY=%precloud%
+					}
 				;gosub, PRECLOUD
 			}
 	}
 return
 
+Enter::
+ControlGetFocus, nfocuslist,%RJ_EXE%
+if ((nfocuslist = AltLaunch) && fileExist(NList) && (NList = ""))
+	{
+		goto, AltLaunch
+	}
+if (nfocuslist = NList)
+	{
+		focusindex=
+		Loop, 20
+			{
+				ensub:	
+				focusindex+=1
+				gosub,NewList
+				if (NList = "")
+					{
+						GUicontrol,choose,NewList,%focusindex%
+						focusindex+=1
+						continue
+					}
+				GuiControl,focus,AltLaunch
+				stringRight,crNlist,nList,25
+				Gui,Font, cLime s14 w700
+				guicontrol,,AltLaunch,LAUNCH %crNList%
+				break			
+			}
+	}
+return
 
+Up::
+Down::
+if (!winExist() or (nerlv = ""))
+	{
+		return
+	}
+ControlGetFocus, nfocuslist,%RJ_EXE%
+if (nfocuslist <> nList)
+	{
+		guicontrolget,nnList,,newList
+		pkr=
+		Loop,parse,exe_list,|
+			{
+				if (A_LoopField = "")
+					Continue
+				pkr+=1	
+				if (A_LoopField = nfocuslist)
+					{
+						nlcrsel:= pkr + 2
+						Break
+					}
+			}
+		guicontrol, focus, newList	
+		guicontrol, choose, newList, %nlcrsel%	
+	}
+		
 NewList:
 guicontrolget,NList,,NewList
 if (A_GuiEvent == "DoubleClick") 
 	{
 		goto, AltLaunch
 	}
+stringRight,crNlist,nList,25
+gui,font, cLime s14 w700
+guicontrol,,AltLaunch,%crNList%
+Gui Show
 return
 
 
@@ -986,26 +1179,102 @@ Loop,read,inifile,`n`r
 				continue
 			}
 	}
+Loop,parse,exe_list,|
+	{
+		if (A_LoopField = "")
+			{
+				continue
+			}
+		FirstItem=%A_LoopField%
+		stringreplace,exe_rest,exe_list,%firstitem%|,,
+		break
+	}
+ppvis= hidden
+Loop,3
+	{
+		if (%A_Index%_Pre <> "") or (%A_Index%_Post <> "")
+			{
+				ppvis= 
+				break
+			}
+	}
+ppdis= checked
+if (ppovr = 1)
+	{
+		ppdis= 
+	}
+tbvis=
+tbdis= Checked
+if (Hide_Taskbar = 1)
+	{
+		if (tbovr = 1)
+			{
+				tbdis=
+			}
+	}
+bgmvis= hidden
+if (JustAfterLaunch <> "")
+	{
+		bgmvis=
+	}
+bgmdis= checked
+if (bgmovr = 1)
+	{
+		bgmdis= 
+	}	
+jalvis= hidden
+if (JustAfterLaunch <> "")
+	{
+		jalvis=
+	}
+jaldis= checked
+if (jalovr = 1)
+	{
+		jaldis= 
+	}
+jbevis= hidden	
+if (JustBeforeExit <> "")
+	{
+		jbevis=
+	}
+jbedis= checked
+if (jbeovr = 1)
+	{
+		jbedis= 
+	}
+monvis= Hidden
+mondis= Checked
+if ((MonitorMode <> 0)&&(MonitorMode <> ""))
+	{
+		monvis=
+		if (monovr = 1)
+			{
+				mondis=
+			}
+	}
+stringright,ExeCurt,FirstItem,10	
 Gui +hWndhMainWnd
 Gui,Color,%bgcolor%
 Gui,Font,%fontColor% %fontXmed%,%fontName%
-Gui,Add,Text,x10 y10,Exe/Script
-Gui,Add,DropDownList, x45 y10 w120 vExeSel gExeSel,%gencb%
-Gui,Add,Text, x10 y32 w130 vExeSTxT,
-Gui,Add,Edit, x10 y32 w60 hidden,
-Gui,Add,Edit, x75 y32 w60 hidden,
-Gui,Add,Text,x32 y53,[options] (path:\...\...\game.exe) [arguments]
-Gui,add,Button,x140 y45w25 h21 vExeBut gExeBut,[...]
-Gui,add,Button,x167 y45 w8 h11 vDelXE gDelXE,-
-Gui,Add,Text,x24 y66 Multimonitor Mode
-Gui,Add,Checkbox,x10 y66 vMMODET gMMODET,
-Gui,Add,Text,x24 y87 Hide Taskbar
-Gui,Add,Checkbox,x10 y87 vTBARTOG gTBARTOG,
-Gui,Add,Text,x10 y108,File Cfg
-Gui,Add,Dropdownlist,x45 y108 w120,%cfglist%
-Gui,add,Button,x167 y108 y32 w8 h11 vDelXE gDelXE,-
-Gui, Show,w450 h480, %RJ_EXE%_CFG
-
+Gui,Add,Text,x10 y12,Exe/Script
+Gui,Add,DropDownList, x85 y10 w320 vExeSel gExeSel,%FirstItem%||%exe_rest%
+Gui,add,Button,x409 y10 w25 h21 vExeBut gExeBut,[...]
+Gui,add,Button,x435 y10 w8 h11 vDelXE gDelXE,-
+;Gui,Add,Edit, x10 y32 w150 vOptADJ gOptADJ,
+Gui,Add,Edit, x210 y32 w200 vArgADJ gArgADJ,%OptAdJ%
+Gui,Add,Text,x32 y53 vExeCurt,(path:%exeCurt%) [arguments]
+Gui,Add,Checkbox,x10 y70 vMMODET gMMODET %monvis% %mondis%, Multimonitor Mode
+Gui,Add,Checkbox,x10 y92 vTBARTOG gTBARTOG %tbvis% %tbdis%, Hide Taskbar
+Gui,Add,Checkbox,x10 y112 vBGPORG gBGPORG %bgmvis% %bgmdis%, Use Borderless Gaming
+Gui,Add,Checkbox,x210 y70 vEditJAL gEditJAL %jalvis% %jaldis%,Just After Launch
+Gui,Add,Checkbox,x210 y92 vEditJBE gEditJBE %jbevis% %jaldis%,Just Before Exit
+Gui,Add,Checkbox,x210 y112 vEditPRP gEditPRP %ppvis% %ppdis%, Pre/Post
+Gui,add,Button,x340 y112 w50 h21 gEditSave,Save
+Gui,add,Button,x400 y112 w40 h21 gALNCHE,Run
+Gui, Show,w450 h140, v0rt3X_CFG
+Blockinput,off
+postediting= 1
+return
 
 AltLaunch:
 gui,submit,nohide
@@ -1017,16 +1286,85 @@ if (plfpchk = "\")
 	{
 		stringtrimleft,plfp,plfp,1
 	}
+if (Exe_Arg <> "")
+	{
+		plfp="%plfp%" %Exe_Arg%
+	}
 splitpath,plfp,,pldr
 linkOptions=
 plarg=
 nrx=
 goto, begin
 
-
-exeSel:
+EditPRP:
+gui,submit,NoHide
+guicontrolget,EditPRP,,EditPRP
 return
-
+EditJBE:
+gui,submit,NoHide
+guicontrolget,jbeovr,,jbeovr
+return
+EditJAL:
+gui,submit,NoHide
+guicontrolget,jalovr,,jalovr
+return
+OptADJ:
+gui,submit,NoHide
+guicontrolget,OptAdJ,,OptAdj
+return
+ArgADJ:
+gui,submit,NoHide
+guicontrolget,ArgADJ,,ArgADJ
+return
+DelXE:
+return
+BGPORG:
+gui,submit,NoHide
+guicontrolget,BGPORG,,BGPORG
+return
+TBARTOG:
+gui,submit,NoHide
+guicontrolget,TBARTOG,,TBARTOG
+return
+MMODET:
+gui,submit,NoHide
+guicontrolget,monovr,,monovr
+return
+exeSel:
+gui,submit,NoHide
+guicontrolget,ExeSel,,ExeSel
+splitpath,ExeSel,nFileF,nFileP,nFileX,nFileJ
+return
+ExeBut:
+FileSelectFile,newPath,35,,Select Game Executable,*.exe; *.cmd; *.bat; *.ps1; *.vbs; *.sh
+splitpath,newpath,nFileF,nFileP,nFileX,nFileJ
+if ((newPath <> "")&& !instr(exe_list,newPath))
+	{
+		exe_list:= newPath . "|" . exe_list
+		FirstItem:= nwepath
+		exe_rest:= exe_list
+	}
+return
+EditSave:
+gosub,MMODET
+gosub,TBARTOG
+gosub,BGPORG
+gosub,ArgADJ
+gosub,EditJAL
+gosub,EditJBE
+gosub,EditPRP
+gosub,ExeSel
+iniwrite,%EditPRP%,%gamecfg%,OVERRIDES,ppovr
+iniwrite,%jalovr%,%gamecfg%,OVERRIDES,jalovr
+iniwrite,%jbeovr%,%gamecfg%,OVERRIDES,jbeovr 
+iniwrite,%monovr%,%gamecfg%,OVERRIDES,monovr 
+iniwrite,%bgmovr%,%gamecfg%,OVERRIDES,bgmovr 
+iniwrite,%TBORG%,%gamecfg%,OVERRIDES,tbovr
+iniwrite,%tbovr%,%gamecfg%,OVERRIDES,tbovr
+iniwrite, %exe_list%,%gamecfg%,CONFIG,exe_list
+iniwrite, %nFileF%,%gamecfg%,CONFIG,exe_file
+iniwrite, %OptAdJ%,%gamecfg%,CONFIG,Exe_Args
+return
 
 begin:
 GUIMSG:= "Loading " .  gmnamex . "`n" . JOYMESSAGE 
@@ -1075,16 +1413,43 @@ if (!fileExist(plfp) or (nrx > 2))
 						}
 				}
 		exiting=1	
+		Gui, Destroy
 		GUIMSG:= "reload exceeded marker`nBe sure you have the launched executable in the exe_list for this game."
-		Gui +hWndhMainWnd
 		Gui,Color,%bgcolor%
 		Gui,Font,%fontColor% %fontXmed%,%fontName%
 		Gui,Add,Listbox,  w440 h440 vNewlist gNewList,|%exe_list%
-		Gui,add,Button, w200 h30 vAltLaunch gAltLaunch,LAUNCH
-		Gui, Show,w450 h480, %RJ_EXE%
-		GUicontrol,choose,NewList,1
-		guicontrol,focus,AltLaunch
+		Gui, Font, cRed s14 w400
+		Gui,add,Button, w440 h30 vAltLaunch gAltLaunch,LAUNCH SELECTED FILE 
+		;Gui, Add, Text, x225 w220 vdsp_NL, %nList%
+		Gui, -0x30000
+		Gui, Show, w450 h480, %RJ_EXE%
+		Gui, Font, Normal
+		Gui +hWndhMainWnd -MinimizeBox
+		Gui Show
+		WinWait, ahk_id %hWndhMainWnd%
+		WinActivate, ahk_id %hWndhMainWnd%
+		Gui +LastFound
+		HM_D := DllCall("user32\GetSystemMenu", "ptr", hMainWnd, "uint", 0, "uptr")
+		DllCall("user32\RemoveMenu", "ptr", HM_D, "uint", 0xf020, "uint", 0)
+		DllCall("user32\RemoveMenu", "ptr", HM_D, "uint", 0xf030, "uint", 0)
+		;DllCall("user32\DrawMenuBar", "ptr", hMenu)
+		HM_D := DllCall("GetSystemMenu", "Ptr", hMainWnd, "UInt", 0, "UPtr")
+		; DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF000, "UInt", 0) ; SIZE
+		; DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF010, "UInt", 0) ; MOVE
+		DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF020, "UInt", 0) ; MINIMIZE
+		DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF030, "UInt", 0) ; MAXIMIZE
+		; DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF060, "UInt", 0) ; CLOSE
+		; DllCall("DeleteMenu", "Ptr", HM_D, "UInt", 0xF120, "UInt", 0) ; RESTORE
+		gui,submit,nohide
+		guicontrol,focus,NewList
+		GUicontrol,choose,NewList,2
+		guicontrolget,NList,,NewList
+		Gui, Font, cRed s14 w400
+		stringRight,crNList,NList,25
+		guicontrol,,AltLaunch,LAUNCH %crNList%
+		Gui, Font, Normal
 		guicontrol,enable,AltLaunch
+		guicontrol,focus,AltLaunch
 		Return
 	}
 if (exiting = 1)
@@ -1101,7 +1466,57 @@ GUIMSG= %tvo%`n%pldr%
 gosub, TTIPS
 sleep, 4000
 Gui, Destroy
+nerlv=
+Menu,Tray,Standard
+Menu,Tray,NoStandard
+Menu, Tray, Add, E&xit Game, quitout
+Menu, Tray, Add, K&ill v0rt3X, quitout
+if (bgwind <> "")
+	{
+		Menu,Tray,Standard
+		Menu,Tray,NoStandard
+		Menu, Tray, Add
+		Menu, Tray, add,<          Borderless-Gaming Config, :bgwind
+	}
+if (cfgjoymenu <> "")
+	{
+		Menu,Tray,Standard
+		Menu,Tray,NoStandard
+		Menu, Tray, Add
+		Menu, Tray, add,<          Borderless-Gaming Config, :cfgjoym
+	}
+if (layoutMM <> "")
+	{
+		Menu,Tray,Standard
+		Menu,Tray,NoStandard
+		Menu, Tray, Add
+		Menu, Tray, add,<          Monitor Layout, :monlay
+	}
+if (CLDTRAY <> "") 
+	{
+		Menu,Tray,Standard
+		Menu,Tray,NoStandard
+		Menu, Tray, Add
+		Menu, Tray, add,<          Cloud Options, :prcldcfg
+	}
+Menu,Tray,Standard
+Menu,Tray,NoStandard
+Menu, Tray, Add
+Menu, Tray, add,<          Other Executables, :altRunSel
+
+
+;#######################################################################################
+;######################    GAME EXECUTION  #############################################
+;#######################################################################################
+
+EWIN:= GetKeyState("f2")
+if (EWIN <> 0)
+	{
+		goto, EditLaunch
+	}
+
 Run, %tvo%,%pldr%,max UseErrorLevel,dcls
+
 nerlv= %errorlevel%
 GUIMSG:= JOYMESSAGE
 gosub, TTIPS
@@ -1110,7 +1525,10 @@ bgl:
 GUIMSG:= ":::getting ancilary exes:::" . "`n" . JOYMESSAGE
 gosub, TTIPS
 apchkn=
-
+if (exiting = 1)
+	{
+		exitapp
+	}
 
 appcheck:
 sleep, 1000
@@ -1143,7 +1561,7 @@ if (Hide_Taskbar <> 0)
 		WinHide, ahk_class Shell_SecondaryTrayWnd
 	}
 GUIMSG:= JOYMESSAGE
-if (JustAfterLaunch <> "")
+if ((JustAfterLaunch <> "")&&(jalovr <> 1))
 	{
 		gosub, PRE_JAL
 	}
@@ -1300,7 +1718,6 @@ if (CWIN = 0)
 blockinput, off
 Suspend, Toggle
 SetKeyDelay,-1
-msgbox,,, whatever
 return
 
 
@@ -1349,7 +1766,6 @@ gii= 1
 
 Quitout:
 Blockinput,On
-POSTRUNORDER=POST_BGP|POST_MON|POST_JBE|LOGOUT|POST_1|POST_MAP|POST_2|POST_3
 acwchk=
 Loop,parse,POSTRUNORDER,|
 	{
@@ -1408,7 +1824,7 @@ if (prestk2 = "")
 	}
 stringright,lnky,jbeprog,4
 runhow= 
-if (jbeprog <> "")
+if ((jbeprog <> "")or(jbeovr = 1))
 	{
 		if (lnky = ".lnk")
 			{
@@ -1893,6 +2309,30 @@ Loop,parse,saveData,|
 return
 
 
+SHWBGW:
+altRunSelection:
+NListP:= A_ThisMenuItem
+goto, AltLaunch
+return
+
+GMLayoutManual:
+Run,%MultiMonitor_Tool% %MMLOAD%"%MM_Game_Config%",%mmpath%,hide,mmpid
+return
+DMLayoutManual:
+Run,%MultiMonitor_Tool% %MMLOAD%"%MM_MediaCenter_Config%",%mmpath%,hide,mmpid
+return
+CFG_RCLONE:
+Run, %comspec% cmd /c "" notepad "%A_AppData%\rclone\rclone.conf" && "%rclone%" config,,
+return
+CFG_DUSAVI:
+Run, %comspec% cmd /c "" notepad "%A_AppData%\ludusavi\config.conf",,
+return
+CFG_CTHING:
+Run, %comspec% cmd /c "" "%syncthing%",,
+return
+CFG_UDSAVE:
+return
+
 PREDUSAVI:
 Loop,parse,GameData,|
 	{
@@ -2096,6 +2536,7 @@ stringreplace,tvo,tvi,#!#,|,All
 stringreplace,tvo,tvo,{GamePath},%Install_Directory%,All
 stringreplace,tvo,tvo,{GameExe},%Exe_File%,All
 stringreplace,tvo,tvo,{ProfileDir},%scpath%,All
+stringreplace,tvo,tvo,{SteamID},%STEAMID%,All
 stringreplace,tvo,tvo,`%programfiles`%,%A_ProgramFiles%,All
 stringreplace,tvo,tvo,`%programfilesx86`%,%ProgramFilesx86%,All
 stringreplace,tvo,tvo,`%username`%,%A_Username%,All
@@ -2357,6 +2798,30 @@ return
 ;;;;###########################     FUNCTIONS     ###########################;;;;
 ;;;;#########################################################################;;;;
 ;{;;#########################################################################;;;;
+
+GuiClose(hWndhMainWnd) {
+    MsgBox 4,, Exit the v0rt3X-Launcher?
+    IfMsgBox No
+        return true
+}
+GuiClose:
+GuiEscape:
+ToolTip, Exiting v0rt3X
+sleep, 2500
+ExitApp
+
+
+OnMessage(0x404,"AHK_NotifyTrayIcon")
+return
+
+AHK_NotifyTrayIcon(wParam, lParam) {
+	  If (lparam = 517)
+		Gosub, ChangeMenu
+	}
+Return
+
+
+
 PathCreateFromURL( URL ) {
 	VarSetCapacity( fPath, Sz := 2084, 0 )
 	DllCall( "shlwapi\PathCreateFromUrl" ( A_IsUnicode ? "W" : "A" )

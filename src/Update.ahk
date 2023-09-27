@@ -95,12 +95,13 @@ return
 
 getupdate:
 upcnt=
-loop, %cacheloc%\%RJPRJCT%*.zip
+loop, %cacheloc%\Portable*.zip
 	{
 		upcnt+=1
 	}
+upcnt+=1
 URLFILE= %UPDATEFILE%
-save= %cacheloc%\%RJPRJCT%%upcnt%.zip
+save= %cacheloc%\Portable%upcnt%.zip
 splitpath,save,svaf,svap
 exe_get(ARIA,URLFILE,svap,svaf,CURPID,cacheloc)
 ;DownloadFile(URLFILE, save, True, True)
@@ -110,7 +111,8 @@ ifexist,%save%
 		Process, close, lrdeploy.exe
 		Process, close, %RJPRJCT%.exe
 		Process, close, Build_Source.exe
-		Runwait, %comspec% /c "%binhome%\7za.exe x -y "%save%" -O"`%CD`%" ",,hide
+		FileCreateDir,%home%\downloaded\Update
+		Runwait, %binhome%\7za.exe x -y "%save%" -O"%home%\downloaded\Update",,hide
 		if (ERRORLEVEL <> 0)
 			{
 				MsgBox,3,Update Failed,Update not found.`n    Retry?
@@ -120,7 +122,9 @@ ifexist,%save%
 					}
 				exitapp
 			}
-		Run, %binhome%\Setup.exe
+		FileDelete,%home%\Update.cmd
+		FileAppend,`n`ntaskkill /f /im Update.exe`nxcopy /y `"%home%\Downloaded\Update`" `"%home%`" /E /H /C /I`nstart `"`" `"%binhome%\Setup.exe`"`nexit /b`n,%home%\Update.cmd
+		Run, %home%\Downloaded\Update.cmd,%home%\downloaded,hide
 		exitapp
 	}
 	else {

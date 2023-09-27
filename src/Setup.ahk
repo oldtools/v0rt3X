@@ -18,8 +18,8 @@ if !(A_IsUnicode=1 and A_PtrSize=4)
 
 RJPRJCT := "v0rt3X"
 RJEXFN := ""
-RELEASE := "2023-08-30 3:33 PM"
-VERSION := "0.99.92.44"
+RELEASE := "2023-09-27 11:09 AM"
+VERSION := "0.99.92.48"
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
 EnvGet,SYSTMRT,SYSTEMROOT
@@ -85,12 +85,23 @@ ARIA:= binhome . "\aria2c.exe"
 cacheloc:= home . "\downloaded"
 /*  ;;[DEBUG32]
 SkinStyle= %source%\
-iniread,ThemeNV,%RJDBINI%,THEME,GUI_Theme_Name
-splitpath,ThemeNV,ThemeN,skinpth,skinxtn
-ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
-if fileExist(source . "\" . ThemeN)
+iniread,GUI_Theme_Name,%RJDBINI%,THEME,GUI_Theme_Name
+splitpath,GUI_Theme_Name,ThemeN,skinpth,skinxtn
+THEMETYP=DARK_
+if instr*(ThemeN,"LIGHT")
 	{
-		ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		THEMETYP=LIGHT_
+	}
+ThemeA= LightMode.native|DarkMode.native|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
+if instr(ThemeN,"native")
+	{
+		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
+		ThemeAll=%ThemeN%||%ThemeA%
+		goto, ThemeLoaded
+	}
+else if fileExist(source . "\" . ThemeN)
+	{
+		ThemeA= LightMode.native|DarkMode.native|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
 		ThemeALL=|%ThemeN%||%ThemeA%
 		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
@@ -106,16 +117,9 @@ if fileExist(source . "\" . ThemeN)
 				goto, ThemeLoaded
 			}
 	}
-else {
-		ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she
-		stringreplace,ThemeA,ThemeA,%ThemeN%|,,
-		ThemeAll=|%ThemeN%||%ThemeA%
-		iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
-		goto, ThemeLoaded
-	}
-ThemeA= Native_Light|Native_Dark|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+ThemeA= LightMode.native|DarkMode.native|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 stringreplace,ThemeA,ThemeA,%ThemeN%|,,
-ThemeAll=|%ThemeN%||%ThemeA%
+ThemeAll=%ThemeN%||%ThemeA%
 iniwrite,%ThemeN%,%RJDBINI%,THEME,GUI_theme_name
 
 ThemeLoaded:
@@ -168,19 +172,16 @@ SPCFIX= .|-|%A_Space%|_
 RLSPFX= .|-|(|[|%A_Space%|_|
 BGMPROGS= WindowManager|SpecialK|SpecialKtest|MultiMonitorFullscreenHelper|Magpie|SKIF|borderstripper|ShaderGlass|Magpie|Fullscreenizer|SRWE|borderlessgamingportable|BorderlessGaming|sizer|BorderlessGamingTool|WindowedBorderlessGaming|MultiMonitorFullscreenHelper|ShiftWindow|BorderlessWindowUtility|BetterFullscreen
 RLSIFX= BYPASSED BY|CRACKED BY|REPACKED BY|UPDATE|MULTi10|MULTi11|MULTi12|MULTi13|MULTi14|MULTi15|MULTi16|MULTi17|MULTi18
-;MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
-MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|Antimicro
-;remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
-remotebins= _BorderlessGaming_|_Antimicro_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
+MAPCFGS= Keysticks|JoyToKey|JoyXoff|Xpadder|AntimicroX|Antimicro
+remotebins= _BorderlessGaming_|_Antimicro_|_AntimicroX_|_JoyToKey_|_Xpadder_|_JoyXoff_|_Keysticks_|_MultiMonitorTool_|_SetSoundDevice_|_SoundVolumeView_
 MENU_X:= A_GuiX*(A_ScreenDPI/96)
 MENU_Y:= A_GuiY*(A_ScreenDPI/96)
 PROFINST=Profile
 stmdbeb= <td><code>
 stmdbee= </code></td>
-GUI_THEMES= Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+GUI_THEMES= LightMode.native|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 ini_p=IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg
-;exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|Antimicrox-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
-exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
+exe_p=Keysticks-Exe|Xpadder-Exe|JoyXoff-Exe|Antimicrox-Exe|joy2key-Exe|Antimicro-Exe|MultiMonitor-Tool|Display-Changer|BorderLess-Gaming-Program|Exe-File|1-Pre|2-Pre|3-Pre|1-Post|2-Post|3-Post|Just Before Exit|Just After Launch|Cloud-Backup|Cloud-Restore
 cfg_p=MediaCenter-Profile|Player 1|Player 2|Player 3|Player 4|Player 5|Player 6|Player 7|Player 8|Monitor-MEDIACENTER-Cfg|Monitor-Game-Cfg|Save Data|Install-Folder|Game Data|keyboard-Mapper
 ptyx=|32|33|35|44|38|45|64|35|123|91|125|93|39|59|58|46|94|43|61|
 reduced= |_Data|Assets|alt|shipping|Data|ThirdParty|engine|App|steam|steamworks|steamclient|script|nocd|Tool|trainer|
@@ -218,7 +219,7 @@ cfgfld=GAME_PROFILES|Source_Directory|
 DDPRVD=Steam|Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 PakLST=KBPak|Pl1Pak|Pl2Pak|MCjPak|GMPak|DMPak|JALPak|JBEPak|PREPak|PSTPak
 CENITEMS= CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|
-GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncludedD|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL|IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|Package|iniBut|MMODET|TBARTOG|MapDDL|exeDDL|_LCLeP|_CENeP|ExeBut|DelExe|cfgDDL|_LCLcP|_CENcP|CfgBut|Delcfg|PRFNAME|SappID|eName|ToolTips|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg|Themen
+GUIVARS= ASADMIN|PostWait|PreWait|Localize|SCONLY|EXEONLY|BOTHSRCH|ADDGAME|ButtonClear|ButtonCreate|MyListView|CREFLD|GMCONF|GMJOY|GMLNK|UPDTSC|OVERWRT|POPULATE|RESET|EnableLogging|RJDB_Config|RJDB_Location|GAME_ProfB|GAME_DirB|SOURCE_DirB|SOURCE_DirectoryT|REMSRC|Keyboard_MapB|Player1_TempB|Player2_TempB|CENTRLCKB|MediaCenter_ProfB|MultiMonitor_Tool|MM_ToolB|MM_Game_CfgB|MM_MediaCenter_CfgB|BGM_ProgB|BGP_Enable|BGP_TE|BGP_TU|PREAPP|PREDD|DELPREAPP|POSTAPP|PostDD|DELPOSTAPP|REINDEX|KILLCHK|INCLALTS|SELALLBUT|SELNONEBUT|KBM_RC|MMT_RC|MMT_RC|BGM_RC|JAL_ProgB|JBE_ProgB|JBE_RC|JAL_RC|PRE_RC|POST_RC|IncDED|DDINCLD|Hide_Taskbar|JALWAIT|JBEWAIT|NAMECHK|NetChk|CenKBM|CenPL1|CenPL2|CenMC|CenGM|CenMM|CenJAL|CenJBE|CenPRE|CenPST|EXCL_DirB|EXCLUDE_DirectoryT|REMEXCL|IniSel|MMODET|TBARTOG|MapDDL|exeDDL|iniexe|ExeBut|DelExe|cfgDDL|inicfg|CfgBut|Delcfg|SappID|PRFNAME|SaveName|LcLcP|LcLeP|CeneP|cencp|keyboard_Mapper|opnif|opnRLD|Package|iniBut|MMODET|TBARTOG|MapDDL|exeDDL|_LCLeP|_CENeP|ExeBut|DelExe|cfgDDL|_LCLcP|_CENcP|CfgBut|Delcfg|PRFNAME|SappID|eName|ToolTips|CloudSavDDL|CloudSavEDT|CloudSavBut|DelCloudSav|CloudCfgDDL|CloudCfgEDT|CloudCfgBut|DelCloudCfg|Themen
 STDVARS= EXCLUDE_Directory|EXCLUDE_DirectoryT|SOURCE_DirectoryT|SOURCE_Directory|KeyBoard_Mapper|MediaCenter_Profile|Player1_Template|Player2_Template|MultiMonitor_Tool|MMLOAD|MMSAVE|MM_MEDIACENTER_Config|MM_Game_Config|BorderLess_Gaming_Program|extapp|Game_Directory|Game_Profiles|RJDB_Location|Source_Directory|Mapper_Extension|1_Post|2_Post|3_Post|1_Post|2_Post|3_Post|Install_Folder|GameData|SaveData|BGP_State|Borderless_Gaming_Program|Name_Check|Net_Check|CENTRLCKB|Cloud_Backup|Cloud_Restore|JustBeforeExit|JustAfterLaunch|Hide_Taskbar|Steam_AppID|Exe_File|Steam_UserID|exe_list
 DDTA= <$This_prog$><Monitor><Mapper>
 DDTB= <Monitor><$This_prog$><Mapper>
@@ -243,13 +244,13 @@ SupData=</span><sup id="cite_ref-gamedir_
 trig3=<span class="mw-headline" id="Save_game_cloud_syncing">
 DBINF=(mounted in <a href="/wiki/DOSBox" title="DOSBox">DOSBox</a>)</i>
 STINQ=abbr title="replace with My Documents for Windows XP"
-STINF=<a href="/wiki/Glossary:Game_data#Steam_client" title="Glossary:Game data"><abbr title="The base Steam installation folder">&lt;Steam-folder&gt;</abbr></a>
+STINF=<a href="/wiki/Glossary:Game_data#Steam_client" title="Glossary:Game data"><abbr title="The base Steam installation folder">&lt`;Steam-folder&gt`;</abbr></a>
 PRINF=<a href="/wiki/Glossary:Game_data#User_profile" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%USERPROFILE`%</abbr></a>
 UAINF=<a href="/wiki/Glossary:Game_data#User_application_data" title="Glossary:Game data"><abbr title="Windows: copy this path into a folder address bar to go to this location">`%LOCALAPPDATA`%</abbr></a>
-STUNF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt;user-id&gt;</abbr></a>
-GSUIF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt;user-id&gt;</abbr></a>
+STUNF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt`;user-id&gt`;</abbr></a>
+GSUIF=<a href="/wiki/Glossary:Game_data#User_ID" title="Glossary:Game data"><abbr title="The user ID or profile name (specific to your account or computer)">&lt`;user-id&gt`;</abbr></a>
 REGIF=<a href="/wiki/Glossary:Game_data#Windows_registry" title="Glossary:Game data"><abbr title="Windows Registry path (use the Registry Editor to access)">
-BSINF=<a href="/wiki/Glossary:Game_data#Installation_folder" title="Glossary:Game data"><abbr title="The base installation folder">&lt;path-to-game&gt;</abbr></a>
+BSINF=<a href="/wiki/Glossary:Game_data#Installation_folder" title="Glossary:Game data"><abbr title="The base installation folder">&lt`;path-to-game&gt`;</abbr></a>
 repA=</abbr>|</a>|</span></td>
 Loop,parse,chariterate,|
 	{
@@ -295,7 +296,16 @@ Loop,parse,tabsol,`n`r
 			}
 		iremv.= A_LoopField . "|"
 	}
+THEMETYP=DARK_	
 iniread,Gui_Theme_Name,%RJDBINI%,THEME,Gui_Theme_Name
+if instr(Gui_Theme_Name,"Light")
+	{
+		THEMETYP=LIGHT_	
+	}
+else {
+		THEMETYP=DARK_
+	}
+
 /*  ;;[DEBUG32]
 if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . "AnkaCoder_b.ttf")&& fileexist(site_local . "\" . "Hermit-Regular.otf")&& fileexist(site_local . "\" . "InterUI.ttf"))
 	{
@@ -308,60 +318,24 @@ if (fileexist(site_local . "\" . "TruenoLt.otf")&& fileexist(site_local . "\" . 
 		fontCName= Trueno
 		fontDName= Inter UI
 		fontEName= Default
-		iniread,LFontL,%RJDBINI%,THEME,Gui_Light_FontL
-		iniread,LFontM,%RJDBINI%,THEME,Gui_Light_FontM
-		iniread,LFontS,%RJDBINI%,THEME,Gui_Light_FontS
-		iniread,LFontB,%RJDBINI%,THEME,Gui_Light_FontB
-		iniread,LFontG,%RJDBINI%,THEME,Gui_Light_FontG
-		iniread,DFontL,%RJDBINI%,THEME,Gui_Dark_FontL
-		iniread,DFontM,%RJDBINI%,THEME,Gui_Dark_FontM
-		iniread,DFontS,%RJDBINI%,THEME,Gui_Dark_FontS
-		iniread,DFontB,%RJDBINI%,THEME,Gui_Dark_FontB
-		iniread,DFontG,%RJDBINI%,THEME,Gui_Dark_FontG
-		iniread,bgLightcolor,%RJDBINI%,THEME,GUI_Light_BG
-		iniread,bgccolor,%RJDBINI%,THEME,Gui_Dark_BG
+		iniread,FontL,%RJDBINI%,%THEMETYP%THEME,Font_L
+		iniread,FontM,%RJDBINI%,%THEMETYP%THEME,Font_M
+		iniread,FontS,%RJDBINI%,%THEMETYP%THEME,Font_S
+		iniread,FontB,%RJDBINI%,%THEMETYP%THEME,Font_B
+		iniread,FontG,%RJDBINI%,%THEMETYP%THEME,Font_G
+		iniread,opText,%RJDBINI%,%THEMETYP%THEME,op_Text
+		iniread,opLabel,%RJDBINI%,%THEMETYP%THEME,op_Label
+		iniread,bgColor,%RJDBINI%,%THEMETYP%THEME,BG_Color
+		iniread,BGShadow,%RJDBINI%,%THEMETYP%THEME,BG_Shadow
 	}
 	else {
 */  ;;[DEBUG32]
-fontAName= Default
-fontBName= Default
-fontCName= Default
-fontDName= Default
-fontEName= Default
-fontAColor= cSilver
-fontBColor= cSilver
-fontCColor= cSilver
-fontDColor= cSilver
-fontEColor= cSilver
-bgDarkcolor= 151515
-bgLightcolor= 000000
-LFontM=%fontAColor% s7,Default
-LFontL=%fontBColor% s7 Bold,Default	
-LFontG=%fontCColor% s7,Default
-LFontB=%fontDColor% s7 Bold,Default
-LFontS=%fontEColor% s6 Bold,Default
-DFontM=%fontAColor% s7,Default
-DFontL=%fontBColor% s7 Bold,Default	
-DFontG=%fontCColor% s7,Default
-DFontB=%fontDColor% s7 Bold,Default
-DFontS=%fontEColor% s6 Bold,Default
 /*  ;;[DEBUG32]
 	}
-*/  ;;[DEBUG32]	
-FontM=Gui, Font, %DFontM%
-FontL=Gui, Font, %DFontL%
-FontG=Gui, Font, %DFontG%
-FontB=Gui, Font, %DFontB%
-FontS=Gui, Font, %DFontS%
-bgcolor= %bgDarkcolor%
-if instr(Gui_Theme_Name,"Light")
+*/  ;;[DEBUG32]
+if instr(GUI_THEME_NAME,"Native")
 	{
-		FontM=Gui, Font, %LFontM%
-		FontL=Gui, Font, %LFontL%
-		FontG=Gui, Font, %LFontG%
-		FontB=Gui, Font, %LFontB%
-		FontS=Gui, Font, %LFontS%
-		bgcolor= %bgLightcolor%
+		gosub, LoadTheme
 	}
 gosub, popgui
 if (Logging = 1)
@@ -453,7 +427,7 @@ if (ToolTips = 1)
 	{
 		Tltp:= "checked"
 	}
-if (IncludedD = 1)
+if (IncDED = 1)
 	{
 		InclDD:= "checked"
 	}
@@ -526,7 +500,7 @@ if (Hide_Taskbar = 0)
 		taskbarv:= ""
 	}
 stmddchk:= ""
-if instr(IncludedD,"Steam")
+if instr(IncDED,"Steam")
 	{
 		stmddchk:= "checked"
 	}
@@ -627,262 +601,393 @@ Menu, MyContextMenu, Add, Download Meta-Data, GetMetaData
 Menu, MyContextMenu, Add,,
 Menu, MyContextMenu, Add, Clear from ListView, ContextClearRows
 
+Menu,Tray,Standard
+Menu,Tray,NoStandard
+Menu, Tray, Add, Kill v0rt3X, quitout
+Menu, Tray, Add, Open Help, QHelp
+
+Gui, Color,, %bgColor%
+Gui -DPIScale
 ITERTARE:
 ;} ################################# MENU PREPARED ####################################
 ;#######################################################################################
 ;{ ################################# GUI GENERATION #########################################
 ;###################################################################################################
 Gui +hWndhMainWnd
+
 Gui, Add, GroupBox, x667 y0 w136 h35
 Gui, Add, GroupBox, x670 y0 w134 h35
 Gui, Font, %FontB%
-Gui, Add, Button, x318 y10 h20 vADDGAME gADDGAME disabled, ADD+
+Gui, Add, Button, hWndhADDGAME x318 y10 h20 vADDGAME gADDGAME disabled, ADD+
+ControlColor(hADDGAME, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 Gui, Add, GroupBox, x432 y0 w122 h35
 
 Gui, Add, Text, x439 y12 h12, Check:
 Gui, Font, %FontB%
-Gui, Add, Button, x480 y10 h19 vSELALLBUT gSELALLBUT hidden, All
-Gui, Add, Button, x507 y10 h19 vSELNONEBUT gSELNONEBUT hidden, None
-Gui, Add, Button, x580 y10 h19 vButtonClear gButtonClear hidden disabled, Empty List
-Gui, Add, Button, x674 y11 h19 vButtonCreate gButtonCreate hidden disabled,CREATE
+Gui, Add, Button, hWndhSELALLBUT x480 y10 h19 vSELALLBUT gSELALLBUT hidden, All
+ControlColor(hSELALLBUT, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhSELNONEBUT x507 y10 h19 vSELNONEBUT gSELNONEBUT hidden, None
+ControlColor(hSELNONEBUT, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhButtonClear x580 y10 h19 vButtonClear gButtonClear hidden disabled, Empty List
+ControlColor(hButtonClear, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhButtonCreate x674 y11 h19 vButtonCreate gButtonCreate hidden disabled,CREATE
+ControlColor(hButtonCreate, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 Gui, Add, Text, x740 y13 h12,Launchers
 Gui, Add, ListView, r44 x310 y35 h560 w340 -Readonly vMyListView gMyListView hwndHLV1 AltSubmit Checked hidden,Name|Directory/Location|Opt /s|Arg /s|Name Override|KBM|P1|P2|McP|MMT|GM|DM|JAL|JBE|Pre|Pst|Bgm|SteamID
+GuiControl, -AltSubmit, MyListView
 LV_ModifyCol(3, "Integer")
+GuiControl, +AltSubmit, MyListView
 ImageListID1 := IL_Create(10)
 ImageListID2 := IL_Create(10, 10, true)
 LV_SetImageList(ImageListID1)
 LV_SetImageList(ImageListID2)
 Gui, Font, %FontB%
-Gui, Add, Button, x236 y0 w55 h20 vCANCLDBUT gCANCLDBUT hidden disabled,CANCEL
+Gui, Add, Button, hWndhCANCLDBUT x231 y0 w55 h15 vCANCLDBUT gCANCLDBUT hidden disabled,CANCEL
+ControlColor(hCANCLDBUT, hMainWnd, bgcolor)
 Gui, Font, %FontM%
+Gui, Font, c%opLabel%
 GUI Add,TAB2, x2 y0 w297 h676 vTABMENU, Setup||Config|Edit
-Gui, Add, StatusBar, x0 y675 w314 h28 vRJStatus -Theme Background404040, Status Bar
+Gui, Add, StatusBar, x0 y675 w314 h28 vRJStatus -Theme Background%bgcolor%, Status Bar
+Gui, Font, c%opLabel%
 Gui,Tab, 1
 Gui Tab, Setup
-Gui, Add, GroupBox, x0 y20 w296 h655
+Gui, Add, GroupBox, x0 y22 w296 h655
 Gui, Font, %FontG%
-GUi, Add, Checkbox, x90 y80 h14 vIncludedD gIncludedD Right %stmddchk%,<Include>
+Gui, Add, Checkbox, hWndhIncDED x26 y80 h14 vIncDED gIncDED Right %stmddchk%,<Include>
+ControlColor(hIncDED, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontS%
-Gui, Add, DropDownList, x184 y77 w80 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
+Gui, Add, DropDownList, x120 y77 w140 vDDINCLD gDDINCLD,Steam||Itch|EA|Origin|GOG|Amazon|Epic|XBox|XCloud|Battle
 ;;Gui, Add, Radio, x95 y32 vEXEONLY gEXEONLY checked hidden, Exe`,Cmd`,Bat
 Gui, Font, %FontB%
-Gui, Add, Button, x24 y50 w41 h21 vSOURCE_DirB gSOURCE_DirB,SRC+
+Gui, Add, Button, hWndhSOURCE_DirB x24 y50 w41 h21 vSOURCE_DirB gSOURCE_DirB,SRC+
+ControlColor(hSOURCE_DirB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y33 h14 vCURDP Right,<Game Fldrs>
+Gui, Add, Text, hwndhCURDP x24 y33 h14 vCURDP Right,<Game Fldrs>
+ControlColor(hCURDP, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y50 w192 vSOURCE_DirectoryT gSOURCE_DirectoryDD,%sourcepop%
 Gui, Font, %FontB%
-Gui, Add, Button, x269 y52 w15 h15 vREMSRC gREMSRC,X
-Gui, Add, Button, x24 y104 w41 h19 vEXCL_DirB gEXCL_DirB,EXC+
+Gui, Add, Button, hWndhREMSRC x269 y52 w15 h15 vREMSRC gREMSRC,X
+ControlColor(hREMSRC, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhEXCL_DirB x220 y104 w41 h19 vEXCL_DirB gEXCL_DirB,EXC+
+ControlColor(hEXCL_DirB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x28 y87 h14,<Exclude>
+Gui, Add, Text, hWndhEXCLDG x26 y104 h14 vEXCLDG,<Exclude>
+ControlColor(hEXCLDG, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontS%
-Gui, Add, DropDownList, x72 y104 w192 vEXCLUDE_DirectoryT gEXCLUDE_DirectoryDD,%exclpop%
+Gui, Add, DropDownList, x95 y104 w121 vEXCLUDE_DirectoryT gEXCLUDE_DirectoryDD,%exclpop%
 Gui, Font, %FontB%
-Gui, Add, Button, x268 y107 w15 h15 vREMEXCL gREMEXCL,X
+Gui, Add, Button, hWndhREMEXCL x268 y107 w15 h15 vREMEXCL gREMEXCL,X
+ControlColor(hREMEXCL, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y128 h14 vCURSKT,<Shortcut Output Directory>
+Gui, Add, Text, hwndhCURSKT x24 y128 h14 vCURSKT,<Shortcut Output Directory>
+ControlColor(hCURSKT, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y144 w35 h21 vGame_DirB gGame_DirB,OUT
+Gui, Add, Button, hWndhGame_DirB x21 y144 w35 h21 vGame_DirB gGame_DirB,OUT
+ControlColor(hGame_DirB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x64 y148 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
-Gui, Add, Text, x24 y168 w152 h14 vGame_ProfilesR,<Game-Profiles-Directory>
+Gui, Add, Text, hwndhGAME_DirectoryT x64 y148 w222 h14 vGAME_DirectoryT Right,%GAME_Directory%
+ControlColor(hGAME_DirectoryT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndhGame_ProfilesR x24 y168 h14 vGame_ProfilesR,<Game-Profiles-Directory>
+ControlColor(hGame_ProfilesR, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y184 w35 h21 vGame_ProfB gGame_ProfB,GPD
+Gui, Add, Button, hWndhGame_ProfB x21 y184 w35 h21 vGame_ProfB gGame_ProfB,GPD
+ControlColor(hGame_ProfB, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x64 y186 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
+Gui, Add, Text, hwndhGAME_ProfilesT x64 y186 w222 h14 vGAME_ProfilesT Right,%GAME_Profiles%
+ControlColor(hGAME_ProfilesT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y206 w206 h14,<Keyboard Mapper Program>
+Gui, Add, Text, hWndhKBMPGUIT x24 y206 h14 vKBMPGUIT,<Keyboard Mapper Program>
+ControlColor(hKBMPGUIT, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y222 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
-Gui Add, Button, x4 y222 w14 h17 vKBM_RC gKBM_RC, v
+Gui, Add, Button, hWndhKeyboard_MapB x21 y222 w35 h21 vKeyboard_MapB gKeyboard_MapB,KBM
+ControlColor(hKeyboard_MapB, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhKBM_RC x4 y222 w14 h17 vKBM_RC gKBM_RC, v
+ControlColor(hKBM_RC, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x67 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
+Gui, Add, Text, hwndhKeyboard_MapperT x67 y224 w222 h14 vKeyboard_MapperT Right,%Keyboard_Mapper%
+ControlColor(hKeyboard_MapperT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y248 w222 h14,<Template Profile for Player 1>
+Gui, Add, Text, hWndhTMPLPLA x24 y248 h14 vTMPLPLA,<Template Profile for Player 1>
+ControlColor(hTMPLPLA, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x25 y266 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
+Gui, Add, Button, hWndhPlayer1_TempB x25 y266 w35 h19 vPlayer1_TempB gPlayer1_TempB,PL1
+ControlColor(hPlayer1_TempB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x64 y268 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
+Gui, Add, Text, hwndhPlayer1_TemplateT x64 y268 w222 h14 vPlayer1_TemplateT Right,%Player1_Template%
+ControlColor(hPlayer1_TemplateT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y285 w222 h14,<Template for Player 2>
+Gui, Add, Text, hWndhTMPLPLB x24 y285 h14 vTMPLPLB,<Template for Player 2>
+ControlColor(hTMPLPLB, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x25 y303 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
+Gui, Add, Button, hWndhPlayer2_TempB x25 y303 w36 h19 vPlayer2_TempB gPlayer2_TempB,PL2
+ControlColor(hPlayer2_TempB, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x64 y305 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
+Gui, Add, Text, hwndhPlayer2_TemplateT x64 y305 w222 h14 vPlayer2_TemplateT Right,%Player2_Template%
+ControlColor(hPlayer2_TemplateT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y324 w222 h14,<Template for MediaCenter/Desktop>
+Gui, Add, Text, hWndhTMPLMC x24 y324 h14 vTMPLMC,<Template for MediaCenter/Desktop>
+ControlColor(hTMPLMC, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x25 y339 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
+Gui, Add, Button, hWndhMediaCenter_ProfB x25 y339 w35 h19 vMediaCenter_ProfB gMediaCenter_ProfB,MCP
+ControlColor(hMediaCenter_ProfB, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x64 y341 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
+Gui, Add, Text, hwndhMediaCenter_TemplateT x64 y341 w222 h14 vMediaCenter_TemplateT Right,%MediaCenter_Template%
+ControlColor(hMediaCenter_TemplateT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y361 w125 h14,<Borderless_Program>
+Gui, Add, Text, hWndhBGMGDSP x24 y361 h14 vBGMGDSP,<Borderless_Program>
+ControlColor(hBGMGDSP, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y376 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
-Gui Add, Button, x4 y376 w14 h17 vBGM_RC gBGM_RC, v
+Gui, Add, Button, hWndhBGM_ProgB x21 y376 w36 h21 vBGM_ProgB gBGM_ProgB,BGP
+ControlColor(hBGM_ProgB, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhBGM_RC x4 y376 w14 h17 vBGM_RC gBGM_RC, v
+ControlColor(hBGM_RC, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x67 y378 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
+Gui, Add, Text, hwndhBorderless_Gaming_ProgramT x67 y378 w222 h14 vBorderless_Gaming_ProgramT Right,%Borderless_Gaming_Program%
+ControlColor(hBorderless_Gaming_ProgramT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y399 w222 h14,<Multimonitor Program>
+Gui, Add, Text, hWndhTMPLMMPRG x24 y399 h14 vTMPLMMPRG,<Multimonitor Program>
+ControlColor(hTMPLMMPRG, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y415 w35 h21 vMM_ToolB gMM_ToolB,MMT
-Gui Add, Button, x4 y415 w14 h17 vMMT_RC gMMT_RC, v
+Gui, Add, Button, hWndhMM_ToolB x21 y415 w35 h21 vMM_ToolB gMM_ToolB,MMT
+ControlColor(hMM_ToolB, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhMMT_RC x4 y415 w14 h17 vMMT_RC gMMT_RC, v
+ControlColor(hMMT_RC, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+Gui, Add, Text, hwndhMultiMonitor_ToolT x70 y417 w202 h14 vMultiMonitor_ToolT Right,%MultiMonitor_Tool%
+ControlColor(hMultiMonitor_ToolT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y440 w222 h14,<Game Monitor CFG>
+Gui, Add, Text, hWndhTMPLTGMC x24 y440 h14 vTMPLTGMC,<Game Monitor CFG>
+ControlColor(hTMPLTGMC, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontM%
-Gui, Add, Radio, x205 y458 w18 h14 vMMResDR gMMResDR hidden,
-Gui, Add, Radio, x223 y458 w18 h14 vMMResTR gMMResTR hidden,
-Gui, Add, Radio, x241 y458 w18 h14 vMMResSR gMMResSR hidden,
+Gui, Add, Radio, hwndhMMResDR x205 y458 w18 h14 vMMResDR gMMResDR hidden,
+ControlColor(hMMResDR, hMainWnd, bgcolor)
+Gui, Add, Radio, hwndhMMResTR x223 y458 w18 h14 vMMResTR gMMResTR hidden,
+ControlColor(hMMResTR, hMainWnd, bgcolor)
+Gui, Add, Radio, hwndhMMResSR x241 y458 w18 h14 vMMResSR gMMResSR hidden,
+ControlColor(hMMResSR, hMainWnd, bgcolor)
 Gui, Font, %FontS%
 Gui, Add, DropDownList, x64 y456 w95 vMMResDD gMMResDD hidden,
 Gui, Add, DropDownList, x162 y456 w40 vMMResHD gMMResHD hidden,
 Gui, Font, %FontB%
-Gui, Add, Button, x25 y456 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
+Gui, Add, Button, hWndhMM_Game_CfgB x25 y456 w35 h19 vMM_Game_CfgB gMM_Game_CfgB,GMC
+ControlColor(hMM_Game_CfgB, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x163 y442 h14 vMMResXX hidden,hz __ | [_] [C] [S]
+Gui, Add, Text, hwndhMMResXX x163 y442 h14 vMMResXX hidden,hz __ | [_] [C] [S]
+ControlColor(hMMResXX, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui, Add, Button, x261 y456 w28 vMMResB gMMResB hidden,OK
+Gui, Add, Button, hWndhMMResB x261 y456 w28 vMMResB gMMResB hidden,OK
+ControlColor(hMMResB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x64 y458 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
+Gui, Add, Text, hwndhMM_Game_ConfigT x64 y458 w222 h14 vMM_Game_ConfigT Right,%MM_Game_Config%
+ControlColor(hMM_Game_ConfigT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x24 y478 w214 h14,<HTPC/Desktop Monitor CFG>
+Gui, Add, Text, hWndhTMPLTDTMC x24 y478 h14 vTMPLTDTMC,<HTPC/Desktop Monitor CFG>
+ControlColor(hTMPLTDTMC, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui, Add, Button, x25 y495 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
+Gui, Add, Button, hWndhMM_MediaCenter_CfgB x25 y495 w35 h19 vMM_MediaCenter_CfgB gMM_MediaCenter_CfgB,DMC
+ControlColor(hMM_MediaCenter_CfgB, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x64 y497 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
+Gui, Add, Text, hwndhMM_MediaCenter_ConfigT x64 y497 w225 h14 vMM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
+ControlColor(hMM_MediaCenter_ConfigT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y522 w35 h21 vJAL_ProgB gJAL_ProgB,JAL
-Gui Add, Button, x4 y522 w14 h17 vJAL_RC gJAL_RC,v
+Gui, Add, Button, hWndhJAL_ProgB x21 y522 w35 h21 vJAL_ProgB gJAL_ProgB,JAL
+ControlColor(hJAL_ProgB, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhJAL_RC x4 y522 w14 h17 vJAL_RC gJAL_RC,v
+ControlColor(hJAL_RC, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x71 y525 w195 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
-Gui, Add, Checkbox, x273 y524 w12 h14 vJALWait gJALWait %jalstatus%
-;Gui, Add, Text,  x64 y526 w198 h14,<Run After Launch>
+Gui, Add, Text, hwndhJustAfterLaunchT x71 y525 w195 h14 vJustAfterLaunchT Right,%JustAfterLaunchT%
+ControlColor(hJustAfterLaunchT, hMainWnd, bgShadow, opText)
+Gui, Add, Checkbox, hWndhJALWait x273 y524 w12 h14 vJALWait gJALWait %jalstatus%
+ControlColor(hJALWait, hMainWnd, bgcolor)
+;Gui, Add, Text,  x64 y526 h14,<Run After Launch>
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y550 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
-Gui Add, Button, x4 y550 w14 h17 vJBE_RC gJBE_RC,v
+Gui, Add, Button, hWndhJBE_ProgB x21 y550 w35 h19 vJBE_ProgB gJBE_ProgB,JBE
+ControlColor(hJBE_ProgB, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhJBE_RC x4 y550 w14 h17 vJBE_RC gJBE_RC,v
+ControlColor(hJBE_RC, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui, Add, Text, x67 y550 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
-Gui, Add, Checkbox, x273 y552 w12 h14 vJBEWait gJBEWait %jbestatus%
-;Gui, Add, Text, x64 y548 w198 h14,<Run Before Exit>
+Gui, Add, Text, hwndhJustBeforeExitT x67 y550 w198 h14 vJustBeforeExitT Right,%JustBeforeExitT%
+ControlColor(hJustBeforeExitT, hMainWnd, bgShadow, opText)
+Gui, Add, Checkbox, hWndhJBEWait x273 y552 w12 h14 vJBEWait gJBEWait %jbestatus%
+ControlColor(hJBEWait, hMainWnd, bgcolor)
+;Gui, Add, Text, x64 y548 h14,<Run Before Exit>
 Gui, Font, %FontB%
-Gui, Add, Button, x21 y576 w36 h21 vPREAPP gPREAPP ,PRE
-Gui Add, Button, x4 y576 w14 h17 vPRE_RC gPRE_RC, v
+Gui, Add, Button, hWndhPREAPP x21 y576 w36 h21 vPREAPP gPREAPP ,PRE
+ControlColor(hPREAPP, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhPRE_RC x4 y576 w14 h17 vPRE_RC gPRE_RC, v
+ControlColor(hPRE_RC, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x63 y578 h12 vPRETNUM,1 
+Gui, Add, Text, hwndhPRETNUM x63 y578 h12 vPRETNUM,1 
+ControlColor(hPRETNUM, hMainWnd, bgShadow, opText)
 Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y576 w193 vPREDD gPREDD Right,%prelist%
-Gui, Add, Text, x4 y597 h14 w260 vPREDDT cAqua,<$This_Prog$><Monitor><Mapper><game.exe>
-Gui, Font, %FontM%
-Gui, Add, Checkbox, x273 y578 w12 h14 vPreWait gPreWait %prestatus%,
 Gui, Font, %FontB%
-Gui, Add, Button, x273 y595 w14 h14 vDELPREAPP gDELPREAPP ,X
-Gui, Add, Button, x21 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
-Gui Add, Button, x4 y614 w14 h17 vPOST_RC gPOST_RC, v
+Gui, Add, Text, hwndhPREDDT x4 y597 h14 w260 vPREDDT cAqua,<$This_Prog$><Monitor><Mapper><game.exe>
+ControlColor(hPREDDT, hMainWnd, bgShadow, opLabel)
+Gui, Font, %FontM%
+Gui, Add, Checkbox, hWndhPreWait x273 y578 w12 h14 vPreWait gPreWait %prestatus%,
+ControlColor(hPreWait, hMainWnd, bgcolor)
+Gui, Font, %FontB%
+Gui, Add, Button, hWndhDELPREAPP x273 y595 w14 h14 vDELPREAPP gDELPREAPP ,X
+ControlColor(hDELPREAPP, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhPOSTAPP x21 y614 w36 h21 vPOSTAPP gPOSTAPP,PST
+ControlColor(hPOSTAPP, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhPOST_RC x4 y614 w14 h17 vPOST_RC gPOST_RC, v
+ControlColor(hPOST_RC, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui, Add, Text, x63 y616 h12 vPOSTDNUM,1
+Gui, Add, Text, hwndhPOSTDNUM x63 y616 h12 vPOSTDNUM,1
+ControlColor(hPOSTDNUM, hMainWnd, bgShadow, opText)
 Gui, Font, %FontS%
 Gui, Add, DropDownList, x72 y616 w193 vPostDD gPostDD Right,%postlist%
 Gui, Font, %FontG%
-Gui, Add, Text, x4 y638 h14 w260 vPOSTDDT cAqua,<game.exe><$This_Prog$><Mapper><Monitor>
+Gui, Add, Text, hwndhPOSTDDT x4 y638 h14 w260 vPOSTDDT cAqua,<game.exe><$This_Prog$><Mapper><Monitor>
+ControlColor(hPOSTDDT, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontM%
-Gui, Add, Checkbox, x273 y619 w12 h14 vPostWait gPostWait %poststatus%
+Gui, Add, Checkbox, hWndhPostWait x273 y619 w12 h14 vPostWait gPostWait %poststatus%
+ControlColor(hPostWait, hMainWnd, bgcolor)
 Gui, Font, %FontB%
-Gui, Add, Button, x273 y636 w14 h14 vDELPOSTAPP gDELPOSTAPP ,X
-Gui, Add, Button, x268 y656 h16 w18 vRESET gRESET,R
+Gui, Add, Button, hWndhDELPOSTAPP x273 y636 w14 h14 vDELPOSTAPP gDELPOSTAPP ,X
+ControlColor(hDELPOSTAPP, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhRESET x268 y656 h16 w18 vRESET gRESET,R
+ControlColor(hRESET, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 /*  ;;[DEBUGINT]
-	Gui, Add, Checkbox, x40 y657 h16 w18 vEnableLogging gEnableLogging right %loget%,
+	Gui, Add, Checkbox, hWndhEnableLogging x40 y657 h16 w18 vEnableLogging gEnableLogging right %loget%,
+ControlColor(hEnableLogging, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-	Gui, Add, Button, x20 y656 h16 w18 vOPNLOG gOPNLOG,!
+	Gui, Add, Button, hWndhOPNLOG x20 y656 h16 w18 vOPNLOG gOPNLOG,!
+ControlColor(hOPNLOG, hMainWnd, bgShadow, opLabel)
 */  ;;[DEBUGINT]
+Gui, Font, c%opLabel%
 Gui, Tab, 2
+Gui, Font, c%opLabel%
 Gui, Tab, Config
 Gui, Font, %FontM%
-Gui, Add, GroupBox, x7 y21 w284 h31
-Gui, Add, Radio, x30 y31 h14 vOVERWRT gUPDTSC %ovrwrchk%,Overwrite
-Gui, Add, Radio, x110 y31 h14 vUPDTSC gOVERWRT %updtchk%,Update
-Gui, Add, GroupBox, x7 y50 w284 h218
-GUi, Add, Checkbox, x30 y68 h14 vCREFLD gCREFLD %fldrget%, Profile Folders
-GUi, Add, Checkbox, x50 y87 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Config File
-Gui, Add, Checkbox, x65 y107 w92 h14 vKILLCHK gKILLCHK checked,Kill-List
-GUi, Add, Checkbox, x65 y123 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admin
-Gui, Add, Checkbox, x65 y141 w109 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
-GUi, Add, Checkbox, x50 y159 h14 vGMLNK gGMLNK %lnkget% %lnkenbl%,Launcher Shortcuts
-GUi, Add, Checkbox, x50 y177 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joystick Profiles
-Gui, Add, Checkbox, x202 y169 h14 vToolTips gToolTips %Tltp% Right,Tool-Tips
+Gui, Add, GroupBox, x7 y20 w284 h35
+Gui, Add, Radio, hwndhOVERWRT x30 y33 h14 vOVERWRT gUPDTSC %ovrwrchk%,Overwrite
+ControlColor(hOVERWRT, hMainWnd, bgShadow, opLabel)
+Gui, Add, Radio, hwndhUPDTSC x110 y33 h14 vUPDTSC gOVERWRT %updtchk%,Update
+ControlColor(hUPDTSC, hMainWnd, bgShadow, opLabel)
+Gui, Add, GroupBox, x7 y53 w284 h216
+Gui, Add, Checkbox, hWndhCREFLD x30 y68 h14 vCREFLD gCREFLD %fldrget%, Profile Folders
+ControlColor(hCREFLD, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhGMCONF x50 y87 h14 vGMCONF gGMCONF %cfgget% %cfgenbl%,Config File
+ControlColor(hGMCONF, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhKILLCHK x65 y107 h14 vKILLCHK gKILLCHK checked,Kill-List
+ControlColor(hKILLCHK, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhASADMIN x65 y123 h14 vASADMIN gASADMIN %admnget% %admnenabl%,As Admin
+ControlColor(hASADMIN, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhHide_Taskbar x65 y141 h14 vHide_Taskbar gHide_Taskbar %taskbarv%,Hide Taskbar
+ControlColor(hHide_Taskbar, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhGMLNK x50 y159 h14 vGMLNK gGMLNK %lnkget% %lnkenbl%,Launcher Shortcuts
+ControlColor(hGMLNK, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhGMJOY x50 y177 h14 vGMJOY gGMJOY %Joyget% %joyenbl%,Joystick Profiles
+ControlColor(hGMJOY, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhToolTips x202 y169 h14 vToolTips gToolTips %Tltp% Right,Tool-Tips
+ControlColor(hToolTips, hMainWnd, bgShadow, opLabel)
 Gui, Add, GroupBox, x7 y280 w284 h370 center,
-Gui, Add, Checkbox, x30 y205 h14 vBGP_Enable gBGP_Enable %gbtstate%, Enable Borderless-Gaming Program
-Gui, Add, Checkbox, x50 y225 h14 vBGP_TU gBGP_TU %bgptu%,Terminate if unused
-Gui, Add, Checkbox, x50 y243 h14 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
-Gui, Add, Checkbox, x185 y112 h14 vNameChk gNameChk right %nmchkst%,Name-Check
-Gui, Add, Checkbox, x185 y92 h14 vNetChk gNetChk right %netnchk%,Net-Check
-Gui, Add, Checkbox, x142 y295 w85 h14 vLocalize gLocalize %cnlocz% %fontAColor% Right,LOCALIZE
-Gui, Add, Checkbox, x202 y309 h14 vPackage gPackage %pkckb% %pkcol% Right,Package
-Gui, Add, Checkbox, x38 y300 h14 vCENTRLCKB gCENTRLCKB %cntz% %fontAColor%,CENTRALIZE
-Gui, Add, Checkbox, x55 y330 w14 h14 vCenKBM gCenKBM %cnkbm%,
-Gui, Add, Checkbox, x55 y360 w14 h14 vCenPL1 gCenPL1 %cnpl1%,
-Gui, Add, Checkbox, x55 y390 w14 h14 vCenPL2 gCenPL2 %cnpl2%,
-Gui, Add, Checkbox, x55 y418 w14 h14 vCenMC gCenMC %cnMC%,
-Gui, Add, Checkbox, x55 y451 w14 h14 vCenGM gCenGM %cnGM%,
-Gui, Add, Checkbox, x55 y484 w14 h14 vCenMM gCenMM %cnMM%,
-Gui, Add, Checkbox, x55 y515 w14 h14 vCenJAL gCenJAL %cnJAL%,
-Gui, Add, Checkbox, x55 y547 w14 h14 vCenJBE gCenJBE %cnJBE%,
-Gui, Add, Checkbox, x55 y579 w14 h14 vCenPRE gCenPRE %cnPRE%,
-Gui, Add, Checkbox, x55 y617 w14 h14 vCenPST gCenPST %cnPST%,
-Gui, Add, Checkbox, x272 y330 w14 h14 vKBPak gKBPak %KBPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y360 w14 h14 vPl1Pak gPl1Pak %Pl1Pak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y390 w14 h14 vPl2Pak gPl2Pak %Pl2Pak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y418 w14 h14 vMCjPak gMCjPak %MCjPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y451 w14 h14 vGMPak gGMPak %GMPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y484 w14 h14 vDMPak gDMPak %DMPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y515 w14 h14 vJALPak gJALPak %JALPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y547 w14 h14 vJBEPak gJBEPak %JBEPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y579 w14 h14 vPREPak gPREPak %PREPak_p% %pkcvz%,
-Gui, Add, Checkbox, x272 y617 w14 h14 vPSTPak gPSTPak %PSTPak_p% %pkcvz%,
+Gui, Add, Checkbox, hWndhBGP_Enable x30 y205 h14 vBGP_Enable gBGP_Enable %gbtstate%, Enable Borderless-Gaming Program
+ControlColor(hBGP_Enable, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhBGP_TU x50 y225 h14 vBGP_TU gBGP_TU %bgptu%,Terminate if unused
+ControlColor(hBGP_TU, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhBGP_TE x50 y243 h14 vBGP_TE gBGP_TE %bgpte%,Terminate on exit
+ControlColor(hBGP_TE, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhNameChk x185 y112 h14 vNameChk gNameChk right %nmchkst%,Name-Check
+ControlColor(hNameChk, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhNetChk x185 y92 h14 vNetChk gNetChk right %netnchk%,Net-Check
+ControlColor(hNetChk, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhLocalize x142 y293 h14 vLocalize gLocalize %cnlocz% %fontAColor% Right,LOCALIZE
+ControlColor(hLocalize, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhPackage x202 y309 h14 vPackage gPackage %pkckb% %pkcol% Right,Package
+ControlColor(hPackage, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCENTRLCKB x38 y300 h14 vCENTRLCKB gCENTRLCKB %cntz% %fontAColor%,CENTRALIZE
+ControlColor(hCENTRLCKB, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenKBM x55 y330 w14 h14 vCenKBM gCenKBM %cnkbm%,
+ControlColor(hCenKBM, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenPL1 x55 y360 w14 h14 vCenPL1 gCenPL1 %cnpl1%,
+ControlColor(hCenPL1, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenPL2 x55 y390 w14 h14 vCenPL2 gCenPL2 %cnpl2%,
+ControlColor(hCenPL2, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenMC x55 y418 w14 h14 vCenMC gCenMC %cnMC%,
+ControlColor(hCenMC, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenGM x55 y451 w14 h14 vCenGM gCenGM %cnGM%,
+ControlColor(hCenGM, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenMM x55 y484 w14 h14 vCenMM gCenMM %cnMM%,
+ControlColor(hCenMM, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenJAL x55 y515 w14 h14 vCenJAL gCenJAL %cnJAL%,
+ControlColor(hCenJAL, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenJBE x55 y547 w14 h14 vCenJBE gCenJBE %cnJBE%,
+ControlColor(hCenJBE, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenPRE x55 y579 w14 h14 vCenPRE gCenPRE %cnPRE%,
+ControlColor(hCenPRE, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhCenPST x55 y617 w14 h14 vCenPST gCenPST %cnPST%,
+ControlColor(hCenPST, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhKBPak x272 y330 w14 h14 vKBPak gKBPak %KBPak_p% %pkcvz%,
+ControlColor(hKBPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhPl1Pak x272 y360 w14 h14 vPl1Pak gPl1Pak %Pl1Pak_p% %pkcvz%,
+ControlColor(hPl1Pak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhPl2Pak x272 y390 w14 h14 vPl2Pak gPl2Pak %Pl2Pak_p% %pkcvz%,
+ControlColor(hPl2Pak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhMCjPak x272 y418 w14 h14 vMCjPak gMCjPak %MCjPak_p% %pkcvz%,
+ControlColor(hMCjPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhGMPak x272 y451 w14 h14 vGMPak gGMPak %GMPak_p% %pkcvz%,
+ControlColor(hGMPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhDMPak x272 y484 w14 h14 vDMPak gDMPak %DMPak_p% %pkcvz%,
+ControlColor(hDMPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhJALPak x272 y515 w14 h14 vJALPak gJALPak %JALPak_p% %pkcvz%,
+ControlColor(hJALPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhJBEPak x272 y547 w14 h14 vJBEPak gJBEPak %JBEPak_p% %pkcvz%,
+ControlColor(hJBEPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhPREPak x272 y579 w14 h14 vPREPak gPREPak %PREPak_p% %pkcvz%,
+ControlColor(hPREPak, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhPSTPak x272 y617 w14 h14 vPSTPak gPSTPak %PSTPak_p% %pkcvz%,
+ControlColor(hPSTPak, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontG%
-
 Gui, Add, Text, x22 y330 w31 h14,KBM:
-
 Gui, Add, Text, x22 y360 w31 h14,PL1:
-
 Gui, Add, Text, x22 y390 w31 h14,PL2:
-
 Gui, Add, Text, x22 y420 w31 h14,MCT:
-
 Gui, Add, Text, x22 y450 w31 h14,GMC:
-
 Gui, Add, Text, x22 y482 w31 h14,DMC:
-
 Gui, Add, Text, x22 y515 w31 h14,JAL:
-
 Gui, Add, Text, x22 y547 w31 h14,JBE:
-
 Gui, Add, Text, x22 y579 h14 w31 h14,PRE:
-
 Gui, Add, Text, x22 y618 h14 w31 h14,PST:
 Gui, Font, %FontM%
-Gui, Add, Text, x84 y330 w182 h14 v_Keyboard_MapperT Right,%Keyboard_Mapper%
-Gui, Add, Text, x84 y360 w182 h14 v_Player1_TemplateT Right,%Player1_Template%
-Gui, Add, Text, x84 y390 w182 h14 v_Player2_TemplateT Right,%Player2_Template%
-Gui, Add, Text, x84 y418 w182 h14 v_MediaCenter_TemplateT Right,%MediaCenter_Template%
-Gui, Add, Text, x84 y448 w182 h14 v_MM_Game_ConfigT Right,%MM_Game_Config%
-Gui, Add, Text, x84 y482 w182 h14 v_MM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
-Gui, Add, Text, x84 y515 w182 h14 v_JustAfterLaunchT Right,%JustAfterLaunchT%
-Gui, Add, Text, x84 y544 w182 h14 v_JustBeforeExitT Right,%JustBeforeExitT%
-Gui, Add, Text, x72 y578 h14 w8 v_PRETNUM,1
+Gui, Add, Text, hwndh_Keyboard_MapperT x84 y330 w182 h14 v_Keyboard_MapperT Right,%Keyboard_Mapper%
+ControlColor(h_Keyboard_MapperT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_Player1_TemplateT x84 y360 w182 h14 v_Player1_TemplateT Right,%Player1_Template%
+ControlColor(h_Player1_TemplateT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_Player2_TemplateT x84 y390 w182 h14 v_Player2_TemplateT Right,%Player2_Template%
+ControlColor(h_Player2_TemplateT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_MediaCenter_TemplateT x84 y418 w182 h14 v_MediaCenter_TemplateT Right,%MediaCenter_Template%
+ControlColor(h_MediaCenter_TemplateT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_MM_Game_ConfigT x84 y448 w182 h14 v_MM_Game_ConfigT Right,%MM_Game_Config%
+ControlColor(h_MM_Game_ConfigT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_MM_MediaCenter_ConfigT x84 y482 w182 h14 v_MM_MediaCenter_ConfigT Right,%MM_MediaCenter_Config%
+ControlColor(h_MM_MediaCenter_ConfigT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_JustAfterLaunchT x84 y515 w182 h14 v_JustAfterLaunchT Right,%JustAfterLaunchT%
+ControlColor(h_JustAfterLaunchT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_JustBeforeExitT x84 y544 w182 h14 v_JustBeforeExitT Right,%JustBeforeExitT%
+ControlColor(h_JustBeforeExitT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_PRETNUM x72 y578 h14 w8 v_PRETNUM,1
+ControlColor(h_PRETNUM, hMainWnd, bgShadow, opText)
 Gui, Font, %FontG%
-Gui, Add, Text, x72 y616 h14 w8 v_POSTDNUM,1
+Gui, Add, Text, hwndh_POSTDNUM x72 y616 h14 w8 v_POSTDNUM,1
+ControlColor(h_POSTDNUM, hMainWnd, bgShadow, opText)
 Gui, Font, %FontM%
-Gui, Add, Text, x84 y578 h14 w182 v_PREDDT Right,
-Gui, Add, Text, x84 y616 h14 w182 v_POSTDDT Right,
+Gui, Add, Text, hwndh_PREDDT x84 y578 h14 w182 v_PREDDT Right,
+ControlColor(h_PREDDT, hMainWnd, bgShadow, opText)
+Gui, Add, Text, hwndh_POSTDDT x84 y616 h14 w182 v_POSTDDT Right,
+ControlColor(h_POSTDDT, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui, Add, Button, x231 y0 w55 h15 vREINDEX gREINDEX %repopbut%,re-index
-Gui, Add, Button, x241 y27 w45 h23 vPOPULATE gPOPULATE,GO>
+Gui, Add, Button, hWndhREINDEX x231 y0 w55 h15 vREINDEX gREINDEX %repopbut%,re-index
+ControlColor(hREINDEX, hMainWnd, bgShadow, opLabel)
+Gui, Add, Button, hWndhPOPULATE x241 y29 w45 h22 vPOPULATE gPOPULATE,GO>
+ControlColor(hPOPULATE, hMainWnd, bgShadow, opLabel)
 /*  ;;[DEBUG32]
 Gui, Add, DDL, x70 y652 w170 hwndDplHndl2 vTHEMEN gTHEMEN,%themeALL%
 */  ;;[DEBUG32]
@@ -891,15 +996,19 @@ Gui, Tab, Edit
 Gui, Font, %FontM%
 Gui, Add, GroupBox, x7 y20 w288 h116
 Gui, Font, %FontG%
-Gui,Add,Text,x15 y45 h15,Game.ini
-Gui,Add,Text, x100 y42 w177 h15 vIniSel hidden right,%gameifile%
+Gui, Add, Text, x15 y45 h15,Game.ini
+Gui, Add, Text, hwndhIniSel hidden x100 y42 w177 h15 vIniSel hidden right,%gameifile%
+ControlColor(hIniSel hidden, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui,add,Button,x70 y42 w26 h21 viniBut giniBut,...
+Gui, Add, Button, hWndhiniBut x70 y42 w26 h21 viniBut giniBut,...
+ControlColor(hiniBut, hMainWnd, bgcolor)
 Gui, Font, %FontM%
-Gui,Add,Checkbox,x30 y66 w144 h20 vMMODET gMMODET hidden,Multimonitor Mode
-Gui,Add,Checkbox,x30 y90 w142 h20 vTBARTOG gTBARTOG hidden,Hide Taskbar
+Gui, Add, Checkbox, hWndhMMODET x30 y66 w144 h20 vMMODET gMMODET hidden,Multimonitor Mode
+ControlColor(hMMODET, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndhTBARTOG x30 y90 w142 h20 vTBARTOG gTBARTOG hidden,Hide Taskbar
+ControlColor(hTBARTOG, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontM%
-Gui,Add,Text,x208 y80 w43 h15,Mapper
+Gui, Add, Text, x208 y80 w43 h15,Mapper
 Gui, Font, %FontS%
 Gui,Add,DropDownList,x184 y96 w90 vMapDDL gMapDDL hidden, %MAPCFGS%
 Gui, Font, %FontM%
@@ -907,66 +1016,101 @@ Gui,Add, GroupBox, x7 y138 w288 h68,Programs/Scripts
 Gui, Font, %FontS%
 Gui,Add,DDL,x25 y160 w175 vexeDDL gexeDDL hidden,%exe_p%
 Gui, Font, %FontM%
-Gui, Add, Checkbox, x205 y160 w25 h20 v_LCLeP gLCLeP hidden,L
-Gui, Add, Checkbox, x230 y160 w25 h20 v_CENeP gCENeP hidden,C
+Gui, Add, Checkbox, hWndh_LCLeP x205 y160 w25 h20 v_LCLeP gLCLeP hidden,L
+ControlColor(h_LCLeP, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndh_CENeP x230 y160 w25 h20 v_CENeP gCENeP hidden,C
+ControlColor(h_CENeP, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontG%
-Gui,Add,Text,x25 y184 w222 h15 viniexe right hidden,
+Gui, Add, Text, hwndhiniexe right x25 y184 w222 h15 viniexe right hidden,
+ControlColor(hiniexe right, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui,Add, Button, x258 y182 w26 h21889 gExeBut hidden, ...
-Gui,add,Button,x278 y162 w15 h15 vDelExe gDelExe hidden,x
+Gui, Add, Button, hWndhExeBut x258 y182 w26 h21 vExeBut gExeBut hidden, ...
+ControlColor(hExeBut, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhDelExe x278 y162 w15 h15 vDelExe gDelExe hidden,x
+ControlColor(hDelExe, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 Gui,Add, GroupBox, x7 y208 w288 h69,Config-File/Folder
 Gui,Add,DDL,x25 y232 w175 vcfgDDL gcfgDDL hidden,%cfg_p%
 Gui, Font, %FontM%
-Gui, Add, Checkbox, x205 y232 w25 h20 v_LCLcP gLCLcP hidden,L
-Gui, Add, Checkbox, x230 y232 w25 h20 v_CENcP gCENcP hidden,C
+Gui, Add, Checkbox, hWndh_LCLcP x205 y232 w25 h20 v_LCLcP gLCLcP hidden,L
+ControlColor(h_LCLcP, hMainWnd, bgShadow, opLabel)
+Gui, Add, Checkbox, hWndh_CENcP x230 y232 w25 h20 v_CENcP gCENcP hidden,C
+ControlColor(h_CENcP, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontG%
-Gui,Add,Text,x25 y256 w222 h15 vinicfg right hidden,
+Gui, Add, Text, hwndhinicfg right x25 y256 w222 h15 vinicfg right hidden,
+ControlColor(hinicfg right, hMainWnd, bgShadow, opText)
 Gui, Font, %FontB%
-Gui,Add, Button, x258 y251 w26 h21 vCfgBut gCfgBut hidden,...
-Gui,add,Button,x278 y230 w15 h15 vDelcfg gDelCfg hidden,x
+Gui, Add, Button, hWndhCfgBut x258 y251 w26 h21 vCfgBut gCfgBut hidden,...
+ControlColor(hCfgBut, hMainWnd, bgcolor)
+Gui, Add, Button, hWndhDelcfg x278 y230 w15 h15 vDelcfg gDelCfg hidden,x
+ControlColor(hDelcfg, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 Gui,Add, GroupBox,x7 y280 w288 h127 right,Name/Attributes
 Gui, Font, %FontM%
-Gui,Add, Text,x25 y303 w75 h15,Profile Name
+Gui, Add, Text, x25 y303 w75 h15,Profile Name
 Gui, Font, %FontG%
-Gui,Add, Edit,x105 y303 w170 h23 vPRFNAME gPRFNAME cWhite hidden,
+Gui,Add, Edit, hWndhPRFNAME x105 y303 w170 h23 vPRFNAME gPRFNAME cWhite hidden,
+ControlColor(hPRFNAME, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontM%
-Gui,Add, Text,x25 y335 w75 h15,Steam AppID
+Gui, Add, Text, x25 y335 w75 h15,Steam AppID
 Gui, Font, %FontG%
-Gui,Add, Edit,x105 y335 w70 h23 vSappID gSappID hidden cWhite,
+Gui,Add, Edit, hWndhSappID x105 y335 w70 h23 vSappID gSappID hidden cWhite,
+ControlColor(hSappID, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui,Add, Button,x245 y372 w40 h23 vSaveName gSaveName hidden,save
+Gui, Add, Button, hWndhSaveName x245 y372 w40 h23 vSaveName gSaveName hidden,save
+ControlColor(hSaveName, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 Gui,Add, GroupBox,x7 y412 w288 h135 right,Save Data/Game Data
 Gui, Font, %FontM%
 Gui,Add,DropDownList,x25 y435 w175 vCloudSavDDL gCloudSavDDL hidden,
 Gui, Font, %FontM%
-Gui,Add, Text,x205 y435 h15,Save Files
+Gui, Add, Text, x205 y435 h15,Save Files
 Gui, Font, %FontB%
-Gui,add,Button,x278 y435 w15 h15 vDelCloudSav gDelCloudSav hidden,x
+Gui, Add, Button, hWndhDelCloudSav x278 y435 w15 h15 vDelCloudSav gDelCloudSav hidden,x
+ControlColor(hDelCloudSav, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui,Add, Edit,x25 y462 w222 h21 vCloudSavEdt gCloudSavedt cWhite hidden,
+Gui,Add, Edit, hWndhCloudSavEdt x25 y462 w222 h21 vCloudSavEdt gCloudSavedt cWhite hidden,
+ControlColor(hCloudSavEdt, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui,Add, Button, x254 y462 w31 h21 vCloudSavBut gCloudSavBut hidden,... +
+Gui, Add, Button, hWndhCloudSavBut x254 y462 w31 h21 vCloudSavBut gCloudSavBut hidden,... +
+ControlColor(hCloudSavBut, hMainWnd, bgcolor)
 Gui, Font, %FontS%
 Gui,Add,DropDownList,x25 y491 w175 vCloudCfgDDL gCloudCfgDDL hidden,
 Gui, Font, %FontM%
-Gui,Add, Text,x205 y491 h15,Config Files
+Gui, Add, Text, x205 y491 h15,Config Files
 Gui, Font, %FontB%
-Gui,add,Button,x278 y491 w15 h15 vDelCloudCfg gDelCloudCfg hidden,x
+Gui, Add, Button, hWndhDelCloudCfg x278 y491 w15 h15 vDelCloudCfg gDelCloudCfg hidden,x
+ControlColor(hDelCloudCfg, hMainWnd, bgcolor)
 Gui, Font, %FontG%
-Gui,Add, Edit,x25 y520 w222 h21 vCloudCfgEdt gCloudCfgedt cWhite hidden,
+Gui,Add, Edit, hWndhCloudCfgEdt x25 y520 w222 h21 vCloudCfgEdt gCloudCfgedt cWhite hidden,
+ControlColor(hCloudCfgEdt, hMainWnd, bgShadow, opLabel)
 Gui, Font, %FontB%
-Gui,Add, Button, x254 y520 w31 h21 vCloudCfgBut gCloudCfgBut hidden,... +
+Gui, Add, Button, hWndhCloudCfgBut x254 y520 w31 h21 vCloudCfgBut gCloudCfgBut hidden,... +
+ControlColor(hCloudCfgBut, hMainWnd, bgcolor)
 Gui, Font, %FontM%
 
 	OnMessage(0x200, "WM_MOUSEMOVE")
 
 Gui,Color,%bgcolor%
 Gui Show, w314 h700, v0rt3X_GUI
+sleep,500
+if instr(Gui_Theme_Name,"Dark")
+	{
+		hwnd := WinExist("A")
+		SetDarkWindowFrame(hwnd, 1)
+		if (GUIMSG = "DarkMode Not Supported")
+			{
+				Gui, Destroy
+				THEMETYP=LIGHT_
+				gosub, LoadTheme
+				Gui,Color,%bgcolor%
+				Gui Show, w314 h700, v0rt3X_GUI
+				sleep,500
+				hwnd := WinExist("A")
+			}
+	}	
 GuiOpen := 1
-;}    #######################################  GUI CREATED ##############################
+;}#######################################  GUI CREATED ##############################
 ;###################################################################################################
 ;{#####################  TOOL-TIP GENERATION  #################################
 ;##################################################################
@@ -1026,7 +1170,7 @@ GMJOY_TT :="creates the joystick profiles"
 GMLNK_TT :="creates the shortcuts"
 Hide_TaskBar_TT :="Hides the windows taskbar while game is running"
 INCLALTS_TT :="Alternate versions of a game will be created as alternates in a subfolder of the profile."
-IncludedD_TT :="Include games from digital distributor to include"
+IncDED_TT :="Include games from digital distributor to include"
 JALWAIT_TT :="waits for the program to exit"
 JAL_ProgB_TT :=" ''J''ust ''A''fter ''L''aunch`nAssign a program to run after the game is launched`n* (good for trainers or executable-aware programs.)"
 JAL_RC_TT :="disable or download and assign a program after launch"
@@ -1049,7 +1193,7 @@ MM_ToolB_TT :=" ''M''ulti''M''onitor''T''ool`nAssigns the multimonitor executabl
 MM_Game_ConfigT_TT :="the multimonitor game-configuration template file`n Right_Click to Edit or propagate the selected item"
 MM_MediaCenter_ConfigT_TT :="the MediaCenter/Frontend configuration template file`n Right_Click to Edit or propagate the selected item"
 MultiMonitor_ToolT_TT :="the multimonitor program`n Right_Click to Edit or propagate the selected item"
-MyListView_TT :="The current queue`n The fields marked with ''y'' may be edited to ''1'' for ''on''`n and ''n'' for ''off'' or ''Ø''`n The fields marked with ''<'' may be edited to the path to any file as an override`n (.cmd,.bat,.ps1,.psm1,.vb,.vbs,.vbe,.wsf,.wse,.sh,.tsch) script files obey localization."
+MyListView_TT :="The current queue`n The fields marked with ''y'' may be edited to ''1'' for ''on''`n and ''n'' for ''off'' or ''�''`n The fields marked with ''<'' may be edited to the path to any file as an override`n (.cmd,.bat,.ps1,.psm1,.vb,.vbs,.vbe,.wsf,.wse,.sh,.tsch) script files obey localization."
 NAMECHK_TT :="Matches guessed names at steam database."
 NETCHK_TT :="Scrapes game-details from the steampowered api and PCGamingWiki databases.`nRight Click to reset the Lookup-Table"
 Net_Check_TT :="Queries internet Databases to aquire save and configuration locations."
@@ -1112,6 +1256,16 @@ if instr(skinxtn,"msstyles")
 	}
 */  ;;[DEBUG32]	
 ExitApp
+
+QHelp:
+GUIMSG:= "Opening Documentation"
+for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+		{
+			btt(GUIMSG,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		}
+Run, %site_local%\index.html,%site_local%,
+Return
 
 Game_ProfB:
 gui,submit,nohide
@@ -1209,7 +1363,9 @@ popui:= 1
 NSOURCEDLIST:= ""
 gui,submit,nohide
 Gui, ListView, MyListView
+GuiControl, -AltSubmit, MyListView
 LV_Modify(0, "+Check")
+GuiControl, +AltSubmit, MyListView
 nwtgt= |`n
 Gosub, RprseLV
 Blockinput,off
@@ -1220,7 +1376,9 @@ gui,submit,nohide
 popui:= 1
 NSOURCEDLIST:= ""
 Gui, ListView, MyListView
+GuiControl, -AltSubmit, MyListView
 LV_Modify(0, "-check")
+GuiControl, +AltSubmit, MyListView
 nwtgt= |?`n
 Gosub, RprseLV
 Blockinput,off
@@ -1230,7 +1388,9 @@ RPRSELV:
 nrplsrl=       
 RowNumber:= 0                  
 Gui, ListView, MyListView
+GuiControl, -AltSubmit, MyListView
 LV_Modify(RowNumber, "Select")
+GuiControl, +AltSubmit, MyListView
 Loop
 	{
 		RowNumber := LV_GetNext(RowNumber)
@@ -3518,6 +3678,9 @@ if (kbmpprt <> "")
 		FileDelete,%KBM_Template%
 		FileDelete,%Blank_Template%
 		FileDelete,%MediaCenter_Template%
+		stringReplace,antimicrox_executableR,antimicrox_executable,\,/,All
+		stringreplace,RJ_HOMER,%home%,\,/,All
+		stringReplace,antimicro_executableR,antimicro_executable,\,/,All
 		stringreplace,amks,amks,[KEYSTX],%kbmpprt%,All
 		stringreplace,amcb,amcb,[JOYXO],%kbmpprt%,All
 		stringreplace,amcb,amcb,[J2KEY],%kbmpprt%,All
@@ -3525,14 +3688,15 @@ if (kbmpprt <> "")
 		stringreplace,amcb,amcb,[AMICRX],%kbmpprt%,All
 		stringreplace,amcb,amcb,[AMICRO],%kbmpprt%,All
 		stringreplace,kbmamcp,kbmamcp,[NEWOSK],%osklok%,All
-		stringreplace,kbmamcp,kbmamcp,[AMICRX],%antimicrox_executable%,All
-		stringreplace,kbmamcp,kbmamcp,[AMICRO],%antimicro_executable%,All
+		stringreplace,kbmamcp,kbmamcp,[AMICRX],%antimicrox_executableR%,All
+		stringreplace,kbmamcp,kbmamcp,[AMICRO],%antimicro_executableR%,All
 		stringreplace,amcp,amcp,[NEWOSK],%osklok%,All
-		stringreplace,amcp,amcp,[AMICRX],%antimicrox_executable%,All
-		stringreplace,amcp,amcp,[AMICRO],%antimicro_executable%,All
+		stringreplace,amcp,amcp,[AMICRX],%antimicrox_executableR%,All
+		stringreplace,amcp,amcp,[AMICRO],%antimicro_executableR%,All
+		stringreplace,amcp,amcp,[RJ_HOME],%RJ_HOMER%,All
 		stringreplace,amcd,amcd,[NEWOSK],%osklok%,All
-		stringreplace,amcd,amcd,[AMICRX],%antimicrox_executable%,All
-		stringreplace,amcd,amcd,[AMICRO],%antimicro_executable%,All
+		stringreplace,amcd,amcd,[AMICRX],%antimicrox_executableR%,All
+		stringreplace,amcd,amcd,[AMICRO],%antimicro_executableR%,All
 		FileAppend,%amcb%,%home%\%JMAP%_!.cmd,UTF-8-RAW
 		FileAppend,%blcd%,%Blank_Template%,UTF-8-RAW
 		FileAppend,%kbmamcp%,%KBM_Template%,UTF-8-RAW
@@ -3811,8 +3975,8 @@ Loop,parse,dralbet,|
 	}
 if (ACONCAT_ROOT <> "")
 	{
-		IncludedD=0
-				;iniwrite,0,%RJDBINI%,GENERAL,IncludedD
+		IncDED=0
+				;iniwrite,0,%RJDBINI%,GENERAL,IncDED
 	}
 
 STEAM_Q:
@@ -4921,7 +5085,7 @@ fileread,stmfz,%home%\steam.db
 Gui,Listview,MyListView
 guicontrolget,enablelogging,,enablelogging
 guicontrolget,NameChk,,NameChk
-guicontrolget,IncludedD,,IncludedD
+guicontrolget,IncDED,,IncDED
 guicontrolget,BGP_Enable,,BGP_Enable
 guicontrolget,teval,,BGP_TE
 teval:= (teval * 8)
@@ -4985,7 +5149,9 @@ if (SOURCEDLIST <> "")
 								rni%A_Index%:= A_Space
 							}
 					}
+				GuiControl, -AltSubmit, MyListView
 				LV_Add(lvachk,rni1, rni2, rni3, rni4, rni5,rni6, rni7, rni8, rni9, rni10, rni11, rni12, rni13, rni14, rni15, rni16, rni17, rni18)
+				GuiControl, +AltSubmit, MyListView
 				%vavn%SDL:= A_LoopField
 				fullist.= rni2 . "\" . rni1 . "|"
 			}
@@ -5072,8 +5238,8 @@ Loop,parse,NSPLIT,|
 										continue
 									}
 								DDLp= %A_LoopField%
-								iniread,IncludedD,%RJDBINI%,GENERAL,IncludedD
-								if (instr(IncludedD,DDLp) or (IncludedD = "") or (IncludedD = "ERROR"))
+								iniread,IncDED,%RJDBINI%,GENERAL,IncDED
+								if (instr(IncDED,DDLp) or (IncDED = "") or (IncDED = "ERROR"))
 									{
 										continue
 									}
@@ -5352,7 +5518,9 @@ Loop,parse,NSPLIT,|
 						FileOpts:= <
 						FileArgs:= <
 						SB_SetText("added " FileNM "")
+						GuiControl, -AltSubmit, MyListView
 						LV_Add(lvachk,FileNM, FilePPUT, FileOpts, FileArgs, njName,"y","<","<","<","y","<","<","<","<","y","y","<",SPZ)
+						GuiControl, +AltSubmit, MyListView
 						if (lvachk <> "")
 							{
 								NSOURCEDLIST.= FileNM . "|" . FilePPUT . "|" . FileOpts . "|" . FileArgs . "|" . njName . "|y|<|<|<|y|<|<|<|<|y|y|<" . SPZa . "`n"
@@ -5392,7 +5560,9 @@ Loop,parse,simpnk,`r`n
 						stringreplace,jtst,fltsmp,%rplt%,,UseErrorLevel
 						if (errorlevel = 0)
 							{
+								GuiControl, -AltSubmit, MyListView
 								LV_Add(lvachk,fenf, fendir, , , A_Space,"y","<","<","<","y","<","<","<","<","y","y","<",SPZ)
+								GuiControl, +AltSubmit, MyListView
 								NSOURCEDLIST.= fenf . "|" . fendir . "|" . vd . "|" . vd . "|" . A_Space . "|y|<|<|<|y|<|<|<|<|y|y|<" . SPZa . "`n"
 								fullist.= fenx . "|"
 								break
@@ -5432,11 +5602,13 @@ Guicontrol,Show,ButtonClear
 Guicontrol,Show,SELALLBUT
 Guicontrol,Show,SELNONEBUT
 GuiControl, +Redraw, MyListView
+GuiControl, -AltSubmit, MyListView
 LV_ModifyCol(1, 140)
 LV_ModifyCol(2, 140)
 LV_ModifyCol(3, 60)
 LV_ModifyCol(4, 50)
 LV_ModifyCol(5, 100)
+GuiControl, +AltSubmit, MyListView
 
 listView_autoSize:
 GUI, +LastFound
@@ -5714,7 +5886,8 @@ intl= {"applist":{"apps":[{
 		guicontrolget,KILLCHK,,KILLCHK
 		guicontrolget,Hide_Taskbar,,Hide_Taskbar
 		guicontrolget,EnableLogging,,EnableLogging
-		complist:= LVGetCheckedItems("SysListView321","v0rt3X_GUI")
+		Gui,ListView,MyListView
+		complist:= LVGetCheckedItems("SysListView321","ahk_id " hMainWnd )
 		fullist:= complist
 		stringsplit,fullstn,fullist,`n
 		gmnames:= "|"
@@ -6591,11 +6764,12 @@ intl= {"applist":{"apps":[{
 							}
 						if (prnxtn = "exe")
 							{
+								OutOpts=
 								OutArgs=
-								OutArgz=
 								if ((gmopts <> "")&&(gmopts <> "<"))
 									{
-										OutArgs:= gmopts
+										OutOpts:= gmopts
+										iniwrite, %OutOpts%,%gamecfg%,CONFIG,Exe_Opts
 									}
 								if ((gmargs <> "")&&(gmargs <> "<"))
 									{
@@ -6604,6 +6778,7 @@ intl= {"applist":{"apps":[{
 												OutArgs:= A_Space
 											}
 										OutArgs.= gmargs
+										iniwrite, %OutArgs%,%gamecfg%,CONFIG,Exe_Args
 									}
 								if ((OVERWRT = 1)or(renum = 1))
 									{
@@ -6687,7 +6862,7 @@ intl= {"applist":{"apps":[{
 									}
 								if ((G_SaveData = "") or (G_SaveData = "ERROR"))
 									{
-										iniwrite, %SaveData%,%Savecfg%,CONFIG,SaveData
+										iniwrite, %SaveData%,%gamecfg%,CONFIG,SaveData
 									}
 								if ((G_GameData = "") or (G_GameData = "ERROR"))
 									{
@@ -6823,7 +6998,7 @@ intl= {"applist":{"apps":[{
 					{
 						IF ((CENPL1 <> 1)or(Player1_Template = "DISABLED"))
 							{
-								if ((Player1_Template <> player1X)&&if (player1x <> "")&&(Player1_Template <> ""))
+								if ((Player1_Template <> player1X)&&(player1x <> "")&&(Player1_Template <> ""))
 									{
 										Filecopy,%Player1_Template%,%player1X%,%OVERWRT%
 										if ((errorlevel = 0)or fileexist(player1X))
@@ -7314,23 +7489,23 @@ intl= {"applist":{"apps":[{
 		DDINCLD:
 		gui,submit,nohide
 		guicontrolget,DDINCLD,,DDINCLD
-		guicontrolget,IncludedD,,IncludedD
-		iniread,IncDD,%RJDBINI%,GENERAL,IncludedD
+		guicontrolget,IncDED,,IncDED
+		iniread,IncDD,%RJDBINI%,GENERAL,IncDED
 		if instr(IncDD,DDINCLD)
 			{
-				guicontrol,,IncludedD,1
+				guicontrol,,IncDED,1
 				return
 			}
-		guicontrol,,IncludedD,0
+		guicontrol,,IncDED,0
 		return
 
-		IncludedD:
+		IncDED:
 		gui,submit,nohide
-		guicontrolget,IncludedD,,IncludedD
+		guicontrolget,IncDED,,IncDED
 		guicontrolget,DDInc,,DDIncld
-		iniread,IncDD,%RJDBINI%,GENERAL,IncludedD
+		iniread,IncDD,%RJDBINI%,GENERAL,IncDED
 		guicontrolget,Exclude_Fldr,,EXCLUDE_DirectoryT
-		if (IncludedD = 0)
+		if (IncDED = 0)
 			{
 				if ((INcDD = "ERROR")or(IncDD = ""))
 					{
@@ -7365,12 +7540,12 @@ intl= {"applist":{"apps":[{
 							}
 					}
 				stringreplace,IncDD,IncDD,%DDinc%|,,
-				iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludedD
+				iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncDED
 				iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
 				guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
 				return
 			}
-		if (IncludedD = 1)
+		if (IncDED = 1)
 			{
 				if ((INcDD = "ERROR")or(IncDD = ""))
 					{
@@ -7427,7 +7602,7 @@ intl= {"applist":{"apps":[{
 					}
 				stringreplace,IncDD,IncDD,%DDinc%|,,
 				IncDD.= DDInc . "|"
-				iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncludedD
+				iniwrite,%IncDD%,%RJDBINI%,GENERAL,IncDED
 				iniwrite,%Exclude_Directory%,%RJDBINI%,GENERAL,Exclude_Directory
 				guicontrol,,Exclude_DirectoryT,|%Exclude_Fldr%||%Exclude_Directory%
 				return
@@ -8980,7 +9155,7 @@ intl= {"applist":{"apps":[{
 						break
 					}
 			}		
-		stringreplace,nvat,nva,%A_Space%,·,All
+		stringreplace,nvat,nva,%A_Space%,�,All
 		guicontrol,,inicfg,%nvat%
 		return
 
@@ -9053,7 +9228,7 @@ intl= {"applist":{"apps":[{
 				nva= %exebut%
 			}	
 		iniwrite,%nva%,%gamefini%,%sec%,%iva1%
-		stringreplace,nvat,nva,%A_Space%,·,All
+		stringreplace,nvat,nva,%A_Space%,�,All
 		guicontrol,,inicfg,%nvat%
 		return	
 
@@ -9105,10 +9280,10 @@ intl= {"applist":{"apps":[{
 		if (iva1 = "Exe_File")
 			{
 				splitpath,exebut,nva
-				stringreplace,exebutt,nva,%A_Space%,·,All
+				stringreplace,exebutt,nva,%A_Space%,�,All
 			}
 		iniwrite,%exebut%,%gamefini%,%sec%,%iva1%	
-		stringreplace,exebutt,exebutt,%A_Space%,·,All
+		stringreplace,exebutt,exebutt,%A_Space%,�,All
 		guicontrol,,iniexe,%exebutt%
 		return
 
@@ -9150,7 +9325,7 @@ intl= {"applist":{"apps":[{
 						break
 					}
 			}	
-		stringreplace,nvat,nva,%A_Space%,·,All
+		stringreplace,nvat,nva,%A_Space%,�,All
 		guicontrol,,iniexe,%nvat%	
 		return
 
@@ -9254,9 +9429,21 @@ intl= {"applist":{"apps":[{
 				guicontrol,show,%A_LoopField%
 				guicontrol,enable,%A_LoopField%
 			}
-		stringreplace,nvat,gamefini,%A_Space%,·,All
+		stringreplace,nvat,gamefini,%A_Space%,�,All
 		guicontrol,,IniSel,%nvat%	
 		return
+		
+LoadTheme:
+iniread,bgcolor,%RJDBINI%,%THEMETYP%THEME,bg_color
+iniread,bgShadow,%RJDBINI%,%THEMETYP%THEME,bg_Shadow
+iniread,opText,%RJDBINI%,%THEMETYP%THEME,op_Text
+iniread,opLabel,%RJDBINI%,%THEMETYP%THEME,op_Label
+iniread,FontL,%RJDBINI%,%THEMETYP%THEME,Font_L
+iniread,FontM,%RJDBINI%,%THEMETYP%THEME,Font_M
+iniread,FontG,%RJDBINI%,%THEMETYP%THEME,Font_G
+iniread,FontB,%RJDBINI%,%THEMETYP%THEME,Font_B
+iniread,FontS,%RJDBINI%,%THEMETYP%THEME,Font_S
+return
 /*  ;;[DEBUG32]		
 
 		THEMEN:
@@ -9264,26 +9451,32 @@ intl= {"applist":{"apps":[{
 		guicontrolget,themen,,THEMEN
 		if instr(themen,"Light")
 			{
-				iniwrite,Default,%RJDBINI%,THEME,GUI_Light_BG
-				iniwrite,cSilver s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
-				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontS
-				iniwrite,c151515 s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontM
-				iniwrite,cSilver s7,Anka/Coder,%RJDBINI%,THEME,Gui_Light_FontB
-				iniwrite,c151515 s7,Trueno,%RJDBINI%,THEME,Gui_Light_FontG
+				iniwrite,0x000000,%RJDBINI%,LIGHT_THEME,op_Label
+				iniwrite,0x121212,%RJDBINI%,LIGHT_THEME,op_Text
+				iniwrite,0xE1E1E1,%RJDBINI%,LIGHT_THEME,BG_Color
+				iniwrite,0xCED6D7,%RJDBINI%,LIGHT_THEME,BG_Shadow
+				iniwrite,cSilver s8,Inter UI,%RJDBINI%,LIGHT_THEME,Font_L
+				iniwrite,cSilver s8,Hermit,%RJDBINI%,LIGHT_THEME,Font_S
+				iniwrite,c151515 s8,Hermit,%RJDBINI%,LIGHT_THEME,Font_M
+				iniwrite,cSilver s8 Bold,Anka/Coder,%RJDBINI%,LIGHT_THEME,Font_B
+				iniwrite,c151515 s8 Bold,Trueno,%RJDBINI%,LIGHT_THEME,Font_G
 				SB_SetText("Theme change may require restarting v0rt3X")
 			}
 		if instr(themen,"Dark")
 			{
-				iniwrite,151515,%RJDBINI%,THEME,GUI_Dark_BG
-				iniwrite,cWhite s7,Inter UI,%RJDBINI%,THEME,Gui_Light_FontL
-				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontS
-				iniwrite,cSilver s7,Hermit,%RJDBINI%,THEME,Gui_Light_FontM
-				iniwrite,cWhite s7,Anka/Coder,%RJDBINI%,THEME,Gui_Light_FontB
-				iniwrite,cWhite s7,Trueno,%RJDBINI%,THEME,Gui_Light_FontG
+				iniwrite,0x5c5c5c,%RJDBINI%,DARK_THEME,op_Text
+				iniwrite,0xFFFFFF,%RJDBINI%,DARK_THEME,op_Label
+				iniwrite,0x1A2225,%RJDBINI%,DARK_THEME,BG_Color
+				iniwrite,0x0D1101,%RJDBINI%,DARK_THEME,BG_Shadow
+				iniwrite,cLime s7,Inter UI,%RJDBINI%,DARK_THEME,Font_L
+				iniwrite,cSilver s8,Hermit,%RJDBINI%,DARK_THEME,Font_S
+				iniwrite,cSilver s8,Hermit,%RJDBINI%,DARK_THEME,Font_M
+				iniwrite,cWhite s8 Bold,Anka/Coder,%RJDBINI%,DARK_THEME,Font_B
+				iniwrite,cWhite s8 Bold,Inter UI,%RJDBINI%,DARK_THEME,Font_G
 				SB_SetText("Theme change requires restart")
 			}
 		iniwrite,%themen%,%RJDBINI%,THEME,GUI_theme_name
-		ThemeA= Native_Dark|Native_Light|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
+		ThemeA= DarkMode.native|LightMode.native|LightMode.msstyles|LightMode.she|DarkMode.msstyles|DarkMode.she|
 		stringreplace,ThemeA,ThemeA,%themen%|,,
 		Guicontrol,,ThemeN,|%themen%||%themeA%
 		if instr(ThemeN,"msstyles")
@@ -9481,7 +9674,9 @@ intl= {"applist":{"apps":[{
 			}
 
 		CLRLIST:
+		GuiControl, -AltSubmit, MyListView
 		LV_Delete()
+		GuiControl, +AltSubmit, MyListView
 		SOURCEDLIST:= ""
 		fileDelete,%SRCFILE%
 		guicontrol,show,REINDEX
@@ -9625,7 +9820,9 @@ intl= {"applist":{"apps":[{
 							goto, RECONT
 						}
 					else {
+						GuiControl, -AltSubmit, MyListView
 						LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
+						GuiControl, +AltSubmit, MyListView
 						SB_SetText("Booleans Only: 0`,off`,n`,1`,on`,or y")
 						popui:= ""
 						blockinput,off
@@ -9652,7 +9849,9 @@ intl= {"applist":{"apps":[{
 							goto, RECONT
 						}
 					else {
+						GuiControl, -AltSubmit, MyListView
 						LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
+						GuiControl, +AltSubmit, MyListView
 						SB_SetText("0 or N=off,1 or Y=on, 5=unused kill,8=exit kill, 9= all on")
 						popui:= ""
 						blockinput,off
@@ -9666,10 +9865,12 @@ intl= {"applist":{"apps":[{
 							goto, RECONT
 						}
 					else {
-						LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
-						SB_SetText("SteamID must be a number and only a number")
-						popui:= ""
-						return
+							GuiControl, -AltSubmit, MyListView
+							LV_Modify(FocusedRowNumber,"" SPENB " Col" OnCol,redo)
+							GuiControl, +AltSubmit, MyListView
+							SB_SetText("SteamID must be a number and only a number")
+							popui:= ""
+							return
 					}
 				}
 		}
@@ -10435,7 +10636,9 @@ intl= {"applist":{"apps":[{
 							{
 								if ((kmstat = "1")or(kmstat = "on")or(kmstat = "y"))
 									{
+										GuiControl, -AltSubmit, MyListView
 										LV_Modify(FocusedRowNumber,"" " Col" OnCol,redo)
+										GuiControl, +AltSubmit, MyListView
 									}
 							}
 					}
@@ -11064,8 +11267,10 @@ intl= {"applist":{"apps":[{
 				rwnm:= lsvs1
 				mdo= lsvs2
 				mdo= lsvs3
+				GuiControl, -AltSubmit, MyListView
 				LV_Modify(lsvs1,"COL3", clioptions)
 				LV_Modify(lsvs1,"COL4", cliargs)
+				GuiControl, +AltSubmit, MyListView
 				cli_obj.= A_LoopField . "|" . clioptions . "|" . cliargs . "`n"
 				Loop,parse,SOURCEDLIST,`n
 					{
@@ -11090,12 +11295,15 @@ intl= {"applist":{"apps":[{
 								stringreplace,srcdlrpl,srcdlrpl,|||,|,All
 								stringreplace,srcdlrpl,srcdlrpl,||,|,All
 								stringtrimright,srcdlrpl,srcdlrpl,1
-								stringreplace,SOURCEDLIST,SOURCEDLIST,%A_LoopField%,%srcdlrpl%,
+								stringreplace,SOURCEDLIST,SOURCEDLIST,%clth%,%srcdlrpl%,
 								break
 							}
 					}
 			}
+			
+		GuiControl, -AltSubmit, MyListView
 		LV_ModifyCol()
+		GuiControl, +AltSubmit, MyListView
 		filedelete,%SRCFILE%
 		fileappend,%SOURCEDLIST%,%SRCFILE%,UTF-8
 		Return
@@ -11337,7 +11545,9 @@ intl= {"applist":{"apps":[{
 						break
 					}
 				LV_GetText(lnv,RowNumber)
+				GuiControl, -AltSubmit, MyListView
 				LV_Delete(RowNumber)
+				GuiControl, +AltSubmit, MyListView
 				remvln:= % %RowNumber%SDL
 				stringreplace,SOURCEDLIST,SOURCEDLIST,%lnv%,,
 			}
@@ -11390,6 +11600,65 @@ SkinForm(Param1 = "Apply", DLL = "", SkinName = ""){
 		}
 }
 */  ;;[DEBUG32]
+SetDarkWindowFrame(hwnd, boolEnable) {
+    if VerCompare(A_OSVersion, "10.0.17763") >= 0 {
+        attr := 19
+        if VerCompare(A_OSVersion, "10.0.18985") >= 0
+            attr := 20 ; DWMWA_USE_IMMERSIVE_DARK_MODE is officially defined for 10.0.22000 as 20.
+        DllCall("dwmapi\DwmSetWindowAttribute", "ptr", hwnd, "int", attr, "int*", boolEnable, "int", 4)
+    } else {
+        GUIMSG:= "DarkMode Not Supported"
+		iniwrite,LightMode.native,%RJDBINI%,THEME,GUI_THEME_NAME
+		for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
+				{
+					btt(GUIMSG,,,,"Style2",{Transparent:v})
+					Sleep, 30
+				}
+    }
+}
+ControlColor(Control, Window, bc := "", tc := "", Redraw := True) {
+    local a := {}
+    a.c  := Control
+    a.g  := Window
+    a.bc := (bc = "") ? "" : (((bc & 255) << 16) + (((bc >> 8) & 255) << 8) + (bc >> 16))
+    a.tc := (tc = "") ? "" : (((tc & 255) << 16) + (((tc >> 8) & 255) << 8) + (tc >> 16))
+    CC_WindowProc("Set", a, "", "")
+    if (Redraw) {
+        WinSet Redraw,, ahk_id %Control%
+    }
+}
+
+CC_WindowProc(hWnd, uMsg, wParam, lParam) {
+    static Win := {}
+    local tc, bc, a
+    if (uMsg >= 306 && uMsg <= 312) { ; WM_CTLCOLOR(MSGBOX|EDIT|LISTBOX|BTN|DLG|SCROLLBAR|STATIC)
+        if (Win[hWnd].HasKey(lParam)) {
+            if (tc := Win[hWnd, lParam, "tc"]) {
+                DllCall("gdi32\SetTextColor", "Ptr", wParam, "UInt", tc)
+            }
+            if (bc := Win[hWnd, lParam, "bc"]) {
+                DllCall("gdi32\SetBkColor",   "Ptr", wParam, "UInt", bc)
+            }
+            return Win[hWnd, lParam, "Brush"] ; return the HBRUSH to notify the OS that we altered the HDC.
+        }
+    }
+    if (hWnd = "Set") {
+        a := uMsg
+        Win[a.g, a.c] := a
+        if ((Win[a.g, a.c, "tc"] = "") && (Win[a.g, a.c, "bc"] = "")) {
+            Win[a.g].Remove(a.c, "")
+        }
+        if (!Win[a.g, "WindowProcOld"]) {
+            cb := RegisterCallback(A_ThisFunc, "", 4)
+            Win[a.g, "WindowProcOld"] := DllCall("SetWindowLong" . (A_PtrSize = 8 ? "Ptr" : ""), "Ptr", a.g, "Int", -4, "Ptr", cb, "Ptr")
+        }
+        if (Win[a.g, a.c, "bc"] != "") {
+            Win[a.g, a.c, "Brush"] := DllCall("gdi32\CreateSolidBrush", "UInt", a.bc, "Ptr")
+        }
+        return
+    }
+    return DllCall("CallWindowProc", "Ptr", Win[hWnd, "WindowProcOld"], "Ptr", hWnd, "UInt", uMsg, "Ptr", wParam, "Ptr", lParam, "Ptr")
+}
 Class CustomFont
 	{
 		static FR_PRIVATE  := 0x10
@@ -11596,43 +11865,46 @@ CmdRet(sCmd, callBackFuncObj := "", encoding := ""){
 	DllCall("CloseHandle", "Ptr", hPipeRead)
 	Return sOutput
 }
+
 joyGetName(ID) {
 		VarSetCapacity(caps, 728, 0)
 		if DllCall("winmm\joyGetDevCapsW", "uint", ID-1, "ptr", &caps, "uint", 728) != 0
 			return "failed"
 			return StrGet(&caps+4, "UTF-16")
 		}
-	WM_MOUSEMOVE(){
-		static CurrControl, PrevControl, _TT
-		CurrControl := A_GuiControl
-		If (CurrControl <> PrevControl)
-			{
-				SetTimer, DisplayToolTip, -300
-				PrevControl := CurrControl
-			}
-		return
+		
+WM_MOUSEMOVE(){
+	static CurrControl, PrevControl, _TT
+	CurrControl := A_GuiControl
+	If (CurrControl <> PrevControl)
+		{
+			SetTimer, DisplayToolTip, -300
+			PrevControl := CurrControl
+		}
+	return
 
-		DisplayToolTip:
-		try
-			for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
-				{
-					CurTTC:= % %CurrControl%_TT
-					btt(CurTTC,,,,"Style2",{Transparent:v})
-					Sleep, 30
-				}
-		catch
-			SetTimer, RemoveToolTip, -2000
-		return
-
-		RemoveToolTip:
-		for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
+	DisplayToolTip:
+	try
+		for k, v in [15,35,55,75,95,115,135,155,175,195,215,235,255]
 			{
+				CurTTC:= % %CurrControl%_TT
 				btt(CurTTC,,,,"Style2",{Transparent:v})
 				Sleep, 30
 			}
-		ToolTip
-		return
+	catch
+		SetTimer, RemoveToolTip, -2000
+	return
+
+	RemoveToolTip:
+	for k, v in [240,220,200,180,160,140,120,100,80,60,40,20,0]
+		{
+			btt(CurTTC,,,,"Style2",{Transparent:v})
+			Sleep, 30
+		}
+	ToolTip
+	return
 	}
+	
 Class LV_InCellEdit {
 	__New(HWND, HiddenCol1 := False, BlankSubItem := False, EditUserFunc := "") {
 		If (This.Base.Base.__Class)
@@ -12337,7 +12609,7 @@ Class BeautifulToolTip
 					Gdip_DeleteBrush(pBrushBackground)
 					O.X:=O.Border+O.Margin, O.Y:=O.Border+O.Margin, O.Width:=TextWidth, O.Height:=TextHeight
 					if (TextArea[5]<StrLen(Text))
-					  TempText:=TextArea[5]>4 ? SubStr(Text, 1 ,TextArea[5]-4) "…………" : SubStr(Text, 1 ,1) "…………"
+					  TempText:=TextArea[5]>4 ? SubStr(Text, 1 ,TextArea[5]-4) "����" : SubStr(Text, 1 ,1) "����"
 					else
 					  TempText:=Text
 					this._TextToGraphics(this["G" WhichToolTip], TempText, O)
@@ -12518,7 +12790,7 @@ Class BeautifulToolTip
 			, DllCall("GetCursorPos", "Ptr", &Point)
 			, MouseX := NumGet(Point, 0, "Int"), MouseY := NumGet(Point, 4, "Int")
 			if (X="" and Y="")
-				{ ; 没有给出 x,y 则使用鼠标坐标
+				{ ; ???? x,y ???????
 					DisplayX     := MouseX
 				  , DisplayY     := MouseY
 				  , hMonitor     := MDMF_FromPoint(DisplayX, DisplayY, MONITOR_DEFAULTTONEAREST:=2)

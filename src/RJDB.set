@@ -10,7 +10,7 @@ MMLOAD=
 MMSAVE=
 disprogw=1
 ToolTips=
-IncludedD=
+IncDED=
 MonitorMode=0
 Name_Check=1
 Net_Check=0
@@ -68,6 +68,8 @@ Steam_Name=
 Steam_UserID=
 Steam_AppID=
 Exe_File=
+Exe_Opts=
+Exe_Args=
 GameData=
 SaveData=
 Install_Folder=
@@ -85,17 +87,34 @@ PREPak=
 PSTPak=
 
 [THEME]
-Gui_Theme_Name=Native_Dark
-GUI_Light_BG2=9a9a9a
-GUI_Light_BG=Default
-Gui_Light_FontL=cSilver s8,Inter UI
-Gui_Light_FontM=c151515 s8,Hermit
-Gui_Light_FontS=cSilver s8,Hermit
-Gui_Light_FontG=c151515 s8 Bold,Trueno
-Gui_Light_FontB=cSilver s8 Bold,Anka/Coder
-Gui_Dark_BG=151515
-Gui_Dark_FontL=cLime s8,Trueno
-Gui_Dark_FontM=cSilver s8,Hermit
-Gui_Dark_FontS=cSilver s8,Hermit
-Gui_Dark_FontG=cWhite s8 Bold,Inter UI
-Gui_Dark_FontB=s8 Bold,Anka/Coder
+Gui_Theme_Name=LightMode.native
+
+[LIGHT_THEME]
+bg_Color=0xE1E1E1
+bg_Shadow=0xCED6D7
+op_Text=0x121212
+op_Label=0x000000
+Font_L=cSilver s8,Inter UI
+Font_M=c151515 s8,Hermit
+Font_S=cSilver s8,Hermit
+Font_G=c151515 s8 Bold,Trueno
+Font_B=cSilver s8 Bold,Anka/Coder
+
+[DARK_THEME]
+bg_Color=0x1A2225
+bg_Shadow=0x0D1101
+op_Text=0x5c5c5c
+op_Label=0xFFFFFF
+Font_L=cLime s8,Trueno
+Font_M=cSilver s8,Hermit
+Font_S=cSilver s8,Hermit
+Font_G=cWhite s8 Bold,Inter UI
+Font_B=0xcbfbfbf s8 Bold,Anka/Coder
+
+[OVERRIDES]
+PPOVV=
+JALOVV=
+JBEOVV=
+TBOVV=
+BGMOVV=
+MONOVV=

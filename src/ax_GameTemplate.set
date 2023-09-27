@@ -1,17 +1,15 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<gamecontroller configversion="19" appversion="3.2.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<gamecontroller configversion="19" appversion="2.23">
     <!--The SDL name for a joystick is included for informational purposes only.-->
     <sdlname></sdlname>
     <!--The GUID for a joystick is included for informational purposes only.-->
-    <uniqueID></uniqueID>
     <guid></guid>
     <names>
         <buttonname index="5">Relase to Set1</buttonname>
-        <buttonname index="6">Input Panel</buttonname>
         <buttonname index="8">Reset</buttonname>
-        <controlstickbuttonname index="1" button="7">KILLWIN</controlstickbuttonname>
-        <controlstickbuttonname index="1" button="3">taskmanager</controlstickbuttonname>
         <controlstickbuttonname index="1" button="1">WINDOWSKEY</controlstickbuttonname>
+        <controlstickbuttonname index="1" button="3">TABFORWARD</controlstickbuttonname>
+        <controlstickbuttonname index="1" button="7">TABBACK</controlstickbuttonname>
     </names>
     <sets>
         <set index="1">
@@ -27,16 +25,31 @@
                 <setselect>2</setselect>
                 <setselectcondition>while-held</setselectcondition>
                 <actionname>TOGGGLE 2/1</actionname>
+                <cycleresetinterval>100</cycleresetinterval>
+            </button>
+            <button index="6">
+                <slots>
+                    <slot>
+                        <code>3100</code>
+                        <mode>hold</mode>
+                    </slot>
+                    <slot>
+                        <code>2</code>
+                        <mode>setchange</mode>
+                    </slot>
+                </slots>
             </button>
         </set>
         <set index="2">
             <stick index="1">
                 <deadZone>26946</deadZone>
-                <stickbutton index="7">
-                    <actionname>KILL_WIN</actionname>
+                <stickbutton index="1">
+                    <actionname>ALT+TAB</actionname>
+                    <cycleresetactive>true</cycleresetactive>
+                    <cycleresetinterval>1000</cycleresetinterval>
                     <slots>
                         <slot>
-                            <code>1500</code>
+                            <code>350</code>
                             <mode>hold</mode>
                         </slot>
                         <slot>
@@ -44,28 +57,80 @@
                             <mode>keyboard</mode>
                         </slot>
                         <slot>
-                            <code>0x1000033</code>
+                            <code>0x1000001</code>
                             <mode>keyboard</mode>
                         </slot>
-                    </slots>
-                </stickbutton>
-                <stickbutton index="5">
-                    <slots>
                         <slot>
-                            <code>700</code>
-                            <mode>hold</mode>
-                        </slot>
-                        <slot>
-                            <code>0x1000023</code>
-                            <mode>keyboard</mode>
+                            <code>1</code>
+                            <mode>cycle</mode>
                         </slot>
                     </slots>
                 </stickbutton>
                 <stickbutton index="3">
-                    <actionname>TASKMANAGER</actionname>
+                    <actionname>CTRL+TAB</actionname>
+                    <cycleresetactive>true</cycleresetactive>
+                    <cycleresetinterval>1000</cycleresetinterval>
                     <slots>
                         <slot>
-                            <code>1500</code>
+                            <code>350</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000021</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000001</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>150</code>
+                            <mode>keypress</mode>
+                        </slot>
+                        <slot>
+                            <code>1</code>
+                            <mode>cycle</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <stickbutton index="5">
+                    <actionname>ALT+SHIFT+TAB</actionname>
+                    <cycleresetactive>true</cycleresetactive>
+                    <cycleresetinterval>1000</cycleresetinterval>
+                    <slots>
+                        <slot>
+                            <code>350</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000023</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000020</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000001</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>150</code>
+                            <mode>keypress</mode>
+                        </slot>
+                        <slot>
+                            <code>1</code>
+                            <mode>cycle</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <stickbutton index="7">
+                    <actionname>CTRL+SHFT+TAB</actionname>
+                    <cycleresetactive>true</cycleresetactive>
+                    <cycleresetinterval>1000</cycleresetinterval>
+                    <slots>
+                        <slot>
+                            <code>350</code>
                             <mode>hold</mode>
                         </slot>
                         <slot>
@@ -77,51 +142,28 @@
                             <mode>keyboard</mode>
                         </slot>
                         <slot>
-                            <code>0x1000000</code>
-                            <mode>keyboard</mode>
-                        </slot>
-                    </slots>
-                </stickbutton>
-                <stickbutton index="1">
-                    <actionname>WIN_</actionname>
-                    <slots>
-                        <slot>
-                            <code>1500</code>
-                            <mode>hold</mode>
-                        </slot>
-                        <slot>
-                            <code>0x1000022</code>
+                            <code>0x1000001</code>
                             <mode>keyboard</mode>
                         </slot>
                         <slot>
-                            <code>3000</code>
-                            <mode>hold</mode>
+                            <code>150</code>
+                            <mode>keypress</mode>
                         </slot>
                         <slot>
-                            <code>0</code>
-                            <mode>setchange</mode>
+                            <code>1</code>
+                            <mode>cycle</mode>
                         </slot>
                     </slots>
                 </stickbutton>
             </stick>
             <stick index="2">
                 <diagonalRange>65</diagonalRange>
-                <stickbutton index="7">
+                <stickbutton index="1">
                     <extraacceleration>true</extraacceleration>
                     <extraaccelerationcurve>easeoutcubic</extraaccelerationcurve>
                     <slots>
                         <slot>
-                            <code>3</code>
-                            <mode>mousemovement</mode>
-                        </slot>
-                    </slots>
-                </stickbutton>
-                <stickbutton index="5">
-                    <extraacceleration>true</extraacceleration>
-                    <extraaccelerationcurve>easeoutcubic</extraaccelerationcurve>
-                    <slots>
-                        <slot>
-                            <code>2</code>
+                            <code>1</code>
                             <mode>mousemovement</mode>
                         </slot>
                     </slots>
@@ -136,32 +178,33 @@
                         </slot>
                     </slots>
                 </stickbutton>
-                <stickbutton index="1">
+                <stickbutton index="5">
                     <extraacceleration>true</extraacceleration>
                     <extraaccelerationcurve>easeoutcubic</extraaccelerationcurve>
                     <slots>
                         <slot>
-                            <code>1</code>
+                            <code>2</code>
+                            <mode>mousemovement</mode>
+                        </slot>
+                    </slots>
+                </stickbutton>
+                <stickbutton index="7">
+                    <extraacceleration>true</extraacceleration>
+                    <extraaccelerationcurve>easeoutcubic</extraaccelerationcurve>
+                    <slots>
+                        <slot>
+                            <code>3</code>
                             <mode>mousemovement</mode>
                         </slot>
                     </slots>
                 </stickbutton>
             </stick>
             <dpad index="1">
-                <dpadbutton index="4">
+                <dpadbutton index="1">
                     <slots>
                         <slot>
-                            <code>0x1000015</code>
+                            <code>0x1000013</code>
                             <mode>keyboard</mode>
-                        </slot>
-						<slot>
-                            <code>5100</code>
-                            <mode>hold</mode>
-                        </slot>
-                        <slot>
-                            <path>[AMICRX]</path>
-                            <arguments>--show --qwindowgeometry 250x350+72+72</arguments>
-                            <mode>execute</mode>
                         </slot>
                     </slots>
                 </dpadbutton>
@@ -173,11 +216,20 @@
                         </slot>
                     </slots>
                 </dpadbutton>
-                <dpadbutton index="1">
+                <dpadbutton index="4">
                     <slots>
                         <slot>
-                            <code>0x1000013</code>
+                            <code>0x1000015</code>
                             <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>5100</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <path>[AMICRO]</path>
+                            <arguments>--show --qwindowgeometry 250x350+72+72</arguments>
+                            <mode>execute</mode>
                         </slot>
                     </slots>
                 </dpadbutton>
@@ -187,16 +239,35 @@
                             <code>0x1000012</code>
                             <mode>keyboard</mode>
                         </slot>
+                        <slot>
+                            <code>3100</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000021</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000039</code>
+                            <mode>keyboard</mode>
+                        </slot>
+                        <slot>
+                            <code>0x1000022</code>
+                            <mode>keyboard</mode>
+                        </slot>
                     </slots>
                 </dpadbutton>
             </dpad>
             <trigger index="1">
                 <throttle>positivehalf</throttle>
                 <triggerbutton index="2">
+                    <actionname>F12</actionname>
+                    <cycleresetactive>true</cycleresetactive>
+                    <cycleresetinterval>1000</cycleresetinterval>
                     <slots>
                         <slot>
-                            <code>1</code>
-                            <mode>mousebutton</mode>
+                            <code>0x1000021</code>
+                            <mode>keyboard</mode>
                         </slot>
                     </slots>
                 </triggerbutton>
@@ -204,23 +275,12 @@
             <trigger index="2">
                 <throttle>positivehalf</throttle>
                 <triggerbutton index="2">
+                    <actionname>LMouseButton</actionname>
                     <slots>
                         <slot>
-                            <code>3</code>
+                            <code>1</code>
                             <mode>mousebutton</mode>
                         </slot>
-                        <slot>
-                            <code>3000</code>
-                            <mode>hold</mode>
-                        </slot>
-                        <slot>
-                            <code>0x1000023</code>
-                            <mode>keyboard</mode>
-                        </slot>
-                        <slot>
-                            <code>0x1000037</code>
-                            <mode>keyboard</mode>
-                        </slot>							  
                     </slots>
                 </triggerbutton>
             </trigger>
@@ -260,27 +320,11 @@
                 <setselect>1</setselect>
                 <setselectcondition>while-held</setselectcondition>
                 <actionname>TOGGLESET1/2</actionname>
-                <slots>
-                    <slot>
-                        <code>200</code>
-                        <mode>hold</mode>
-                    </slot>
-                    <slot>
-                        <code>2</code>
-                        <mode>setchange</mode>
-                    </slot>
-                    <slot>
-                        <code>100</code>
-                        <mode>release</mode>
-                    </slot>
-                    <slot>
-                        <code>0</code>
-                        <mode>setchange</mode>
-                    </slot>
-                </slots>
             </button>
             <button index="6">
-                <actionname>Opens and closes the OSK</actionname>
+                <actionname>Opens and closes the OSK . . . [ctrl+f8]</actionname>
+                <cycleresetactive>true</cycleresetactive>
+                <cycleresetinterval>1000</cycleresetinterval>
                 <slots>
                     <slot>
                         <code>100</code>
@@ -289,6 +333,22 @@
                     <slot>
                         <path>[NEWOSK]</path>
                         <mode>execute</mode>
+                    </slot>
+                    <slot>
+                        <code>3500</code>
+                        <mode>hold</mode>
+                    </slot>
+                    <slot>
+                        <code>0x1000023</code>
+                        <mode>keyboard</mode>
+                    </slot>
+                    <slot>
+                        <code>0x1000037</code>
+                        <mode>keyboard</mode>
+                    </slot>
+                    <slot>
+                        <code>1</code>
+                        <mode>cycle</mode>
                     </slot>
                 </slots>
             </button>
@@ -300,12 +360,16 @@
                         <mode>hold</mode>
                     </slot>
                     <slot>
-                        <code>0x1000021</code>
+                        <code>0x1000004</code>
                         <mode>keyboard</mode>
                     </slot>
                     <slot>
-                        <code>0x100003b</code>
-                        <mode>keyboard</mode>
+                        <code>3500</code>
+                        <mode>hold</mode>
+                    </slot>
+                    <slot>
+                        <code>0</code>
+                        <mode>setchange</mode>
                     </slot>
                 </slots>
             </button>
@@ -327,10 +391,15 @@
                 </slots>
             </button>
             <button index="9">
+                <actionname>Mouse MB</actionname>
                 <slots>
                     <slot>
-                        <code>1</code>
-                        <mode>mousebutton</mode>
+                        <code>700</code>
+                        <mode>hold</mode>
+                    </slot>
+                    <slot>
+                        <code>0x100003b</code>
+                        <mode>keyboard</mode>
                     </slot>
                 </slots>
             </button>
@@ -345,8 +414,8 @@
             <button index="11">
                 <slots>
                     <slot>
-                        <code>0x1000004</code>
-                        <mode>keyboard</mode>
+                        <code>3</code>
+                        <mode>mousebutton</mode>
                     </slot>
                 </slots>
             </button>
@@ -354,11 +423,7 @@
         <set index="3">
             <stick index="1">
                 <deadZone>17610</deadZone>
-                <stickbutton index="7">
-                    <setselect>1</setselect>
-                    <setselectcondition>one-way</setselectcondition>
-                </stickbutton>
-                <stickbutton index="5">
+                <stickbutton index="1">
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
@@ -366,32 +431,110 @@
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
-                <stickbutton index="1">
+                <stickbutton index="5">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+                <stickbutton index="7">
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
             </stick>
+            <stick index="2">
+                <stickbutton index="1">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+                <stickbutton index="3">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+                <stickbutton index="5">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+                <stickbutton index="7">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+            </stick>
+            <dpad index="1">
+                <dpadbutton index="1">
+                    <slots>
+                        <slot>
+                            <code>1000</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <profile>[RJ_HOME]/KBM.gamecontroller.amgp</profile>
+                            <mode>loadprofile</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="2">
+                    <slots>
+                        <slot>
+                            <code>1000</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <profile>[RJ_HOME]/Player1.gamecontroller.amgp</profile>
+                            <mode>loadprofile</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="4">
+                    <slots>
+                        <slot>
+                            <code>1000</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <profile>[RJ_HOME]/KBM.gamecontroller.amgp</profile>
+                            <mode>loadprofile</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+                <dpadbutton index="8">
+                    <slots>
+                        <slot>
+                            <code>1000</code>
+                            <mode>hold</mode>
+                        </slot>
+                        <slot>
+                            <profile>[RJ_HOME]/Player1.gamecontroller.amgp</profile>
+                            <mode>loadprofile</mode>
+                        </slot>
+                    </slots>
+                </dpadbutton>
+            </dpad>
             <trigger index="1">
                 <throttle>positivehalf</throttle>
                 <triggerbutton index="2">
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
-                    <actionname>gotoset1</actionname>
                 </triggerbutton>
             </trigger>
             <trigger index="2">
                 <throttle>positivehalf</throttle>
                 <triggerbutton index="2">
-                    <actionname>command prompt</actionname>
-                    <slots>
-                        <slot>
-                            <code>1100</code>
-                            <mode>hold</mode>
-                        </slot>
-                    </slots>
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
                 </triggerbutton>
             </trigger>
+            <button index="1">
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
+            </button>
             <button index="2">
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
+            </button>
+            <button index="3">
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
+            </button>
+            <button index="4">
                 <setselect>1</setselect>
                 <setselectcondition>one-way</setselectcondition>
             </button>
@@ -399,53 +542,22 @@
                 <setselect>1</setselect>
                 <setselectcondition>one-way</setselectcondition>
             </button>
-            <button index="6">
-                <actionname>newosk</actionname>
-            </button>
             <button index="7">
-                <slots>
-                    <slot>
-                        <code>500</code>
-                        <mode>hold</mode>
-                    </slot>
-                    <slot>
-                        <code>0x1000021</code>
-                        <mode>keyboard</mode>
-                    </slot>
-                    <slot>
-                        <code>0x100003b</code>
-                        <mode>keyboard</mode>
-                    </slot>
-                </slots>
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
             </button>
             <button index="8">
-                <slots>
-                    <slot>
-                        <code>1000</code>
-                        <mode>release</mode>
-                    </slot>
-                    <slot>
-                        <code>0x1000021</code>
-                        <mode>keyboard</mode>
-                    </slot>
-                    <slot>
-                        <code>0x1000031</code>
-                        <mode>keyboard</mode>
-                    </slot>
-                    <slot>
-                        <code>0</code>
-                        <mode>setchange</mode>
-                    </slot>
-                </slots>
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
+            </button>
+            <button index="10">
+                <setselect>1</setselect>
+                <setselectcondition>one-way</setselectcondition>
             </button>
         </set>
         <set index="4">
             <stick index="2">
-                <stickbutton index="7">
-                    <setselect>1</setselect>
-                    <setselectcondition>one-way</setselectcondition>
-                </stickbutton>
-                <stickbutton index="5">
+                <stickbutton index="1">
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
@@ -453,7 +565,11 @@
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
-                <stickbutton index="1">
+                <stickbutton index="5">
+                    <setselect>1</setselect>
+                    <setselectcondition>one-way</setselectcondition>
+                </stickbutton>
+                <stickbutton index="7">
                     <setselect>1</setselect>
                     <setselectcondition>one-way</setselectcondition>
                 </stickbutton>
