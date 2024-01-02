@@ -1,12 +1,12 @@
 ﻿;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
-;;;;###################### v0rt3X VERSION=2023-09-27 11:09 AM 0.99.92.48 ##############################;;;;;;;
+;;;;###################### v0rt3X VERSION=2024-01-02 12:38 AM 0.99.92.58 ##############################;;;;;;;
 ;;;;###########################     SCRIPT LAUNCHER    ######################################;;;;;;;
 #NoEnv
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 #SingleInstance Force
 #Persistent
-DetectHiddenWindows,off
+;DetectHiddenWindows,off
 FileEncoding, UTF-8
 EnvGet,LADTA,LOCALAPPDATA
 EnvGet,USRPRF,USERPROFILE
@@ -1272,6 +1272,8 @@ Gui,Add,Checkbox,x210 y112 vEditPRP gEditPRP %ppvis% %ppdis%, Pre/Post
 Gui,add,Button,x340 y112 w50 h21 gEditSave,Save
 Gui,add,Button,x400 y112 w40 h21 gALNCHE,Run
 Gui, Show,w450 h140, v0rt3X_CFG
+WinWait, A,, 2
+WinSet, ExStyle, % +0x80		
 Blockinput,off
 postediting= 1
 return
@@ -1428,6 +1430,8 @@ if (!fileExist(plfp) or (nrx > 2))
 		Gui Show
 		WinWait, ahk_id %hWndhMainWnd%
 		WinActivate, ahk_id %hWndhMainWnd%
+		WinWait, A,, 2
+		WinSet, ExStyle, % +0x80		
 		Gui +LastFound
 		HM_D := DllCall("user32\GetSystemMenu", "ptr", hMainWnd, "uint", 0, "uptr")
 		DllCall("user32\RemoveMenu", "ptr", HM_D, "uint", 0xf020, "uint", 0)
@@ -1503,7 +1507,8 @@ Menu,Tray,Standard
 Menu,Tray,NoStandard
 Menu, Tray, Add
 Menu, Tray, add,<          Other Executables, :altRunSel
-
+WinWait, A,, 2
+WinSet, ExStyle, % +0x80
 
 ;#######################################################################################
 ;######################    GAME EXECUTION  #############################################
